@@ -92,15 +92,15 @@ namespace Models.RelayMatchmakingService
             catch (RelayServiceException e) { Debug.LogError(e); return false; }
         }
 
-        // ✨ [수정] 방 나가기 및 세션 정리
+        // ✨ [수정된 방 나가기 및 세션 정리 로직]
         public async Task LeaveLobbyAsync()
         {
             try
             {
-                // 1. 로비 서비스 정리
+                await LockLobbyAsync();
+                // 1. 로비 서비스 정리 (기존과 동일)
                 if (currentLobby != null)
                 {
-                    // 내가 방장이면 방 삭제, 아니면 그냥 퇴장
                     if (currentLobby.HostId == AuthenticationService.Instance.PlayerId)
                     {
                         await LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
@@ -109,18 +109,46 @@ namespace Models.RelayMatchmakingService
                     {
                         await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
                     }
-                    currentLobby = null; // 참조 해제
+                    currentLobby = null; 
                 }
 
-                // 2. NGO 연결 종료
+                // 2. NGO 연결 종료 및 찌꺼기 청소 대기
                 if (NetworkManager.Singleton != null)
                 {
                     NetworkManager.Singleton.Shutdown();
+
+                    // 🚨 핵심 해결책: Shutdown은 '비동기'이므로 완전히 꺼질 때까지 프레임을 넘기며 기다려야 합니다.
+                    while (NetworkManager.Singleton.ShutdownInProgress)
+                    {
+                        await Task.Yield(); // 완전히 꺼질 때까지 다음 프레임으로 대기
+                    }
+                    
+                    Debug.Log("네트워크 매니저가 완전히 종료되고 포트가 정리되었습니다.");
                 }
             }
             catch (LobbyServiceException e)
             {
                 Debug.LogError($"로비 퇴장 중 오류: {e.Message}");
+            }
+        }
+        public async Task LockLobbyAsync()
+        {
+            if (currentLobby != null)
+            {
+                try
+                {
+                    UpdateLobbyOptions options = new UpdateLobbyOptions
+                    {
+                        IsLocked = true // 게시판에서 방을 비공개/잠금 처리함
+                    };
+                    // 로비 정보를 서버에 업데이트하고, 내 변수도 최신화
+                    currentLobby = await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, options);
+                    Debug.Log("방이 잠겼습니다. 더 이상 새로운 유저가 매칭되지 않습니다.");
+                }
+                catch (LobbyServiceException e)
+                {
+                    Debug.LogError($"방 잠금 실패: {e.Message}");
+                }
             }
         }
     }

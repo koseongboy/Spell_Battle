@@ -1,7 +1,7 @@
 using ScriptableObjects.ScrollData;
 using UnityEngine;
 
-namespace Controller.ScrollController
+namespace Controllers.ScrollController
 {
     public class ScrollController : MonoBehaviour
     {
