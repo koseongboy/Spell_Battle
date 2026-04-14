@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Controller.ScrollController;
+using Controllers.ScrollController;
 using ScriptableObjects.ScrollData;
 
 namespace Managers.ScrollManager

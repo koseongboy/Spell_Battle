@@ -401,13 +401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97dab6fa0dc24dc48b08317e5896e9b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyUIManager
-  matchmakingManager: {fileID: 0}
-  mainMenuPanel: {fileID: 486896359}
-  joinCodeInputField: {fileID: 332592393}
-  createRoomBtn: {fileID: 24823443}
-  joinBtn: {fileID: 1739996473}
-  roomInfoPanel: {fileID: 1741603308}
-  codeText: {fileID: 308521854}
 --- !u!4 &120864373 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5186735023777053022, guid: ac8efb728f1fb9b4092c4df591c827ca, type: 3}
@@ -1390,7 +1383,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 828094641}
   - {fileID: 338143717}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1542,12 +1534,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828094638}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
-  m_LocalPosition: {x: 0, y: 5, z: -6}
+  m_LocalRotation: {x: 0.13052616, y: -0, z: -0, w: 0.9914449}
+  m_LocalPosition: {x: 0, y: 5.5, z: -15.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 679695740}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
 --- !u!114 &828094642
 MonoBehaviour:
@@ -2018,7 +2010,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1124094129}
-    PlayerPrefab: {fileID: 7934801250952124813, guid: e987c8e6eb9443749963ea81df8ea877, type: 3}
+    PlayerPrefab: {fileID: 3965741523160770176, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 254b337264167cd4c83e1741a93b12bd, type: 2}
@@ -3612,6 +3604,7 @@ MonoBehaviour:
   randomMatchButton: {fileID: 1429414635}
   createRoomButton: {fileID: 24823443}
   joinRoomButton: {fileID: 1739996473}
+  cancelButton: {fileID: 1248427188}
 --- !u!4 &2109976885
 Transform:
   m_ObjectHideFlags: 0
@@ -3631,6 +3624,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 828094641}
   - {fileID: 679695740}
   - {fileID: 542740253}
   - {fileID: 2109976885}
