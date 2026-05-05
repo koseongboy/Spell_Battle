@@ -337,6 +337,7 @@ RectTransform:
   - {fileID: 486896360}
   - {fileID: 1741603309}
   - {fileID: 1375634369}
+  - {fileID: 709502793}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -410,9 +411,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 64109215}
+  - component: {fileID: 64109212}
   - component: {fileID: 64109214}
   - component: {fileID: 64109213}
-  - component: {fileID: 64109212}
   m_Layer: 0
   m_Name: TurnSystem
   m_TagString: Untagged
@@ -480,6 +481,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8481d27499e720448e817814c77262b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.TurnController
+  ShowTopMostFoldoutHeaderGroup: 1
+  model: {fileID: 64109213}
+  view: {fileID: 709502794}
 --- !u!4 &64109215
 Transform:
   m_ObjectHideFlags: 0
@@ -1480,6 +1484,57 @@ Transform:
   - {fileID: 338143717}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &709502792
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 709502793}
+  - component: {fileID: 709502794}
+  m_Layer: 5
+  m_Name: TurnView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &709502793
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709502792}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 39545191}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &709502794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709502792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5dcaa71ab3043c448a767564f10b351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Views.TurnView.TurnView
+  turnInfoText: {fileID: 0}
+  phaseText: {fileID: 0}
+  actionButton: {fileID: 0}
 --- !u!4 &736766816 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2222111361405018444, guid: 88f2fd29f58b9734683512546acec310, type: 3}

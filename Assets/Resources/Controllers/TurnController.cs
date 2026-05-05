@@ -17,8 +17,7 @@ namespace Controllers.TurnController
             // 1. Model의 데이터 변경 구독 -> View 업데이트
             model.OnPhaseChangedEvent += HandlePhaseChanged;
 
-            // 2. View의 버튼 클릭 구독 -> 서버로 넘어갈 요청
-            view.actionButton.onClick.AddListener(RequestAdvancePhase);
+            // 2. view 버튼 클릭 구독 (todo) -> StartGame(게임 시작하기), AdvancePhaseServerRpc(페이즈 넘기기)
         }
 
         // ==========================================
