@@ -483,7 +483,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.TurnController
   ShowTopMostFoldoutHeaderGroup: 1
   model: {fileID: 64109213}
-  view: {fileID: 709502794}
+  view: {fileID: 0}
 --- !u!4 &64109215
 Transform:
   m_ObjectHideFlags: 0
@@ -1247,7 +1247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f6c6a6af8615de49b7664899c2deac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.LobbyController
-  lobbyView: {fileID: 2109976884}
+  lobbyView: {fileID: 0}
 --- !u!4 &567789332 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1279437348525638701, guid: e2e682b966e3f644392ffbfab511e0e2, type: 3}
@@ -1493,7 +1493,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 709502793}
-  - component: {fileID: 709502794}
   m_Layer: 5
   m_Name: TurnView
   m_TagString: Untagged
@@ -1520,21 +1519,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &709502794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 709502792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5dcaa71ab3043c448a767564f10b351, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Views.TurnView.TurnView
-  turnInfoText: {fileID: 0}
-  phaseText: {fileID: 0}
-  actionButton: {fileID: 0}
 --- !u!4 &736766816 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2222111361405018444, guid: 88f2fd29f58b9734683512546acec310, type: 3}
@@ -3725,7 +3709,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2109976885}
-  - component: {fileID: 2109976884}
   m_Layer: 0
   m_Name: Views
   m_TagString: Untagged
@@ -3733,27 +3716,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2109976884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2109976883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ee8b20a7138ce0438dafb15fe2b321a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Views.LobbyView.LobbyView
-  mainMenuPanel: {fileID: 486896359}
-  roomInfoPanel: {fileID: 1741603308}
-  joinCodeInputField: {fileID: 332592393}
-  displayCodeText: {fileID: 308521854}
-  statusText: {fileID: 1375634370}
-  randomMatchButton: {fileID: 1429414635}
-  createRoomButton: {fileID: 24823443}
-  joinRoomButton: {fileID: 1739996473}
-  cancelButton: {fileID: 1248427188}
 --- !u!4 &2109976885
 Transform:
   m_ObjectHideFlags: 0
