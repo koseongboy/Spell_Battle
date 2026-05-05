@@ -7,6 +7,7 @@ namespace Models.Cards.Interface
 {
     public interface ICard
     {
+        int Id {get;}
         string CardName {get;}
         int Cost {get;}
         

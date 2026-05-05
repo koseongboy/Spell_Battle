@@ -24,15 +24,10 @@ namespace Models.Cards.Implementations
             target.AddStatus(StatusType.Ignite, IgniteStacks, 2); 
         }
 
-        // IFireCard 전용 특수 함수 구현
+
         public void TriggerIgnite(PlayerModel.PlayerModel target)
         {
-            // '홍련' 카드 발동 시 사용될 로직[cite: 1]
-            int currentStacks = target.GetStatusStack(StatusType.Ignite);
-            if(currentStacks > 0)
-            {
-                target.TakeDamage(currentStacks);
-            }
+            // 발화 카드는 아무것도 안함.
         }
     }
 }

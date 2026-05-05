@@ -8,10 +8,12 @@ namespace Models.Cards.CardBase
     public abstract class CardBase : ScriptableObject, ICard
     {
         [Header("Card Info")]
+        [SerializeField] private int id;
         [SerializeField] private string cardName;
         [SerializeField] private int cost;
         [SerializeField] [TextArea] private string description;
 
+        public int Id => id;
         public string CardName => cardName;
         public int Cost => cost;
 
