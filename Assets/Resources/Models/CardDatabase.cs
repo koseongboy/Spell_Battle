@@ -1,21 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Models.Cards.CardBase;
+using Cards.PlayableCards;
 
-namespace Models.CardDatabase
+namespace Models.CardDatabases
 {
     public static class CardDatabase
     {
-        private static Dictionary<int, CardBase> cardMap;
+        private static Dictionary<int, PlayableCard> cardMap;
         private static void Initialize()
         {
             if (cardMap != null) return;
 
-            cardMap = new Dictionary<int, CardBase>();
+            cardMap = new Dictionary<int, PlayableCard>();
 
-            CardBase[] loadedCards = Resources.LoadAll<CardBase>("Cards");
+            PlayableCard[] loadedCards = Resources.LoadAll<PlayableCard>("Cards");
 
-            foreach(CardBase card in loadedCards)
+            foreach(PlayableCard card in loadedCards)
             {
                 if (!cardMap.ContainsKey(card.Id))
                 {
@@ -23,16 +23,16 @@ namespace Models.CardDatabase
                 } 
                 else
                 {
-                    Debug.LogError($"{card.CardName}가 중복되어있습니다. 지워주세요");
+                    Debug.LogError($"{card.Name}가 중복되어있습니다. 지워주세요");
                 }
             }
             Debug.Log($"총 {cardMap.Count}장의 카드 로드 성공!");
         }
 
-        public static CardBase getCard(int cardId)
+        public static PlayableCard getCard(int cardId)
         {
             if (cardMap == null) Initialize();
-            if(cardMap.TryGetValue(cardId, out CardBase card))
+            if(cardMap.TryGetValue(cardId, out PlayableCard card))
             {
                 return card;
             }
