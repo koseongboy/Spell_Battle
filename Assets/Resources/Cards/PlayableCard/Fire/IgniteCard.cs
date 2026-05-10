@@ -1,4 +1,5 @@
 using Models.PlayerModel;
+using Models.SpellPayloads;
 using UnityEngine;
 
 namespace Cards.PlayableCards
@@ -10,9 +11,9 @@ namespace Cards.PlayableCards
         public int applyStacks = 1;
         public int applyDuration = 2;
 
-        public override void Execute(PlayerModel caster, PlayerModel target)
+        public override void AddToPayload(SpellPayload payload, PlayerModel caster)
         {
-            target.AddStatus(StatusType.Ignite, applyStacks, applyDuration);
+            payload.TargetPayload.AddStatus(StatusType.Ignite, applyStacks, applyDuration);
         }
     }
 }
