@@ -29,7 +29,7 @@ namespace Models.CardDatabases
             Debug.Log($"총 {cardMap.Count}장의 카드 로드 성공!");
         }
 
-        public static PlayableCard getCard(int cardId)
+        public static PlayableCard GetCard(int cardId)
         {
             if (cardMap == null) Initialize();
             if(cardMap.TryGetValue(cardId, out PlayableCard card))

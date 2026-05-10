@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cards.CardUIDatas;
 using Models.PlayerModel;
+using Models.SpellPayloads;
 
 namespace Cards.PlayableCards
 {
@@ -16,6 +17,6 @@ namespace Cards.PlayableCards
         public Property Prop => uiData.property;
 
         // 실제 발동 로직 (자식 클래스들이 반드시 구현해야 함)
-        public abstract void Execute(PlayerModel caster, PlayerModel target);
+        public abstract void AddToPayload(SpellPayload spell, PlayerModel caster);
     }
 }
