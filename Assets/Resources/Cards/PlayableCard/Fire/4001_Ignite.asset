@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b5e621a6dd3a243831f6e1ff294712, type: 3}
+  m_Name: 4001_Ignite
+  m_EditorClassIdentifier: Assembly-CSharp::Cards.PlayableCards.IgniteCard
+  uiData:
+    id: 4001
+    wordName: "\uBC1C\uD654"
+    cost: 3
+    property: 3
+    Effects:
+    - {fileID: 11400000, guid: b05dd917337c035459ea98b0713b460e, type: 2}
+    desc: "\uB300\uC0C1\uC5D0\uAC8C 2\uD134 \uB3D9\uC548 \uBC1C\uD654 \uC911\uCCA9\uB97C
+      1 \uC801\uC6A9\uD55C\uB2E4."
+  applyStacks: 1
+  applyDuration: 2

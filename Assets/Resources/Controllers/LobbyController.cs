@@ -19,6 +19,7 @@ namespace Controllers.LobbyController
 
         private async void Start()
         {
+            // UI 개발 이후 수정할 곳 todo (lobbyView 부분 전부 다)
             lobbyView.ShowMainMenu();
             lobbyView.UpdateStatus("Initiallizing...");
 
