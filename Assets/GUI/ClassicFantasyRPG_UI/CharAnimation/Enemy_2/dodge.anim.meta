@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4498ce1474b409a46959a93fbe7d4026
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Enemy_2/dodge.anim
+  uploadId: 862176

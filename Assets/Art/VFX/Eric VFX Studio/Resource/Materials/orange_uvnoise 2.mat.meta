@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e420821c32b14cd4bb65e730aee6d69f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: fx_textures_gradient_materials.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/orange_uvnoise 2.mat
+  uploadId: 912098

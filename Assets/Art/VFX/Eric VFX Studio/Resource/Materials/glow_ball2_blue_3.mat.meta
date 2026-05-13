@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4653a52dceaf8a94ab168e8a2dbb5cfa
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: fx_textures_glow_materials.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glow_ball2_blue_3.mat
+  uploadId: 912098

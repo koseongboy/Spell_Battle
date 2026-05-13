@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0030cd4a8da249b40aa4af5769cf758d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/M_2D_Smoke_01_Builtin.mat
+  uploadId: 912098

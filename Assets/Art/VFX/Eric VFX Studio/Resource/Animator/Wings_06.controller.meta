@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: d1413bed67558ea4597743cec0e6345b
+timeCreated: 1532511882
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Animator/Wings_06.controller
+  uploadId: 912098

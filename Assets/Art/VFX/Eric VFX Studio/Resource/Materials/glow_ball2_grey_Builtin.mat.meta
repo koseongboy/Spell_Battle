@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0f3f4376628d89c4cbf4a2f900b6d7b7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glow_ball2_grey_Builtin.mat
+  uploadId: 912098

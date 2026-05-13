@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a428b2229b42aac4ca814d3b29ca1217
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/URP/FX_Holy
+    Light.prefab
+  uploadId: 912098

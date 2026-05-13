@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 11f539182ee3b03439f2ce34a013db3d
+timeCreated: 1528979677
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glow_point2_yellow_03.mat
+  uploadId: 912098

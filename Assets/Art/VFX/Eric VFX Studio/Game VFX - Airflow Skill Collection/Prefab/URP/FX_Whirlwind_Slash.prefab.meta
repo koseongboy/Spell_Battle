@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3f4b0fda5ad2fc3428ab7856be975d6a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Airflow Skill Collection/Prefab/URP/FX_Whirlwind_Slash.prefab
+  uploadId: 912098

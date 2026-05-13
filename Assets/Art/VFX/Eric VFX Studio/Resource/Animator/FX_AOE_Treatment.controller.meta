@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: cc0e213757b89bb4685b14cbd2225a3b
+timeCreated: 1521600265
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Animator/FX_AOE_Treatment.controller
+  uploadId: 912098

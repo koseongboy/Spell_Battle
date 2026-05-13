@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d8d1e5fa6afc8774e8b15b4d64c4bb33
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: fx_textures_glow_materials.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/mat_vfx-ult_particle_02.mat
+  uploadId: 912098

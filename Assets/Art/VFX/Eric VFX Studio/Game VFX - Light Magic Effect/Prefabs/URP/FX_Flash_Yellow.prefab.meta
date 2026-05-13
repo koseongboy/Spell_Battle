@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 30209363b157e4a46a046bac025510ac
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/URP/FX_Flash_Yellow.prefab
+  uploadId: 912098

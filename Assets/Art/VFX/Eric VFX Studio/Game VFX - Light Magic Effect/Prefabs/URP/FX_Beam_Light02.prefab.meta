@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a99512324455d5e4291ea7d576904746
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/URP/FX_Beam_Light02.prefab
+  uploadId: 912098

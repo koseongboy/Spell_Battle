@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1489376daf1f0984fbb51b38f3f0a3c5
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/URP/FX_AOE_IceEarth.prefab
+  uploadId: 912098

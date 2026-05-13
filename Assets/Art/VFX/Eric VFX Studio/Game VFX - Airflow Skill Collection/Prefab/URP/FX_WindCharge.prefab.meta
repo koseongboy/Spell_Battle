@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 62fab55032ae89b4785dae88d72094b1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Airflow Skill Collection/Prefab/URP/FX_WindCharge.prefab
+  uploadId: 912098

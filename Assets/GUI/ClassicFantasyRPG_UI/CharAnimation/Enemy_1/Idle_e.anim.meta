@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ce9bb9f4519a95d47a79b946866959af
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Enemy_1/Idle_e.anim
+  uploadId: 862176

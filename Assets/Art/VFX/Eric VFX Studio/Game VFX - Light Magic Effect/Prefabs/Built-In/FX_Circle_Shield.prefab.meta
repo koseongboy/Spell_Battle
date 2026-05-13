@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 361ef621c81b7414ebd15062d458899d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/Built-In/FX_Circle_Shield.prefab
+  uploadId: 912098

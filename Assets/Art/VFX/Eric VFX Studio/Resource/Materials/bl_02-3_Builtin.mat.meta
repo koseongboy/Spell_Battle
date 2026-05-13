@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 490a6ab4c4fc5f643b87c9059c9f7c47
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/bl_02-3_Builtin.mat
+  uploadId: 912098

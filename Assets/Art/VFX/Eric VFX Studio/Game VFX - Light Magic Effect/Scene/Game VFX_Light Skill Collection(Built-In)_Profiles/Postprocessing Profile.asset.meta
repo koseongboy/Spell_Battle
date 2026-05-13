@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f3a40d5fc305ca4478253a7b89dec0ba
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Scene/Game VFX_Light
+    Skill Collection(Built-In)_Profiles/Postprocessing Profile.asset
+  uploadId: 912098

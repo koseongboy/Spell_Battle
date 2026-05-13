@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 078fc1e68de14f6e92a4ff35fdf18c51
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 198134
+  packageName: Figma Converter for Unity
+  packageVersion: 7.2.0
+  assetPath: Assets/DA-Assets/Figma-Converter-for-Unity/Editor/Scripts/MCP/FcuInstancesResource.cs
+  uploadId: 911702

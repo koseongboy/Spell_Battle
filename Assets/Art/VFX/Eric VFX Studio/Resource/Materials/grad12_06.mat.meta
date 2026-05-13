@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 59eb7e9ee3013e24d83c99315b180338
+timeCreated: 1435130655
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: fx_textures_gradient_materials.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/grad12_06.mat
+  uploadId: 912098

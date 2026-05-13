@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a9c8bb2c085ccbe41bfef75c01cd13d8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/PotionButton.prefab
+  uploadId: 862176

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: aecc29f6e773195459e0e84ea5f980a8
+timeCreated: 1502721949
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97931
+  packageName: POLYART - Stylized Sky Dungeon
+  packageVersion: 1.0
+  assetPath: Assets/Sky Temple/Anims/Point light.controller
+  uploadId: 199862

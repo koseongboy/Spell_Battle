@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1eadd4a292efee148a94d6697c1c1f0c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/URP/FX_AOE_Summoning
+    Beam.prefab
+  uploadId: 912098

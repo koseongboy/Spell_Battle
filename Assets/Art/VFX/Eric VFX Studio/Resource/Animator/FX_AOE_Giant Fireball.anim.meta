@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bfb6c7c8d07ee814d91c8fda173cbbeb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Animator/FX_AOE_Giant Fireball.anim
+  uploadId: 912098

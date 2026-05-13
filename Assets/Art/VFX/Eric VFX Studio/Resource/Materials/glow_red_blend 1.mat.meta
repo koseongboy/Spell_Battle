@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: ab6c89847da316948b3299b62c45b666
+timeCreated: 1531116269
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glow_red_blend 1.mat
+  uploadId: 912098

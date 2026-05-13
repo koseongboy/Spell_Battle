@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5c0d805a647a4874cbdc91efd6ce3e8f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Magic Projectiles Vol.1/Prefabs/FX_GoldArrow_Hit.prefab
+  uploadId: 912098

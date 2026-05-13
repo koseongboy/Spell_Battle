@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d4a086b6a4fa8d84db7b9f1cf369c63c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Animator/FX_AOE_Fireball.controller
+  uploadId: 912098

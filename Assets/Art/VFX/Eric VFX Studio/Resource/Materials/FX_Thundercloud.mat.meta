@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: ae34c91da8c90614e81a15f81997a9f2
+timeCreated: 1517539930
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/FX_Thundercloud.mat
+  uploadId: 912098

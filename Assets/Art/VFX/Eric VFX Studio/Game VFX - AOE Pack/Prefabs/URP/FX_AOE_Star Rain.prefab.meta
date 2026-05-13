@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 837694bf6564d35458a77dfd22de635e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/URP/FX_AOE_Star Rain.prefab
+  uploadId: 912098

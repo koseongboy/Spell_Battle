@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b78ee042f272b9e449b119d586d81679
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/Built-In/FX_AOE_Star
+    Fall.prefab
+  uploadId: 912098

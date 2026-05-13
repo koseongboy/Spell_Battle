@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 82bbd4d66f899704a9b0a0e9ff7ed67b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/Trajectory_Electro.mat
+  uploadId: 912098

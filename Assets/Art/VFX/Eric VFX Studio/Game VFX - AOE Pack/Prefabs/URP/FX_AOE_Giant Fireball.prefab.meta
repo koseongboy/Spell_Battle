@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8ee471de8a2848846b1057c82f6a5678
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/URP/FX_AOE_Giant
+    Fireball.prefab
+  uploadId: 912098

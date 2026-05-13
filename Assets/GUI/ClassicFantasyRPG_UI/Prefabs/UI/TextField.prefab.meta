@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e8acfb578ac35444e9ee66e51a8f0c50
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/TextField.prefab
+  uploadId: 862176

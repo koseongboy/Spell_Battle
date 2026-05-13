@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f0f9394c1105cde41a96d6d641e31f2d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/waveofLight_damage 6_Builtin.mat
+  uploadId: 912098

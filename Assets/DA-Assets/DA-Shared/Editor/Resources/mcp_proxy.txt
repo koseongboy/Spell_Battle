@@ -1,0 +1,172 @@
+import sys
+import json
+import urllib.request
+from urllib.error import URLError
+
+DEFAULT_MCP_SERVER_URL = "http://127.0.0.1:8673/"
+RPC_VERSION = "2.0"
+PROTOCOL_VERSION = "2024-11-05"
+OFFLINE_SERVER_VERSION = "1.0.0"
+OFFLINE_TOOL_NAME = "enable_unity_mcp_server"
+OFFLINE_TOOL_DESCRIPTION = "Explains how to make the Unity MCP server available."
+REQUEST_TIMEOUT_SECONDS = 300
+
+
+def read_args():
+    server_url = DEFAULT_MCP_SERVER_URL
+    server_name = "unity-mcp-proxy"
+
+    args = sys.argv[1:]
+    for i, arg in enumerate(args):
+        if arg == "--url" and i + 1 < len(args):
+            server_url = args[i + 1]
+        elif arg == "--server-name" and i + 1 < len(args):
+            server_name = args[i + 1]
+
+    return server_url, server_name
+
+
+MCP_SERVER_URL, SERVER_NAME = read_args()
+OFFLINE_TOOL_MESSAGE = (
+    "Unity MCP server is unavailable.\n\n"
+    "Open the Unity project scene that contains the target FCU component and wait until compilation finishes.\n"
+    "The MCP server starts automatically from Unity when the FCU config is loaded.\n\n"
+    f"Expected endpoint: {MCP_SERVER_URL}\n"
+    "After the server starts, retry the command."
+)
+TIMEOUT_TOOL_MESSAGE = (
+    "Unity MCP server did not respond before the proxy timeout.\n\n"
+    "The server may still be running and the requested Unity operation may still be in progress.\n"
+    f"Endpoint: {MCP_SERVER_URL}\n"
+    f"Timeout: {REQUEST_TIMEOUT_SECONDS} seconds\n"
+    "Check Unity for progress, then retry the command if needed."
+)
+
+
+def build_response(request_id, result):
+    return json.dumps({"jsonrpc": RPC_VERSION, "id": request_id, "result": result})
+
+
+def build_error(request_id, code, message):
+    return json.dumps(
+        {
+            "jsonrpc": RPC_VERSION,
+            "id": request_id,
+            "error": {"code": code, "message": message},
+        }
+    )
+
+
+def build_tool_text_response(message, text):
+    method = message.get("method")
+    request_id = message.get("id")
+
+    if method == "initialize":
+        return build_response(
+            request_id,
+            {
+                "protocolVersion": PROTOCOL_VERSION,
+                "capabilities": {"tools": {}},
+                "serverInfo": {
+                    "name": SERVER_NAME,
+                    "version": OFFLINE_SERVER_VERSION,
+                },
+            },
+        )
+
+    if method == "notifications/initialized":
+        return ""
+
+    if method == "tools/list":
+        return build_response(
+            request_id,
+            {
+                "tools": [
+                    {
+                        "name": OFFLINE_TOOL_NAME,
+                        "description": OFFLINE_TOOL_DESCRIPTION,
+                        "inputSchema": {
+                            "type": "object",
+                            "properties": {},
+                            "required": [],
+                        },
+                    }
+                ]
+            },
+        )
+
+    if method == "tools/call":
+        return build_response(
+            request_id,
+            {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": text,
+                    }
+                ]
+            },
+        )
+
+    if request_id is None:
+        return ""
+
+    return build_error(request_id, -32601, "Method not found")
+
+
+def build_offline_response(message):
+    return build_tool_text_response(message, OFFLINE_TOOL_MESSAGE)
+
+
+def build_timeout_response(message):
+    return build_tool_text_response(message, TIMEOUT_TOOL_MESSAGE)
+
+
+def is_timeout_error(error):
+    reason = getattr(error, "reason", None)
+    return (
+        isinstance(error, TimeoutError)
+        or isinstance(reason, TimeoutError)
+        or "timed out" in str(error).lower()
+    )
+
+
+def proxy_request(message):
+    data = json.dumps(message).encode("utf-8")
+    req = urllib.request.Request(
+        MCP_SERVER_URL,
+        data=data,
+        headers={"Content-Type": "application/json"},
+    )
+
+    with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT_SECONDS) as resp:
+        return resp.read().decode("utf-8")
+
+def main():
+    while True:
+        try:
+            line = sys.stdin.readline()
+            if not line:
+                break
+
+            message = json.loads(line)
+
+            try:
+                text = proxy_request(message)
+            except (URLError, TimeoutError, ConnectionError, OSError) as e:
+                text = build_timeout_response(message) if is_timeout_error(e) else build_offline_response(message)
+            except Exception as e:
+                request_id = message.get("id")
+                text = build_error(request_id, -32000, str(e))
+
+            if text:
+                print(text)
+                sys.stdout.flush()
+
+        except json.JSONDecodeError:
+            continue
+        except KeyboardInterrupt:
+            break
+
+if __name__ == "__main__":
+    main()

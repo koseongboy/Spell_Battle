@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4c7cea87890c46d47b5fafcff5fc280a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/Whiteglow_blend.mat
+  uploadId: 912098

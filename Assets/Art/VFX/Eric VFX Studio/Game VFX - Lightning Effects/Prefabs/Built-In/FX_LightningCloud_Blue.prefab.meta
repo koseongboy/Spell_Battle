@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 96c2bab86f68db74f8a414288fc80d3d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/Built-In/FX_LightningCloud_Blue.prefab
+  uploadId: 912098

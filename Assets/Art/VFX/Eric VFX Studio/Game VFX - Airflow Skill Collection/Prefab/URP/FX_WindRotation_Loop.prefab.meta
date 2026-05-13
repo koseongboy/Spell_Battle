@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 32417f61f4b8b6d468917219a63f15d0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Airflow Skill Collection/Prefab/URP/FX_WindRotation_Loop.prefab
+  uploadId: 912098

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e12a0407482d06a418013e1c3ccfcaa2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/Bomb_icon_01.mat
+  uploadId: 912098

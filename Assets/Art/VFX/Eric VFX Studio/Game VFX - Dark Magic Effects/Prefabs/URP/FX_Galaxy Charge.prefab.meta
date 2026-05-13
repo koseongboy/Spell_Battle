@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 008880d5fd572b14298403815f7ca4ed
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Dark Magic Effects/Prefabs/URP/FX_Galaxy
+    Charge.prefab
+  uploadId: 912098

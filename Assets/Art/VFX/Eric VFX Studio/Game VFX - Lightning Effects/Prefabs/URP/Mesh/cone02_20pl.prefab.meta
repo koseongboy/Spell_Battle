@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ed3b54a65f0714b4f842f7cd15ab6848
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/URP/Mesh/cone02_20pl.prefab
+  uploadId: 912098

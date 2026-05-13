@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e11b7296734fd8b4c8c33440a25554a0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Enemy_1/attack.anim
+  uploadId: 862176

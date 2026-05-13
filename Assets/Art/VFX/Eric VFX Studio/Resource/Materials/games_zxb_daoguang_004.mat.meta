@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 30e749a6d8cd61c4fbedce6533b31be2
+timeCreated: 1526452201
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/games_zxb_daoguang_004.mat
+  uploadId: 912098

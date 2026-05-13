@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b3dbe8e160e11b24bb673387ff9bc41f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glowa_ball_grey_3_Builtin.mat
+  uploadId: 912098

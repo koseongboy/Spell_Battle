@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 97adb8a311e4f3c4587ce0050f46bfa0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Airflow Skill Collection/Prefab/URP/FX_Airflow
+    Tornado.prefab
+  uploadId: 912098

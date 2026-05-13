@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6b2de1d16464ca744b20ceb49c1cd392
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/URP/FX_LightningHit_Blue.prefab
+  uploadId: 912098

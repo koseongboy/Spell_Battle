@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e93f7cf162eaa4b4b809f1c22e476cf3
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/UIButtons/GrayButtonLong.prefab
+  uploadId: 862176

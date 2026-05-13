@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3db4d1c15d51bbb4bb824013564fd0da
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/EnemyKnight.prefab
+  uploadId: 862176

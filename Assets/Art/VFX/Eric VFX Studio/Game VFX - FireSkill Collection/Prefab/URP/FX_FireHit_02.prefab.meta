@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e6c32e0cb9d482141abe81907664731d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - FireSkill Collection/Prefab/URP/FX_FireHit_02.prefab
+  uploadId: 912098

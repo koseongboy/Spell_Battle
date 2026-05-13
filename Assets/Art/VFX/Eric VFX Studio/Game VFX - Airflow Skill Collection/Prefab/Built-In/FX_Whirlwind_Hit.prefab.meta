@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7028527685af4fc4a8815e486ca0a93d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Airflow Skill Collection/Prefab/Built-In/FX_Whirlwind_Hit.prefab
+  uploadId: 912098

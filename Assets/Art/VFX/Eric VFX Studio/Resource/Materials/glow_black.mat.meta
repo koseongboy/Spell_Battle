@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2f163973c42ecfe46bda4549ccda19d6
+timeCreated: 1500866364
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glow_black.mat
+  uploadId: 912098

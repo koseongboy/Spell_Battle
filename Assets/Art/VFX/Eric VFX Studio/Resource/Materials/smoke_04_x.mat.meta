@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 52fcc5c6ed960d14398184086a9c61a9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: base/effect2/character/material/fx1622.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/smoke_04_x.mat
+  uploadId: 912098

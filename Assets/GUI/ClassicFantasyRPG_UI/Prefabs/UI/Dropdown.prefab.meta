@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7d39c02fd63690646a8ca80eeea2f3aa
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/Dropdown.prefab
+  uploadId: 862176

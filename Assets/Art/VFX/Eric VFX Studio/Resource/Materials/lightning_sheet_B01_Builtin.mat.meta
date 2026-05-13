@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ffcbf1daa83d9854385e31bfc32fad27
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/lightning_sheet_B01_Builtin.mat
+  uploadId: 912098

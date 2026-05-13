@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: def1434a6455def48930e0dea2f9d28f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Dark Magic Effects/Prefabs/Built-In/FX_DarkSkill_Hit01.prefab
+  uploadId: 912098

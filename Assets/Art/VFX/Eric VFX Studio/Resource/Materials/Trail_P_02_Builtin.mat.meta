@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5192a3f78dcd7c0409a3f3726fa08e24
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/Trail_P_02_Builtin.mat
+  uploadId: 912098

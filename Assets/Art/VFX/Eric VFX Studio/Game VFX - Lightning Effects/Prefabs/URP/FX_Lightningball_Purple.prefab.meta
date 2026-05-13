@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: bc73c5eacea9d2f4d800d57b00e7af76
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/URP/FX_Lightningball_Purple.prefab
+  uploadId: 912098

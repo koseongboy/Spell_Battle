@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0179d6d5e0111e2428f3474e533aa365
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/Player.prefab
+  uploadId: 862176

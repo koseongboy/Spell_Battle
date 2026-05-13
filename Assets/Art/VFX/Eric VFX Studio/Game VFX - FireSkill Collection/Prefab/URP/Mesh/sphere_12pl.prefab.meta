@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a30897c53656b534ba2a9fb1f0a81bd9
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - FireSkill Collection/Prefab/URP/Mesh/sphere_12pl.prefab
+  uploadId: 912098

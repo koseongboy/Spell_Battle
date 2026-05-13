@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4a7923bd9b2761e49b32ddc1f427fe91
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - FireSkill Collection/Prefab/URP/FX_Fireball_Bullet.prefab
+  uploadId: 912098

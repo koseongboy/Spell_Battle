@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dc31fb22dee2824408cc7aa4b8a42db2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Hero/HurtColor.anim
+  uploadId: 862176

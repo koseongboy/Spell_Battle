@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2c30292b1667c6a4d9b2d5c8d8aae61b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Dark Magic Effects/Prefabs/URP/FX_MagicBullet_Small2.prefab
+  uploadId: 912098

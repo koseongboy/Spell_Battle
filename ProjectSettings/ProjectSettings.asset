@@ -825,7 +825,8 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Standalone: DACR_EXISTS;DAG_EXISTS;FCU_EXISTS;IMAGE_OVERFLOW_EXISTS;JSONNET_EXISTS;TextMeshPro;UITK_EXISTS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

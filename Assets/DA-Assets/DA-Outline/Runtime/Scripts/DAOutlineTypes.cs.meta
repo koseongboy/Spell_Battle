@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a8d8f03ab3e64d14b7e2d7e814577ac3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 198134
+  packageName: Figma Converter for Unity
+  packageVersion: 7.2.0
+  assetPath: Assets/DA-Assets/DA-Outline/Runtime/Scripts/DAOutlineTypes.cs
+  uploadId: 911702

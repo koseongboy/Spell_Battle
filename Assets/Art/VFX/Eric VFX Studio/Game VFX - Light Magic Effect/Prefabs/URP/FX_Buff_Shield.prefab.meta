@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2046c8e196e8219439feee4c4df9edb5
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/URP/FX_Buff_Shield.prefab
+  uploadId: 912098

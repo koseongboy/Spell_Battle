@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b70cf19f79f888c43b8204de026a9843
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/purple_lightning_3_sheet 1_Builtin.mat
+  uploadId: 912098

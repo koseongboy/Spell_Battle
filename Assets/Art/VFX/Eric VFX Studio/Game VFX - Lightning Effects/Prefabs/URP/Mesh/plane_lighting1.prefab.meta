@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e65fb1e98067ee1498a4ef31e33dbf5a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/URP/Mesh/plane_lighting1.prefab
+  uploadId: 912098

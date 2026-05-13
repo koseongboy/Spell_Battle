@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 31bff3bcab0e88e408b7d515841d40fd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/URP/FX_LightningExp_Gold.prefab
+  uploadId: 912098

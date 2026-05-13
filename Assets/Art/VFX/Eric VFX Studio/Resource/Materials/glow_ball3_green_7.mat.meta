@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7675222f32c048d4da09233a28424c0e
+timeCreated: 1441608340
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glow_ball3_green_7.mat
+  uploadId: 912098

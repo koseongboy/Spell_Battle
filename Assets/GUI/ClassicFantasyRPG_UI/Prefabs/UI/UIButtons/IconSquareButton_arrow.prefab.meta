@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8b01a5de1ea8ecc40a90598dab5c0d6c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/UIButtons/IconSquareButton_arrow.prefab
+  uploadId: 862176

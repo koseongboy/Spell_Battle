@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f204957efcfc88f4dab9a6d4d81ca624
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/GenderToggle.prefab
+  uploadId: 862176

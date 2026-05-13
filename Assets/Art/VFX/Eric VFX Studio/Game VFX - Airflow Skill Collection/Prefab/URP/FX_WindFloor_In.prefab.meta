@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d4fee32b09f03e948815fb49f96e5259
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Airflow Skill Collection/Prefab/URP/FX_WindFloor_In.prefab
+  uploadId: 912098

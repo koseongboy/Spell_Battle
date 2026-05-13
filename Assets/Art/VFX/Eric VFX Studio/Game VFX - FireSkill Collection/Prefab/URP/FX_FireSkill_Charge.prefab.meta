@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e4dbc9e536f1b7c469c99cbad0a4b15a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - FireSkill Collection/Prefab/URP/FX_FireSkill_Charge.prefab
+  uploadId: 912098

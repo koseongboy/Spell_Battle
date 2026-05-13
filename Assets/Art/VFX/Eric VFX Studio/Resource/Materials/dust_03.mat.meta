@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 1aa796bb1664e474ca340e0bb9ad94cb
+timeCreated: 1441473988
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: fx_textures_particle_materials.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/dust_03.mat
+  uploadId: 912098

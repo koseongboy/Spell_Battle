@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5e5205213a413dd4e89c0a125e2f981d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Airflow Skill Collection/Prefab/URP/Mesh
+    Prefabs/Eric_PlaneDownCenter.prefab
+  uploadId: 912098

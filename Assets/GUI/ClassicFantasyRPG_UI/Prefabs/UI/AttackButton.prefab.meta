@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 113b884de63b0584aab805762663b771
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/AttackButton.prefab
+  uploadId: 862176

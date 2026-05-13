@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 86a761a2b00908c418d1b01217d75bab
+timeCreated: 1506335341
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: fx_textures_gradient_materials.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/StartWave_Electro_Purple.mat
+  uploadId: 912098

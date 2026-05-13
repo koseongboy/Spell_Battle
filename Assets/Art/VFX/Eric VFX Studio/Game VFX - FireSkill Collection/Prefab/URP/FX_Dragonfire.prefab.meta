@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2856f3fa1a3d80d44bd961f8b7ed584a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - FireSkill Collection/Prefab/URP/FX_Dragonfire.prefab
+  uploadId: 912098

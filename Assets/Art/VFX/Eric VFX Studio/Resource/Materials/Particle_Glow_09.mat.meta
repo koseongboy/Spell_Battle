@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f1dd51059ee55e0469dad34572258efd
+timeCreated: 1534921911
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/Particle_Glow_09.mat
+  uploadId: 912098

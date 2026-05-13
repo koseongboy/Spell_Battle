@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 929e2552f9c7e89498999cd0e2049c9d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/Built-In/FX_Buff_Lifeup_Loop.prefab
+  uploadId: 912098

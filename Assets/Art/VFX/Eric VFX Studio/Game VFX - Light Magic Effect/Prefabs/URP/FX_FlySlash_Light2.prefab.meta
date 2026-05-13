@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fc5597edd6e4c0c4295624daf53be8ec
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/URP/FX_FlySlash_Light2.prefab
+  uploadId: 912098

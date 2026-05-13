@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e35e4faaaf7e90f40a1536e45c920ba9
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/LevelDungeon.prefab
+  uploadId: 862176

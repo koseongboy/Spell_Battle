@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b4f462704c9d6bd46a556010275a4771
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/SettingsSlider.prefab
+  uploadId: 862176
