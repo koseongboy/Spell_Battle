@@ -14,6 +14,11 @@ namespace Models.TurnModel
         public NetworkVariable<ulong> CurrentTurnPlayerId = new NetworkVariable<ulong>(0);
         public NetworkVariable<GamePhase> CurrentPhase = new NetworkVariable<GamePhase>(GamePhase.Wait);
 
+        [Header("NGO상 플레이어 아이디")]
+        public NetworkVariable<ulong> HostId = new NetworkVariable<ulong>();
+        public NetworkVariable<ulong> GuestId = new NetworkVariable<ulong>();
+        
+
         public event Action<GamePhase, bool> OnPhaseChangedEvent;
 
         private void Awake()

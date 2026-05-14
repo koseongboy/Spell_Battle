@@ -1,6 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
-using Models.PlayerModel;
+using Models.PlayerModels;
 using Views.PlayerView;
 
 namespace Controllers.PlayerController

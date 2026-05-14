@@ -1,4 +1,5 @@
-using Models.PlayerModel;
+using Models.EffectCommands;
+using Models.PlayerModels;
 using Models.SpellPayloads;
 using UnityEngine;
 
@@ -11,9 +12,9 @@ namespace Cards.PlayableCards
         public int applyStacks = 1;
         public int applyDuration = 2;
 
-        public override void AddToPayload(SpellPayload payload, PlayerModel caster)
+        public override void ApplyCardEffects(SpellPayload payload, PlayerModel caster, PlayerModel enemy)
         {
-            payload.TargetPayload.AddStatus(StatusType.Ignite, applyStacks, applyDuration);
+            payload.AddCommand(new IgniteCommand(enemy, applyDuration, applyStacks));
         }
     }
 }

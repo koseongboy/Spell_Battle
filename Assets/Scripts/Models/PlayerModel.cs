@@ -3,8 +3,9 @@ using UnityEngine;
 using System;
 using Models.TurnModel;
 using Controllers.TurnController;
+using Cards.CardUIDatas;
 
-namespace Models.PlayerModel
+namespace Models.PlayerModels
 {
 
     // 기획서에 명시된 상태이상 종류들
@@ -24,6 +25,7 @@ namespace Models.PlayerModel
         public StatusType Type;
         public int Stacks;     // 중첩 수
         public int Duration;   // 지속 턴 수
+        
 
         // NGO가 이 데이터를 0과 1로 변환(직렬화)하는 규칙
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -41,13 +43,14 @@ namespace Models.PlayerModel
     public class PlayerModel : NetworkBehaviour
     {
         [Header("Stats")]
-        public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(100);
-        public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(100);
+        public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
+        public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(30);
         
         public NetworkVariable<int> MaxMana = new NetworkVariable<int>(1);
         public NetworkVariable<int> FinalMana = new NetworkVariable<int>(10);
-        public NetworkVariable<int> CurrentMana = new NetworkVariable<int>(10);
+        public NetworkVariable<int> CurrentMana = new NetworkVariable<int>(1);
         public NetworkVariable<int> Shield = new NetworkVariable<int>(0);
+        public NetworkVariable<Property> LastProperty = new NetworkVariable<Property>(Property.None);
 
         // 🌟 핵심: 네트워크로 자동 동기화되는 상태이상 리스트
         // (일반 List나 Dictionary는 동기화가 안 되기 때문에 반드시 NetworkList를 써야 합니다!)

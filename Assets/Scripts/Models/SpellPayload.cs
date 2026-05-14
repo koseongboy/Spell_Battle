@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using Models.PlayerModel;
+using Models.PlayerModels;
+using Models.EvaluationRequests;
+using Models.EffectCommands;
 using Cards.CardUIDatas;
 using UnityEngine;
 using System.IO;
@@ -9,94 +11,66 @@ using Newtonsoft.Json;
 
 namespace Models.SpellPayloads
 {
-    [System.Serializable]
-    public class DamageInfo
+    public class SpellPayload
     {
-        public int TotalDamage = 0;
-        public int TotalHeal = 0;
-        public int TotalShield = 0;
+        public EvaluationRequest EvalData = new EvaluationRequest();
+        public List<EffectCommand> Commands = new List<EffectCommand>();
 
-        public List<StatusData> StatusEffectsToApply = new List<StatusData>();
+        public List<Property> PropertyHistory = new List<Property>();
+        public Property MainProperty = Property.None;
 
-        public void AddDamage(int amount) => TotalDamage += amount;
-        public void AddHeal(int amount) => TotalHeal += amount;
-        public void AddShield(int amount) => TotalShield += amount;
-
-        public void AddStatus(StatusType type, int stacks, int duration = 1)
+        // 카드가 호출할 함수들
+        public void AddWord(string word) => EvalData.Words.Add(word);
+        public void AddCommand(EffectCommand cmd) => Commands.Add(cmd);
+        public void AddProperty(Property property)
         {
-            if (type == StatusType.Ignite)
+            if (property != Property.None)
             {
-                StatusEffectsToApply.Add(new StatusData { Type = type, Stacks = stacks, Duration = duration });
+                PropertyHistory.Add(property);
+            }
+        }
+                
+        //턴 매니져가 호출할 코드
+        //영창 생성 파트
+        public void SetPrefix(string prefix)
+        {
+            EvalData.RequiredPrefix = prefix;
+            AddWord(prefix);
+        }
+        public void SetConcept(string concept) => EvalData.Concept = concept;
+
+        //영창 종료 후
+        public void CalculateMainProperty()
+        {
+            if (PropertyHistory.Count == 0)
+            {
+                MainProperty = Property.None;
                 return;
             }
 
-            for (int i = 0; i < StatusEffectsToApply.Count; i++)
+            // 1. 속성별 등장 횟수를 카운트
+            Dictionary<Property, int> counts = new Dictionary<Property, int>();
+            foreach (var prop in PropertyHistory)
             {
-                if (StatusEffectsToApply[i].Type == type)
+                if (counts.ContainsKey(prop)) counts[prop]++;
+                else counts[prop] = 1;
+            }
+ 
+            // 2. 가장 많이 등장한(최빈값) 속성 찾기 (todo) 같을 경우 기획적으로 어떻게 처리할 지
+            Property mostFrequent = Property.None;
+            int maxCount = 0;
+
+            foreach (var kvp in counts)
+            {
+                if (kvp.Value > maxCount)
                 {
-                    var status = StatusEffectsToApply[i];
-                    status.Stacks += stacks;
-                    if (type == StatusType.Freeze) status.Duration = duration; // 빙결은 지속시간 초기화
-                    else if (type == StatusType.ArcaneStack || type == StatusType.Prophecy) status.Duration = -1; // 지속 무한인 애들
-                    else status.Duration = Mathf.Max(status.Duration, duration);
-                    StatusEffectsToApply[i] = status;
-                    return;
+                    mostFrequent = kvp.Key;
+                    maxCount = kvp.Value;
                 }
             }
 
-            if (type == StatusType.ArcaneStack || type == StatusType.Prophecy) duration = -1;
-            StatusEffectsToApply.Add(new StatusData { Type = type, Stacks = stacks, Duration = duration });
+            MainProperty = mostFrequent;
         }
-
-    }
-    [System.Serializable]
-    public class SpellPayload
-    {
-        public string RequiredPrefix = "";
-        public string RolePlayConcept = "";
-        public string AudioBase64 = "";
-
-        public List<string> IncantationWords = new List<string>();
-        public DamageInfo CasterPayload = new DamageInfo();
-        public DamageInfo TargetPayload = new DamageInfo();
-        public List<Property> PropertyHistory = new List<Property>();
-
-        public void SetPrefix(string prefix)
-        {
-            RequiredPrefix = prefix;
-            AddIncantation(prefix, Property.None);
-        }
-        public void SetConcept(string concept) => RolePlayConcept = concept;
-
-        public void AddIncantation(string word, Property property)
-        {
-            IncantationWords.Add(word);
-            PropertyHistory.Add(property);
-        }
-
-        public void AddDamage(int amount, bool toOpponent = true)
-        {
-            if (toOpponent) TargetPayload.AddDamage(amount);
-            else CasterPayload.AddDamage(amount);
-        }
-
-        public void AddHeal(int amount, bool toOpponent = false)
-        {
-            if(toOpponent) TargetPayload.AddHeal(amount);
-            else CasterPayload.AddHeal(amount);
-        }
-        public void AddShield(int amount, bool toOpponent = false)
-        {
-            if(toOpponent) TargetPayload.AddShield(amount);
-            else CasterPayload.AddShield(amount);
-        }
-
-        public void AddStatus(StatusType type, int stacks,  bool toOpponent , int duration = 1)
-        {
-            if(toOpponent) TargetPayload.AddStatus(type, stacks, duration);
-            else CasterPayload.AddStatus(type, stacks, duration);
-        }
-
 
         public string ToJson(string audioFilePath = null)
         {
@@ -104,12 +78,12 @@ namespace Models.SpellPayloads
             if (!string.IsNullOrEmpty(audioFilePath) && File.Exists(audioFilePath))
             {
                 byte[] audioBytes = File.ReadAllBytes(audioFilePath);
-                AudioBase64 = Convert.ToBase64String(audioBytes);
+                EvalData.AudioBase64 = Convert.ToBase64String(audioBytes);
             }
 
             // 2. 전체 객체를 JSON으로 직렬화
             //Formatting.Indented를 넣으면 사람이 보기 좋게 줄바꿈이 됩니다.
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return EvalData.ToJson();
         }
     }
 }

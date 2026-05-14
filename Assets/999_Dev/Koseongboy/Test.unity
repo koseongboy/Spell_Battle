@@ -469,6 +469,16 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  HostId:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  GuestId:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!114 &64109214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,8 +492,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.TurnController
   ShowTopMostFoldoutHeaderGroup: 1
+  MyPlayer: {fileID: 0}
+  EnemyPlayer: {fileID: 0}
   model: {fileID: 64109213}
   view: {fileID: 0}
+  playerPrefab: {fileID: 0}
+  hostSpawnPoint: {fileID: 0}
+  guestSpawnPoint: {fileID: 0}
 --- !u!4 &64109215
 Transform:
   m_ObjectHideFlags: 0
@@ -2969,10 +2984,10 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1124094129}
-    PlayerPrefab: {fileID: 3965741523160770176, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
+    PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 254b337264167cd4c83e1741a93b12bd, type: 2}
+      - {fileID: 11400000, guid: 03cae4ea5ae94ad4bb3bb4ff23d3c9f9, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
