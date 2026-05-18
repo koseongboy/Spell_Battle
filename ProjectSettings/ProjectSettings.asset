@@ -826,7 +826,7 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Standalone: DACR_EXISTS;DAG_EXISTS;FCU_EXISTS;IMAGE_OVERFLOW_EXISTS;JSONNET_EXISTS;TextMeshPro;UITK_EXISTS
+    Standalone: DACR_EXISTS;DAG_EXISTS;FCU_EXISTS;IMAGE_OVERFLOW_EXISTS;JSONNET_EXISTS;TextMeshPro;U2D_SPRITE_EXISTS;UITK_EXISTS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
