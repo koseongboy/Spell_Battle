@@ -25,7 +25,7 @@ MonoBehaviour:
   GeneratedEditorAsmdefReferences: []
   RequiredAsmdefs:
   - {fileID: 5897886265953266890, guid: 2c573e6b271651846a79655161004c5b, type: 3}
-  isEnabled: 0
+  isEnabled: 1
   scriptGuid: 
-  statusLabel: Not found
+  statusLabel: Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll
   disabledManually: 0
