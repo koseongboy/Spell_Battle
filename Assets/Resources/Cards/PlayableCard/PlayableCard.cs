@@ -1,6 +1,6 @@
 using UnityEngine;
 using Cards.CardUIDatas;
-using Models.PlayerModel;
+using Models.PlayerModels;
 using Models.SpellPayloads;
 
 namespace Cards.PlayableCards
@@ -17,6 +17,13 @@ namespace Cards.PlayableCards
         public Property Prop => uiData.property;
 
         // 실제 발동 로직 (자식 클래스들이 반드시 구현해야 함)
-        public abstract void AddToPayload(SpellPayload spell, PlayerModel caster);
+        public void AddToPayload(SpellPayload payload, PlayerModel caster, PlayerModel enemy)
+        {
+            payload.AddWord(uiData.wordName);
+            payload.AddProperty(Prop);
+            ApplyCardEffects(payload, caster, enemy);
+        }
+
+        public abstract void ApplyCardEffects(SpellPayload payload, PlayerModel caster, PlayerModel enemy);
     }
 }

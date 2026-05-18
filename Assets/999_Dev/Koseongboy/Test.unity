@@ -469,6 +469,21 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  HostId:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  GuestId:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  FirstPlayerId:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!114 &64109214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,8 +497,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.TurnController
   ShowTopMostFoldoutHeaderGroup: 1
+  MyPlayer: {fileID: 0}
+  EnemyPlayer: {fileID: 0}
   model: {fileID: 64109213}
   view: {fileID: 0}
+  playerPrefab: {fileID: 0}
+  hostSpawnPoint: {fileID: 0}
+  guestSpawnPoint: {fileID: 0}
 --- !u!4 &64109215
 Transform:
   m_ObjectHideFlags: 0
@@ -881,37 +901,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 332592391}
   m_CullTransparentMesh: 1
---- !u!1 &338143716
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 338143717}
-  m_Layer: 0
-  m_Name: Deck
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &338143717
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 338143716}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.84, y: 0, z: 1.22}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 679695740}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &376631507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,7 +1455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Managers.ScrollManager.ScrollManager
   scrollPrefab: {fileID: 3017666708420440051, guid: 66084007da5edfd4b833e50cf4f39a82, type: 3}
   playerTransform: {fileID: 0}
-  blackHole: {fileID: 338143717}
+  blackHole: {fileID: 0}
   radius: 8
   arcAngle: 120
 --- !u!4 &542740253
@@ -1701,38 +1690,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1279437348525638701, guid: e2e682b966e3f644392ffbfab511e0e2, type: 3}
   m_PrefabInstance: {fileID: 147715854}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &679695739
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 679695740}
-  m_Layer: 0
-  m_Name: Player_Local
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &679695740
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 679695739}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -9.84}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 338143717}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &709502792
 GameObject:
   m_ObjectHideFlags: 0
@@ -2969,10 +2926,10 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1124094129}
-    PlayerPrefab: {fileID: 3965741523160770176, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
+    PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 254b337264167cd4c83e1741a93b12bd, type: 2}
+      - {fileID: 11400000, guid: 03cae4ea5ae94ad4bb3bb4ff23d3c9f9, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -5220,7 +5177,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 828094641}
-  - {fileID: 679695740}
   - {fileID: 542740253}
   - {fileID: 2109976885}
   - {fileID: 1124094131}

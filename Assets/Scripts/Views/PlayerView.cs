@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 using Unity.Netcode;
-using Models.PlayerModel;
+using Models.PlayerModels;
 
 namespace Views.PlayerView
 {

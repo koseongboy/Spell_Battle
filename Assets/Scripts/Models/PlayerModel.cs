@@ -3,8 +3,11 @@ using UnityEngine;
 using System;
 using Models.TurnModel;
 using Controllers.TurnController;
+using Cards.CardUIDatas;
+using Models.CardModels;
+using Managers.LocalDataManagers;
 
-namespace Models.PlayerModel
+namespace Models.PlayerModels
 {
 
     // 기획서에 명시된 상태이상 종류들
@@ -24,6 +27,7 @@ namespace Models.PlayerModel
         public StatusType Type;
         public int Stacks;     // 중첩 수
         public int Duration;   // 지속 턴 수
+        
 
         // NGO가 이 데이터를 0과 1로 변환(직렬화)하는 규칙
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -41,17 +45,23 @@ namespace Models.PlayerModel
     public class PlayerModel : NetworkBehaviour
     {
         [Header("Stats")]
-        public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(100);
-        public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(100);
+        public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
+        public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(30);
         
         public NetworkVariable<int> MaxMana = new NetworkVariable<int>(1);
         public NetworkVariable<int> FinalMana = new NetworkVariable<int>(10);
-        public NetworkVariable<int> CurrentMana = new NetworkVariable<int>(10);
+        public NetworkVariable<int> CurrentMana = new NetworkVariable<int>(1);
         public NetworkVariable<int> Shield = new NetworkVariable<int>(0);
+        public NetworkVariable<Property> LastProperty = new NetworkVariable<Property>(Property.None);
 
         // 🌟 핵심: 네트워크로 자동 동기화되는 상태이상 리스트
         // (일반 List나 Dictionary는 동기화가 안 되기 때문에 반드시 NetworkList를 써야 합니다!)
         public NetworkList<StatusData> ActiveStatuses;
+
+        [Header("Card Modules")]
+        public DeckModel Deck;
+        public GraveyardModel Graveyard;
+        public HandModel Hand; 
 
         private void Awake()
         {
@@ -67,7 +77,11 @@ namespace Models.PlayerModel
                 {
                     TurnController.Instance.MyPlayer = this;
                     Debug.Log("방장 캐릭 턴 매니져에 등록 완료");
-                } else
+                    // 중앙 매니저가 스폰되면, 덱 부서에게 "너 팩스 보내!" 라고 지시만 합니다.
+                    // int[] myDeckArray = LocalDataManager.Instance.MyCustomDeck.ToArray();
+                    // Deck.SubmitDeckServerRpc(myDeckArray);
+                } 
+                else
                 {
                     TurnController.Instance.EnemyPlayer = this;
                     Debug.Log("상대 캐릭 턴 매니져에 등록 완료");

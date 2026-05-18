@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
       propertyPath: m_Name
-      value: Player_Wizard 1
+      value: Player_Wizard
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
       propertyPath: m_IsActive
@@ -80,6 +80,21 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 689982012275146488}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1158964750601172776}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1895730800818004533}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1174617382884680269}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3049102454247694144}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1351581078538844621}
   m_SourcePrefab: {fileID: 100100000, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
 --- !u!1 &3965741523160770176 stripped
 GameObject:
@@ -120,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 69977995
+  GlobalObjectIdHash: 826803349
   InScenePlacedSourceGlobalObjectIdHash: 2485049177
   DeferredDespawnTick: 0
   Ownership: 1
@@ -192,3 +207,123 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &-1158964750601172776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965741523160770176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c86add037012c174ababcf270dfea107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Controllers.PlayerController.PlayerController
+  ShowTopMostFoldoutHeaderGroup: 1
+  model: {fileID: 1895730800818004533}
+  view: {fileID: 0}
+--- !u!114 &1895730800818004533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965741523160770176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddb56dd64390e284e9d0bbff6011bf53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Models.PlayerModels.PlayerModel
+  ShowTopMostFoldoutHeaderGroup: 1
+  MaxHealth:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 30
+  CurrentHealth:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 30
+  MaxMana:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 1
+  FinalMana:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 10
+  CurrentMana:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 1
+  Shield:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  LastProperty:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  ActiveStatuses:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+  Deck: {fileID: 1174617382884680269}
+  Graveyard: {fileID: 3049102454247694144}
+  Hand: {fileID: 1351581078538844621}
+--- !u!114 &1174617382884680269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965741523160770176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ac9a0e11598edf46b2ebe07f5d46afd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Models.CardModels.DeckModel
+  ShowTopMostFoldoutHeaderGroup: 1
+  DeckCount:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  Hand: {fileID: 1351581078538844621}
+--- !u!114 &3049102454247694144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965741523160770176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539a352b1f8707046995765cfcf8124c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Models.CardModels.GraveyardModel
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &1351581078538844621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965741523160770176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 095158d88b6dc2047afbc5db25ea0319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Models.CardModels.HandModel
+  ShowTopMostFoldoutHeaderGroup: 1
+  HandCount:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
