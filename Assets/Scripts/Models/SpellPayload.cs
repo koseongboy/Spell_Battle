@@ -16,6 +16,8 @@ namespace Models.SpellPayloads
         public EvaluationRequest EvalData = new EvaluationRequest();
         public List<EffectCommand> Commands = new List<EffectCommand>();
 
+        public List<int> UsedCardIds = new List<int>();
+
         public List<Property> PropertyHistory = new List<Property>();
         public Property MainProperty = Property.None;
 

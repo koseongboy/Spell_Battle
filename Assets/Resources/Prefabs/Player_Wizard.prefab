@@ -86,6 +86,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1895730800818004533}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1174617382884680269}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3049102454247694144}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1351581078538844621}
   m_SourcePrefab: {fileID: 100100000, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
 --- !u!1 &3965741523160770176 stripped
 GameObject:
@@ -126,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 349166111
+  GlobalObjectIdHash: 826803349
   InScenePlacedSourceGlobalObjectIdHash: 2485049177
   DeferredDespawnTick: 0
   Ownership: 1
@@ -265,3 +274,56 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
+  Deck: {fileID: 1174617382884680269}
+  Graveyard: {fileID: 3049102454247694144}
+  Hand: {fileID: 1351581078538844621}
+--- !u!114 &1174617382884680269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965741523160770176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ac9a0e11598edf46b2ebe07f5d46afd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Models.CardModels.DeckModel
+  ShowTopMostFoldoutHeaderGroup: 1
+  DeckCount:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  Hand: {fileID: 1351581078538844621}
+--- !u!114 &3049102454247694144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965741523160770176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539a352b1f8707046995765cfcf8124c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Models.CardModels.GraveyardModel
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &1351581078538844621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965741523160770176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 095158d88b6dc2047afbc5db25ea0319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Models.CardModels.HandModel
+  ShowTopMostFoldoutHeaderGroup: 1
+  HandCount:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0

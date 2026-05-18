@@ -4,6 +4,8 @@ using System;
 using Models.TurnModel;
 using Controllers.TurnController;
 using Cards.CardUIDatas;
+using Models.CardModels;
+using Managers.LocalDataManagers;
 
 namespace Models.PlayerModels
 {
@@ -56,6 +58,11 @@ namespace Models.PlayerModels
         // (일반 List나 Dictionary는 동기화가 안 되기 때문에 반드시 NetworkList를 써야 합니다!)
         public NetworkList<StatusData> ActiveStatuses;
 
+        [Header("Card Modules")]
+        public DeckModel Deck;
+        public GraveyardModel Graveyard;
+        public HandModel Hand; 
+
         private void Awake()
         {
             // NetworkList는 반드시 Awake에서 공간을 할당해 주어야 합니다.
@@ -70,7 +77,11 @@ namespace Models.PlayerModels
                 {
                     TurnController.Instance.MyPlayer = this;
                     Debug.Log("방장 캐릭 턴 매니져에 등록 완료");
-                } else
+                    // 중앙 매니저가 스폰되면, 덱 부서에게 "너 팩스 보내!" 라고 지시만 합니다.
+                    // int[] myDeckArray = LocalDataManager.Instance.MyCustomDeck.ToArray();
+                    // Deck.SubmitDeckServerRpc(myDeckArray);
+                } 
+                else
                 {
                     TurnController.Instance.EnemyPlayer = this;
                     Debug.Log("상대 캐릭 턴 매니져에 등록 완료");
