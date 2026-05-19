@@ -1965,6 +1965,7 @@ GameObject:
   - component: {fileID: 1453070791784312508}
   - component: {fileID: 8032684023731452446}
   - component: {fileID: 5033372363316514358}
+  - component: {fileID: 2002039293262747402}
   m_Layer: 5
   m_Name: Friend_MainWindow
   m_TagString: Untagged
@@ -1989,9 +1990,9 @@ RectTransform:
   - {fileID: 79327941211166198}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 3628.5, y: -4223}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 200, y: 0}
   m_SizeDelta: {x: 363, y: 660}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1453070791784312508
@@ -2045,6 +2046,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 1
+--- !u!114 &2002039293262747402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6870216853771712425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87fc1ea557b09444caaf3a99dd010462, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.Friend_MainWindow
 --- !u!1 &7289032847037698904
 GameObject:
   m_ObjectHideFlags: 0
