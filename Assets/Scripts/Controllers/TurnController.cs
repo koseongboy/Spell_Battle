@@ -112,7 +112,7 @@ namespace Controllers.TurnController
             
             Debug.Log("[Server] 모두 준비 완료! 선후공 토스 및 초기 드로우를 시작합니다.");
 
-            // 1. 코인 토스 (선후공 결정)
+            // 1. 코인 토스 (선후공 결정, todo: ui 전달. 함수로 따로 뺄 수도?)
             bool isHostFirst = Random.value > 0.5f;
             ulong firstPlayerId = isHostFirst ? model.HostId.Value : model.GuestId.Value;
             ulong secondPlayerId = isHostFirst ? model.GuestId.Value : model.HostId.Value;
