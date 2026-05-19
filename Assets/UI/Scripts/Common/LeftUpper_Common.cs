@@ -6,6 +6,7 @@ namespace DefaultNamespace
     {
         public void OpenOptionUI() {
             Debug.Log("[LeftUpper_Common] Open Option UI");
+            UILoader.Instance.ShowUI("Option_Lobby_Popup");
         }
         
         public void OpenFriendUI() {

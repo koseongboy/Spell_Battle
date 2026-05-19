@@ -1889,7 +1889,7 @@ MonoBehaviour:
   uiParentTransform: {fileID: 569652826}
   devGrid: {fileID: 0}
   awakeUIList:
-  - LeftUpper_Common
+  - Lobby_FullScreen
 --- !u!4 &1674595491
 Transform:
   m_ObjectHideFlags: 0

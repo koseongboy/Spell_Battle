@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: UI
   m_GUID: 4c10a22ad52986144b8a67b17be56c0e
   m_SerializeEntries:
+  - m_GUID: 2888fa06aaa93ff498b13e827c713d1b
+    m_Address: Option_Lobby_Popup
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 493df62c55b1577489e444b3a3dd14be
     m_Address: Friend_MainWindow
     m_ReadOnly: 0
@@ -27,6 +32,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 73ba2b89de6180a48957ebd539164cfb
     m_Address: BlackAlert_Common
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bac211063fb17b9448b0b74fc1ce3392
+    m_Address: Lobby_FullScreen
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
