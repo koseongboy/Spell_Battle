@@ -173,7 +173,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 31
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
       positioningMode: 0
       pivotType: 4
       goLayer: 5
-      useDuplicateFinder: 1
+      useDuplicateFinder: 0
       useLayoutUpdater: 0
       destroySyncHelpersAfterImport: 1
       rawImport: 0
@@ -211,7 +211,7 @@ MonoBehaviour:
       textObjectNameMaxLength: 100
       windowMode: 0
       drawLayoutGrids: 0
-      projectUrl: https://www.figma.com/design/NbwoDEime7FII31cz9n0dj/Spell-It-?t=qVbOxCWU2b1IGTVi-1
+      projectUrl: NbwoDEime7FII31cz9n0dj
       projectId: NbwoDEime7FII31cz9n0dj
     UITK_Settings:
       monoBeh: {fileID: 569652825}
@@ -225,8 +225,8 @@ MonoBehaviour:
       redownloadSprites: 0
       spritesPath: Assets/UI/Sprites
       imageFormat: 0
-      imageScale: 4
-      maxSpriteSize: {x: 4096, y: 4096}
+      imageScale: 1
+      maxSpriteSize: {x: 1024, y: 1024}
       preserveRatioMode: 0
       pixelsPerUnit: 100
       useImageLinearMaterial: 1
@@ -452,7 +452,7 @@ MonoBehaviour:
     _selectedTableIndex: 0
     _options:
     - m_Text: CrocobobCAU | mjdaniel@cau.ac.kr
-      m_Image: {fileID: 938394476}
+      m_Image: {fileID: 1026077631}
       m_Tooltip: 
       m_TextWithWhitespace: "CrocobobCAU | mjdaniel@cau.ac.kr\u200B"
   RequestSender:
@@ -460,7 +460,7 @@ MonoBehaviour:
     pbarBytes: 0
   AssetTools:
     monoBeh: {fileID: 569652825}
-    needShowRateMe: 1
+    needShowRateMe: 0
   CurrentProject:
     monoBeh: {fileID: 569652825}
     localPrefabs: []
@@ -473,7 +473,7 @@ MonoBehaviour:
       type: 1
       selected: 1
       childs:
-      - rid: 5425250268479226032
+      - rid: 5425250272280576580
   EditorEventHandlers:
     monoBeh: {fileID: 569652825}
   EditorDelegateHolder:
@@ -622,6 +622,34 @@ MonoBehaviour:
             FontStyle: 0
           bytes: 
           font: {fileID: 11400000, guid: e1b8ab9b5fdcc1046bfc282f54fce3d9, type: 2}
+        - fontSubset: 1
+          fontMetadata:
+            Family: Noto Sans KR
+            Weight: 700
+            FontStyle: 0
+          bytes: 
+          font: {fileID: 11400000, guid: ba9e04b04434adb43bb74dad6f09323f, type: 2}
+        - fontSubset: 134217728
+          fontMetadata:
+            Family: Noto Sans KR
+            Weight: 700
+            FontStyle: 0
+          bytes: 
+          font: {fileID: 11400000, guid: 8a070149b599432419891bceb5091788, type: 2}
+        - fontSubset: 268435456
+          fontMetadata:
+            Family: Noto Sans KR
+            Weight: 700
+            FontStyle: 0
+          bytes: 
+          font: {fileID: 11400000, guid: e2d53166bb344aa47a4b1a0afef1c85d, type: 2}
+        - fontSubset: 536870912
+          fontMetadata:
+            Family: Noto Sans KR
+            Weight: 700
+            FontStyle: 0
+          bytes: 
+          font: {fileID: 11400000, guid: 7e0a4a91dbcf81645861b9b4994f9776, type: 2}
     TtfDownloader:
       monoBeh: {fileID: 569652825}
     GFontsApi:
@@ -639,6 +667,7 @@ MonoBehaviour:
     TtfFonts:
     - {fileID: 12800000, guid: a56c187b64504004aac650a026e3764f, type: 3}
     - {fileID: 12800000, guid: 64687bd87be3f4e4cbc16c35a17547e7, type: 3}
+    - {fileID: 12800000, guid: d27d051b35b6706499e0628f9c0ebba2, type: 3}
     UitkFontAssets: []
     TmpFonts:
     - {fileID: 11400000, guid: 2dd01dbef82802244a56643313e5a6d3, type: 2}
@@ -649,6 +678,10 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1b136f1521b6e5642a54dd7e4b704811, type: 2}
     - {fileID: 11400000, guid: e1b8ab9b5fdcc1046bfc282f54fce3d9, type: 2}
     - {fileID: 11400000, guid: 98351b8dde3fb2e4a978fea0b84444bf, type: 2}
+    - {fileID: 11400000, guid: 8a070149b599432419891bceb5091788, type: 2}
+    - {fileID: 11400000, guid: e2d53166bb344aa47a4b1a0afef1c85d, type: 2}
+    - {fileID: 11400000, guid: 7e0a4a91dbcf81645861b9b4994f9776, type: 2}
+    - {fileID: 11400000, guid: ba9e04b04434adb43bb74dad6f09323f, type: 2}
     uniTextFontsPath: Assets\Fonts\UniText
   GraphicHelpers:
     monoBeh: {fileID: 569652825}
@@ -682,7 +715,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5425250268479226032
+    - rid: 5425250272280576580
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 0:1
@@ -690,96 +723,103 @@ MonoBehaviour:
         type: 2
         selected: 0
         childs:
-        - rid: 5425250268479226033
-        - rid: 5425250268479226034
-        - rid: 5425250268479226035
-        - rid: 5425250268479226036
-        - rid: 5425250268479226037
-        - rid: 5425250268479226038
-        - rid: 5425250268479226039
-        - rid: 5425250268479226040
-        - rid: 5425250268479226041
-        - rid: 5425250268479226042
-        - rid: 5425250268479226043
-        - rid: 5425250268479226044
-        - rid: 5425250268479226045
-        - rid: 5425250268479226046
-        - rid: 5425250268479226047
-        - rid: 5425250268479226048
-        - rid: 5425250268479226049
-        - rid: 5425250268479226050
-        - rid: 5425250268479226051
-        - rid: 5425250268479226052
-        - rid: 5425250268479226053
-        - rid: 5425250268479226054
-        - rid: 5425250268479226055
-        - rid: 5425250268479226056
-        - rid: 5425250268479226057
-        - rid: 5425250268479226058
-        - rid: 5425250268479226059
-        - rid: 5425250268479226060
-        - rid: 5425250268479226061
-        - rid: 5425250268479226062
-        - rid: 5425250268479226063
-        - rid: 5425250268479226064
-        - rid: 5425250268479226065
-        - rid: 5425250268479226066
-        - rid: 5425250268479226067
-        - rid: 5425250268479226068
-        - rid: 5425250268479226069
-        - rid: 5425250268479226070
-        - rid: 5425250268479226071
-        - rid: 5425250268479226072
-        - rid: 5425250268479226073
-        - rid: 5425250268479226074
-        - rid: 5425250268479226075
-        - rid: 5425250268479226076
-        - rid: 5425250268479226077
-        - rid: 5425250268479226078
-        - rid: 5425250268479226079
-        - rid: 5425250268479226080
-        - rid: 5425250268479226081
-        - rid: 5425250268479226082
-        - rid: 5425250268479226083
-        - rid: 5425250268479226084
-        - rid: 5425250268479226085
-        - rid: 5425250268479226086
-        - rid: 5425250268479226087
-        - rid: 5425250268479226088
-        - rid: 5425250268479226089
-        - rid: 5425250268479226090
-        - rid: 5425250268479226091
-        - rid: 5425250268479226092
-        - rid: 5425250268479226093
-        - rid: 5425250268479226094
-        - rid: 5425250268479226095
-        - rid: 5425250268479226096
-        - rid: 5425250268479226097
-        - rid: 5425250268479226098
-        - rid: 5425250268479226099
-        - rid: 5425250268479226100
-        - rid: 5425250268479226101
-        - rid: 5425250268479226102
-        - rid: 5425250268479226103
-        - rid: 5425250268479226104
-        - rid: 5425250268479226105
-        - rid: 5425250268479226106
-        - rid: 5425250268479226107
-        - rid: 5425250268479226108
-        - rid: 5425250268479226109
-        - rid: 5425250268479226110
-        - rid: 5425250268479226111
-        - rid: 5425250268479226112
-        - rid: 5425250268479226113
-        - rid: 5425250268479226114
-        - rid: 5425250268479226115
-        - rid: 5425250268479226116
-        - rid: 5425250268479226117
-        - rid: 5425250268479226118
-        - rid: 5425250268479226119
-        - rid: 5425250268479226120
-        - rid: 5425250268479226121
-    - rid: 5425250268479226033
+        - rid: 5425250272280576581
+        - rid: 5425250272280576582
+        - rid: 5425250272280576583
+        - rid: 5425250272280576584
+        - rid: 5425250272280576585
+        - rid: 5425250272280576586
+        - rid: 5425250272280576587
+        - rid: 5425250272280576588
+        - rid: 5425250272280576589
+        - rid: 5425250272280576590
+        - rid: 5425250272280576591
+        - rid: 5425250272280576592
+        - rid: 5425250272280576593
+        - rid: 5425250272280576594
+        - rid: 5425250272280576595
+        - rid: 5425250272280576596
+        - rid: 5425250272280576597
+        - rid: 5425250272280576598
+        - rid: 5425250272280576599
+        - rid: 5425250272280576600
+        - rid: 5425250272280576601
+        - rid: 5425250272280576602
+        - rid: 5425250272280576603
+        - rid: 5425250272280576604
+        - rid: 5425250272280576605
+        - rid: 5425250272280576606
+        - rid: 5425250272280576607
+        - rid: 5425250272280576608
+        - rid: 5425250272280576609
+        - rid: 5425250272280576610
+        - rid: 5425250272280576611
+        - rid: 5425250272280576612
+        - rid: 5425250272280576613
+        - rid: 5425250272280576614
+        - rid: 5425250272280576615
+        - rid: 5425250272280576616
+        - rid: 5425250272280576617
+        - rid: 5425250272280576618
+        - rid: 5425250272280576619
+        - rid: 5425250272280576620
+        - rid: 5425250272280576621
+        - rid: 5425250272280576622
+        - rid: 5425250272280576623
+        - rid: 5425250272280576624
+        - rid: 5425250272280576625
+        - rid: 5425250272280576626
+        - rid: 5425250272280576627
+        - rid: 5425250272280576628
+        - rid: 5425250272280576629
+        - rid: 5425250272280576630
+        - rid: 5425250272280576631
+        - rid: 5425250272280576632
+        - rid: 5425250272280576633
+        - rid: 5425250272280576634
+        - rid: 5425250272280576635
+        - rid: 5425250272280576636
+        - rid: 5425250272280576637
+        - rid: 5425250272280576638
+        - rid: 5425250272280576639
+        - rid: 5425250272280576640
+        - rid: 5425250272280576641
+        - rid: 5425250272280576642
+        - rid: 5425250272280576643
+        - rid: 5425250272280576644
+        - rid: 5425250272280576645
+        - rid: 5425250272280576646
+        - rid: 5425250272280576647
+        - rid: 5425250272280576648
+        - rid: 5425250272280576649
+        - rid: 5425250272280576650
+        - rid: 5425250272280576651
+        - rid: 5425250272280576652
+        - rid: 5425250272280576653
+        - rid: 5425250272280576654
+        - rid: 5425250272280576655
+        - rid: 5425250272280576656
+        - rid: 5425250272280576657
+        - rid: 5425250272280576658
+        - rid: 5425250272280576659
+        - rid: 5425250272280576660
+        - rid: 5425250272280576661
+        - rid: 5425250272280576662
+        - rid: 5425250272280576663
+        - rid: 5425250272280576664
+        - rid: 5425250272280576665
+        - rid: 5425250272280576666
+        - rid: 5425250272280576667
+        - rid: 5425250272280576668
+        - rid: 5425250272280576669
+        - rid: 5425250272280576670
+        - rid: 5425250272280576671
+        - rid: 5425250272280576672
+        - rid: 5425250272280576673
+        - rid: 5425250272280576674
+        - rid: 5425250272280576675
+        - rid: 5425250272280576676
+    - rid: 5425250272280576581
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 10:2
@@ -787,7 +827,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226034
+    - rid: 5425250272280576582
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 110:104
@@ -795,7 +835,7 @@ MonoBehaviour:
         type: 17
         selected: 0
         childs: []
-    - rid: 5425250268479226035
+    - rid: 5425250272280576583
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 87:43
@@ -803,7 +843,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226036
+    - rid: 5425250272280576584
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 18:27
@@ -811,7 +851,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226037
+    - rid: 5425250272280576585
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:473
@@ -819,7 +859,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226038
+    - rid: 5425250272280576586
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:562
@@ -827,7 +867,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226039
+    - rid: 5425250272280576587
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:650
@@ -835,7 +875,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226040
+    - rid: 5425250272280576588
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:373
@@ -843,7 +883,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226041
+    - rid: 5425250272280576589
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:420
@@ -851,7 +891,7 @@ MonoBehaviour:
         type: 18
         selected: 0
         childs: []
-    - rid: 5425250268479226042
+    - rid: 5425250272280576590
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:329
@@ -859,7 +899,7 @@ MonoBehaviour:
         type: 18
         selected: 0
         childs: []
-    - rid: 5425250268479226043
+    - rid: 5425250272280576591
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:288
@@ -867,7 +907,7 @@ MonoBehaviour:
         type: 18
         selected: 0
         childs: []
-    - rid: 5425250268479226044
+    - rid: 5425250272280576592
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:297
@@ -875,7 +915,7 @@ MonoBehaviour:
         type: 18
         selected: 0
         childs: []
-    - rid: 5425250268479226045
+    - rid: 5425250272280576593
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 124:277
@@ -883,7 +923,7 @@ MonoBehaviour:
         type: 18
         selected: 0
         childs: []
-    - rid: 5425250268479226046
+    - rid: 5425250272280576594
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 24:236
@@ -891,15 +931,23 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226047
+    - rid: 5425250272280576595
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 41:2
-        name: "\uB300\uACB0\uBC29"
+        name: BattleRoom_ImHost
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226048
+    - rid: 5425250272280576596
+      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
+      data:
+        id: 124:337
+        name: UI_CreateGame_PublicToggle
+        type: 18
+        selected: 0
+        childs: []
+    - rid: 5425250272280576597
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 99:2
@@ -907,7 +955,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226049
+    - rid: 5425250272280576598
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 99:36
@@ -915,7 +963,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226050
+    - rid: 5425250272280576599
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 63:12
@@ -923,7 +971,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226051
+    - rid: 5425250272280576600
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 63:71
@@ -931,7 +979,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226052
+    - rid: 5425250272280576601
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 54:44
@@ -939,7 +987,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226053
+    - rid: 5425250272280576602
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 56:363
@@ -947,7 +995,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226054
+    - rid: 5425250272280576603
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 54:14
@@ -955,7 +1003,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226055
+    - rid: 5425250272280576604
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 58:205
@@ -963,7 +1011,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226056
+    - rid: 5425250272280576605
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 58:243
@@ -971,7 +1019,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226057
+    - rid: 5425250272280576606
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 58:288
@@ -979,7 +1027,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226058
+    - rid: 5425250272280576607
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 58:341
@@ -987,7 +1035,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226059
+    - rid: 5425250272280576608
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 58:391
@@ -995,7 +1043,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226060
+    - rid: 5425250272280576609
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 56:302
@@ -1003,7 +1051,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226061
+    - rid: 5425250272280576610
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 24:263
@@ -1011,7 +1059,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226062
+    - rid: 5425250272280576611
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 25:6
@@ -1019,7 +1067,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226063
+    - rid: 5425250272280576612
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 73:28
@@ -1027,7 +1075,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226064
+    - rid: 5425250272280576613
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 115:217
@@ -1035,7 +1083,7 @@ MonoBehaviour:
         type: 17
         selected: 0
         childs: []
-    - rid: 5425250268479226065
+    - rid: 5425250272280576614
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 68:176
@@ -1043,7 +1091,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226066
+    - rid: 5425250272280576615
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 89:137
@@ -1051,7 +1099,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226067
+    - rid: 5425250272280576616
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 73:2
@@ -1059,7 +1107,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226068
+    - rid: 5425250272280576617
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 81:8
@@ -1067,7 +1115,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226069
+    - rid: 5425250272280576618
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 81:75
@@ -1075,7 +1123,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226070
+    - rid: 5425250272280576619
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 81:150
@@ -1083,7 +1131,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226071
+    - rid: 5425250272280576620
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:314
@@ -1091,7 +1139,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226072
+    - rid: 5425250272280576621
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:392
@@ -1099,7 +1147,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226073
+    - rid: 5425250272280576622
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 80:748
@@ -1107,7 +1155,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226074
+    - rid: 5425250272280576623
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 79:62
@@ -1115,7 +1163,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226075
+    - rid: 5425250272280576624
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 77:180
@@ -1123,7 +1171,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226076
+    - rid: 5425250272280576625
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:457
@@ -1131,7 +1179,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226077
+    - rid: 5425250272280576626
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:740
@@ -1139,7 +1187,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226078
+    - rid: 5425250272280576627
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 94:70
@@ -1147,7 +1195,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226079
+    - rid: 5425250272280576628
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 100:2
@@ -1155,7 +1203,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226080
+    - rid: 5425250272280576629
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 95:2
@@ -1163,7 +1211,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226081
+    - rid: 5425250272280576630
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 95:22
@@ -1171,7 +1219,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226082
+    - rid: 5425250272280576631
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 89:2
@@ -1179,7 +1227,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226083
+    - rid: 5425250272280576632
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 89:123
@@ -1187,7 +1235,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226084
+    - rid: 5425250272280576633
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:801
@@ -1195,7 +1243,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226085
+    - rid: 5425250272280576634
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 86:7
@@ -1203,7 +1251,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226086
+    - rid: 5425250272280576635
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:929
@@ -1211,7 +1259,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226087
+    - rid: 5425250272280576636
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:991
@@ -1219,7 +1267,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226088
+    - rid: 5425250272280576637
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 85:9
@@ -1227,7 +1275,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226089
+    - rid: 5425250272280576638
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 84:2
@@ -1235,7 +1283,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226090
+    - rid: 5425250272280576639
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:518
@@ -1243,7 +1291,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226091
+    - rid: 5425250272280576640
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 91:3
@@ -1251,7 +1299,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226092
+    - rid: 5425250272280576641
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:596
@@ -1259,7 +1307,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226093
+    - rid: 5425250272280576642
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:627
@@ -1267,7 +1315,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226094
+    - rid: 5425250272280576643
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 91:27
@@ -1275,7 +1323,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226095
+    - rid: 5425250272280576644
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 82:671
@@ -1283,7 +1331,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226096
+    - rid: 5425250272280576645
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 76:929
@@ -1291,7 +1339,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226097
+    - rid: 5425250272280576646
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 77:61
@@ -1299,7 +1347,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226098
+    - rid: 5425250272280576647
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 76:988
@@ -1307,7 +1355,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226099
+    - rid: 5425250272280576648
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 70:91
@@ -1315,7 +1363,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226100
+    - rid: 5425250272280576649
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 70:141
@@ -1323,7 +1371,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226101
+    - rid: 5425250272280576650
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 15:20
@@ -1331,23 +1379,15 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226102
+    - rid: 5425250272280576651
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
-        id: 115:282
+        id: 2013:1212
         name: UI_VoiceSetting
-        type: 17
+        type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226103
-      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
-      data:
-        id: 115:283
-        name: UI_VoiceSetting
-        type: 19
-        selected: 0
-        childs: []
-    - rid: 5425250268479226104
+    - rid: 5425250272280576652
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 115:90
@@ -1355,15 +1395,15 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226105
+    - rid: 5425250272280576653
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
-        id: 115:269
+        id: 2013:1204
         name: UI_ConfirmPopup
-        type: 17
+        type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226106
+    - rid: 5425250272280576654
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 34:444
@@ -1371,7 +1411,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226107
+    - rid: 5425250272280576655
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 2013:824
@@ -1379,7 +1419,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226108
+    - rid: 5425250272280576656
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 58:456
@@ -1387,7 +1427,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226109
+    - rid: 5425250272280576657
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 60:408
@@ -1395,7 +1435,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226110
+    - rid: 5425250272280576658
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 59:650
@@ -1403,7 +1443,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226111
+    - rid: 5425250272280576659
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 60:2
@@ -1411,7 +1451,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226112
+    - rid: 5425250272280576660
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 60:203
@@ -1419,7 +1459,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226113
+    - rid: 5425250272280576661
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 37:806
@@ -1427,7 +1467,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226114
+    - rid: 5425250272280576662
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 2013:398
@@ -1435,7 +1475,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226115
+    - rid: 5425250272280576663
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 37:609
@@ -1443,7 +1483,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226116
+    - rid: 5425250272280576664
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 37:11
@@ -1451,7 +1491,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226117
+    - rid: 5425250272280576665
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 37:1605
@@ -1459,7 +1499,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226118
+    - rid: 5425250272280576666
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 13:4
@@ -1467,7 +1507,7 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226119
+    - rid: 5425250272280576667
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 115:935
@@ -1475,15 +1515,71 @@ MonoBehaviour:
         type: 3
         selected: 0
         childs: []
-    - rid: 5425250268479226120
+    - rid: 5425250272280576668
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 74:87
         name: UI about Friend
         type: 3
+        selected: 0
+        childs: []
+    - rid: 5425250272280576669
+      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
+      data:
+        id: 2014:1332
+        name: Friend_Detail
+        type: 3
+        selected: 0
+        childs: []
+    - rid: 5425250272280576670
+      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
+      data:
+        id: 2013:1088
+        name: Friend_MainWindow
+        type: 3
         selected: 1
         childs: []
-    - rid: 5425250268479226121
+    - rid: 5425250272280576671
+      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
+      data:
+        id: 2013:1073
+        name: Friend_Search
+        type: 3
+        selected: 0
+        childs: []
+    - rid: 5425250272280576672
+      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
+      data:
+        id: 2013:1193
+        name: UI_Friend_SearchPanel
+        type: 3
+        selected: 0
+        childs: []
+    - rid: 5425250272280576673
+      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
+      data:
+        id: 2013:1189
+        name: UI_Friend_SearchPanel
+        type: 3
+        selected: 0
+        childs: []
+    - rid: 5425250272280576674
+      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
+      data:
+        id: 2013:1185
+        name: Friend_SearchPanel
+        type: 3
+        selected: 0
+        childs: []
+    - rid: 5425250272280576675
+      type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
+      data:
+        id: 2013:1081
+        name: Friend_Request
+        type: 3
+        selected: 0
+        childs: []
+    - rid: 5425250272280576676
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
       data:
         id: 95:40
@@ -1510,7 +1606,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!28 &938394476
+--- !u!28 &1026077631
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
