@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8718211101040073031}
   - component: {fileID: 4238534165869669723}
   - component: {fileID: 8042592254046760414}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: txt-Freind_Detail_Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 4088987779110987138}
   - component: {fileID: 2884582723065006505}
   - component: {fileID: 6196585170734653609}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: txt-Freind_Detail_Rank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 7099739474716813713}
   - component: {fileID: 6535520021434674139}
   - component: {fileID: 7851249805770022647}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: txt-Freind_Detail_Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -466,7 +466,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7806361891496318574}
   - component: {fileID: 7514802278897021348}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_Detail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,7 +527,7 @@ GameObject:
   - component: {fileID: 5510466483066126704}
   - component: {fileID: 5576262653491613714}
   - component: {fileID: 5708344379306808750}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: btn-Invite_Friend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -689,7 +689,7 @@ GameObject:
   - component: {fileID: 8409756325408860348}
   - component: {fileID: 4748988333530200306}
   - component: {fileID: 4127059866962726793}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: txt-Freind_Detail_Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -853,7 +853,7 @@ GameObject:
   - component: {fileID: 76979992362289328}
   - component: {fileID: 7549271473358412302}
   - component: {fileID: 5258006369814934984}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: txt-Remove_Friend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1010,7 +1010,7 @@ GameObject:
   - component: {fileID: 8024646960730011514}
   - component: {fileID: 2404147710045549955}
   - component: {fileID: 4729477355704337649}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_Detail_bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1086,7 +1086,7 @@ GameObject:
   - component: {fileID: 3231511693914877254}
   - component: {fileID: 788497836778053706}
   - component: {fileID: 3672280161013710684}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: btn-Freind_Detail_Close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1206,7 +1206,7 @@ GameObject:
   - component: {fileID: 8925468617256981467}
   - component: {fileID: 8371025201523784710}
   - component: {fileID: 2374204332116291724}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: txt-Invite_Friend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1366,7 +1366,7 @@ GameObject:
   - component: {fileID: 3727757885152522805}
   - component: {fileID: 8322678192511728106}
   - component: {fileID: 1339888509921937724}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: btn-Remove_Friend
   m_TagString: Untagged
   m_Icon: {fileID: 0}

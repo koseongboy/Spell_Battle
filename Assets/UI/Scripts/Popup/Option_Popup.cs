@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class Option_Popup : MonoBehaviour {
+    public class Option_Popup : MonoBehaviour, UI_ILayerInfo {
+        public EUILayer TargetLayer => EUILayer.Popup;
+        
         [SerializeField] private GameObject lobbyUI;
         [SerializeField] private GameObject ingameUI;
 
@@ -38,5 +40,6 @@ namespace DefaultNamespace
             lobbyUI.SetActive(isLobby);
             ingameUI.SetActive(!isLobby);
         }
+
     }
 }

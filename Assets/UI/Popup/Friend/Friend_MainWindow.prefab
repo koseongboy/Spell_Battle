@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8916963425507220934}
   - component: {fileID: 1608365254896528324}
   - component: {fileID: 565291214642348109}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: CloseBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 965747014793520213}
   - component: {fileID: 4947688752546823945}
   - component: {fileID: 8053474934578277033}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: btn-Friend_AddFriend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 7726140958044933109}
   - component: {fileID: 1099539502991251213}
   - component: {fileID: 1835902001924934941}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_AddFriendImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 3366969448565557501}
   - component: {fileID: 7565998472462849785}
   - component: {fileID: 6563282288562691528}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_Friend_MyInfo_ScoreTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -475,7 +475,7 @@ GameObject:
   - component: {fileID: 5334415220747173454}
   - component: {fileID: 9191044669393808188}
   - component: {fileID: 5635330025333604683}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,7 +598,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9040273188075312749}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -637,7 +637,7 @@ GameObject:
   - component: {fileID: 586141913973725696}
   - component: {fileID: 5685551594782230529}
   - component: {fileID: 5528269483704440643}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -726,7 +726,7 @@ GameObject:
   - component: {fileID: 8592457207682658210}
   - component: {fileID: 6158515363770010486}
   - component: {fileID: 1883523803382101106}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_AddFriendBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -799,7 +799,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 184968117262058256}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_Friend_MyInfo_ScorePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -841,7 +841,7 @@ GameObject:
   - component: {fileID: 4733624596255037669}
   - component: {fileID: 5175350977289907105}
   - component: {fileID: 7286598420321033374}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: InteractionBtns
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -953,7 +953,7 @@ GameObject:
   - component: {fileID: 969290277168904034}
   - component: {fileID: 6409172230027333859}
   - component: {fileID: 762012937533595629}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1029,7 +1029,7 @@ GameObject:
   - component: {fileID: 7601334428446490194}
   - component: {fileID: 6128055656971967828}
   - component: {fileID: 8554254091383881004}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Scroll View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1136,7 +1136,7 @@ GameObject:
   - component: {fileID: 1735677656276327538}
   - component: {fileID: 2314593327605780485}
   - component: {fileID: 7583840343266060933}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_Friend_MyInfo_StatusImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1212,7 +1212,7 @@ GameObject:
   - component: {fileID: 1408012768172717745}
   - component: {fileID: 3400807541091293197}
   - component: {fileID: 9069573247379024484}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: MyInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1309,7 +1309,7 @@ GameObject:
   - component: {fileID: 21970112492749712}
   - component: {fileID: 2326186513855686342}
   - component: {fileID: 4035111007833657273}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_AlarmBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1385,7 +1385,7 @@ GameObject:
   - component: {fileID: 8475900760952177220}
   - component: {fileID: 3170543447162047176}
   - component: {fileID: 9172064316260818153}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_Friend_MyInfo_NameTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1536,7 +1536,7 @@ GameObject:
   - component: {fileID: 2621457323809986302}
   - component: {fileID: 347257244529453261}
   - component: {fileID: 8023431374523622112}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_AlarmImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1612,7 +1612,7 @@ GameObject:
   - component: {fileID: 7869412896595715237}
   - component: {fileID: 8964379059552468155}
   - component: {fileID: 2832555335619709009}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_Friend_MyInfo_StatusTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1763,7 +1763,7 @@ GameObject:
   - component: {fileID: 4925627543589152596}
   - component: {fileID: 8196044732286039566}
   - component: {fileID: 8185857103318675594}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: btn-Friend_Alarm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1866,7 +1866,7 @@ GameObject:
   - component: {fileID: 3796747633093998529}
   - component: {fileID: 470067658427708429}
   - component: {fileID: 5365789162951248672}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1946,7 +1946,7 @@ GameObject:
   - component: {fileID: 2319911311147103308}
   - component: {fileID: 4735293721798626299}
   - component: {fileID: 952376138932447219}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_Friend_MyInfo_TierTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2099,7 +2099,7 @@ GameObject:
   - component: {fileID: 8032684023731452446}
   - component: {fileID: 5033372363316514358}
   - component: {fileID: 2002039293262747402}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_MainWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2204,7 +2204,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8276522010397483615}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_Friend_MyInfo_Profile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2244,7 +2244,7 @@ GameObject:
   - component: {fileID: 4224296545191364115}
   - component: {fileID: 6351609993937750430}
   - component: {fileID: 7465006572526976787}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_Friend_MyInfo_TierFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2316,9 +2316,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3796747633093998529}
     m_Modifications:
+    - target: {fileID: 540979401466465471, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 769340057926907546, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1218243765700067748, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
       propertyPath: m_Name
       value: btn-Friend_FriendPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218243765700067748, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6048549889353689903, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
       propertyPath: m_Pivot.x
@@ -2399,6 +2411,14 @@ PrefabInstance:
     - target: {fileID: 6048549889353689903, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6116195369509759511, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026614894685414599, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8682825474416621778, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2426,9 +2446,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3796747633093998529}
     m_Modifications:
+    - target: {fileID: 540979401466465471, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 769340057926907546, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1218243765700067748, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
       propertyPath: m_Name
       value: btn-Friend_FriendPanel (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218243765700067748, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6048549889353689903, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
       propertyPath: m_Pivot.x
@@ -2509,6 +2541,14 @@ PrefabInstance:
     - target: {fileID: 6048549889353689903, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6116195369509759511, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026614894685414599, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8682825474416621778, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
       propertyPath: m_SizeDelta.y

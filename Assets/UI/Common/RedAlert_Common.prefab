@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7076859783569476665}
   - component: {fileID: 3126995558725890592}
   - component: {fileID: 6539195969479244028}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: RedAlert_Common
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 6363344817873034922}
   - component: {fileID: 5310786978154799850}
   - component: {fileID: 3607350421639417904}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_BlackAlert_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

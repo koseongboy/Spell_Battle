@@ -9,8 +9,9 @@ namespace DefaultNamespace
     public class UILoader : MonoBehaviour
     {
         #region Fields & Properties
-        [SerializeField]
-        private Transform uiParentTransform;    
+        [SerializeField] private Transform canvas_FullScreen;    
+        [SerializeField] private Transform canvas_Popup;    
+        [SerializeField] private Transform canvas_Top;    
 
         [SerializeField] 
         private GameObject devGrid;
@@ -155,7 +156,17 @@ namespace DefaultNamespace
                 if (handle.Status == AsyncOperationStatus.Succeeded)
                 {
                     GameObject uiPrefab = handle.Result;
-                    GameObject uiInstance = Instantiate(uiPrefab, uiParentTransform);
+                    
+                    Transform targetParent = canvas_FullScreen; // Default
+                    if (uiPrefab.TryGetComponent<UI_ILayerInfo>(out var layerInfo)) {
+                        targetParent = layerInfo.TargetLayer switch {
+                            EUILayer.FullScreen => canvas_FullScreen,
+                            EUILayer.Popup => canvas_Popup,
+                            EUILayer.Top => canvas_Top,
+                            _ => canvas_FullScreen
+                        };
+                    }
+                    GameObject uiInstance = Instantiate(uiPrefab, targetParent);
                     
                     // 딕셔너리에 인스턴스 등록 시 중복 체크 방어
                     if (!loadedUIs.ContainsKey(uiName))

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7262232546965181557}
   - component: {fileID: 142919617207668478}
   - component: {fileID: 6224056639691467852}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_ConfirmPopup_ButtonTxt1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 4601650004665447595}
   - component: {fileID: 2614389024051517921}
   - component: {fileID: 7351696469801598970}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: ConfirmPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: 6412622234145635157}
   - component: {fileID: 5496436410983244189}
   - component: {fileID: 8562783456183897267}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_ConfirmPopup_ConfirmText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -392,7 +392,7 @@ GameObject:
   - component: {fileID: 4190637493554062173}
   - component: {fileID: 7791896239633216095}
   - component: {fileID: 4165253940743936971}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_ConfirmPopup_Button2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,7 +468,7 @@ GameObject:
   - component: {fileID: 732662809137364563}
   - component: {fileID: 472314228562052754}
   - component: {fileID: 773785578482768320}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_ConfirmPopup_Button1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -544,7 +544,7 @@ GameObject:
   - component: {fileID: 2504366531645410330}
   - component: {fileID: 1325177233806275059}
   - component: {fileID: 7312840560829847511}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_ConfirmPopup_Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -621,7 +621,7 @@ GameObject:
   - component: {fileID: 4062315275321587671}
   - component: {fileID: 3130853201514741911}
   - component: {fileID: 2415666989875705532}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: UI_ConfirmPopup_ButtonTxt2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

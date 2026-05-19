@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1613542911572228773}
   - component: {fileID: 6335075741002974060}
   - component: {fileID: 7699235098584902635}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: img-Common_LeftUpper_Option (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 1492426073418459925}
   - component: {fileID: 4094546155966059100}
   - component: {fileID: 2615503225082497553}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: LeftUpper_Common
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 4044104562212558452}
   - component: {fileID: 8815381873383383719}
   - component: {fileID: 7379605031503196642}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: img-Common_LeftUpper_OptionFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 5844464358387400407}
   - component: {fileID: 5687025857641348905}
   - component: {fileID: 7282767101729601124}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: img-Common_LeftUpper_Option (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -568,6 +568,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: txt-Common_LeftUpper_Friend
       objectReference: {fileID: 0}
+    - target: {fileID: 4849058360312308004, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7077121519930591805, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
       propertyPath: m_SizeDelta.x
       value: 80
@@ -576,9 +580,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: btn-Common_LeftUpper_Friend
       objectReference: {fileID: 0}
+    - target: {fileID: 7401123104245724639, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8803067706530326543, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
       propertyPath: m_Name
       value: img-Common_LeftUpper_Friend
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803067706530326543, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -745,6 +757,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: txt-Common_LeftUpper_Back
       objectReference: {fileID: 0}
+    - target: {fileID: 4849058360312308004, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7077121519930591805, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
       propertyPath: m_SizeDelta.x
       value: 80
@@ -757,9 +773,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: btn-Common_LeftUpper_Back
       objectReference: {fileID: 0}
+    - target: {fileID: 7401123104245724639, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8803067706530326543, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
       propertyPath: m_Name
       value: img-Common_LeftUpper_Back
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803067706530326543, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -926,6 +950,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: txt-Common_LeftUpper_Option
       objectReference: {fileID: 0}
+    - target: {fileID: 4849058360312308004, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7077121519930591805, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
       propertyPath: m_SizeDelta.x
       value: 80
@@ -935,12 +963,20 @@ PrefabInstance:
       value: btn-Common_LeftUpper_Option
       objectReference: {fileID: 0}
     - target: {fileID: 7401123104245724639, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7401123104245724639, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8803067706530326543, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
       propertyPath: m_Name
       value: img-Common_LeftUpper_Option
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803067706530326543, guid: 75ce5fd41ae718147887cc6daa2b1328, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

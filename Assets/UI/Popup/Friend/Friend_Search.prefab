@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4141551142492908255}
   - component: {fileID: 6240916346289509613}
   - component: {fileID: 1294901033411774611}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 6617936779887370430}
   - component: {fileID: 2367047874065419595}
   - component: {fileID: 8260069666219204451}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_SearchIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 8337891685392947337}
   - component: {fileID: 1553032516569405053}
   - component: {fileID: 3465185897408513389}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 337744793455145762}
   - component: {fileID: 963295573075731218}
   - component: {fileID: 3854638137559871960}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 5641201041164131802}
   - component: {fileID: 6223499161548818393}
   - component: {fileID: 1357823844807352858}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: btn-Friend_SearchClose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 5280022474542997251}
   - component: {fileID: 1141013777642806482}
   - component: {fileID: 4523305015875411950}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Scroll View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -594,7 +594,7 @@ GameObject:
   - component: {fileID: 1583214150490887514}
   - component: {fileID: 4842550954358467318}
   - component: {fileID: 8199961473480957349}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_Search
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -683,7 +683,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8985713500674451373}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -723,7 +723,7 @@ GameObject:
   - component: {fileID: 3155592074795708620}
   - component: {fileID: 1042898900385468420}
   - component: {fileID: 4790507569196105683}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_SearchInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -841,7 +841,7 @@ GameObject:
   - component: {fileID: 158642504301247355}
   - component: {fileID: 7623154679877601234}
   - component: {fileID: 6286873160635330795}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Friend_SearchInputText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -999,7 +999,7 @@ GameObject:
   - component: {fileID: 980570847068615503}
   - component: {fileID: 4164220035838554987}
   - component: {fileID: 1300441358041459459}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1088,6 +1088,22 @@ PrefabInstance:
     - target: {fileID: 998180231394800025, guid: df7a72a2495fff74f9d4135c42624f6a, type: 3}
       propertyPath: m_Name
       value: Friend_SearchPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 998180231394800025, guid: df7a72a2495fff74f9d4135c42624f6a, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232892800224486215, guid: df7a72a2495fff74f9d4135c42624f6a, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4296558572543303013, guid: df7a72a2495fff74f9d4135c42624f6a, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5653343620857604016, guid: df7a72a2495fff74f9d4135c42624f6a, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8479607008719567574, guid: df7a72a2495fff74f9d4135c42624f6a, type: 3}
       propertyPath: m_Pivot.x

@@ -5,7 +5,9 @@ using UnityEngine.Serialization;
 
 namespace DefaultNamespace
 {
-    public class Friend_MainWindow : MonoBehaviour {
+    public class Friend_MainWindow : MonoBehaviour, UI_ILayerInfo {
+        public EUILayer TargetLayer => EUILayer.Popup;
+        
         [SerializeField] private TextMeshProUGUI txt_Tier;
         [SerializeField] private TextMeshProUGUI txt_Score;
         [SerializeField] private TextMeshProUGUI txt_Name;

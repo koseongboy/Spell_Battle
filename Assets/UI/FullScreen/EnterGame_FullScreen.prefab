@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2471960043109788019}
   - component: {fileID: 4058358563563879283}
   - component: {fileID: 6605340991365584789}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_CreateRoomTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 6800171160048718270}
   - component: {fileID: 6115489297036469021}
   - component: {fileID: 8037772665287952713}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateRoom_CreateBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +263,8 @@ GameObject:
   - component: {fileID: 5708562609120165402}
   - component: {fileID: 3664939999133295263}
   - component: {fileID: 8925761660910965375}
-  m_Layer: 5
+  - component: {fileID: 7832585928812335535}
+  m_Layer: 6
   m_Name: UI_EnterGame_FindRoomBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,6 +389,62 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
+--- !u!114 &7832585928812335535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979945553159838953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 8925761660910965375}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8276128752063671145}
+        m_TargetAssemblyTypeName: DefaultNamespace.EnterGame_FullScreen, Assembly-CSharp
+        m_MethodName: FindRoom_Pressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1360259422221947521
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,7 +457,7 @@ GameObject:
   - component: {fileID: 7173140937414780295}
   - component: {fileID: 4845129614810054789}
   - component: {fileID: 5663432603717885499}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,7 +547,7 @@ GameObject:
   - component: {fileID: 363180848478607080}
   - component: {fileID: 495717184371576173}
   - component: {fileID: 5504325788322675158}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateRoom_CreateTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -647,7 +704,7 @@ GameObject:
   - component: {fileID: 253311429418318643}
   - component: {fileID: 8991381809174066194}
   - component: {fileID: 7759257181906160366}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_InputRoomCode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -726,7 +783,7 @@ GameObject:
   - component: {fileID: 1501140837326035752}
   - component: {fileID: 9022552493881456440}
   - component: {fileID: 3533717396233649133}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_FindRoom_EnterRoomTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -883,7 +940,7 @@ GameObject:
   - component: {fileID: 5302691031426271077}
   - component: {fileID: 5730904978795882072}
   - component: {fileID: 1208863766655822178}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateRoom_RoomNameBg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -958,7 +1015,7 @@ GameObject:
   - component: {fileID: 8416414419629257411}
   - component: {fileID: 3450451947828481852}
   - component: {fileID: 8425304688882444685}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateGame_PublicToggleFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1034,7 +1091,7 @@ GameObject:
   - component: {fileID: 5926468739706423648}
   - component: {fileID: 5815247483082187865}
   - component: {fileID: 6076226857948575809}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_Menus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1135,7 +1192,7 @@ GameObject:
   - component: {fileID: 4228700164076540321}
   - component: {fileID: 3682320212392697808}
   - component: {fileID: 8134734425219895416}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_InputRoomCodeBg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1213,7 +1270,7 @@ GameObject:
   - component: {fileID: 6675273491102383041}
   - component: {fileID: 2404005603597551774}
   - component: {fileID: 5670218724763099335}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_FindRoom_EnterRoomBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1348,7 +1405,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6672641732807544321}
   - component: {fileID: 3308628595665715712}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateRoom_RoomName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1396,7 +1453,7 @@ GameObject:
   - component: {fileID: 2843746815379192890}
   - component: {fileID: 7963395675922578424}
   - component: {fileID: 8823178091178293282}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1474,7 +1531,8 @@ GameObject:
   - component: {fileID: 4752493824989995452}
   - component: {fileID: 8022509163433687824}
   - component: {fileID: 6749885129448975115}
-  m_Layer: 5
+  - component: {fileID: 6414039415501992041}
+  m_Layer: 6
   m_Name: UI_EnterGame_CreateRoomBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1599,6 +1657,62 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
+--- !u!114 &6414039415501992041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2845187215888227364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 6749885129448975115}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8276128752063671145}
+        m_TargetAssemblyTypeName: DefaultNamespace.EnterGame_FullScreen, Assembly-CSharp
+        m_MethodName: CreateRoom_Pressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3129407550552984044
 GameObject:
   m_ObjectHideFlags: 0
@@ -1611,7 +1725,7 @@ GameObject:
   - component: {fileID: 5348965727040740095}
   - component: {fileID: 6527628117606028711}
   - component: {fileID: 4023519992826415482}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_CreateRoomTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1768,7 +1882,7 @@ GameObject:
   - component: {fileID: 597633846574591500}
   - component: {fileID: 7361449751160314998}
   - component: {fileID: 1770046794999239038}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_InputRoomCodeFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1841,7 +1955,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4282287661123733868}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1882,7 +1996,7 @@ GameObject:
   - component: {fileID: 9189231109621790971}
   - component: {fileID: 3952482460695161173}
   - component: {fileID: 1213422953116118334}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_InputRoomCode_InputTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2036,7 +2150,8 @@ GameObject:
   - component: {fileID: 8464875897819187501}
   - component: {fileID: 2707588139089197964}
   - component: {fileID: 1405341590536977351}
-  m_Layer: 5
+  - component: {fileID: 2027433221953048093}
+  m_Layer: 6
   m_Name: UI_EnterGame_Random
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2161,6 +2276,62 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
+--- !u!114 &2027433221953048093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4488537137078094460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1405341590536977351}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8276128752063671145}
+        m_TargetAssemblyTypeName: DefaultNamespace.EnterGame_FullScreen, Assembly-CSharp
+        m_MethodName: RandomEnter_Pressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4621150360425191228
 GameObject:
   m_ObjectHideFlags: 0
@@ -2173,7 +2344,7 @@ GameObject:
   - component: {fileID: 7590239182103752307}
   - component: {fileID: 1038983687142132730}
   - component: {fileID: 6415937577331533919}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Scroll View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2280,7 +2451,7 @@ GameObject:
   - component: {fileID: 5992997766845559407}
   - component: {fileID: 5167905097378323884}
   - component: {fileID: 410155194962621278}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2360,7 +2531,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4493620357069774395}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2396,7 +2567,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6273285791927062777}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateGame_PublicToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2439,7 +2610,7 @@ GameObject:
   - component: {fileID: 5041173378640108477}
   - component: {fileID: 8597274149416727477}
   - component: {fileID: 863795936770707746}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_FindRoomTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2597,7 +2768,8 @@ GameObject:
   - component: {fileID: 3182473553891769636}
   - component: {fileID: 4137266482706427790}
   - component: {fileID: 6726994393302446416}
-  m_Layer: 5
+  - component: {fileID: 8276128752063671145}
+  m_Layer: 6
   m_Name: EnterGame_FullScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2678,6 +2850,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 1
+--- !u!114 &8276128752063671145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5946863708188152205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c6c054b3e6e4e6438c58ba7bb9b3eba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.EnterGame_FullScreen
+  CreateRoom_BtnImage: {fileID: 6749885129448975115}
+  FindRoom_BtnImage: {fileID: 8925761660910965375}
+  Default_BtnSprite: {fileID: 21300000, guid: 498da230f3bde3249a46f4ab2c40cdb0, type: 3}
+  Seleted_BtnSprite: {fileID: 21300000, guid: 87e7db6d7d7c47148909d1c5cf361598, type: 3}
 --- !u!1 &6075495460669817719
 GameObject:
   m_ObjectHideFlags: 0
@@ -2689,7 +2877,7 @@ GameObject:
   - component: {fileID: 5129217982996649756}
   - component: {fileID: 6823567924189853026}
   - component: {fileID: 915166435358698243}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_FindRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2762,7 +2950,7 @@ GameObject:
   - component: {fileID: 7221642289282466564}
   - component: {fileID: 8530250079382925768}
   - component: {fileID: 2713963755849031418}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateGame_PublicToggleBg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2837,7 +3025,7 @@ GameObject:
   - component: {fileID: 5692418579103214622}
   - component: {fileID: 6419031411616046112}
   - component: {fileID: 106856067725232682}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_SearchRoomBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2913,7 +3101,7 @@ GameObject:
   - component: {fileID: 3141369985673949483}
   - component: {fileID: 811636608810304958}
   - component: {fileID: 7078951647602080321}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateGame_PublicToggle_PvTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3050,7 +3238,7 @@ GameObject:
   - component: {fileID: 4002429663080407521}
   - component: {fileID: 6481801521510975997}
   - component: {fileID: 2755081215140857099}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateRoom_RoomNameFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3126,7 +3314,7 @@ GameObject:
   - component: {fileID: 8450043296562062444}
   - component: {fileID: 1412534651019915600}
   - component: {fileID: 3116855812673501465}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateRoom_RoomNameInputTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3278,7 +3466,7 @@ GameObject:
   - component: {fileID: 6222747415733294169}
   - component: {fileID: 7923204508497775424}
   - component: {fileID: 578164050624836065}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3403,7 +3591,7 @@ GameObject:
   - component: {fileID: 5403737635714015917}
   - component: {fileID: 8326545383873898207}
   - component: {fileID: 456407319633037220}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateGame_PublicToggle_PbTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3541,7 +3729,7 @@ GameObject:
   - component: {fileID: 7914179503520668416}
   - component: {fileID: 5679368457813507508}
   - component: {fileID: 6851436553243279111}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_EnterGame_SearchRoomTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3691,7 +3879,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8761493857372071919}
   - component: {fileID: 1097401971424240640}
-  m_Layer: 5
+  - component: {fileID: 8278378370308497759}
+  m_Layer: 6
   m_Name: UI_EnterGame_SearchRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3739,6 +3928,62 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &8278378370308497759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8888792506440367413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8276128752063671145}
+        m_TargetAssemblyTypeName: DefaultNamespace.EnterGame_FullScreen, Assembly-CSharp
+        m_MethodName: SearchRoom_Pressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8959429776041943197
 GameObject:
   m_ObjectHideFlags: 0
@@ -3750,7 +3995,7 @@ GameObject:
   - component: {fileID: 2966059044222518712}
   - component: {fileID: 3413958755269181791}
   - component: {fileID: 44118427511104215}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UI_CreateGame_PublicToggleBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3822,9 +4067,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5992997766845559407}
     m_Modifications:
+    - target: {fileID: 2087517737358546213, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5271062053402692652, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5933851253444248900, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Name
       value: UI_FindRoom_RoomPiece (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6986652182597918686, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8147871881771941954, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Material
@@ -3928,9 +4193,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5992997766845559407}
     m_Modifications:
+    - target: {fileID: 2087517737358546213, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5271062053402692652, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5933851253444248900, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Name
       value: UI_FindRoom_RoomPiece (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6986652182597918686, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8147871881771941954, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Material
@@ -4034,9 +4319,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5992997766845559407}
     m_Modifications:
+    - target: {fileID: 2087517737358546213, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5271062053402692652, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5933851253444248900, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Name
       value: UI_FindRoom_RoomPiece (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6986652182597918686, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8147871881771941954, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Material
@@ -4220,9 +4525,17 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -71.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2524150549159788619, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2781576751165197471, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
       propertyPath: m_Name
       value: Common_LeftUpper
+      objectReference: {fileID: 0}
+    - target: {fileID: 2781576751165197471, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3369695279202717729, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4264,9 +4577,49 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -71.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5137571259398529976, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5591273473661324028, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5652962916371880525, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5652962916371880525, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5976152333942130589, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6010186971730789403, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522545447914233351, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7640900639598284080, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7750159983563525814, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8428950742422488023, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8544801384002539744, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8572947750287317681, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
       propertyPath: m_Pivot.x
@@ -4348,6 +4701,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8909314177257627549, guid: e76f30f64ed5bf843aacc6f78aefcbdd, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4366,9 +4723,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5992997766845559407}
     m_Modifications:
+    - target: {fileID: 2087517737358546213, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5271062053402692652, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5933851253444248900, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Name
       value: UI_FindRoom_RoomPiece (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6986652182597918686, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8147871881771941954, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Material
@@ -4472,9 +4849,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5992997766845559407}
     m_Modifications:
+    - target: {fileID: 2087517737358546213, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5271062053402692652, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5933851253444248900, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Name
       value: UI_FindRoom_RoomPiece
+      objectReference: {fileID: 0}
+    - target: {fileID: 5974715906419634369, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6986652182597918686, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8147871881771941954, guid: 5292aa07661e0ae46af28b5aa23a8cb3, type: 3}
       propertyPath: m_Material
