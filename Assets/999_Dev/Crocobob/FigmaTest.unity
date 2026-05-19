@@ -1888,7 +1888,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.UILoader
   uiParentTransform: {fileID: 569652826}
   devGrid: {fileID: 0}
-  awakeUIList: []
+  awakeUIList:
+  - LeftUpper_Common
 --- !u!4 &1674595491
 Transform:
   m_ObjectHideFlags: 0

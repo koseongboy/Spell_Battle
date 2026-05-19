@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace.UI.Scripts
+namespace DefaultNamespace
 {
     /// <summary>
     /// UILoader로부터 타입 안정성을 보장받으며 데이터를 전달받기 위한 공통 인터페이스입니다.

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace DefaultNamespace.UI.Scripts
+namespace DefaultNamespace
 {
     public class UILoader : MonoBehaviour
     {
@@ -248,9 +248,14 @@ namespace DefaultNamespace.UI.Scripts
 
         #region DEV
 
-        [ContextMenu("Show Friend Popup")]
-        public void ShowFriendPopup() {
-            ShowUI("Friend_MainWindow");
+        [ContextMenu("Show Red Alert")]
+        public void ShowRedAlert() {
+            ShowUI<string>("RedAlert_Common", "Test Message.");
+        }
+
+        [ContextMenu("Show Black Alert")]
+        public void ShowBlackAlert() {
+            ShowUI<string>("BlackAlert_Common", "Test Message.");
         }
         
 
