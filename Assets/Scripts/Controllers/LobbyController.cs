@@ -147,7 +147,6 @@ namespace Controllers.LobbyController
             
             string rawTitle = ui_EnterGame.GetInput_RoomName();
             bool isPrivate = ui_EnterGame.GetInput_IsRoomPrivate();
-            Debug.Log(isPrivate);
             if (string.IsNullOrEmpty(rawTitle)) { CommonUIController.Instance.ShowRedAlert("방 제목을 입력하세요!"); return; }
             string title = FilterTitle( rawTitle ); // 필터링
             
@@ -211,15 +210,14 @@ namespace Controllers.LobbyController
         // --- 액션 3: 리스트에서 선택하여 참여 ---
         public async void OnConfirmJoinFromList(string lobbyId)
         {
-            if (string.IsNullOrEmpty(lobbyId)) { lobbyView.UpdateStatus("입장할 방을 선택하세요."); return; }
-
-            lobbyView.UpdateStatus("방에 접속 시도 중...");
-            lobbyView.SetLoadingPanel(true, "방 접속 중..");
+            if (string.IsNullOrEmpty(lobbyId)) { CommonUIController.Instance.ShowRedAlert("입장할 방을 선택하세요."); return; }
+            
+            CommonUIController.Instance.ShowLoading();
             string title = await matchmakingService.JoinCustomLobbyByIdAsync(lobbyId);
-            lobbyView.SetLoadingPanel(false);
+            CommonUIController.Instance.DoneLoading();
             
             if (title != null) EnterWaitingRoom(title, matchmakingService.CurrentLobbyCode);
-            else lobbyView.UpdateStatus("접속 실패. 이미 꽉 찼거나 없는 방입니다.");
+            else CommonUIController.Instance.ShowRedAlert("이미 꽉 찼거나 없는 방입니다.");
         }
 
         // --- 상태 전환: 대결방 진입 ---

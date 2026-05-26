@@ -44,10 +44,14 @@ namespace DefaultNamespace
         [Header("Find Room")]
         [SerializeField] private Transform contentParent;    // Scroll View 안의 Content 객체를 드래그 앤 드롭
         [SerializeField] private FindRoom_RoomPiece roomPiecePrefab;
+        [SerializeField] private Button btn_FindRoom_Enter;
+        
         // 현재 화면에 활성화되어 있는(풀에서 꺼낸) 아이템들을 추적하는 리스트
         private List<FindRoom_RoomPiece> activeItems = new List<FindRoom_RoomPiece>();
         // 오브젝트 풀 인터페이스 선언
         private IObjectPool<FindRoom_RoomPiece> roomPool;
+        private string selectedLobbyId = string.Empty;
+        
         
         [Header("Menu Element")]
         [SerializeField] private GameObject createRoomMenuElement;
@@ -82,6 +86,9 @@ namespace DefaultNamespace
 
             btn_PublicToggle.onClick.AddListener(OnPublicTogglePressed);
             btn_ConfirmCreateRoom.onClick.AddListener( () => cont.OnConfirmCreateAsync());
+            
+            
+            btn_FindRoom_Enter.onClick.AddListener( () => cont.OnConfirmJoinFromList(selectedLobbyId) );
         }
         
 
@@ -131,19 +138,27 @@ namespace DefaultNamespace
         public void UpdateUI_RoomList(List<Lobby> lobbies) {
             Debug.Log(lobbies);
             
-            // 1. 기존 리스트 초기화
-            // Content의 자식으로 있는 기존 방 UI들을 모두 삭제합니다.
-            foreach (Transform child in contentParent) 
+            // 1. 기존 리스트 초기화 (Destroy 대신 풀에 반환)
+            foreach (FindRoom_RoomPiece item in activeItems)
             {
-                Destroy(child.gameObject);
+                roomPool.Release(item);
             }
+            activeItems.Clear(); // 추적 리스트 비우기
 
             // 2. 새 리스트로 채워넣기
             foreach (Lobby lobby in lobbies) 
             {
-                FindRoom_RoomPiece newItem = Instantiate(roomPiecePrefab, contentParent);
-                newItem.UpdateUI(lobby);
+                // 풀에서 잠자고 있는 UI 객체를 하나 가져옴 (부족하면 createFunc 자동 실행)
+                FindRoom_RoomPiece newItem = roomPool.Get();
+                // 프리팹 내부의 텍스트 및 데이터 갱신
+                newItem.SetUp(lobby, SetSelectedLobbyId);
+                // 관리용 추적 리스트에 추가
+                activeItems.Add(newItem);
             }
+        }
+
+        public void SetSelectedLobbyId(string lobbyId) {
+            selectedLobbyId = lobbyId;
         }
 
         
