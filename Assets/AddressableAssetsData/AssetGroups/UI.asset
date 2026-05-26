@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d6d62e59ef98e442855a267c21dd4db
+    m_Address: Option_InGame_Popup
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 60d64d8eb7039dc41b881d52b103db9e
     m_Address: RedAlert_Common
     m_ReadOnly: 0

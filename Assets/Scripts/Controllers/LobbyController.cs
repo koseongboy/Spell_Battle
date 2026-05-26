@@ -3,48 +3,56 @@ using Models.RelayMatchmakingService;
 using Views.LobbyView;
 using Unity.Netcode;
 using System.Threading.Tasks;
+using DefaultNamespace;
 
 namespace Controllers.LobbyController
 {
     public class LobbyController : MonoBehaviour
     {
+        public static LobbyController Instance { get; private set; }
+
         private RelayMatchmakingService matchmakingService;
         [SerializeField] private LobbyView lobbyView;
+
+        private Lobby_FullScreen ui_Lobby;
+        private EnterGame_FullScreen ui_EnterGame;
 
         // 현재 유저가 대결방에 들어가 있는지 여부를 추적 (뒤로가기 버튼 로직 처리용)
         private bool isInWaitingRoom = false; 
 
         private void Awake()
         {
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
+            
             matchmakingService = new RelayMatchmakingService();
         }
 
         private async void Start()
         {
-            lobbyView.UpdateStatus("서버 초기화 중...");
-            lobbyView.SetLoadingPanel(true, "서버에 연결중입니다...");
-            await matchmakingService.InitializeAndSignInAsync();
-            lobbyView.SetLoadingPanel(false);
+            UILoader.Instance.ShowLoading();
             
-            // 초기 화면 세팅: 로비 화면 + 대결 만들기 탭
-            lobbyView.SwitchMainView(MainViewType.Lobby);
-            lobbyView.ShowLobbyTab(LobbyTabType.Create);
-
-            // 1. 글로벌 버튼 연결
-            lobbyView.globalBackButton.AddAsyncListener(OnGlobalBackRequested);
-            // (설정, 친구 버튼은 나중에 기능 추가 시 연결)
-
-            // 2. 탭 이동 버튼 연결
-            lobbyView.tabCreateModeButton.onClick.AddListener(() => lobbyView.ShowLobbyTab(LobbyTabType.Create));
-            lobbyView.tabSearchModeButton.onClick.AddListener(OnTabSearchRequested);
-
-            // 3. 접속/생성 액션 버튼 연결
-            lobbyView.confirmCreateButton.AddAsyncListener(OnConfirmCreateAsync);
-            lobbyView.joinRoomByCodeButton.onClick.AddListener(OnConfirmJoinByCode);
-
-            lobbyView.confirmJoinFromListButton.onClick.AddListener(() => OnConfirmJoinFromList(lobbyView.GetSelectedLobbyId()));
-
+            // 서버 로그인 진행
+            await matchmakingService.InitializeAndSignInAsync();
+            
+            // Lobby UI 불러오기
+            UILoader.Instance.ChangeFullScreen("Lobby_FullScreen");
         }
+
+        public void RegisterLobbyUI(Lobby_FullScreen ui) {
+            ui_Lobby = ui;
+        }
+        public void RegisterLobbyUI() {
+            ui_EnterGame = null;
+        }
+
+        public void RegisterEnterGameUI(EnterGame_FullScreen ui) {
+            ui_EnterGame = ui;
+        }
+        public void UnregisterEnterGameUI() {
+            ui_EnterGame = null;
+        }
+        
 
         // ==========================================
         // ❌ 오브젝트가 파괴되거나 프로그램이 종료될 때 실행
@@ -85,43 +93,82 @@ namespace Controllers.LobbyController
             }
         }
 
-        // --- 탭 이동: 방 찾기 ---
-        private async void OnTabSearchRequested()
-        {
-            lobbyView.ShowLobbyTab(LobbyTabType.Search);
-            lobbyView.UpdateStatus("방 목록을 불러오는 중...");
-            lobbyView.SetLoadingPanel(true, "방 목록을 불러오는 중..."); //todo: 스크롤 뷰 안에서만 따로 로딩을 적용할 지
-            var lobbies = await matchmakingService.GetPublicLobbyListAsync();
-            lobbyView.SetLoadingPanel(false);
-            lobbyView.RenderRoomList(lobbies);
+        // '게임 시작'
+        public void OnGameStartPressed() {
+            Debug.Log("[LobbyController] OnGameStartPressed");
+            
+            if (ui_Lobby == null) {
+                Debug.Log("[LobbyController] 잘못된 호출입니다. ui_Lobby null입니다.");
+                return;
+            }
+            
+            UILoader.Instance.ChangeFullScreen("EnterGame_FullScreen");
         }
 
-        // --- 액션 1: 커스텀 방 생성 ---
-        private async Task OnConfirmCreateAsync()
-        {
-            string title = lobbyView.GetRoomTitle();
-            bool isPrivate = lobbyView.GetIsPrivate();
+        // '덱'
+        public void OnDeckPressed() {
+            Debug.Log("[LobbyController] OnDeckPressed");
+        }
 
-            if (string.IsNullOrEmpty(title)) { lobbyView.UpdateStatus("방 제목을 입력하세요!"); return; }
-            lobbyView.SetLoadingPanel(true, "대결방 만드는 중...");
+        // '튜토리얼'
+        public void OnTutorialPressed() {
+            Debug.Log("[LobbyController] OnTutorialPressed");
+        }
+
+        // '크레딧'
+        public void OnCreditPressed() {
+            Debug.Log("[LobbyController] OnCreditPressed");
+            UILoader.Instance.ShowBlackAlert("헤헷 미구현입니다. 그치만 저희 열심히 만들었어요.");
+        }
+
+
+        public void GoBackToLobby() {
+            // TODO : '로비로 돌아가시겠습니까?' confirm
+            
+        }
+        
+
+        // --- 탭 이동: 방 찾기 ---
+        public async void OnFindRoomPressed() 
+        {
+            if (lobbyView == null) return;
+            
+            UILoader.Instance.ShowLoading();
+            
+            var lobbies = await matchmakingService.GetPublicLobbyListAsync();
+            ui_EnterGame.UpdateUI_RoomList( lobbies );
+        }
+        
+        // --- 액션 1: 커스텀 방 생성 ---
+        public async Task OnConfirmCreateAsync()
+        {
+            if (ui_EnterGame == null) return;
+
+            // TODO : View 딴에서, 유저가 입력한 방 이름 읽어오기
+            string title = ui_EnterGame.GetInput_RoomName();
+            bool isPrivate = ui_EnterGame.GetInput_IsRoomPublic();
+
+            if (string.IsNullOrEmpty(title)) { UILoader.Instance.ShowRedAlert("방 제목을 입력하세요!"); return; }
+            UILoader.Instance.ShowLoading();
+            
             try
             {
                 SetupNetworkCallbacks();
-                lobbyView.UpdateStatus("방 생성 중...");
+                UILoader.Instance.ShowLoading();
                 string lobbyCode = await matchmakingService.CreateCustomLobbyAsync(title, isPrivate);
 
                 if (!string.IsNullOrEmpty(lobbyCode))
                 {
-                    lobbyView.UpdateStatus($"방 생성 성공! 대결방으로 이동합니다. (코드: {lobbyCode})");
                     EnterWaitingRoom(title, lobbyCode);
                 }
             }
             finally
             {
-                lobbyView.SetLoadingPanel(false);
+                UILoader.Instance.ShowRedAlert("방 생성 중 네트워크 통신에 실패했습니다.");
             }
-            
         }
+
+
 
         // --- 액션 2: 코드로 비공개 방 참여 ---
         private async void OnConfirmJoinByCode()
@@ -129,6 +176,7 @@ namespace Controllers.LobbyController
             string code = lobbyView.GetInputCode();
             if (string.IsNullOrEmpty(code)) { lobbyView.UpdateStatus("코드를 입력하세요!"); return; }
 
+            
             lobbyView.SetLoadingPanel(true, "대결방에 접속하고 있습니다...");
             try
             {

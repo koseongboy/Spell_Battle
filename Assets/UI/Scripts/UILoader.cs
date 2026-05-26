@@ -24,6 +24,11 @@ namespace DefaultNamespace
         // 생성된 UI 인스턴스를 관리하는 딕셔너리
         private Dictionary<string, GameObject> loadedUIs = new();
 
+
+        // 뒤로가기 버튼을 위한
+        [SerializeField] private string lastFullScreenUI = string.Empty;
+        [SerializeField] private string currentFullScreenUI = string.Empty;
+
         #endregion
 
         #region Singleton & initialization
@@ -33,12 +38,11 @@ namespace DefaultNamespace
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
+                return;
             }
-            else
-            {
-                Instance = this;
-            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion
@@ -218,6 +222,45 @@ namespace DefaultNamespace
             // 이제 독립적인 하드코딩 메서드 대신 범용 ShowUI<T> 구조를 통해 호출 가능합니다.
             ShowUI<string>("UI_Alert", text);
         }
+        
+        public void ShowRedAlert( string text ) {
+            ShowUI<string>("RedAlert_Common", text);
+        }
+        
+        public void ShowBlackAlert( string text ) {
+            ShowUI<string>("BlackAlert_Common", text);
+        }
+
+        public void ShowLoading() {
+            Debug.Log("TODO : 여기서 로딩창 나와야함.");
+        }
+        
+        public bool IsGoBackAllowed() {
+            if ( lastFullScreenUI == string.Empty || currentFullScreenUI == "Lobby_FullScreen" )
+                return false;
+            
+            return true;
+        }
+        
+        public void ChangeFullScreen(string target) {
+            if (currentFullScreenUI != string.Empty) {
+                HideUI(currentFullScreenUI);
+            }
+
+            // TODO : 화면 전환 연출
+            
+            ShowUI( target );
+            
+            lastFullScreenUI = currentFullScreenUI;
+            currentFullScreenUI = target;
+            
+            // TODO : 하씨 이게 맞냐
+            LeftUpperController.Instance.RefreshUI();
+        }
+        
+        public void GoBack_FullScreen() {
+            ChangeFullScreen( lastFullScreenUI );
+        }
 
         #endregion
 
@@ -258,18 +301,11 @@ namespace DefaultNamespace
 
 
         #region DEV
-
-        [ContextMenu("Show Red Alert")]
-        public void ShowRedAlert() {
-            ShowUI<string>("RedAlert_Common", "Test Message.");
-        }
-
-        [ContextMenu("Show Black Alert")]
-        public void ShowBlackAlert() {
-            ShowUI<string>("BlackAlert_Common", "Test Message.");
-        }
         
 
         #endregion
+
+
+
     }
 }
