@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7076859783569476665}
   - component: {fileID: 3126995558725890592}
   - component: {fileID: 6539195969479244028}
+  - component: {fileID: 835550288372504991}
   m_Layer: 6
   m_Name: RedAlert_Common
   m_TagString: Untagged
@@ -90,6 +91,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.RedAlert
   message: {fileID: 3607350421639417904}
+--- !u!225 &835550288372504991
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7530897146644444413}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7724309326450512401
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +222,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 1
   m_fontSizeMax: 48
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Models.RelayMatchmakingService;
 using Views.LobbyView;
@@ -143,14 +144,13 @@ namespace Controllers.LobbyController
         public async Task OnConfirmCreateAsync()
         {
             if (ui_EnterGame == null) return;
-
-            // TODO : View 딴에서, 유저가 입력한 방 이름 읽어오기
-            string title = ui_EnterGame.GetInput_RoomName();
-            bool isPrivate = ui_EnterGame.GetInput_IsRoomPublic();
-
-            if (string.IsNullOrEmpty(title)) { CommonUIController.Instance.ShowRedAlert("방 제목을 입력하세요!"); return; }
-            CommonUIController.Instance.ShowLoading();
             
+            string rawTitle = ui_EnterGame.GetInput_RoomName();
+            bool isPrivate = ui_EnterGame.GetInput_IsRoomPublic();
+            if (string.IsNullOrEmpty(rawTitle)) { CommonUIController.Instance.ShowRedAlert("방 제목을 입력하세요!"); return; }
+            string title = FilterTitle( rawTitle ); // 필터링
+            
+            CommonUIController.Instance.ShowLoading();
             try
             {
                 SetupNetworkCallbacks();
@@ -165,13 +165,24 @@ namespace Controllers.LobbyController
             finally
             {
                 CommonUIController.Instance.DoneLoading();
-                
-                // 흠? 내가 이건 왜 적었지?
-                // CommonUIController.Instance.ShowRedAlert("방 생성 중 네트워크 통신에 실패했습니다.");
             }
-            CommonUIController.Instance.ShowLoading(); // 혹시 몰라서 한 번 더 호출
         }
 
+        private string FilterTitle(string inputTxt) {
+            // 1. 앞뒤 공백 제거 (Trim)
+            inputTxt = inputTxt.Trim();
+
+            // 2. TMP Rich Text 태그 제거 (정규식: < 로 시작해서 > 로 끝나는 모든 문자열 제거)
+            inputTxt = Regex.Replace(inputTxt, "<.*?>", string.Empty);
+
+            // 3. 금칙어 필터링 (마스킹 처리 또는 차단)
+            // TODO : 욕설 필터링
+
+            // 4. 허용되지 않은 특수문자 제거
+            inputTxt = Regex.Replace(inputTxt, @"[^a-zA-Z0-9가-힣\s]", "");
+
+            return inputTxt;
+        }
 
 
         // --- 액션 2: 코드로 비공개 방 참여 ---
@@ -209,20 +220,23 @@ namespace Controllers.LobbyController
         private void EnterWaitingRoom(string title, string joinCode)
         {
             isInWaitingRoom = true;
-            lobbyView.SetWaitingRoomTitle(title);
-            lobbyView.SetWaitingRoomJoinCode(joinCode);
-            lobbyView.SwitchMainView(MainViewType.WaitingRoom);
-            // 🌟 1. 일단 손님 자리는 비워둠 ([+] 버튼 켜기)
-            lobbyView.SetGuestSlotActive(false);
+            
+            // TODO : 대기실 UI 띄우기
+            // TODO : 대기실 Code 만들어주기
+            
+            // lobbyView.SetWaitingRoomTitle(title);
+            // lobbyView.SetWaitingRoomJoinCode(joinCode);
+            // lobbyView.SwitchMainView(MainViewType.WaitingRoom);
+            // // 🌟 1. 일단 손님 자리는 비워둠 ([+] 버튼 켜기)
+            // lobbyView.SetGuestSlotActive(false);
 
             // 🌟 2. 네트워크 매니저가 켜져 있다면 실시간 이벤트 구독 시작!
             if (NetworkManager.Singleton != null)
             {
-
-                // 만약 내가 방장이 아니라 '손님' 자격으로 막 들어온 거라면, 내 화면엔 내가 손님이므로 즉시 UI 활성화
+                // 내가 '손님'이면, 즉시 Guest UI 활성화
                 if (!NetworkManager.Singleton.IsHost && NetworkManager.Singleton.IsClient)
                 {
-                    lobbyView.SetGuestSlotActive(true);
+                    // lobbyView.SetGuestSlotActive(true);
                 }
             }
         }

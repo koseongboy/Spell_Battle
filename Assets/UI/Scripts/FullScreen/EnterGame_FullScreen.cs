@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Controllers.LobbyController;
+using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace DefaultNamespace
 {
@@ -17,6 +19,7 @@ namespace DefaultNamespace
         public EUILayer TargetLayer => EUILayer.FullScreen;
 
         private EnterGame_UIMode mode = EnterGame_UIMode.CreateRoom;
+        private bool isCreatingRoomPublic = true;
 
         [Header("Buttons")]
         [SerializeField] private Button btn_RandomEnter;
@@ -30,6 +33,12 @@ namespace DefaultNamespace
 
         [SerializeField] private Sprite Default_BtnSprite;
         [SerializeField] private Sprite Seleted_BtnSprite;
+        
+        [Header("Create Room")]
+        [SerializeField] private TMP_InputField input_RoomName;
+        [SerializeField] private Button btn_ConfirmCreateRoom;
+        [SerializeField] private Button btn_PublicToggle;
+        [SerializeField] private RectTransform rt_CreateRoom_PublicToggle;
         
         [Header("Menu Element")]
         [SerializeField] private GameObject createRoomMenuElement;
@@ -60,6 +69,9 @@ namespace DefaultNamespace
             btn_SearchRoom.onClick.AddListener( OnSearchRoomMenuPressed );
 
             OnSearchRoomByCode = cont.OnConfirmJoinByCode;
+
+            btn_PublicToggle.onClick.AddListener(OnPublicTogglePressed);
+            btn_ConfirmCreateRoom.onClick.AddListener( () => cont.OnConfirmCreateAsync());
         }
         
 
@@ -78,6 +90,18 @@ namespace DefaultNamespace
             }
             
             OnSearchRoomByCode(roomCode);
+        }
+
+        private void OnPublicTogglePressed() {
+            isCreatingRoomPublic = !isCreatingRoomPublic;
+            // 이동할 목표 X 좌표 설정
+            float targetX = isCreatingRoomPublic ? -120f : 120f;
+    
+            // 기존에 실행 중인 동일 객체의 트윈을 취소 (빠른 연타 버그 방지)
+            rt_CreateRoom_PublicToggle.DOKill();
+    
+            // 0.2초 동안 X 좌표를 targetX로 이동하며, 통통 튀는 텐션(OutBack) 부여
+            rt_CreateRoom_PublicToggle.DOAnchorPosX(targetX, 0.2f).SetEase(Ease.OutQuint);
         }
 
 
@@ -105,11 +129,12 @@ namespace DefaultNamespace
 
         
         public string GetInput_RoomName() {
-            return ""; // TODO
+            string inputTxt = input_RoomName.text;
+            return inputTxt;
         }
 
         public bool GetInput_IsRoomPublic() {
-            return true; // TODO
+            return isCreatingRoomPublic;
         }
     }
 }

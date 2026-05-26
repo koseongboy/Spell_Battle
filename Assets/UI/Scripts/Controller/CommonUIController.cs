@@ -23,10 +23,12 @@ namespace DefaultNamespace
         [SerializeField] private string lastFullScreenUI = string.Empty;
         [SerializeField] private string currentFullScreenUI = string.Empty;
         
+        [ContextMenu("Show Red Alert")]
         public void ShowRedAlert( string text ) {
             UILoader.Instance.ShowUI<string>("RedAlert_Common", text);
         }
         
+        [ContextMenu("Show Black Alert")]
         public void ShowBlackAlert( string text ) {
             UILoader.Instance.ShowUI<string>("BlackAlert_Common", text);
         }

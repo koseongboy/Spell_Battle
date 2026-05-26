@@ -2067,6 +2067,7 @@ GameObject:
   - component: {fileID: 767537957}
   - component: {fileID: 767537959}
   - component: {fileID: 767537960}
+  - component: {fileID: 767537961}
   m_Layer: 0
   m_Name: UI_Controller
   m_TagString: Untagged
@@ -2128,6 +2129,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.CommonUIController
   lastFullScreenUI: 
   currentFullScreenUI: 
+--- !u!114 &767537961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767537956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70e062380a1e16647bc098397944d990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.EnterGameController
 --- !u!1 &784845763
 GameObject:
   m_ObjectHideFlags: 0
