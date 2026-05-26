@@ -25,9 +25,7 @@ namespace DefaultNamespace
         private Dictionary<string, GameObject> loadedUIs = new();
 
 
-        // 뒤로가기 버튼을 위한
-        [SerializeField] private string lastFullScreenUI = string.Empty;
-        [SerializeField] private string currentFullScreenUI = string.Empty;
+
 
         #endregion
 
@@ -212,54 +210,6 @@ namespace DefaultNamespace
             {
                 Debug.LogWarning($"UI {uiName} 는 로드 핸들이 존재하지 않습니다.");
             }
-        }
-
-        /// <summary>
-        /// 기존 하드코딩되었던 ShowAlert 방식을 범용 제네릭 ShowUI로 통합 처리합니다.
-        /// </summary>
-        public void ShowAlert(string text)
-        {
-            // 이제 독립적인 하드코딩 메서드 대신 범용 ShowUI<T> 구조를 통해 호출 가능합니다.
-            ShowUI<string>("UI_Alert", text);
-        }
-        
-        public void ShowRedAlert( string text ) {
-            ShowUI<string>("RedAlert_Common", text);
-        }
-        
-        public void ShowBlackAlert( string text ) {
-            ShowUI<string>("BlackAlert_Common", text);
-        }
-
-        public void ShowLoading() {
-            Debug.Log("TODO : 여기서 로딩창 나와야함.");
-        }
-        
-        public bool IsGoBackAllowed() {
-            if ( lastFullScreenUI == string.Empty || currentFullScreenUI == "Lobby_FullScreen" )
-                return false;
-            
-            return true;
-        }
-        
-        public void ChangeFullScreen(string target) {
-            if (currentFullScreenUI != string.Empty) {
-                HideUI(currentFullScreenUI);
-            }
-
-            // TODO : 화면 전환 연출
-            
-            ShowUI( target );
-            
-            lastFullScreenUI = currentFullScreenUI;
-            currentFullScreenUI = target;
-            
-            // TODO : 하씨 이게 맞냐
-            LeftUpperController.Instance.RefreshUI();
-        }
-        
-        public void GoBack_FullScreen() {
-            ChangeFullScreen( lastFullScreenUI );
         }
 
         #endregion

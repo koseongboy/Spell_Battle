@@ -12,8 +12,6 @@ namespace DefaultNamespace
         
         [SerializeField] private Button btn_credit; 
         
-        // TODO : LeftUpper_Common 애들은 어떻게 처리하지?
-        
         
         public EUILayer TargetLayer => EUILayer.FullScreen;
 

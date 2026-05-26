@@ -826,7 +826,24 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Standalone: DACR_EXISTS;DAG_EXISTS;FCU_EXISTS;IMAGE_OVERFLOW_EXISTS;JSONNET_EXISTS;TextMeshPro;U2D_SPRITE_EXISTS;UITK_EXISTS
+    Android: DOTWEEN
+    EmbeddedLinux: DOTWEEN
+    GameCoreScarlett: DOTWEEN
+    GameCoreXboxOne: DOTWEEN
+    Kepler: DOTWEEN
+    LinuxHeadlessSimulation: DOTWEEN
+    Nintendo Switch: DOTWEEN
+    Nintendo Switch 2: DOTWEEN
+    PS4: DOTWEEN
+    PS5: DOTWEEN
+    QNX: DOTWEEN
+    Standalone: DACR_EXISTS;DAG_EXISTS;DOTWEEN;FCU_EXISTS;IMAGE_OVERFLOW_EXISTS;JSONNET_EXISTS;TextMeshPro;U2D_SPRITE_EXISTS;UITK_EXISTS
+    VisionOS: DOTWEEN
+    WebGL: DOTWEEN
+    Windows Store Apps: DOTWEEN
+    XboxOne: DOTWEEN
+    iPhone: DOTWEEN
+    tvOS: DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

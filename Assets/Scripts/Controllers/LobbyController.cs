@@ -30,20 +30,18 @@ namespace Controllers.LobbyController
 
         private async void Start()
         {
-            UILoader.Instance.ShowLoading();
+            CommonUIController.Instance.ShowLoading();
             
             // 서버 로그인 진행
             await matchmakingService.InitializeAndSignInAsync();
-            
+
+            CommonUIController.Instance.DoneLoading();
             // Lobby UI 불러오기
-            UILoader.Instance.ChangeFullScreen("Lobby_FullScreen");
+            CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
         }
 
         public void RegisterLobbyUI(Lobby_FullScreen ui) {
             ui_Lobby = ui;
-        }
-        public void RegisterLobbyUI() {
-            ui_EnterGame = null;
         }
 
         public void RegisterEnterGameUI(EnterGame_FullScreen ui) {
@@ -102,7 +100,7 @@ namespace Controllers.LobbyController
                 return;
             }
             
-            UILoader.Instance.ChangeFullScreen("EnterGame_FullScreen");
+            CommonUIController.Instance.ChangeFullScreen("EnterGame_FullScreen");
         }
 
         // '덱'
@@ -118,7 +116,7 @@ namespace Controllers.LobbyController
         // '크레딧'
         public void OnCreditPressed() {
             Debug.Log("[LobbyController] OnCreditPressed");
-            UILoader.Instance.ShowBlackAlert("헤헷 미구현입니다. 그치만 저희 열심히 만들었어요.");
+            CommonUIController.Instance.ShowBlackAlert("헤헷 미구현입니다. 그치만 저희 열심히 만들었어요.");
         }
 
 
@@ -133,9 +131,11 @@ namespace Controllers.LobbyController
         {
             if (lobbyView == null) return;
             
-            UILoader.Instance.ShowLoading();
+            CommonUIController.Instance.ShowLoading();
             
             var lobbies = await matchmakingService.GetPublicLobbyListAsync();
+            
+            CommonUIController.Instance.DoneLoading();
             ui_EnterGame.UpdateUI_RoomList( lobbies );
         }
         
@@ -148,24 +148,28 @@ namespace Controllers.LobbyController
             string title = ui_EnterGame.GetInput_RoomName();
             bool isPrivate = ui_EnterGame.GetInput_IsRoomPublic();
 
-            if (string.IsNullOrEmpty(title)) { UILoader.Instance.ShowRedAlert("방 제목을 입력하세요!"); return; }
-            UILoader.Instance.ShowLoading();
+            if (string.IsNullOrEmpty(title)) { CommonUIController.Instance.ShowRedAlert("방 제목을 입력하세요!"); return; }
+            CommonUIController.Instance.ShowLoading();
             
             try
             {
                 SetupNetworkCallbacks();
-                UILoader.Instance.ShowLoading();
                 string lobbyCode = await matchmakingService.CreateCustomLobbyAsync(title, isPrivate);
 
                 if (!string.IsNullOrEmpty(lobbyCode))
                 {
+                    CommonUIController.Instance.DoneLoading();
                     EnterWaitingRoom(title, lobbyCode);
                 }
             }
             finally
             {
-                UILoader.Instance.ShowRedAlert("방 생성 중 네트워크 통신에 실패했습니다.");
+                CommonUIController.Instance.DoneLoading();
+                
+                // 흠? 내가 이건 왜 적었지?
+                // CommonUIController.Instance.ShowRedAlert("방 생성 중 네트워크 통신에 실패했습니다.");
             }
+            CommonUIController.Instance.ShowLoading(); // 혹시 몰라서 한 번 더 호출
         }
 
 

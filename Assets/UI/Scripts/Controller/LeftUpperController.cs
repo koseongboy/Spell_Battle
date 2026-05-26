@@ -43,8 +43,8 @@ namespace DefaultNamespace
         }
 
         public UnityAction GetAction_GoBack() {
-            if ( UILoader.Instance.IsGoBackAllowed() ) {
-                backAction = () => { UILoader.Instance.GoBack_FullScreen(); };
+            if ( CommonUIController.Instance.IsGoBackAllowed() ) {
+                backAction = () => { CommonUIController.Instance.GoBack_FullScreen(); };
             }
             else {
                 backAction = null;
