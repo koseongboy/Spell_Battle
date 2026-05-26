@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e9748abbe8f884e42bdba91956a3050a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/Built-In/FX_LightningBolt_Gold.prefab
+  uploadId: 912098

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a3275b08ff789d04bbd8771cc15904be
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Dark Magic Effects/Prefabs/Built-In/FX_Buff_Skull.prefab
+  uploadId: 912098

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dca47ba7f9b2dcd4a86f446f124a3a36
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - FireSkill Collection/Prefab/Built-In/FX_Meteor.prefab
+  uploadId: 912098

@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 17fbd2118260ec64d99cb713cb64424f
+AssetOrigin:
+  serializedVersion: 1
+  productId: 198134
+  packageName: Figma Converter for Unity
+  packageVersion: 7.2.0
+  assetPath: Assets/DA-Assets/Figma-Converter-for-Unity/Runtime/Scripts/AssetPipeline/Sprites/Processing/SpriteAlphaNormalizer.cs
+  uploadId: 911702

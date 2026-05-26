@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cbfb9e032e981ba419339fd7e109309e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Ice Skill Collection/Prefabs/Built-In/FX_Icearrow_Hit.prefab
+  uploadId: 912098

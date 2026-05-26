@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dadbb7b7f59f5c6409a26bf69b76c0a0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - FireSkill Collection/Prefab/Built-In/FX_Fire_explosion.prefab
+  uploadId: 912098

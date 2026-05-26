@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d1ea811d935be00419ede1a7d0be1b8e
+timeCreated: 1468835801
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/vfx-ult_particle_sprite.mat
+  uploadId: 912098

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 49a9dd10c31259c4c92f47421b00d747
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Magic Projectiles Vol.1/Prefabs/FX_LightningBolt_Hit.prefab
+  uploadId: 912098

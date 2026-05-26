@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c137ce78f65ccb340a47dd6cad48a8e1
+timeCreated: 1440568938
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/Blue_Glow.mat
+  uploadId: 912098

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 268ffed9ac1bb40499c43014d64ab2a0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Enemy_1/EnemyAnimator.controller
+  uploadId: 862176

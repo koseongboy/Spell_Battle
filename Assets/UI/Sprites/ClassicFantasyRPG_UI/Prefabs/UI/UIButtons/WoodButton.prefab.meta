@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 07aa79b78d0d51948a76c401d053bfb6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/UIButtons/WoodButton.prefab
+  uploadId: 862176

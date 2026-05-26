@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 98399544c61a0124daee6d995ac29a1b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/Built-In/FX_AOE_Thundercloud.prefab
+  uploadId: 912098

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b0e320ee9a1d5894aafb8a30aa3f8bec
+timeCreated: 1501889181
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97931
+  packageName: POLYART - Stylized Sky Dungeon
+  packageVersion: 1.0
+  assetPath: Assets/Sky Temple/Prefabs/Objects/Stun1.prefab
+  uploadId: 199862

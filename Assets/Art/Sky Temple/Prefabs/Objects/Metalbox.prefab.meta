@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 5253be4e9d5ab5a43951b51062696a0b
+timeCreated: 1504288586
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97931
+  packageName: POLYART - Stylized Sky Dungeon
+  packageVersion: 1.0
+  assetPath: Assets/Sky Temple/Prefabs/Objects/Metalbox.prefab
+  uploadId: 199862

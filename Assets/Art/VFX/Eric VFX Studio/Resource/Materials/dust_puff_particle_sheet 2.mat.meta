@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5b796575f066b234ca7c3c9d30800e50
+timeCreated: 1528272711
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/dust_puff_particle_sheet 2.mat
+  uploadId: 912098

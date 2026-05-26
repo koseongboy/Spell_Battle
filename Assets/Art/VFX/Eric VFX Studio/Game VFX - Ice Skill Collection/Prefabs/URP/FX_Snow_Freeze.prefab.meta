@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d87f725955b4ec94dbca306980fa93ee
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Ice Skill Collection/Prefabs/URP/FX_Snow_Freeze.prefab
+  uploadId: 912098

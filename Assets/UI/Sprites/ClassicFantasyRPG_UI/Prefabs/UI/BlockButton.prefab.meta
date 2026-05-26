@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dbcf99c971c9dcd4cb70a97d57dcae4e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/BlockButton.prefab
+  uploadId: 862176

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7340b862cfca5424bb6bf358e55d84f1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Ice Skill Collection/Prefabs/URP/FX_FlySlash_Snow.prefab
+  uploadId: 912098

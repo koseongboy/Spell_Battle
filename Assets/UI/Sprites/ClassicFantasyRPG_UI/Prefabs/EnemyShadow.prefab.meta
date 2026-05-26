@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4e4812c9d9ee3114787b0b8868447457
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/EnemyShadow.prefab
+  uploadId: 862176

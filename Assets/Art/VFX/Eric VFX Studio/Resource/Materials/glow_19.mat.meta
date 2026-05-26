@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1201c8f42462c0e4cb0f3d0d3e9352c7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: base/effect2/character/material/fx1554.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glow_19.mat
+  uploadId: 912098

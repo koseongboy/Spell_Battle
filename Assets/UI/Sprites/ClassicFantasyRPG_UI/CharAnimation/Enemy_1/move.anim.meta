@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 28d011a98cd3bd84996396f6bbdf0ebb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Enemy_1/move.anim
+  uploadId: 862176

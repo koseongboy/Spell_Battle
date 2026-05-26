@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dd8dee21f7c35ff41854f7541da248f7
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/Built-In/FX_CartoonLightning_Blue.prefab
+  uploadId: 912098

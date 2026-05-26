@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 648815684b9669442a8e82a2365b46f6
+timeCreated: 1537686855
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: fx_textures_flare_materials.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/eye_lwy_t_ptc_18_single_1.mat
+  uploadId: 912098

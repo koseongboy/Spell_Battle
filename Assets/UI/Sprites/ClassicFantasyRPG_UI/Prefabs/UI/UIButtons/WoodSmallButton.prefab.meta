@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 327e5fa22be4d7445881b24d1711a57a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/UIButtons/WoodSmallButton.prefab
+  uploadId: 862176

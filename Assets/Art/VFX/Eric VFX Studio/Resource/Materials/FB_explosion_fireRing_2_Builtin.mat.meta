@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 32d2945c03c264e49806138f2162210d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/FB_explosion_fireRing_2_Builtin.mat
+  uploadId: 912098

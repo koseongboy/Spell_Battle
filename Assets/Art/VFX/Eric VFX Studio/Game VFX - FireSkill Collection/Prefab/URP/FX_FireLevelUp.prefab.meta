@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1fffcb729a3db4c4197c45283dbdcaa2
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - FireSkill Collection/Prefab/URP/FX_FireLevelUp.prefab
+  uploadId: 912098

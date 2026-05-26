@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 40bcc2b0464847b4db88847d09d3fa00
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/Built-In/FX_Light_Hit03.prefab
+  uploadId: 912098

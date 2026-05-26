@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b387b924a6dda4045b0f5fbb8b7a86cd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Enemy_1/Enemy_1_PSB.controller
+  uploadId: 862176

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0fcc0c41a81d21b428c28bfa7008b226
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Hero/defHurt.anim
+  uploadId: 862176

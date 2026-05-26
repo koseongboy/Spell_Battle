@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f6cf5a2134fdd3549abd060e81950244
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Dark Magic Effects/Prefabs/Built-In/FX_Ghost_Loop.prefab
+  uploadId: 912098

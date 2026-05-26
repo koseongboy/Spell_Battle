@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2daffade3e749e34290d6be46d5eec66
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Ice Skill Collection/Prefabs/URP/FX_MagicCircle_Crystal.prefab
+  uploadId: 912098

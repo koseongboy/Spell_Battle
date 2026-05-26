@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 138dfffd0dd24f14684080187603921b
+timeCreated: 1501934313
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97931
+  packageName: POLYART - Stylized Sky Dungeon
+  packageVersion: 1.0
+  assetPath: Assets/Sky Temple/Prefabs/Objects/Rock2.prefab
+  uploadId: 199862

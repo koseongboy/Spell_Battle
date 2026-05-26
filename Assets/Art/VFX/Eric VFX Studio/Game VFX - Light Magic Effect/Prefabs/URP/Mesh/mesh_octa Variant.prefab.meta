@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d4eee380ec3fbf2428ce1cdb0c8a64eb
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/URP/Mesh/mesh_octa
+    Variant.prefab
+  uploadId: 912098

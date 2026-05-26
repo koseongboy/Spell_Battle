@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 19a388b7183f5734f9eb34648bd0def2
+AssetOrigin:
+  serializedVersion: 1
+  productId: 198134
+  packageName: Figma Converter for Unity
+  packageVersion: 7.2.0
+  assetPath: Assets/DA-Assets/Figma-Converter-for-Unity/Runtime/Scripts/Data/Layout/LayoutGridPattern.cs
+  uploadId: 911702

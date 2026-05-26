@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2a2d052986ef0e2439b2cc82a6718db6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Animator/FX_AOE_Star Rain.controller
+  uploadId: 912098

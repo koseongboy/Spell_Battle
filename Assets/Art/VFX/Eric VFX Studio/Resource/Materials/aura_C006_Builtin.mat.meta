@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 81841d6147e28764a858bf1f0d556030
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/aura_C006_Builtin.mat
+  uploadId: 912098

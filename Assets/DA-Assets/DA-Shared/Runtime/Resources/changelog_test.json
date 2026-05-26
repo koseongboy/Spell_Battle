@@ -1,0 +1,133 @@
+{
+  "assets": [
+    {
+      "name": "Figma Converter for Unity",
+      "assetType": 1,
+      "oldVersionDaysCount": 28,
+      "developerMessage": {
+        "text": "Asset-level developer message rendering test. <link=\"daassets\"><color=#62A8FF><u>da-assets.com</u></color></link>",
+        "type": 1,
+        "links": [
+          {
+            "id": "daassets",
+            "url": "https://da-assets.com/"
+          }
+        ]
+      },
+      "versions": [
+        {
+          "version": "7.1.0",
+          "versionType": 0,
+          "releaseDate": "Apr 24, 2026",
+          "description": "Added:\n• Baseline entry for testing the previous release in the new changelog popup.\n\nFixed:\n• Minor inspector text layout issues.",
+          "developerMessage": {
+            "text": "Version-level developer message rendering test. <link=\"daassets\"><color=#62A8FF><u>da-assets.com</u></color></link>",
+            "type": 2,
+            "links": [
+              {
+                "id": "daassets",
+                "url": "https://da-assets.com/"
+              }
+            ]
+          },
+          "changelog": {
+            "added": [
+              {
+                "description": "Baseline entry for testing the previous release in the new changelog popup.",
+                "richText": "Baseline <code>7.1.0</code> entry for testing the previous release in the new changelog popup."
+              }
+            ],
+            "fixed": [
+              {
+                "description": "Minor inspector text layout issues.",
+                "richText": "Minor inspector text layout issues."
+              }
+            ],
+            "knownIssues": [
+              {
+                "description": "Known issue section rendering test.",
+                "richText": "Known issue section rendering test."
+              }
+            ]
+          }
+        },
+        {
+          "version": "7.2.0",
+          "versionType": 0,
+          "releaseDate": "May 1, 2026",
+          "description": "Added:\n• Keep a Changelog compatible JSON data for release notes.\n• Rich changelog popup with colored sections, inline code, and clickable documentation links.\n\nChanged:\n• Asset footer version details now render through UITK instead of the native Unity tooltip.\n\nFixed:\n• Long changelog lines wrap inside a scrollable popup.",
+          "developerMessage": {
+            "text": "Latest version developer message rendering test.",
+            "type": 1
+          },
+          "changelog": {
+            "added": [
+              {
+                "description": "Keep a Changelog compatible JSON data for release notes.",
+                "richText": "Keep a Changelog compatible JSON data for release notes, while preserving the old <code>description</code> fallback.",
+                "links": [
+                  {
+                    "id": "keepachangelog",
+                    "url": "https://keepachangelog.com/en/1.1.0/"
+                  }
+                ]
+              },
+              {
+                "description": "Rich changelog popup with colored sections, inline code, and clickable documentation links.",
+                "richText": "Rich changelog popup with colored sections, inline <code>code</code>, and clickable <link=\"keepachangelog\"><color=#62A8FF><u>Keep a Changelog</u></color></link> links.",
+                "links": [
+                  {
+                    "id": "keepachangelog",
+                    "url": "https://keepachangelog.com/en/1.1.0/"
+                  }
+                ]
+              }
+            ],
+            "changed": [
+              {
+                "description": "Asset footer version details now render through UITK instead of the native Unity tooltip.",
+                "richText": "Asset footer version details now render through <code>UITK</code> instead of the native Unity tooltip."
+              }
+            ],
+            "deprecated": [
+              {
+                "description": "Deprecated section rendering test.",
+                "richText": "Deprecated section rendering test."
+              }
+            ],
+            "removed": [
+              {
+                "description": "Removed section rendering test.",
+                "richText": "Removed section rendering test."
+              }
+            ],
+            "fixed": [
+              {
+                "description": "Long changelog lines wrap inside a scrollable popup.",
+                "richText": "Long changelog lines wrap inside a scrollable popup."
+              }
+            ],
+            "security": [
+              {
+                "description": "No security changes in this test release.",
+                "richText": "No security changes in this test release."
+              }
+            ],
+            "notes": [
+              {
+                "description": "Notes section rendering test.",
+                "richText": "Notes section rendering test."
+              }
+            ],
+            "knownIssues": [
+              {
+                "description": "Known issues section rendering test.",
+                "richText": "Known issues section rendering test."
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

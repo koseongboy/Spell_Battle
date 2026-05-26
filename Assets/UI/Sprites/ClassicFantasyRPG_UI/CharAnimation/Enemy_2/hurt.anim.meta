@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8ce69e2b9a3f7cf44a8c35fc49d7abe0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Enemy_2/hurt.anim
+  uploadId: 862176

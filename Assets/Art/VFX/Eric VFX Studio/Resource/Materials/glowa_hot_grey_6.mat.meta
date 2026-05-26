@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b98fe20dd7078ce40a2f09013e438c5b
+timeCreated: 1435044376
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/glowa_hot_grey_6.mat
+  uploadId: 912098

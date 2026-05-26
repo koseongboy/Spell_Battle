@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 61a9dc0848be7b64baadf6647a15ae2e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/URP/Mesh/Dust_Sphere002.prefab
+  uploadId: 912098

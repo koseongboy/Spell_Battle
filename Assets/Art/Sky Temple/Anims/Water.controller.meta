@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 085a5b9958a463b428efedd5ca2aa1be
+timeCreated: 1502627967
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97931
+  packageName: POLYART - Stylized Sky Dungeon
+  packageVersion: 1.0
+  assetPath: Assets/Sky Temple/Anims/Water.controller
+  uploadId: 199862

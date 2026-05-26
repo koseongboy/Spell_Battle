@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7ffb09e5c2fd462428d9bd09fb3b7d91
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/URP/FX_AOE_DarkShock.prefab
+  uploadId: 912098

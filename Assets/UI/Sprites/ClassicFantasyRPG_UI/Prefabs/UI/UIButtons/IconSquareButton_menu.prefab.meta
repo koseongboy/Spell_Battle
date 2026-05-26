@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dcde33c648d644648aa3566758875646
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Prefabs/UI/UIButtons/IconSquareButton_menu.prefab
+  uploadId: 862176

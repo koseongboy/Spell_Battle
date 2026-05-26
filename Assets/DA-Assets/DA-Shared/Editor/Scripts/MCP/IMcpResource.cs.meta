@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 41a6f14d6c7f4d20a2f6d1e8b5a31401
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 198134
+  packageName: Figma Converter for Unity
+  packageVersion: 7.2.0
+  assetPath: Assets/DA-Assets/DA-Shared/Editor/Scripts/MCP/IMcpResource.cs
+  uploadId: 911702

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0dc93b3892aa1354fbaf16910bb98d3c
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/Shaders/Grayscale.shader
+  uploadId: 862176

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ac861bff540aeb64e8f3b2f2ccbba583
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/Built-In/FX_AOE_Meter
+    Shower.prefab
+  uploadId: 912098

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ca15122426976534f9767ca8e78e9052
+timeCreated: 1502658621
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97931
+  packageName: POLYART - Stylized Sky Dungeon
+  packageVersion: 1.0
+  assetPath: Assets/Sky Temple/Anims/Sky.anim
+  uploadId: 199862

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 14266513672efb54f90acf918ab07d7f
+timeCreated: 1502703657
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 97931
+  packageName: POLYART - Stylized Sky Dungeon
+  packageVersion: 1.0
+  assetPath: Assets/Sky Temple/Demo/Anim/Camera.controller
+  uploadId: 199862

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 173befdc66754b94fb30e3f34fe4c63e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - AOE Pack/Prefabs/Built-In/FX_AOE_Missiles.prefab
+  uploadId: 912098

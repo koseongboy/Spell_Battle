@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 12a0ebda8bb113a429e2096072f159e3
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Dark Magic Effects/Prefabs/URP/FX_Galaxy
+    Cube.prefab
+  uploadId: 912098

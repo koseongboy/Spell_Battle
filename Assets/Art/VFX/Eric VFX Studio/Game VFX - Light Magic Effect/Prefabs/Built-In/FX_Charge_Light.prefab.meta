@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 998f14ff3aafec94c91772f273b8f216
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/Built-In/FX_Charge_Light.prefab
+  uploadId: 912098

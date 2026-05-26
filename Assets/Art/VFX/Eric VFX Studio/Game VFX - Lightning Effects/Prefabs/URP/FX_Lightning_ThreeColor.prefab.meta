@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c28f2cf6e7a7ed146bf02d268c07d1cf
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/URP/FX_Lightning_ThreeColor.prefab
+  uploadId: 912098

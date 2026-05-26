@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d872dead66dfbd247b42319595036137
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: base/effect2/character/material/fx1630.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/imp_01.mat
+  uploadId: 912098

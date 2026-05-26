@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c92f976a4b0eec34e927df88b7286ac8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Prefabs/Built-In/FX_LightningExp_Purple.prefab
+  uploadId: 912098

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ec32de48c42fc994e9061a46431b2411
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/Built-In/FX_SunLight_Loop.prefab
+  uploadId: 912098

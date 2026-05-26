@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 10ece83ff56b1ad439f875c6014cacd9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/PhysicMaterials/Player.physicsMaterial2D
+  uploadId: 862176

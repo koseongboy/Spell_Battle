@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 42bc8e74b4ee5ec40a579b168dc86884
+timeCreated: 1526269594
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/Flare_Gold2.mat
+  uploadId: 912098

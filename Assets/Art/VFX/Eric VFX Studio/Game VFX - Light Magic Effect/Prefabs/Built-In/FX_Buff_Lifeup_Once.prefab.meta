@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 138e86d88e048654eba5234f778b2608
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Light Magic Effect/Prefabs/Built-In/FX_Buff_Lifeup_Once.prefab
+  uploadId: 912098

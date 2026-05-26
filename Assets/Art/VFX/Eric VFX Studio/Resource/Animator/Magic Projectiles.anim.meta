@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 83ec6d3361c6cca45a487d5b5c8fc9bb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Animator/Magic Projectiles.anim
+  uploadId: 912098

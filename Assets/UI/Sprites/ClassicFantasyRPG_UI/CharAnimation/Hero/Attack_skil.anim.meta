@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a6a45fe1094659f4fa841d802fea8d9d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 193841
+  packageName: Classic Fantasy RPG - UI Kit
+  packageVersion: 1.01
+  assetPath: Assets/ClassicFantasyRPG_UI/CharAnimation/Hero/Attack_skil.anim
+  uploadId: 862176

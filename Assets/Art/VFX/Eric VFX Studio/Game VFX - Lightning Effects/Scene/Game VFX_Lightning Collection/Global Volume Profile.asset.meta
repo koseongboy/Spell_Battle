@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: fb167ddfcd62e7d4094d1e8622c4d28d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Game VFX - Lightning Effects/Scene/Game VFX_Lightning
+    Collection/Global Volume Profile.asset
+  uploadId: 912098

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 16df485cfdc6a154eb97e603889fc2ef
+timeCreated: 1467861852
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: fx_textures_line_rotate_materials.unity3d
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 378522
+  packageName: Game VFX - RPG Skill Effects (Magic, AOE, Projectile)
+  packageVersion: 1.0
+  assetPath: Assets/Eric VFX Studio/Resource/Materials/sl-g01g_13.mat
+  uploadId: 912098
