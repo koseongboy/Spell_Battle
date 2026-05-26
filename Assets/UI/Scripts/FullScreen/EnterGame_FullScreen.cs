@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Pool;
 
 namespace DefaultNamespace
 {
@@ -19,7 +20,7 @@ namespace DefaultNamespace
         public EUILayer TargetLayer => EUILayer.FullScreen;
 
         private EnterGame_UIMode mode = EnterGame_UIMode.CreateRoom;
-        private bool isCreatingRoomPublic = true;
+        private bool isCreatingRoomPrivate = false;
 
         [Header("Buttons")]
         [SerializeField] private Button btn_RandomEnter;
@@ -38,7 +39,15 @@ namespace DefaultNamespace
         [SerializeField] private TMP_InputField input_RoomName;
         [SerializeField] private Button btn_ConfirmCreateRoom;
         [SerializeField] private Button btn_PublicToggle;
-        [SerializeField] private RectTransform rt_CreateRoom_PublicToggle;
+        [FormerlySerializedAs("rt_CreateRoom_PublicToggle")] [SerializeField] private RectTransform rt_CreateRoom_PrivateToggle;
+        
+        [Header("Find Room")]
+        [SerializeField] private Transform contentParent;    // Scroll View 안의 Content 객체를 드래그 앤 드롭
+        [SerializeField] private FindRoom_RoomPiece roomPiecePrefab;
+        // 현재 화면에 활성화되어 있는(풀에서 꺼낸) 아이템들을 추적하는 리스트
+        private List<FindRoom_RoomPiece> activeItems = new List<FindRoom_RoomPiece>();
+        // 오브젝트 풀 인터페이스 선언
+        private IObjectPool<FindRoom_RoomPiece> roomPool;
         
         [Header("Menu Element")]
         [SerializeField] private GameObject createRoomMenuElement;
@@ -51,6 +60,7 @@ namespace DefaultNamespace
                 LobbyController.Instance.RegisterEnterGameUI(this);
                 BindEvents();
                 SetMenuMode(EnterGame_UIMode.CreateRoom);
+                ReadyRoomPiecePool();
             }
         }
 
@@ -93,15 +103,15 @@ namespace DefaultNamespace
         }
 
         private void OnPublicTogglePressed() {
-            isCreatingRoomPublic = !isCreatingRoomPublic;
+            isCreatingRoomPrivate = !isCreatingRoomPrivate;
             // 이동할 목표 X 좌표 설정
-            float targetX = isCreatingRoomPublic ? -120f : 120f;
+            float targetX = isCreatingRoomPrivate ? 120f : -120f;
     
             // 기존에 실행 중인 동일 객체의 트윈을 취소 (빠른 연타 버그 방지)
-            rt_CreateRoom_PublicToggle.DOKill();
+            rt_CreateRoom_PrivateToggle.DOKill();
     
             // 0.2초 동안 X 좌표를 targetX로 이동하며, 통통 튀는 텐션(OutBack) 부여
-            rt_CreateRoom_PublicToggle.DOAnchorPosX(targetX, 0.2f).SetEase(Ease.OutQuint);
+            rt_CreateRoom_PrivateToggle.DOAnchorPosX(targetX, 0.2f).SetEase(Ease.OutQuint);
         }
 
 
@@ -119,12 +129,21 @@ namespace DefaultNamespace
         }
 
         public void UpdateUI_RoomList(List<Lobby> lobbies) {
-            // 방 리스트 서버에서 가져오기
             Debug.Log(lobbies);
             
-            // TODO : 기존 리스트 초기화
-            
-            // TODO : 새 리스트로 채워넣기
+            // 1. 기존 리스트 초기화
+            // Content의 자식으로 있는 기존 방 UI들을 모두 삭제합니다.
+            foreach (Transform child in contentParent) 
+            {
+                Destroy(child.gameObject);
+            }
+
+            // 2. 새 리스트로 채워넣기
+            foreach (Lobby lobby in lobbies) 
+            {
+                FindRoom_RoomPiece newItem = Instantiate(roomPiecePrefab, contentParent);
+                newItem.UpdateUI(lobby);
+            }
         }
 
         
@@ -133,8 +152,21 @@ namespace DefaultNamespace
             return inputTxt;
         }
 
-        public bool GetInput_IsRoomPublic() {
-            return isCreatingRoomPublic;
+        public bool GetInput_IsRoomPrivate() {
+            return isCreatingRoomPrivate;
+        }
+
+
+        private void ReadyRoomPiecePool() {
+            // 씬 시작 시 오브젝트 풀 초기화 및 규칙 셋업
+            roomPool = new ObjectPool<FindRoom_RoomPiece>(
+                createFunc: () => Instantiate(roomPiecePrefab, contentParent), // 1. 풀에 여분이 없을 때 새로 생성하는 로직
+                actionOnGet: (item) => item.gameObject.SetActive(true),   // 2. 풀에서 꺼낼 때 실행할 로직 (활성화)
+                actionOnRelease: (item) => item.gameObject.SetActive(false), // 3. 풀로 반환할 때 실행할 로직 (비활성화)
+                actionOnDestroy: (item) => Destroy(item.gameObject),      // 4. 최대 보관 용량 초과 시 파괴 로직
+                defaultCapacity: 5, // 기본 할당량
+                maxSize: 200          // 최대 보관량 (이 수치를 넘어가면 반환 시 객체를 파괴함)
+            );
         }
     }
 }

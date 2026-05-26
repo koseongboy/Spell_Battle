@@ -146,7 +146,8 @@ namespace Controllers.LobbyController
             if (ui_EnterGame == null) return;
             
             string rawTitle = ui_EnterGame.GetInput_RoomName();
-            bool isPrivate = ui_EnterGame.GetInput_IsRoomPublic();
+            bool isPrivate = ui_EnterGame.GetInput_IsRoomPrivate();
+            Debug.Log(isPrivate);
             if (string.IsNullOrEmpty(rawTitle)) { CommonUIController.Instance.ShowRedAlert("방 제목을 입력하세요!"); return; }
             string title = FilterTitle( rawTitle ); // 필터링
             
@@ -154,7 +155,12 @@ namespace Controllers.LobbyController
             try
             {
                 SetupNetworkCallbacks();
-                string lobbyCode = await matchmakingService.CreateCustomLobbyAsync(title, isPrivate);
+                
+                // TODO : 플레이어의 이름와 레벨을 가져와서 방 개설
+                string playerName = "TEST";
+                int playerLevel = 0;
+                
+                string lobbyCode = await matchmakingService.CreateCustomLobbyAsync(title, isPrivate, playerName, playerLevel);
 
                 if (!string.IsNullOrEmpty(lobbyCode))
                 {

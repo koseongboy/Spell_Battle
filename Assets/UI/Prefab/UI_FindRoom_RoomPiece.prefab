@@ -487,6 +487,7 @@ GameObject:
   - component: {fileID: 8147871881771941954}
   - component: {fileID: 3763880939309508649}
   - component: {fileID: 6187981711144866170}
+  - component: {fileID: 299843550636633317}
   m_Layer: 5
   m_Name: UI_FindRoom_RoomPiece
   m_TagString: Untagged
@@ -582,6 +583,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 1
+--- !u!114 &299843550636633317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974715906419634369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12dca5f46b51ee04b9cb11c8a31f3528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.FindRoom_RoomPiece
+  txt_RoomName: {fileID: 3975508307607705907}
+  txt_HostName: {fileID: 6766900274702103533}
+  txt_HostLevel: {fileID: 5543088901443804784}
+  txt_Capacity: {fileID: 8448579423445070373}
 --- !u!1 &6986652182597918686
 GameObject:
   m_ObjectHideFlags: 0

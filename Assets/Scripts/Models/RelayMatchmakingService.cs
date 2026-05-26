@@ -123,7 +123,7 @@ namespace Models.RelayMatchmakingService
         // ==========================================
         // ✨ [새로 추가된 기능] 2. 방 제목 지정 & 공개/비공개 방 생성
         // ==========================================
-        public async Task<string> CreateCustomLobbyAsync(string roomName, bool isPrivate)
+        public async Task<string> CreateCustomLobbyAsync(string roomName, bool isPrivate, string hostName="", int hostLevel=0)
         {
             try
             {
@@ -138,17 +138,24 @@ namespace Models.RelayMatchmakingService
                     Data = new Dictionary<string, DataObject>
                     {
                         // 릴레이 코드는 'Member(방 참가자)'만 볼 수 있도록 숨김 처리
-                        { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, relayJoinCode) }
+                        { "JoinCode", new DataObject(DataObject.VisibilityOptions.Member, relayJoinCode) },
+                
+                        // 방장 이름 (방에 입장하지 않은 사람도 리스트에서 봐야 하므로 Public 설정)
+                        // 추후 방장 이름으로 검색할 수 있도록 IndexOptions.S1 할당 (String 인덱스)
+                        { "HostName", new DataObject(DataObject.VisibilityOptions.Public, hostName, DataObject.IndexOptions.S1) },
+                
+                        // 방장 레벨 (숫자도 문자열로 변환하여 저장, 추후 레벨 제한 필터링을 위해 IndexOptions.N1 할당)
+                        { "HostLevel", new DataObject(DataObject.VisibilityOptions.Public, hostLevel.ToString(), DataObject.IndexOptions.N1) }
                     }
                 };
 
                 // 3. 로비 서버에 방 등록 (최대 인원 2명)
                 currentLobby = await LobbyService.Instance.CreateLobbyAsync(roomName, 2, options);
-                StartHeartbeat();
-                
+                StartHeartbeat(); // (작성하신 Heartbeat 코루틴/메서드 호출)
+        
                 Debug.Log($"커스텀 방 생성 완료! 제목: {roomName}, 로비코드: {currentLobby.LobbyCode}");
-                
-                // 생성한 방의 로비 접속 코드 반환 (비공개 방일 경우 친구에게 알려줄 코드)
+        
+                // 생성한 방의 로비 접속 코드 반환
                 return currentLobby.LobbyCode;
             }
             catch (LobbyServiceException e)
