@@ -334,7 +334,7 @@ GameObject:
   - component: {fileID: 569652824}
   - component: {fileID: 569652823}
   m_Layer: 0
-  m_Name: Canvas 223e470a
+  m_Name: Canvas for Figma
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
