@@ -175,16 +175,11 @@ namespace Controllers.LobbyController
 
 
         // --- 액션 2: 코드로 비공개 방 참여 ---
-        private async void OnConfirmJoinByCode()
+        public async void OnConfirmJoinByCode( string code )
         {
-            string code = lobbyView.GetInputCode();
-            if (string.IsNullOrEmpty(code)) { lobbyView.UpdateStatus("코드를 입력하세요!"); return; }
-
-            
-            lobbyView.SetLoadingPanel(true, "대결방에 접속하고 있습니다...");
+            CommonUIController.Instance.ShowLoading();
             try
             {
-                lobbyView.UpdateStatus($"{code} 방에 접속 시도 중...");
                 string title = await matchmakingService.JoinCustomLobbyByCodeAsync(code);
                 
                 if (title != null) EnterWaitingRoom(title, code);
@@ -192,12 +187,12 @@ namespace Controllers.LobbyController
             }
             finally
             {
-                lobbyView.SetLoadingPanel(false);
+                CommonUIController.Instance.DoneLoading();
             }
         }
 
         // --- 액션 3: 리스트에서 선택하여 참여 ---
-        private async void OnConfirmJoinFromList(string lobbyId)
+        public async void OnConfirmJoinFromList(string lobbyId)
         {
             if (string.IsNullOrEmpty(lobbyId)) { lobbyView.UpdateStatus("입장할 방을 선택하세요."); return; }
 

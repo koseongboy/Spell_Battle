@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Controllers.LobbyController;
 using Unity.Services.Lobbies.Models;
@@ -14,75 +15,101 @@ namespace DefaultNamespace
     
     public class EnterGame_FullScreen : MonoBehaviour, UI_ILayerInfo {
         public EUILayer TargetLayer => EUILayer.FullScreen;
-        public LobbyController lobbyController;
 
+        private EnterGame_UIMode mode = EnterGame_UIMode.CreateRoom;
+
+        [Header("Buttons")]
         [SerializeField] private Button btn_RandomEnter;
         [SerializeField] private Button btn_CreateRoom;
         [SerializeField] private Button btn_FindRoom;
+        [SerializeField] private Button btn_SearchRoom;
         
-        
+        [Header("Images")]
         [SerializeField] private Image CreateRoom_BtnImage;
         [SerializeField] private Image FindRoom_BtnImage;
 
         [SerializeField] private Sprite Default_BtnSprite;
         [SerializeField] private Sprite Seleted_BtnSprite;
+        
+        [Header("Menu Element")]
+        [SerializeField] private GameObject createRoomMenuElement;
+        [SerializeField] private GameObject findRoomMenuElement;
+
+        private Action<string> OnSearchRoomByCode;
 
         private void Start() {
             if (LobbyController.Instance != null) {
                 LobbyController.Instance.RegisterEnterGameUI(this);
                 BindEvents();
+                SetMenuMode(EnterGame_UIMode.CreateRoom);
             }
         }
 
         private void BindEvents() {
             var cont = LobbyController.Instance;
             
-            // randomEnterButton.onClick.AddListener( () => cont. );
+            // TODO : 랜덤입장
+            // btn_RandomEnter.onClick.AddListener( () => cont. );
             
-        }
-
-
-        public void RandomEnter_Pressed() {
-            Debug.Log("[EnterGame_FullScreen] Random Enter Pressed");
-        }
-
-        public void CreateRoom_Pressed() {
-            Debug.Log("[EnterGame_FullScreen] Create Room Pressed");
-        }
-
-        public void FindRoom_Pressed() {
-            Debug.Log("[EnterGame_FullScreen] Find Room Pressed");
-        }
-
-
-        public void ChangeMode_Create() {
             
+            btn_CreateRoom.onClick.AddListener( OnCreateRoomMenuPressed );
+            
+            btn_FindRoom.onClick.AddListener( OnFindRoomMenuPressed );
+            btn_FindRoom.onClick.AddListener( cont.OnFindRoomPressed );
+            
+            btn_SearchRoom.onClick.AddListener( OnSearchRoomMenuPressed );
+
+            OnSearchRoomByCode = cont.OnConfirmJoinByCode;
+        }
+        
+
+        private void OnCreateRoomMenuPressed() {
+            SetMenuMode(EnterGame_UIMode.CreateRoom);
         }
 
-        public void ChangeMode_Find() {
+        private void OnFindRoomMenuPressed() {
+            SetMenuMode(EnterGame_UIMode.FindRoom);
+        }
+
+        private void OnSearchRoomMenuPressed() {
+            string roomCode = GetInput_RoomName(); // TODO
+            if (string.IsNullOrEmpty(roomCode)) { CommonUIController.Instance.ShowRedAlert("코드를 입력하세요!");
+                return;
+            }
             
+            OnSearchRoomByCode(roomCode);
+        }
+
+
+        private void SetMenuMode( EnterGame_UIMode newMode ) {
+            mode = newMode;
+
+            if (mode == EnterGame_UIMode.CreateRoom) {
+                createRoomMenuElement.gameObject.SetActive(true);
+                findRoomMenuElement.gameObject.SetActive(false);
+            }
+            else {
+                createRoomMenuElement.gameObject.SetActive(false);
+                findRoomMenuElement.gameObject.SetActive(true);
+            }
         }
 
         public void UpdateUI_RoomList(List<Lobby> lobbies) {
-            // TODO : 방 리스트 서버에서 가져오기
-            // 
+            // 방 리스트 서버에서 가져오기
+            Debug.Log(lobbies);
             
             // TODO : 기존 리스트 초기화
             
             // TODO : 새 리스트로 채워넣기
         }
 
-        public void SearchRoom_Pressed() {
-            Debug.Log("[EnterGame_FullScreen] Search Room Pressed");
-        }
-
         
         public string GetInput_RoomName() {
-            throw new System.NotImplementedException();
+            return ""; // TODO
         }
 
         public bool GetInput_IsRoomPublic() {
-            throw new System.NotImplementedException();
+            return true; // TODO
         }
     }
 }

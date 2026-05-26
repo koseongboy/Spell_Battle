@@ -2861,10 +2861,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c6c054b3e6e4e6438c58ba7bb9b3eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.EnterGame_FullScreen
+  btn_RandomEnter: {fileID: 2027433221953048093}
+  btn_CreateRoom: {fileID: 6414039415501992041}
+  btn_FindRoom: {fileID: 7832585928812335535}
+  btn_SearchRoom: {fileID: 8278378370308497759}
   CreateRoom_BtnImage: {fileID: 6749885129448975115}
   FindRoom_BtnImage: {fileID: 8925761660910965375}
   Default_BtnSprite: {fileID: 21300000, guid: 498da230f3bde3249a46f4ab2c40cdb0, type: 3}
   Seleted_BtnSprite: {fileID: 21300000, guid: 87e7db6d7d7c47148909d1c5cf361598, type: 3}
+  createRoomMenuElement: {fileID: 4325995988765311426}
+  findRoomMenuElement: {fileID: 6075495460669817719}
 --- !u!1 &6075495460669817719
 GameObject:
   m_ObjectHideFlags: 0
