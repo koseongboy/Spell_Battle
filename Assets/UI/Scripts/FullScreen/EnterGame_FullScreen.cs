@@ -79,22 +79,22 @@ namespace DefaultNamespace
             // btn_RandomEnter.onClick.AddListener( () => cont. );
             
             // 좌측 메뉴
-            btn_RandomEnter.onClick.AddListener( () => _ = cont.OnRandomJoinPressed() );
+            btn_RandomEnter.onClick.AddListener( () => _ = cont.OnClick_RandomJoin() );
             
             btn_CreateRoom.onClick.AddListener( OnCreateRoomMenuPressed );
             
             btn_FindRoom.onClick.AddListener( OnFindRoomMenuPressed );
-            btn_FindRoom.onClick.AddListener( cont.OnFindRoomPressed );
+            btn_FindRoom.onClick.AddListener( cont.OnClick_FindRoom );
             
             btn_SearchRoom.onClick.AddListener( OnSearchRoomMenuPressed );
-            OnSearchRoomByCode = cont.OnConfirmJoinByCode;
+            OnSearchRoomByCode = cont.OnClick_JoinByCode;
 
             // Create Room
             btn_PublicToggle.onClick.AddListener(OnPublicTogglePressed);
-            btn_ConfirmCreateRoom.onClick.AddListener( () => _ = cont.OnConfirmCreateAsync());
+            btn_ConfirmCreateRoom.onClick.AddListener( () => _ = cont.OnClick_CreateRoomConfirm());
             
             // Find Room
-            btn_FindRoom_Enter.onClick.AddListener( () => cont.OnConfirmJoinFromList(selectedLobbyId) );
+            btn_FindRoom_Enter.onClick.AddListener( () => cont.OnClick_JoinFromList(selectedLobbyId) );
         }
         
 

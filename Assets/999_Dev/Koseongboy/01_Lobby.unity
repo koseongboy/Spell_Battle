@@ -2138,7 +2138,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 767537956}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70e062380a1e16647bc098397944d990, type: 3}
+  m_Script: {fileID: 11500000, guid: edb87b14c4fd804428376a2089883ea5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.EnterGameController
 --- !u!1 &784845763

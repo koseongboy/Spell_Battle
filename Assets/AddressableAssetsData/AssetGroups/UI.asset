@@ -40,6 +40,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 728a7abe206ec0f4fa663234acc2896c
+    m_Address: Room_FullScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 73ba2b89de6180a48957ebd539164cfb
     m_Address: BlackAlert_Common
     m_ReadOnly: 0

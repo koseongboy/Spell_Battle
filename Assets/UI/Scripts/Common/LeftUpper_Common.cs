@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -5,39 +6,30 @@ using UnityEngine.UI;
 namespace DefaultNamespace
 {
     public class LeftUpper_Common : MonoBehaviour, UI_ILayerInfo {
+        public EUILayer TargetLayer => EUILayer.Popup;
+        
         [SerializeField] private Button btn_Option;
         [SerializeField] private Button btn_Friend;
         [SerializeField] private Button btn_Back;
         
-        public EUILayer TargetLayer => EUILayer.Popup;
+        // Controller가 구독할 클릭 이벤트
+        public event Action OnClicked_Option;
+        public event Action OnClicked_Friend;
+        public event Action OnClicked_Back;
         
         private void Start() {
             LeftUpperController.Instance.RegisterView(this);
-            BindEvents();
+            
+            // UI 버튼 클릭 시 이벤트 발생
+            btn_Option.onClick.AddListener(() => OnClicked_Option?.Invoke());
+            btn_Friend.onClick.AddListener(() => OnClicked_Friend?.Invoke());
+            btn_Back.onClick.AddListener(() => OnClicked_Back?.Invoke());
         }
-
-        public void BindEvents() {
-            var cont = LeftUpperController.Instance;
-            
-            // 옵션 버튼
-            btn_Option.onClick.RemoveAllListeners();
-            btn_Option.onClick.AddListener( ()=>cont.OpenOptionUI() );
-            
-            // 친구 버튼
-            btn_Friend.onClick.RemoveAllListeners();
-            btn_Friend.onClick.AddListener( ()=>cont.OpenFriendUI() );
-            
-            // 뒤로 버튼
-            var action = cont.GetAction_GoBack();
-            if (action == null) {
-                btn_Back.onClick.RemoveAllListeners();
-                btn_Back.gameObject.SetActive(false);
-            }
-            else {
-                btn_Back.gameObject.SetActive(true);
-                btn_Back.onClick.RemoveAllListeners();
-                btn_Back.onClick.AddListener( action );
-            }
+        
+        // 로비 최상단 등 뒤로 갈 곳이 없을 때 버튼을 숨기는 기능
+        public void SetBackButtonActive(bool isActive)
+        {
+            btn_Back.gameObject.SetActive(isActive);
         }
     }
 }

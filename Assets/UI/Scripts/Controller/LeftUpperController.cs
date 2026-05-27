@@ -9,7 +9,7 @@ namespace DefaultNamespace
         public static LeftUpperController Instance { get; private set; }
 
         private LeftUpper_Common ui_leftUpper;
-        private UnityAction backAction = null;
+        private Action backAction = null;
         
         private void Awake() 
         {
@@ -17,43 +17,65 @@ namespace DefaultNamespace
             else Destroy(gameObject);
         }
 
+        private void Start() {
+            // CommonUIController의 스택 상태 변경 이벤트 구독
+            if (CommonUIController.Instance != null)
+            {
+                // 처음 시작할 때 초기 상태 1회 동기화 (보통 로비이므로 false)
+                UpdateBackButtonActive();
+            }
+        }
+
         public void RegisterView( LeftUpper_Common ui ) {
             ui_leftUpper = ui;
-        }
-
-        public void RefreshUI() {
-            ui_leftUpper.BindEvents();
-        }
-
-
-        public void OpenOptionUI() {
-            if (isLobby()) {
-                Debug.Log("[LeftUpperController] Open Lobby Option UI");
-                UILoader.Instance.ShowUI("Option_Lobby_Popup");
-            }
-            else {
-                Debug.Log("[LeftUpperController] Open InGame Option UI");
-                UILoader.Instance.ShowUI("Option_InGame_Popup");
-            }
+            
+            // View의 이벤트 구독
+            ui_leftUpper.OnClicked_Option += HandleOptionClicked;
+            ui_leftUpper.OnClicked_Friend += HandleFriendClicked;
+            ui_leftUpper.OnClicked_Back += HandleBackClicked;
         }
         
-        public void OpenFriendUI() {
-            Debug.Log("[LeftUpperController] Open Friend UI");
+        private void HandleOptionClicked() {
+            bool isLobby = IsLobby();
+            UILoader.Instance.ShowUI(isLobby ? "Option_Lobby_Popup" : "Option_InGame_Popup");
+        }
+        
+        private void HandleFriendClicked()
+        {
             UILoader.Instance.ShowUI("Friend_MainWindow");
         }
 
-        public UnityAction GetAction_GoBack() {
-            if ( CommonUIController.Instance.IsGoBackAllowed() ) {
-                backAction = () => { CommonUIController.Instance.GoBack_FullScreen(); };
+        private void HandleBackClicked()
+        {
+            // 1순위: 누군가 Set해둔 특수 동작이 있다면 그것부터 실행
+            if (backAction != null)
+            {
+                backAction.Invoke();
             }
-            else {
-                backAction = null;
+            // 2순위: Set된 게 없다면, 기본 스택 Pop 동작 실행
+            else if (CommonUIController.Instance != null)
+            {
+                CommonUIController.Instance.GoBackToPreviousFullScreen();
             }
-            
-            return backAction;
+        }
+
+        public void SetBackAction(Action action) {
+            backAction = action;
+            UpdateBackButtonActive();
+        }
+
+        // 뒤로가기 버튼 SetActive 최신화
+        public void UpdateBackButtonActive() {
+            if (ui_leftUpper == null) return;
+
+            // 커스텀 액션이 있거나(특수 상황), 스택에 돌아갈 화면이 남아있다면(일반 상황) 켠다.
+            bool hasCustomAction = backAction != null;
+            bool hasHistory = CommonUIController.Instance != null && CommonUIController.Instance.CanGoBack;
+
+            ui_leftUpper.SetBackButtonActive(hasCustomAction || hasHistory);
         }
         
-        private bool isLobby() {
+        private bool IsLobby() {
             return true; // TODO
         }
     }

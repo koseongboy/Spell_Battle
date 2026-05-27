@@ -11,14 +11,26 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using System.Threading;
+using DefaultNamespace;
 
 namespace Models.RelayMatchmakingService
 {
     public class RelayMatchmakingService
     {
+// 1. 싱글톤 인스턴스 선언
+        private static RelayMatchmakingService instance;
+        public static RelayMatchmakingService Instance => instance ??= new RelayMatchmakingService();
+        
+        // 외부에서 new 키워드로 인스턴스를 중복 생성하지 못하도록 생성자를 private으로 제한
+        private RelayMatchmakingService() { }
+        
         private Lobby currentLobby;
         private LobbyEventCallbacks lobbyEvents;
         private CancellationTokenSource heartbeatTokenSource;
+        
+        // 비동기 중복 요청 방지용 락(Lock) 플래그
+        private bool isProcessing = false;
+        
         public bool IsSignedIn => AuthenticationService.Instance.IsSignedIn;
         public string CurrentLobbyCode => currentLobby?.LobbyCode;
 
@@ -62,8 +74,16 @@ namespace Models.RelayMatchmakingService
         // ==========================================
         public async Task<(bool isHost, string joinCode)> QuickMatchAsync()
         {
+            if (isProcessing)
+            {
+                Debug.LogWarning("이미 네트워크 통신이 진행 중입니다.");
+                return (false, null);
+            }
+            
             try
             {
+                isProcessing = true; // 락 설정
+                
                 currentLobby = await LobbyService.Instance.QuickJoinLobbyAsync(); 
                 string joinCode = currentLobby.Data["JoinCode"].Value;
                 
@@ -86,6 +106,10 @@ namespace Models.RelayMatchmakingService
                 currentLobby = await LobbyService.Instance.CreateLobbyAsync("Random Match Room", 2, options);
                 
                 return (true, joinCode);
+            }
+            finally
+            {
+                isProcessing = false; // 통신 완료 후 락 해제
             }
         }
 
@@ -243,6 +267,7 @@ namespace Models.RelayMatchmakingService
 
         public async Task LeaveLobbyAsync()
         {
+            // 하트비트 안전종료
             if (heartbeatTokenSource != null)
             {
                 heartbeatTokenSource.Cancel();
@@ -253,6 +278,13 @@ namespace Models.RelayMatchmakingService
             {
                 if (currentLobby != null)
                 {
+                    // 이벤트 구독 해제 (싱글톤 잔존 찌꺼기 제거)
+                    if (lobbyEvents != null)
+                    {
+                        lobbyEvents.LobbyChanged -= OnLobbyChanged;
+                        lobbyEvents = null;
+                    }
+                    
                     if (currentLobby.HostId == AuthenticationService.Instance.PlayerId)
                     {
                         await LockLobbyAsync();
@@ -262,7 +294,6 @@ namespace Models.RelayMatchmakingService
                     {
                         await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
                     }
-                    currentLobby = null; 
                 }
 
                 if (NetworkManager.Singleton != null)
@@ -280,6 +311,17 @@ namespace Models.RelayMatchmakingService
             catch (LobbyServiceException e)
             {
                 Debug.LogError($"로비 퇴장 중 오류: {e.Message}");
+            }
+            finally
+            {
+                // 중요: 통신 실패 여부와 상관없이 상태 변수들을 완벽히 초기화하여 다음 매칭에 영향이 없도록 함
+                currentLobby = null;
+                isProcessing = false;
+
+                if (NetworkManager.Singleton != null)
+                {
+                    NetworkManager.Singleton.Shutdown();
+                }
             }
         }
 

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -19,9 +21,10 @@ namespace DefaultNamespace
 
         #endregion
         
-        // 뒤로가기 버튼을 위한
-        [SerializeField] private string lastFullScreenUI = string.Empty;
-        [SerializeField] private string currentFullScreenUI = string.Empty;
+        [SerializeField] private Stack<string> fullScreenUiHistoryStack = new Stack<string>();
+        private string currentFullScreenUI = string.Empty;
+        
+        public bool CanGoBack => fullScreenUiHistoryStack.Count > 0;
         
         [ContextMenu("Show Red Alert")]
         public void ShowRedAlert( string text ) {
@@ -43,31 +46,50 @@ namespace DefaultNamespace
             UILoader.Instance.HideUI("Loading_Common");
         }
         
-        public bool IsGoBackAllowed() {
-            if ( lastFullScreenUI == string.Empty || currentFullScreenUI == "Lobby_FullScreen" )
-                return false;
-            
-            return true;
-        }
-        
         public void ChangeFullScreen(string target) {
-            if (currentFullScreenUI != string.Empty) {
-                UILoader.Instance.HideUI(currentFullScreenUI);
+            // 현재 열려있는 화면을 스택에 저장 (최초 화면 제외)
+            if (currentFullScreenUI == target) {
+                Debug.LogWarning("이미 해당 Full Screen UI가 활성화되어 있습니다.");
+                return;
+            }
+            
+            // 직전 화면으로 돌아가려고 하면
+            if (fullScreenUiHistoryStack.Count > 0 && fullScreenUiHistoryStack.Peek() == target) {
+                Debug.Log($"[UI 스택] 직전 화면({target})으로 돌아갑니다. 스택 Pop 실행.");
+                
+                fullScreenUiHistoryStack.Pop();
+                SwitchUI(target);
+                
+                return;
             }
 
-            // TODO : 화면 전환 연출
-            
-            UILoader.Instance.ShowUI( target );
-            
-            lastFullScreenUI = currentFullScreenUI;
-            currentFullScreenUI = target;
-            
-            // TODO : 하씨 이게 맞냐
-            LeftUpperController.Instance.RefreshUI();
+            // 새로운 화면으로 갈 때
+            if (!string.IsNullOrEmpty(currentFullScreenUI))
+            {
+                // 기존 화면을 히스토리 스택에 저장
+                fullScreenUiHistoryStack.Push(currentFullScreenUI);
+            }
+
+            // 실제 UI 활성화 처리
+            SwitchUI(target);
         }
         
-        public void GoBack_FullScreen() {
-            ChangeFullScreen( lastFullScreenUI );
+        // 실제 게임오브젝트를 켜고 끄는 내부 로직
+        private void SwitchUI(string targetUIName)
+        {
+            UILoader.Instance.HideUI(currentFullScreenUI);
+            UILoader.Instance.ShowUI(targetUIName);
+            
+            currentFullScreenUI = targetUIName;
+
+            LeftUpperController.Instance.UpdateBackButtonActive();
+        }
+                
+        public void GoBackToPreviousFullScreen() {
+            if (fullScreenUiHistoryStack.Count <= 0) return;
+            
+            string previousUI = fullScreenUiHistoryStack.Peek(); 
+            ChangeFullScreen(previousUI);
         }
     }
 }
