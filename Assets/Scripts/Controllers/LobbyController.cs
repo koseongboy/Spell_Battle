@@ -140,6 +140,32 @@ namespace Controllers.LobbyController
             ui_EnterGame.UpdateUI_RoomList( lobbies );
         }
         
+        // --- 액션 : 랜덤 방 진입 ---
+        public async Task OnRandomJoinPressed() {
+            CommonUIController.Instance.ShowLoading();
+
+            var result = await matchmakingService.QuickMatchAsync();
+
+            if (result.joinCode != null)
+            {
+                if (result.isHost)
+                {
+                    Debug.Log("기존 방이 없어 새로운 방의 방장(Host)으로 매칭을 대기합니다.");
+                }
+                else
+                {
+                    Debug.Log("기존에 존재하던 방에 게스트(Client)로 매칭되었습니다.");
+                }
+                // 다음 매칭 성공 씬 전환 등의 처리
+            }
+            else
+            {
+                CommonUIController.Instance.ShowRedAlert("오류가 발생했습니다. 다시 시도해주세요.");
+            }
+            
+            CommonUIController.Instance.DoneLoading();
+        }
+        
         // --- 액션 1: 커스텀 방 생성 ---
         public async Task OnConfirmCreateAsync()
         {
@@ -193,13 +219,14 @@ namespace Controllers.LobbyController
         // --- 액션 2: 코드로 비공개 방 참여 ---
         public async void OnConfirmJoinByCode( string code )
         {
+            Debug.Log(code);
             CommonUIController.Instance.ShowLoading();
             try
             {
                 string title = await matchmakingService.JoinCustomLobbyByCodeAsync(code);
                 
                 if (title != null) EnterWaitingRoom(title, code);
-                else lobbyView.UpdateStatus("접속 실패. 코드를 다시 확인하세요.");
+                else CommonUIController.Instance.ShowRedAlert("접속 실패. 코드를 다시 확인하세요.");
             }
             finally
             {

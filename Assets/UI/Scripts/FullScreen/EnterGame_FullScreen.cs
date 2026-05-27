@@ -13,7 +13,8 @@ namespace DefaultNamespace
 {
     public enum EnterGame_UIMode {
         CreateRoom,
-        FindRoom
+        FindRoom,
+        Other
     }
     
     public class EnterGame_FullScreen : MonoBehaviour, UI_ILayerInfo {
@@ -46,6 +47,9 @@ namespace DefaultNamespace
         [SerializeField] private FindRoom_RoomPiece roomPiecePrefab;
         [SerializeField] private Button btn_FindRoom_Enter;
         
+        [Header("Search Room")]
+        [SerializeField] private TMP_InputField input_RoomCode;
+        
         // 현재 화면에 활성화되어 있는(풀에서 꺼낸) 아이템들을 추적하는 리스트
         private List<FindRoom_RoomPiece> activeItems = new List<FindRoom_RoomPiece>();
         // 오브젝트 풀 인터페이스 선언
@@ -74,6 +78,8 @@ namespace DefaultNamespace
             // TODO : 랜덤입장
             // btn_RandomEnter.onClick.AddListener( () => cont. );
             
+            // 좌측 메뉴
+            btn_RandomEnter.onClick.AddListener( () => _ = cont.OnRandomJoinPressed() );
             
             btn_CreateRoom.onClick.AddListener( OnCreateRoomMenuPressed );
             
@@ -81,13 +87,13 @@ namespace DefaultNamespace
             btn_FindRoom.onClick.AddListener( cont.OnFindRoomPressed );
             
             btn_SearchRoom.onClick.AddListener( OnSearchRoomMenuPressed );
-
             OnSearchRoomByCode = cont.OnConfirmJoinByCode;
 
+            // Create Room
             btn_PublicToggle.onClick.AddListener(OnPublicTogglePressed);
-            btn_ConfirmCreateRoom.onClick.AddListener( () => cont.OnConfirmCreateAsync());
+            btn_ConfirmCreateRoom.onClick.AddListener( () => _ = cont.OnConfirmCreateAsync());
             
-            
+            // Find Room
             btn_FindRoom_Enter.onClick.AddListener( () => cont.OnConfirmJoinFromList(selectedLobbyId) );
         }
         
@@ -101,7 +107,7 @@ namespace DefaultNamespace
         }
 
         private void OnSearchRoomMenuPressed() {
-            string roomCode = GetInput_RoomName(); // TODO
+            string roomCode = GetInput_RoomCode();
             if (string.IsNullOrEmpty(roomCode)) { CommonUIController.Instance.ShowRedAlert("코드를 입력하세요!");
                 return;
             }
@@ -126,10 +132,16 @@ namespace DefaultNamespace
             mode = newMode;
 
             if (mode == EnterGame_UIMode.CreateRoom) {
+                CreateRoom_BtnImage.sprite = Seleted_BtnSprite;
+                FindRoom_BtnImage.sprite = Default_BtnSprite;
+                
                 createRoomMenuElement.gameObject.SetActive(true);
                 findRoomMenuElement.gameObject.SetActive(false);
             }
             else {
+                CreateRoom_BtnImage.sprite = Default_BtnSprite;
+                FindRoom_BtnImage.sprite = Seleted_BtnSprite;
+                
                 createRoomMenuElement.gameObject.SetActive(false);
                 findRoomMenuElement.gameObject.SetActive(true);
             }
@@ -162,13 +174,21 @@ namespace DefaultNamespace
         }
 
         
+        // 방 생성 - 입력된 방 이름을 가져오는 함수
         public string GetInput_RoomName() {
             string inputTxt = input_RoomName.text;
             return inputTxt;
         }
 
+        // 방 생성 - 방 Public / Private 토글을 가져오는 함수
         public bool GetInput_IsRoomPrivate() {
             return isCreatingRoomPrivate;
+        }
+
+        // 방 코드 입력 - 입력된 방 코드 가져오는 함수
+        public string GetInput_RoomCode() {
+            string inputTxt = input_RoomCode.text;
+            return inputTxt;
         }
 
 
