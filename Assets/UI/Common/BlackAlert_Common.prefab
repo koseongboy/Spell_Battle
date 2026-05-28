@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8266613234976860439}
   - component: {fileID: 4317746353098331918}
   - component: {fileID: 1972777584165520235}
+  - component: {fileID: 7955248568473342549}
   m_Layer: 8
   m_Name: BlackAlert_Common
   m_TagString: Untagged
@@ -142,6 +143,19 @@ MonoBehaviour:
   curveSegments: 24
   smoothing: 1
   outlineColor: {r: 0.41414833, g: 0.41414833, b: 0.41414833, a: 1}
+--- !u!114 &7955248568473342549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650844821004489171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fdd6b0ccbe5df7499dbf5197d75b0e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.BlackAlert
+  message: {fileID: 2486273497292272926}
 --- !u!1 &8916182654482609983
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,10 +269,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40.05
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 1
   m_fontSizeMax: 48
   m_fontStyle: 1

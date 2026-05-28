@@ -1,28 +1,36 @@
+using System;
+using Controllers.LobbyController;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DefaultNamespace
 {
-    public class Lobby_FullScreen : MonoBehaviour, UI_ILayerInfo
-    {
+    public class Lobby_FullScreen : MonoBehaviour, UI_ILayerInfo {
+        [SerializeField] private Button btn_GameStart; 
+        [SerializeField] private Button btn_Deck; 
+        [SerializeField] private Button btn_Tutorial; 
+        
+        [SerializeField] private Button btn_credit; 
+        
+        
         public EUILayer TargetLayer => EUILayer.FullScreen;
 
-        public void OpenCredit() {
-            Debug.Log("[Lobby] Open Credit Pressed");
+
+        private void Start() {
+            if (LobbyController.Instance != null)
+            {
+                LobbyController.Instance.RegisterLobbyUI(this);
+                BindEvents();
+            }
         }
 
-        public void GameStartPressed() {
-            Debug.Log("[Lobby] Game Start Pressed");
-            // TODO : 화면 전환 연출
-            UILoader.Instance.ShowUI("EnterGame_FullScreen");
-            UILoader.Instance.HideUI("Lobby_FullScreen");
-        }
-
-        public void DeckEditPressed() {
-            Debug.Log("[Lobby] Deck Edit Pressed");
-        }
-
-        public void TutorialPressed() {
-            Debug.Log("[Lobby] Tutorial Pressed");
+        private void BindEvents() {
+            var cont = LobbyController.Instance;
+            
+            btn_GameStart.onClick.AddListener(() => cont.OnGameStartPressed());
+            btn_Deck.onClick.AddListener(() => cont.OnDeckPressed());
+            btn_Tutorial.onClick.AddListener(() => cont.OnTutorialPressed());
+            btn_credit.onClick.AddListener(() => cont.OnCreditPressed());
         }
     }
 }

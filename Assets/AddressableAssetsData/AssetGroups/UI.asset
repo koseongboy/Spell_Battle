@@ -25,13 +25,33 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 508830967d021ae458d031cdb6579b9f
+    m_Address: Loading_Common
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d6d62e59ef98e442855a267c21dd4db
+    m_Address: Option_InGame_Popup
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 60d64d8eb7039dc41b881d52b103db9e
     m_Address: RedAlert_Common
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 728a7abe206ec0f4fa663234acc2896c
+    m_Address: Room_FullScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 73ba2b89de6180a48957ebd539164cfb
     m_Address: BlackAlert_Common
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 77e00c7b473e2ea488fc1189c6767bf5
+    m_Address: DeckList_Room_Popup
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

@@ -673,7 +673,7 @@ GameObject:
   - component: {fileID: 3056639845709628136}
   - component: {fileID: 6624577082726460752}
   m_Layer: 7
-  m_Name: OptionPopup_InGame
+  m_Name: Option_InGame_Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

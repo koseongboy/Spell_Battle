@@ -24,6 +24,9 @@ namespace DefaultNamespace
         // 생성된 UI 인스턴스를 관리하는 딕셔너리
         private Dictionary<string, GameObject> loadedUIs = new();
 
+
+
+
         #endregion
 
         #region Singleton & initialization
@@ -33,12 +36,11 @@ namespace DefaultNamespace
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
+                return;
             }
-            else
-            {
-                Instance = this;
-            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion
@@ -210,15 +212,6 @@ namespace DefaultNamespace
             }
         }
 
-        /// <summary>
-        /// 기존 하드코딩되었던 ShowAlert 방식을 범용 제네릭 ShowUI로 통합 처리합니다.
-        /// </summary>
-        public void ShowAlert(string text)
-        {
-            // 이제 독립적인 하드코딩 메서드 대신 범용 ShowUI<T> 구조를 통해 호출 가능합니다.
-            ShowUI<string>("UI_Alert", text);
-        }
-
         #endregion
 
         #region private methods
@@ -258,18 +251,11 @@ namespace DefaultNamespace
 
 
         #region DEV
-
-        [ContextMenu("Show Red Alert")]
-        public void ShowRedAlert() {
-            ShowUI<string>("RedAlert_Common", "Test Message.");
-        }
-
-        [ContextMenu("Show Black Alert")]
-        public void ShowBlackAlert() {
-            ShowUI<string>("BlackAlert_Common", "Test Message.");
-        }
         
 
         #endregion
+
+
+
     }
 }
