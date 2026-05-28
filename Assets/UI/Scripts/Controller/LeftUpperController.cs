@@ -41,7 +41,7 @@ namespace DefaultNamespace
         }
         
         private void HandleFriendClicked() {
-            FriendPopupController.Instance.ToggleOnOff();
+            FriendPopupController.Instance.ToggleOnOff_MainWindow();
         }
 
         private void HandleBackClicked()

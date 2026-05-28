@@ -11,7 +11,6 @@ namespace DefaultNamespace
 {
     public class Friend_MainWindow : MonoBehaviour, UI_ILayerInfo, UI_Popup {
         public EUILayer TargetLayer => EUILayer.Popup;
-
         
         
         [Header("UI Element")]
