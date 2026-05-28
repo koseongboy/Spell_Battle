@@ -20,14 +20,14 @@ namespace DefaultNamespace
         
         [Header("UI Buttons")]
         [SerializeField] private Button btn_AddFriend;
-        [SerializeField] private Button btn_Alert;
+        [FormerlySerializedAs("btn_Alert")] [SerializeField] private Button btn_Request;
         
         [Header("Friend List Element")]
         [SerializeField] private Transform friendListContent; // 🌟 추가: 스크롤 뷰의 Content Transform
         [SerializeField] private FriendPanelPiece friendItemPrefab;
         
         public Action OnClick_AddFriend;
-        public Action OnClick_Alert;
+        public Action OnClick_Request;
         public Action<int> OnClick_FriendDetail;
         
         private IObjectPool<FriendPanelPiece> friendPool;
@@ -81,7 +81,7 @@ namespace DefaultNamespace
 
         private void SetupButtonEvent() {
             btn_AddFriend.onClick.AddListener(() => OnClick_AddFriend?.Invoke());
-            btn_Alert.onClick.AddListener(() => OnClick_Alert?.Invoke());
+            btn_Request.onClick.AddListener(() => OnClick_Request?.Invoke());
         }
         
         public void UpdateUI((int,int,string) profileData, List<FriendDataForUI> fDataList) 

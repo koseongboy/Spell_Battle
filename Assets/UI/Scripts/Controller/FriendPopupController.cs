@@ -14,7 +14,7 @@ namespace DefaultNamespace
         
         private Friend_MainWindow ui_mainWindow;
         private Friend_SearchWindow ui_SearchWindowWindow;
-        private Friend_DetailWindow ui_detailWindow;
+        private Friend_RequestWindow ui_requestWindow;
         
         private bool isMainWindowOpen = false;
         private bool isSearchWindowOpen = false;
@@ -24,7 +24,7 @@ namespace DefaultNamespace
             ui_mainWindow = ui;
 
             ui_mainWindow.OnClick_AddFriend += ToggleOnOff_SearchWindow;
-            ui_mainWindow.OnClick_Alert += OpenAlert;
+            ui_mainWindow.OnClick_Request += OpenRequestWindow;
             
             ui_mainWindow.OnClick_FriendDetail += ShowFriendDetail;
         }
@@ -48,10 +48,6 @@ namespace DefaultNamespace
             isMainWindowOpen = !isMainWindowOpen;
         }
 
-
-        public void OpenAlert() {
-            
-        }
         
         private (int, int, string) LoadMyProfile() 
         {
@@ -135,11 +131,6 @@ namespace DefaultNamespace
         #endregion
         
         #region DetailWindow
-        public void RegisterDetailWindow(Friend_DetailWindow ui) 
-        {
-            ui_detailWindow = ui;
-        }
-
         // 닫기 함수
         public void CloseDetailWindow() 
         {
@@ -186,6 +177,55 @@ namespace DefaultNamespace
             CloseDetailWindow();
             UpdateUI_MainWindow();
         }
+        #endregion
+
+        #region RequestWindow
+
+        public void RegisterRequestWindow(Friend_RequestWindow ui) 
+        {
+            ui_requestWindow = ui;
+            ui_requestWindow.OnClick_Close += CloseRequestWindow;
+            ui_requestWindow.OnClick_Accept += AcceptFriendRequest;
+            ui_requestWindow.OnClick_Reject += RejectFriendRequest;
+        }
+
+        // 로비 알림 아이콘 등을 눌렀을 때 호출
+        public void OpenRequestWindow() 
+        {
+            UILoader.Instance.ShowUI("Friend_RequestWindow");
+
+            // TODO: 서버에서 나에게 온 친구 요청 리스트 불러오기
+            List<FriendDataForUI> dummyRequests = new List<FriendDataForUI> 
+            {
+                new FriendDataForUI { userId = 201, name = "Dulgy_1" },
+                new FriendDataForUI { userId = 202, name = "Dulgy_2" },
+                new FriendDataForUI { userId = 203, name = "Dulgy_3" }
+            };
+
+            if (ui_requestWindow != null) {
+                ui_requestWindow.UpdateUI_RequestList(dummyRequests);
+            }
+        }
+
+        private void CloseRequestWindow() 
+        {
+            UILoader.Instance.HideUI("Friend_RequestWindow");
+        }
+
+        private void AcceptFriendRequest(int targetUserId) 
+        {
+            Debug.Log($"서버에 유저 ID [{targetUserId}] 친구 수락 패킷을 전송합니다.");
+    
+            // TODO: 수락 성공 시 해당 유저를 리스트에서 제거하고 다시 UpdateUI_RequestList 호출
+        }
+
+        private void RejectFriendRequest(int targetUserId) 
+        {
+            Debug.Log($"서버에 유저 ID [{targetUserId}] 친구 거절 패킷을 전송합니다.");
+    
+            // TODO: 거절 성공 시 해당 유저를 리스트에서 제거하고 다시 UpdateUI_RequestList 호출
+        }
+
         #endregion
     }
     

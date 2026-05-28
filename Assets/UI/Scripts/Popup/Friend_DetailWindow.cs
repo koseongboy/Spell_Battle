@@ -34,11 +34,6 @@ public class Friend_DetailWindow : MonoBehaviour, UI_ILayerInfo, UI_Popup, UI_ID
 
         private void Awake() 
         {
-            // 컨트롤러에 자신을 등록 (버튼 이벤트 연결용)
-            if (FriendPopupController.Instance != null) {
-                FriendPopupController.Instance.RegisterDetailWindow(this);
-            }
-
             canvasGroup = GetComponent<CanvasGroup>();
             popupRect = GetComponent<RectTransform>();
             originalPos = popupRect.anchoredPosition;

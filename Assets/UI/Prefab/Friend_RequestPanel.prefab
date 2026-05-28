@@ -132,6 +132,8 @@ GameObject:
   - component: {fileID: 7541138692991449693}
   - component: {fileID: 5715944586732216708}
   - component: {fileID: 7170843508189306258}
+  - component: {fileID: 7039978095118404718}
+  - component: {fileID: 5958934970779746729}
   m_Layer: 5
   m_Name: Friend_RequestPanel
   m_TagString: Untagged
@@ -219,6 +221,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 5
+--- !u!114 &7039978095118404718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4381191842284577087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051708c2144b1c14a89772c51d2c91e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.FriendRequestPiece
+  txt_Name: {fileID: 7768396638917368882}
+  btn_Accept: {fileID: 1988188432824349310}
+  btn_Reject: {fileID: 4237812288871840492}
+--- !u!225 &5958934970779746729
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4381191842284577087}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5173816260440762279
 GameObject:
   m_ObjectHideFlags: 0

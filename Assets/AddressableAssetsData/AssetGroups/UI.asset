@@ -60,6 +60,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7675899f335b78445b72482db7413431
+    m_Address: Friend_RequestWindow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 77e00c7b473e2ea488fc1189c6767bf5
     m_Address: DeckList_Room_Popup
     m_ReadOnly: 0
