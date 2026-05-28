@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace DefaultNamespace
@@ -28,9 +29,12 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI txt_GuestScore;
         [SerializeField] private GameObject inviteButton;
 
-
+        
+        [FormerlySerializedAs("btn_Game")]
         [Header("Lower Buttons")]
-        [SerializeField] private Button btn_StartGame;
+        [SerializeField] private Button btn_GameStart;
+        [SerializeField] private Button btn_Ready;
+        [SerializeField] private TextMeshProUGUI txt_ReadyBtnText;
         [SerializeField] private Button btn_DeckList;
         [SerializeField] private Button btn_EditDeck;
         
@@ -41,6 +45,8 @@ namespace DefaultNamespace
         public event Action OnStartGameClicked;
         public event Action OnDeckListClicked;
         public event Action OnEditDeckClicked;
+        public event Action OnReadyClicked;
+        
 
         private void Start()
         {
@@ -50,7 +56,8 @@ namespace DefaultNamespace
             }
 
             // UI 클릭 이벤트를 Controller로 전달
-            btn_StartGame.onClick.AddListener(() => OnStartGameClicked?.Invoke());
+            btn_GameStart.onClick.AddListener(() => OnStartGameClicked?.Invoke());
+            btn_Ready.onClick.AddListener(() => OnReadyClicked?.Invoke());
             btn_DeckList.onClick.AddListener(() => OnDeckListClicked?.Invoke());
             btn_EditDeck.onClick.AddListener(() => OnEditDeckClicked?.Invoke());
             
@@ -113,13 +120,38 @@ namespace DefaultNamespace
         // 방장에게만 게임 시작 버튼 활성화
         public void SetStartButtonActive(bool isActive)
         {
-            btn_StartGame.gameObject.SetActive(isActive);
+            btn_GameStart.gameObject.SetActive(isActive);
+        }
+        
+        // ==========================================
+        // 게임 시작 & 준비 완료
+        // ==========================================
+        
+        public void SetupRoleButtons(bool isHost)
+        {
+            btn_GameStart.gameObject.SetActive(isHost); // 방장만 시작 버튼 노출
+            btn_Ready.gameObject.SetActive(!isHost);    // 손님만 준비 버튼 노출
+        }
+
+        // Host의 게임 시작버튼 활성화 비활성화
+        public void SetStartButtonInteractable(bool isInteractable)
+        {
+            btn_GameStart.interactable = isInteractable;
+        }
+
+        // Guest 레디버튼 업데이트
+        public void UpdateReadyButtonVisual(bool isReady)
+        {
+            if (txt_ReadyBtnText != null)
+            {
+                txt_ReadyBtnText.text = isReady ? "준비 취소" : "준 비";
+            }
         }
         
         
         
         // ==========================================
-        // 4. Deck 편집 관련
+        // Deck 편집 관련
         // ==========================================
 
         // 덱 리스트 출력하는 함수

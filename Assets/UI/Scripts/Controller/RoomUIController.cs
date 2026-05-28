@@ -18,6 +18,7 @@ namespace DefaultNamespace
         
         // View 컴포넌트 참조
         private Room_FullScreen ui_Room;
+        [SerializeField] private ReadyStateModel readyStateModel;
         
         private void Awake()
         {
@@ -25,6 +26,8 @@ namespace DefaultNamespace
             else Destroy(gameObject);
             
             matchmakingService = RelayMatchmakingService.Instance;
+
+            SetupNetworkCallbacks();
         }
         
         // View가 생성되면서 자신을 Controller에 등록
@@ -35,6 +38,7 @@ namespace DefaultNamespace
             // View 버튼들에 기능 주입
             ui_Room.OnLeaveRoomClicked += HandleLeaveRoom;
             ui_Room.OnStartGameClicked += HandleStartGame;
+            ui_Room.OnReadyClicked += HandleReadyClicked;
             ui_Room.OnDeckListClicked += HandleDeckListClicked;
             ui_Room.OnEditDeckClicked += HandleDeckEditClicked;
             
@@ -42,6 +46,20 @@ namespace DefaultNamespace
         }
 
         private void SetupUI() {
+            bool isHost = NetworkManager.Singleton.IsHost;
+            // 방장/손님 역할에 맞게 버튼 켜기
+            ui_Room.SetupRoleButtons(isHost);
+
+            // 초기 버튼 상태 세팅
+            if (isHost) {
+                // 방장은 처음엔 무조건 시작 불가 (손님이 없거나 준비를 안 했으므로)
+                ui_Room.SetStartButtonInteractable(false);
+            } else {
+                // 손님은 처음 들어왔을 때 무조건 준비 안 된 상태로 UI 세팅
+                ui_Room.UpdateReadyButtonVisual(false);
+            }
+            
+            
             // Room Info 업데이트
             ui_Room.UpdateRoomInfo(matchmakingService.CurrentLobbyName, matchmakingService.CurrentLobbyCode);
             ui_Room.UpdateHostUI( /* TODO : 호스트의 정보 불러와서 주입해주기 */ );
@@ -108,6 +126,34 @@ namespace DefaultNamespace
             }
         }
         
+        // 게스트가 준비 버튼을 눌렀을 때
+        private void HandleReadyClicked()
+        {
+            if (readyStateModel != null)
+            {
+                // Controller는 Model에게 명령(RPC)만 내림. 
+                // 시각적 업데이트는 서버에서 값이 바뀐 후 콜백을 통해 이루어짐.
+                readyStateModel.ToggleReadyServerRpc();
+            }
+        }
+
+        // Model의 Ready 값이 바뀌었을 때
+        private void HandleGuestReadyStateChanged(bool isReady)
+        {
+            if (ui_Room == null) return;
+
+            if (NetworkManager.Singleton.IsHost)
+            {
+                // 방장이면: 손님의 상태에 따라 게임 시작 버튼의 잠금을 풀거나 채움
+                ui_Room.SetStartButtonInteractable(isReady);
+            }
+            else
+            {
+                // 손님이면: 내 화면의 버튼 텍스트를 "준비 취소" 혹은 "준비"로 바꿈
+                ui_Room.UpdateReadyButtonVisual(isReady);
+            }
+        }
+        
         private void HandleDeckListClicked()
         {
             isDeckPopupOpen = !isDeckPopupOpen;
@@ -138,6 +184,7 @@ namespace DefaultNamespace
         private List<DeckMetaData> GetStoredDeckData()
         {
             // TODO : 저장소 또는 데이터 매니저로부터 실제 덱 정보 불러오기
+            // 아 아아아
             
             // 테스트용 더미 데이터
             return new List<DeckMetaData>
@@ -188,6 +235,8 @@ namespace DefaultNamespace
                     
                     if (connectionTimeoutCoroutine != null) StopCoroutine(connectionTimeoutCoroutine);
                     connectionTimeoutCoroutine = StartCoroutine(ConnectionTimeoutRoutine(request.ClientNetworkId));
+                    
+                    CommonUIController.Instance.ShowLoading();
                 }
             }
 
@@ -229,10 +278,18 @@ namespace DefaultNamespace
         // 누군가 방에 접속 (Start와 같다 생각)
         private void OnClientConnected(ulong clientId)
         {
+            // 무사히 접속을 완료했으므로 5초 타임아웃 타이머를 즉시 끕니다.
+            if (connectionTimeoutCoroutine != null)
+            {
+                StopCoroutine(connectionTimeoutCoroutine);
+                connectionTimeoutCoroutine = null;
+                CommonUIController.Instance.DoneLoading(); 
+            }
+            
             // 방장(나) 외에 누군가 들어왔다면 손님 UI 켜기
             if (NetworkManager.Singleton.IsHost && NetworkManager.Singleton.ConnectedClientsList.Count > 1)
             {
-                ui_Room?.UpdateGuestUI(); // 손님 들어옴 처리
+                ui_Room?.UpdateGuestUI( /* 게스트 정보 주입 필요 */ ); // 손님 들어옴 처리
             }
         }
         
