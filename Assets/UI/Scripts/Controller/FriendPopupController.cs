@@ -18,13 +18,14 @@ namespace DefaultNamespace
         
         private bool isMainWindowOpen = false;
         private bool isSearchWindowOpen = false;
+        private bool isRequestWindowOpen = false;
 
         #region MainWindow
         public void RegisterMainWindow(Friend_MainWindow ui) {
             ui_mainWindow = ui;
 
             ui_mainWindow.OnClick_AddFriend += ToggleOnOff_SearchWindow;
-            ui_mainWindow.OnClick_Request += OpenRequestWindow;
+            ui_mainWindow.OnClick_Request += ToggleOnOff_RequestWindow;
             
             ui_mainWindow.OnClick_FriendDetail += ShowFriendDetail;
         }
@@ -197,24 +198,20 @@ namespace DefaultNamespace
         public void RegisterRequestWindow(Friend_RequestWindow ui) 
         {
             ui_requestWindow = ui;
-            ui_requestWindow.OnClick_Close += CloseRequestWindow;
             ui_requestWindow.OnClick_Accept += AcceptFriendRequest;
             ui_requestWindow.OnClick_Reject += RejectFriendRequest;
         }
 
         // 로비 알림 아이콘 등을 눌렀을 때 호출
-        public void OpenRequestWindow() 
-        {
-            UILoader.Instance.ShowUI("Friend_RequestWindow");
-
-            // TODO: 서버에서 나에게 온 친구 요청 리스트 불러오기
-            var pendingRequests = LoadPendingRequests();
-            UILoader.Instance.ShowUI<List<FriendDataForUI>>("Friend_RequestWindow", pendingRequests);
-        }
-
-        private void CloseRequestWindow() 
-        {
-            UILoader.Instance.HideUI("Friend_RequestWindow");
+        public void ToggleOnOff_RequestWindow() {
+            if (!isRequestWindowOpen) {
+                var pendingRequests = LoadPendingRequests();
+                UILoader.Instance.ShowUI<List<FriendDataForUI>>("Friend_RequestWindow", pendingRequests);
+            }
+            else {
+                UILoader.Instance.HideUI("Friend_RequestWindow");
+            }
+            isRequestWindowOpen = !isRequestWindowOpen;
         }
 
         private void AcceptFriendRequest(int targetUserId) 

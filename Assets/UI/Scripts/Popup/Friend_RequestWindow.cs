@@ -14,12 +14,10 @@ namespace DefaultNamespace
         public EUILayer TargetLayer => EUILayer.Popup;
 
         [Header("UI Elements")]
-        [SerializeField] private Button btn_Close;
         [SerializeField] private Transform requestListContent; // 스크롤 뷰 Content
-        [FormerlySerializedAs("requestItemPrefab")] [SerializeField] private FriendRequestPiece requestPiecePrefab;
+        [SerializeField] private FriendRequestPiece requestPiecePrefab;
 
         // Controller로 보낼 이벤트
-        public Action OnClick_Close;
         public Action<int> OnClick_Accept;
         public Action<int> OnClick_Reject;
 
@@ -44,8 +42,6 @@ namespace DefaultNamespace
             canvasGroup = GetComponent<CanvasGroup>();
             popupRect = GetComponent<RectTransform>();
             originalPos = popupRect.anchoredPosition;
-
-            btn_Close.onClick.AddListener(() => OnClick_Close?.Invoke());
 
             requestPool = new ObjectPool<FriendRequestPiece>(
                 createFunc: CreateRequestItem,
