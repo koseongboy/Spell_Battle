@@ -21,7 +21,7 @@ namespace Cards.PlayableCards
         {
             payload.AddWord(uiData.wordName);
             payload.AddProperty(Prop);
-            ApplyCardEffects(payload, caster, enemy);
+            payload.EnqueuePendingCard(this); // 카드 등록만 수행
         }
 
         public abstract void ApplyCardEffects(SpellPayload payload, PlayerModel caster, PlayerModel enemy);

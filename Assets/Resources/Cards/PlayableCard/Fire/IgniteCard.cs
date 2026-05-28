@@ -14,7 +14,7 @@ namespace Cards.PlayableCards
 
         public override void ApplyCardEffects(SpellPayload payload, PlayerModel caster, PlayerModel enemy)
         {
-            payload.AddCommand(new IgniteCommand(enemy, applyDuration, applyStacks));
+            payload.AddCommand(new AddStatusCommand(enemy, StatusType.Ignite, applyStacks, applyDuration));
         }
     }
 }
