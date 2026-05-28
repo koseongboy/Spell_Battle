@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,12 +23,17 @@ namespace DefaultNamespace
         // [SerializeField] private Image img_HostProfile;
         // [SerializeField] private Image img_GuestProfile;
 
-        [Header("Buttons")]
+        [Header("Lower Buttons")]
         [SerializeField] private Button btn_StartGame;
+        [SerializeField] private Button btn_DeckList;
+        [SerializeField] private Button btn_EditDeck;
+        
+        [SerializeField] private DeckList_Room_Popup deckListPopup;
 
         // Controller가 구독할 이벤트
         public event Action OnLeaveRoomClicked;
         public event Action OnStartGameClicked;
+        public event Action OnDeckListClicked;
 
         private void Start()
         {
@@ -38,6 +44,12 @@ namespace DefaultNamespace
 
             // UI 클릭 이벤트를 Controller로 전달
             btn_StartGame.onClick.AddListener(() => OnStartGameClicked?.Invoke());
+            btn_DeckList.onClick.AddListener(() => OnDeckListClicked?.Invoke());
+            // 팝업 초기 상태는 비활성화
+            if (deckListPopup != null)
+            {
+                deckListPopup.gameObject.SetActive(false);
+            }
         }
 
         
@@ -86,6 +98,29 @@ namespace DefaultNamespace
         public void SetStartButtonActive(bool isActive)
         {
             btn_StartGame.gameObject.SetActive(isActive);
+        }
+        
+
+        // 덱 리스트 출력하는 함수
+        public void OpenDeckListPopup(List<DeckMetaData> myDecks)
+        {
+            if (deckListPopup == null) return;
+    
+            // 비활성화 상태라면 켜줌
+            if (!deckListPopup.gameObject.activeSelf)
+            {
+                deckListPopup.gameObject.SetActive(true);
+            }
+    
+            deckListPopup.UpdateDeckListUI(myDecks);
+            deckListPopup.ShowPopup();
+        }
+        
+        public void CloseDeckListPopup()
+        {
+            if (deckListPopup == null) return;
+
+            deckListPopup.HidePopup(); // 닫기 애니메이션 실행
         }
     }
 }

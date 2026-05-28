@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Models.RelayMatchmakingService;
 using Unity.Netcode;
@@ -12,6 +13,9 @@ namespace DefaultNamespace
         private RelayMatchmakingService matchmakingService;
         private Coroutine connectionTimeoutCoroutine;   // 현재 실행 중인 타이머를 기억할 변수
 
+        // Deck 팝업이 열려있는지
+        private bool isDeckPopupOpen = false;
+        
         // View 컴포넌트 참조
         private Room_FullScreen ui_Room;
         
@@ -31,6 +35,7 @@ namespace DefaultNamespace
             // View의 버튼 클릭 이벤트 구독
             ui_Room.OnLeaveRoomClicked += HandleLeaveRoom;
             ui_Room.OnStartGameClicked += HandleStartGame;
+            ui_Room.OnDeckListClicked += HandleDeckListClicked;
         }
 
         public void EnterRoom(string roomCode) 
@@ -69,7 +74,7 @@ namespace DefaultNamespace
                 }
             }
             
-            // 🌟 권한 세팅 (내 함수를 맡긴다)
+            // 뒤로가기 버튼 세팅
             if (LeftUpperController.Instance != null)
             {
                 LeftUpperController.Instance.SetBackAction(OnBackButtonPressedInRoom);
@@ -99,7 +104,38 @@ namespace DefaultNamespace
             }
         }
         
-        // 뒤로 가기 버튼이 눌렸을 때 실행될 래퍼(Wrapper) 함수
+        private void HandleDeckListClicked()
+        {
+            isDeckPopupOpen = !isDeckPopupOpen;
+
+            if (isDeckPopupOpen) {
+                // 열기
+                List<DeckMetaData> currentDecks = GetStoredDeckData(); 
+                if (ui_Room != null) {
+                    ui_Room.OpenDeckListPopup(currentDecks);
+                }
+            }
+            else {
+                // 닫기
+                if (ui_Room != null) {
+                    ui_Room.CloseDeckListPopup();
+                }
+            }
+        }
+        
+        private List<DeckMetaData> GetStoredDeckData()
+        {
+            // TODO : 저장소 또는 데이터 매니저로부터 실제 덱 정보 불러오기
+            
+            // 테스트용 더미 데이터
+            return new List<DeckMetaData>
+            {
+                new DeckMetaData { Name = "기본 불 덱", CardCount = "기본 30 불 10 생명 5", Element = DeckElement.Fire},
+                new DeckMetaData { Name = "커스텀 물 덱", CardCount = "기본 26 불 14 생명 5", Element = DeckElement.Fire}
+            };
+        }
+        
+        // 좌상단 뒤로 가기 버튼이 눌렸을 때 실행될 래퍼(Wrapper) 함수
         private void OnBackButtonPressedInRoom()
         {
             // 여기서 그냥 바로 퇴장할지, 아니면 "정말 나가시겠습니까?" 팝업을 띄울지 
