@@ -114,7 +114,7 @@ namespace Controllers.LobbyController
                 Debug.Log($"[랜덤 매치 성공] Host 여부: {isHost} | JoinCode: {joinCode}");
 
                 // 4. 기존에 이미 구현되어 있는 대기실 진입 함수 호출
-                RoomUIController.Instance.EnterRoom(joinCode);
+                RoomUIController.Instance.EnterRoom();
             }
 
             if (joinCode != null)
@@ -166,7 +166,7 @@ namespace Controllers.LobbyController
                     // 성공 시 대기방 UI 컨트롤러에게 코드 권한을 넘기고 UI 전환
                     if (RoomUIController.Instance != null)
                     {
-                        RoomUIController.Instance.EnterRoom(lobbyCode);
+                        RoomUIController.Instance.EnterRoom();
                     }
                 }
             }
@@ -202,7 +202,7 @@ namespace Controllers.LobbyController
             {
                 string title = await matchmakingService.JoinCustomLobbyByCodeAsync(code);
                 
-                if (title != null) RoomUIController.Instance.EnterRoom(code);
+                if (title != null) RoomUIController.Instance.EnterRoom();
                 else CommonUIController.Instance.ShowRedAlert("접속 실패. 코드를 다시 확인하세요.");
             }
             finally
@@ -220,7 +220,7 @@ namespace Controllers.LobbyController
             string title = await matchmakingService.JoinCustomLobbyByIdAsync(lobbyId);
             CommonUIController.Instance.DoneLoading();
             
-            if (title != null) RoomUIController.Instance.EnterRoom(matchmakingService.CurrentLobbyCode);
+            if (title != null) RoomUIController.Instance.EnterRoom();
             else CommonUIController.Instance.ShowRedAlert("이미 꽉 찼거나 없는 방입니다.");
         }
     }

@@ -656,9 +656,14 @@ MonoBehaviour:
   txt_RoomTitle: {fileID: 7729652791873997657}
   txt_RoomCode: {fileID: 5837248866152592589}
   hostSlotGroup: {fileID: 6925572479493807523}
-  guestSlotGroup: {fileID: 7751268351015870954}
   txt_HostName: {fileID: 3629761913672790103}
+  txt_HostRank: {fileID: 4386257186463643066}
+  txt_HostScore: {fileID: 1028284649267462680}
+  guestSlotGroup: {fileID: 7751268351015870954}
   txt_GuestName: {fileID: 8986954454461365463}
+  txt_GuestRank: {fileID: 3356614264189185862}
+  txt_GuestScore: {fileID: 5981296097218675021}
+  inviteButton: {fileID: 5333062543082046250}
   btn_StartGame: {fileID: 387218770420047336}
   btn_DeckList: {fileID: 3408613674116272451}
   btn_EditDeck: {fileID: 7731858077329519424}

@@ -15,13 +15,19 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI txt_RoomCode;
 
         [Header("Player Slots UI")]
+        [Header("Host")]
         [SerializeField] private GameObject hostSlotGroup;
-        [SerializeField] private GameObject guestSlotGroup;
-        
         [SerializeField] private TextMeshProUGUI txt_HostName;
+        [SerializeField] private TextMeshProUGUI txt_HostRank;
+        [SerializeField] private TextMeshProUGUI txt_HostScore;
+
+        [Header("Guest")]
+        [SerializeField] private GameObject guestSlotGroup;
         [SerializeField] private TextMeshProUGUI txt_GuestName;
-        // [SerializeField] private Image img_HostProfile;
-        // [SerializeField] private Image img_GuestProfile;
+        [SerializeField] private TextMeshProUGUI txt_GuestRank;
+        [SerializeField] private TextMeshProUGUI txt_GuestScore;
+        [SerializeField] private GameObject inviteButton;
+
 
         [Header("Lower Buttons")]
         [SerializeField] private Button btn_StartGame;
@@ -34,6 +40,7 @@ namespace DefaultNamespace
         public event Action OnLeaveRoomClicked;
         public event Action OnStartGameClicked;
         public event Action OnDeckListClicked;
+        public event Action OnEditDeckClicked;
 
         private void Start()
         {
@@ -45,6 +52,8 @@ namespace DefaultNamespace
             // UI 클릭 이벤트를 Controller로 전달
             btn_StartGame.onClick.AddListener(() => OnStartGameClicked?.Invoke());
             btn_DeckList.onClick.AddListener(() => OnDeckListClicked?.Invoke());
+            btn_EditDeck.onClick.AddListener(() => OnEditDeckClicked?.Invoke());
+            
             // 팝업 초기 상태는 비활성화
             if (deckListPopup != null)
             {
@@ -68,30 +77,37 @@ namespace DefaultNamespace
         // ==========================================
         
         // 호스트(방장) 정보 세팅
-        public void SetHostInfo(/* 매개변수로 플레이어 데이터 객체 전달 */)
+        public void UpdateHostUI(/* 매개변수로 플레이어 데이터 객체 전달 */)
         {
             hostSlotGroup.SetActive(true);
             
-            // TODO : 플레이어 정보 불러오기 (Name, Score, Rank 등)
-            txt_HostName.text = "Host Player"; // 임시
+            // TODO
+            txt_HostName.text = "Host Player";
+            txt_HostRank.text = "5";
+            txt_HostScore.text = "12345";
         }
 
         // 게스트(손님) 정보 세팅
-        public void SetGuestInfo(/* 매개변수로 플레이어 데이터 객체 전달 */)
+        public void UpdateGuestUI(/* 매개변수로 플레이어 데이터 객체 전달 */)
         {
+            inviteButton.SetActive(false);
             guestSlotGroup.SetActive(true);
             
-            // TODO : 플레이어 정보 불러오기 (Name, Score, Rank 등)
-            txt_GuestName.text = "Guest Player"; // 임시
+            // TODO
+            txt_GuestName.text = "Guest Player";
+            txt_GuestRank.text = "3";
+            txt_GuestScore.text = "54321";
         }
 
         // 게스트가 나갔을 때 슬롯 비우기
-        public void ClearGuestInfo()
+        public void ClearGuestUI()
         {
             guestSlotGroup.SetActive(false);
             txt_GuestName.text = string.Empty;
+            txt_GuestRank.text = string.Empty;
+            txt_GuestScore.text = string.Empty;
             
-            // TODO : 초대하기 버튼 다시 띄우기
+            inviteButton.SetActive(true);
         }
 
         // 방장에게만 게임 시작 버튼 활성화
@@ -100,6 +116,11 @@ namespace DefaultNamespace
             btn_StartGame.gameObject.SetActive(isActive);
         }
         
+        
+        
+        // ==========================================
+        // 4. Deck 편집 관련
+        // ==========================================
 
         // 덱 리스트 출력하는 함수
         public void OpenDeckListPopup(List<DeckMetaData> myDecks)

@@ -33,6 +33,9 @@ namespace Models.RelayMatchmakingService
         
         public bool IsSignedIn => AuthenticationService.Instance.IsSignedIn;
         public string CurrentLobbyCode => currentLobby?.LobbyCode;
+        public string CurrentLobbyName => currentLobby?.Name;
+        // Players 리스트 안에, ID가 현재 로비의 HostId와 다른 플레이어가 존재하는지 검사
+        public bool HasGuest => currentLobby != null && currentLobby.Players.Exists(player => player.Id != currentLobby.HostId);
 
         public async Task InitializeAndSignInAsync()
         {

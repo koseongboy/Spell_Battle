@@ -31,33 +31,35 @@ namespace DefaultNamespace
         public void RegisterRoomUI(Room_FullScreen ui)
         {
             ui_Room = ui;
-
-            // View의 버튼 클릭 이벤트 구독
+            
+            // View 버튼들에 기능 주입
             ui_Room.OnLeaveRoomClicked += HandleLeaveRoom;
             ui_Room.OnStartGameClicked += HandleStartGame;
             ui_Room.OnDeckListClicked += HandleDeckListClicked;
+            ui_Room.OnEditDeckClicked += HandleDeckEditClicked;
+            
+            SetupUI();
         }
 
-        public void EnterRoom(string roomCode) 
+        private void SetupUI() {
+            // Room Info 업데이트
+            ui_Room.UpdateRoomInfo(matchmakingService.CurrentLobbyName, matchmakingService.CurrentLobbyCode);
+            ui_Room.UpdateHostUI( /* TODO : 호스트의 정보 불러와서 주입해주기 */ );
+            
+            // 게스트 존재 여부 확인
+            if (matchmakingService.HasGuest) {
+                ui_Room.UpdateGuestUI( /* TODO : 게스트의 정보 불러와서 주입해주기 */ );
+            }
+            else {
+                ui_Room.ClearGuestUI();
+            }
+        }
+
+        public void EnterRoom()
         {
             // 1. 방 정보 갱신 (Model -> Controller -> View)
             CommonUIController.Instance.ShowLoading();
             CommonUIController.Instance.ChangeFullScreen("Room_FullScreen");
-            
-            // Model(matchmakingService)에 현재 로비 이름을 가져오는 프로퍼티(CurrentLobbyName 등)가 있다고 가정합니다.
-            string currentRoomName = "테스트 방 이름"; // TODO: matchmakingService.CurrentLobbyName 등으로 교체
-            
-            if (ui_Room != null)
-            {
-                // Controller가 View에게 명령을 내림
-                ui_Room.UpdateRoomInfo(currentRoomName, roomCode);
-                
-                // 일단 호스트 정보는 무조건 채움 (내가 방장이든 손님이든 방장은 존재하므로)
-                ui_Room.SetHostInfo();
-                
-                // 기본적으로 손님 슬롯은 꺼둠
-                ui_Room.ClearGuestInfo();
-            }
 
             if (NetworkManager.Singleton != null)
             {
@@ -70,7 +72,7 @@ namespace DefaultNamespace
                 else if (NetworkManager.Singleton.IsClient)
                 {
                     ui_Room?.SetStartButtonActive(false);
-                    ui_Room?.SetGuestInfo(); // 나 자신의 정보 세팅
+                    ui_Room?.UpdateGuestUI( /* TODO : 게스트의 정보 불러와서 주입해주기 */ );
                 }
             }
             
@@ -83,7 +85,9 @@ namespace DefaultNamespace
             CommonUIController.Instance.DoneLoading();
         }
         
-        // --- 뷰에서 발생한 이벤트 처리 ---
+        
+        #region View Event Handlers
+        
         private async void HandleLeaveRoom()
         {
             CommonUIController.Instance.ShowLoading();
@@ -122,6 +126,14 @@ namespace DefaultNamespace
                 }
             }
         }
+
+        private void HandleDeckEditClicked() {
+            // TODO : 여기서 덱 편집 FullScreen 띄우기
+            Debug.Log("[Room_FullScreen] Deck Edit Clicked. 아직 미구현입니다.");
+        }
+
+        #endregion View Event 
+  
         
         private List<DeckMetaData> GetStoredDeckData()
         {
@@ -138,12 +150,11 @@ namespace DefaultNamespace
         // 좌상단 뒤로 가기 버튼이 눌렸을 때 실행될 래퍼(Wrapper) 함수
         private void OnBackButtonPressedInRoom()
         {
-            // 여기서 그냥 바로 퇴장할지, 아니면 "정말 나가시겠습니까?" 팝업을 띄울지 
-            // RoomUIController가 독자적으로 결정할 수 있음.
+            // TODO : 진짜 나갈지 Confirm 팝업 
             _ = ReturnToLobbyMain(false);
         }
         
-        
+        #region Network
         // --- 기존 네트워크 콜백 이벤트들 ---
         public void SetupNetworkCallbacks()
         {
@@ -185,13 +196,14 @@ namespace DefaultNamespace
             response.CreatePlayerObject = true; 
             response.Pending = false;
         }
-        
+        #endregion
+
         
         // 내가 방에서 나가는 코드
         private async Task ReturnToLobbyMain(bool isForce = false)
         {
             CommonUIController.Instance.ShowLoading();
-            // 🌟 권한 반납 (null로 만들어버림)
+            // 뒤로가기 버튼 반납
             if (LeftUpperController.Instance != null)
             {
                 LeftUpperController.Instance.SetBackAction(null);
@@ -220,7 +232,7 @@ namespace DefaultNamespace
             // 방장(나) 외에 누군가 들어왔다면 손님 UI 켜기
             if (NetworkManager.Singleton.IsHost && NetworkManager.Singleton.ConnectedClientsList.Count > 1)
             {
-                ui_Room?.SetGuestInfo(); // 손님 들어옴 처리
+                ui_Room?.UpdateGuestUI(); // 손님 들어옴 처리
             }
         }
         
@@ -232,7 +244,7 @@ namespace DefaultNamespace
                 // [방장 시점] 손님이 나간 경우: 다시 [+] 버튼 띄우기
                 if (NetworkManager.Singleton.ConnectedClientsList.Count <= 1)
                 {
-                    ui_Room?.ClearGuestInfo(); // 손님 UI 지우기
+                    ui_Room?.ClearGuestUI(); // 손님 UI 지우기
                 }
             }
             else
