@@ -1,4 +1,22 @@
 ﻿<Solution>
+  <Project Path="DA_Assets.Shared.Editor.csproj" />
+  <Project Path="DA_Assets.Shared.csproj" />
+  <Project Path="DA_Assets.FCU.csproj" />
+  <Project Path="DA_Assets.DM.Tests.csproj" />
+  <Project Path="DA_Assets.FCU.Editor.csproj" />
+  <Project Path="DA_Assets.Figmage.Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="DA_Assets.DAO.csproj" />
+  <Project Path="DA_Assets.Figmage.Editor.Tests.csproj" />
+  <Project Path="DA_Assets.DM.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="DA_Assets.CR.csproj" />
+  <Project Path="DA_Assets.DAG.csproj" />
+  <Project Path="DA_Assets.Figmage.csproj" />
+  <Project Path="DA_Assets.Shared.Runtime.Tests.csproj" />
+  <Project Path="DA_Assets.ImgOverflow.csproj" />
+  <Project Path="DA_Assets.ImgOverflowEditor.csproj" />
+  <Project Path="DA_Assets.DAG.Editor.csproj" />
+  <Project Path="DA_Assets.Shared.Editor.Tests.csproj" />
+  <Project Path="DA_Assets.CR.Editor.csproj" />
 </Solution>
