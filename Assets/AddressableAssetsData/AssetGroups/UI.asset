@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: UI
   m_GUID: 4c10a22ad52986144b8a67b17be56c0e
   m_SerializeEntries:
+  - m_GUID: 153c59c14da2f4c49a09c7f2a1ad524f
+    m_Address: Friend_DetailWindow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1da258458ea99b84c871d9bba0b8fa2f
     m_Address: Friend_SearchWindow
     m_ReadOnly: 0
