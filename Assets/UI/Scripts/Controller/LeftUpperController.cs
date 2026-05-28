@@ -40,9 +40,8 @@ namespace DefaultNamespace
             UILoader.Instance.ShowUI(isLobby ? "Option_Lobby_Popup" : "Option_InGame_Popup");
         }
         
-        private void HandleFriendClicked()
-        {
-            UILoader.Instance.ShowUI("Friend_MainWindow");
+        private void HandleFriendClicked() {
+            FriendPopupController.Instance.ToggleOnOff();
         }
 
         private void HandleBackClicked()

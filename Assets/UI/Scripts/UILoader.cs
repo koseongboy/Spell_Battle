@@ -55,6 +55,11 @@ namespace DefaultNamespace
             if (loadedUIs.TryGetValue(uiName, out GameObject uiInstance) && uiInstance != null)
             {
                 uiInstance.SetActive(true);
+                // 팝업이면 OpenAction 실행
+                if (uiInstance.TryGetComponent<UI_Popup>(out var popup))
+                {
+                    popup.OpenAction();
+                }
             }
             else
             {
@@ -63,7 +68,13 @@ namespace DefaultNamespace
                 
                 LoadUI(uiName, (instance) =>
                 {
-                    if (instance != null) instance.SetActive(true);
+                    if (instance != null) {
+                        instance.SetActive(true);
+                        if (instance.TryGetComponent<UI_Popup>(out var popup))
+                        {
+                            popup.OpenAction();
+                        }
+                    }
                 });
             }
         }
@@ -78,6 +89,10 @@ namespace DefaultNamespace
             {
                 uiInstance.SetActive(true);
                 SendDataToUI(uiInstance, data);
+                if (uiInstance.TryGetComponent<UI_Popup>(out var popup))
+                {
+                    popup.OpenAction();
+                }
             }
             else
             {
@@ -89,6 +104,10 @@ namespace DefaultNamespace
                     {
                         instance.SetActive(true);
                         SendDataToUI(instance, data);
+                        if (instance.TryGetComponent<UI_Popup>(out var popup))
+                        {
+                            popup.OpenAction();
+                        }
                     }
                 });
             }
@@ -100,7 +119,20 @@ namespace DefaultNamespace
             {
                 if (uiInstance != null)
                 {
-                    uiInstance.SetActive(false);
+                    if (uiInstance.TryGetComponent<UI_Popup>(out var popup))
+                    {
+                        // 닫기 애니메이션을 연출하라고 명령하고, 완료 콜백을 람다식으로 넘겨줍니다.
+                        popup.CloseAction(() =>
+                        {
+                            // 이 블록 안의 코드는 DOTween 애니메이션이 완전히 끝나는 미래 시점에 실행됩니다.
+                            uiInstance.SetActive(false);
+                        });
+                    }
+                    else
+                    {
+                        // 일반 UI(인터페이스 없음)는 즉시 비활성화합니다.
+                        uiInstance.SetActive(false);
+                    }
                 }
                 else
                 {
