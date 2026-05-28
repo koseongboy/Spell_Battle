@@ -666,10 +666,14 @@ MonoBehaviour:
   txt_GuestScore: {fileID: 5981296097218675021}
   inviteButton: {fileID: 5333062543082046250}
   btn_GameStart: {fileID: 387218770420047336}
+  img_GameStart: {fileID: 5250542550551408364}
   btn_Ready: {fileID: 4688540964215964298}
+  img_Ready: {fileID: 7583206744224138732}
   txt_ReadyBtnText: {fileID: 4069580914063181511}
   btn_DeckList: {fileID: 3408613674116272451}
   btn_EditDeck: {fileID: 7731858077329519424}
+  img_active: {fileID: 21300000, guid: f1d5791b6fa80bf40b039ad3a5918eb0, type: 3}
+  img_inactive: {fileID: 21300000, guid: a8718c122ebb2894396b81ec9ba4fb4e, type: 3}
   deckListPopup: {fileID: 9112806786706841745}
 --- !u!1 &1986553115596357930
 GameObject:

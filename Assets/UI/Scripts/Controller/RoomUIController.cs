@@ -41,6 +41,8 @@ namespace DefaultNamespace
             ui_Room.OnReadyClicked += HandleReadyClicked;
             ui_Room.OnDeckListClicked += HandleDeckListClicked;
             ui_Room.OnEditDeckClicked += HandleDeckEditClicked;
+            readyStateModel.OnGuestReadyChanged -= HandleGuestReadyStateChanged;
+            readyStateModel.OnGuestReadyChanged += HandleGuestReadyStateChanged;
             
             SetupUI();
         }
@@ -49,14 +51,15 @@ namespace DefaultNamespace
             bool isHost = NetworkManager.Singleton.IsHost;
             // 방장/손님 역할에 맞게 버튼 켜기
             ui_Room.SetupRoleButtons(isHost);
+            
 
             // 초기 버튼 상태 세팅
             if (isHost) {
                 // 방장은 처음엔 무조건 시작 불가 (손님이 없거나 준비를 안 했으므로)
-                ui_Room.SetStartButtonInteractable(false);
+                ui_Room.UpdateStartButton(false);
             } else {
                 // 손님은 처음 들어왔을 때 무조건 준비 안 된 상태로 UI 세팅
-                ui_Room.UpdateReadyButtonVisual(false);
+                ui_Room.UpdateReadyButton(false);
             }
             
             
@@ -145,12 +148,12 @@ namespace DefaultNamespace
             if (NetworkManager.Singleton.IsHost)
             {
                 // 방장이면: 손님의 상태에 따라 게임 시작 버튼의 잠금을 풀거나 채움
-                ui_Room.SetStartButtonInteractable(isReady);
+                ui_Room.UpdateStartButton(isReady);
             }
             else
             {
                 // 손님이면: 내 화면의 버튼 텍스트를 "준비 취소" 혹은 "준비"로 바꿈
-                ui_Room.UpdateReadyButtonVisual(isReady);
+                ui_Room.UpdateReadyButton(isReady);
             }
         }
         
@@ -179,7 +182,6 @@ namespace DefaultNamespace
         }
 
         #endregion View Event 
-  
         
         private List<DeckMetaData> GetStoredDeckData()
         {
@@ -263,6 +265,7 @@ namespace DefaultNamespace
             {
                 NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
                 NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+                readyStateModel.OnGuestReadyChanged -= HandleGuestReadyStateChanged;
             }
             if(!isForce)
             {

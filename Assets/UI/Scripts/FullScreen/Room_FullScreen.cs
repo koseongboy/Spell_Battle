@@ -33,10 +33,14 @@ namespace DefaultNamespace
         [FormerlySerializedAs("btn_Game")]
         [Header("Lower Buttons")]
         [SerializeField] private Button btn_GameStart;
+        [SerializeField] private Image img_GameStart;
         [SerializeField] private Button btn_Ready;
+        [SerializeField] private Image img_Ready;
         [SerializeField] private TextMeshProUGUI txt_ReadyBtnText;
         [SerializeField] private Button btn_DeckList;
         [SerializeField] private Button btn_EditDeck;
+        [SerializeField] private Sprite img_active;
+        [SerializeField] private Sprite img_inactive;
         
         [SerializeField] private DeckList_Room_Popup deckListPopup;
 
@@ -134,18 +138,16 @@ namespace DefaultNamespace
         }
 
         // Host의 게임 시작버튼 활성화 비활성화
-        public void SetStartButtonInteractable(bool isInteractable)
+        public void UpdateStartButton(bool isInteractable)
         {
             btn_GameStart.interactable = isInteractable;
+            img_GameStart.sprite = isInteractable ? img_active : img_inactive;
         }
 
         // Guest 레디버튼 업데이트
-        public void UpdateReadyButtonVisual(bool isReady)
-        {
-            if (txt_ReadyBtnText != null)
-            {
-                txt_ReadyBtnText.text = isReady ? "준비 취소" : "준 비";
-            }
+        public void UpdateReadyButton(bool isReady) {
+            txt_ReadyBtnText.text = isReady ? "준비 취소" : "준 비";
+            img_Ready.sprite = isReady ? img_active : img_inactive;
         }
         
         
