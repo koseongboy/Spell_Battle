@@ -20,7 +20,8 @@ namespace Cards.CardUIDatas
         Ice,
         Vacuity,
         Vision,
-        Life
+        Life,
+        Void
     }
     [System.Serializable]
     public class CardUIData

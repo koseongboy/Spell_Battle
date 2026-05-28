@@ -69,6 +69,23 @@ namespace Models.CardModels
                 RemoveCardClientRpc(cardId, RpcTarget.Single(OwnerClientId, RpcTargetUse.Temp));
             }
         }
+        
+        // ==========================================
+        // 📤 [서버 영역] 손패에서 무작위 카드 하나를 버리고 그 ID를 반환
+        // ==========================================
+        public int DiscardRandomCardFromServer()
+        {
+            if (!IsServer || serverHand.Count == 0) return -1;
+
+            // 1. 무작위 인덱스 추첨
+            int randomIndex = Random.Range(0, serverHand.Count);
+            int cardToDiscard = serverHand[randomIndex];
+
+            // 2. 기존에 만들어두신 함수 재활용 (주인 로컬 손패 제거 RPC 자동 전송됨)
+            RemoveCardFromServerHand(cardToDiscard);
+
+            return cardToDiscard;
+        }
 
         // ==========================================
         // 📨 [클라이언트 영역] 서버의 귓속말을 받는 RPC 함수들
