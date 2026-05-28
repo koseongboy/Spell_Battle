@@ -61,6 +61,8 @@ namespace DefaultNamespace
                 // 손님은 처음 들어왔을 때 무조건 준비 안 된 상태로 UI 세팅
                 ui_Room.UpdateReadyButton(false);
             }
+
+            ui_Room.UpdateGuestReadyImg(false);
             
             
             // Room Info 업데이트
@@ -87,12 +89,12 @@ namespace DefaultNamespace
                 // 내가 '방장'이라면 게임 시작 버튼 노출
                 if (NetworkManager.Singleton.IsHost)
                 {
-                    ui_Room?.SetStartButtonActive(true);
+                    ui_Room?.SetupRoleButtons(true);
                 }
                 // 내가 '손님'으로 들어왔다면
                 else if (NetworkManager.Singleton.IsClient)
                 {
-                    ui_Room?.SetStartButtonActive(false);
+                    ui_Room?.SetupRoleButtons(false);
                     ui_Room?.UpdateGuestUI( /* TODO : 게스트의 정보 불러와서 주입해주기 */ );
                 }
             }
@@ -144,6 +146,8 @@ namespace DefaultNamespace
         private void HandleGuestReadyStateChanged(bool isReady)
         {
             if (ui_Room == null) return;
+            
+            
 
             if (NetworkManager.Singleton.IsHost)
             {
@@ -155,6 +159,7 @@ namespace DefaultNamespace
                 // 손님이면: 내 화면의 버튼 텍스트를 "준비 취소" 혹은 "준비"로 바꿈
                 ui_Room.UpdateReadyButton(isReady);
             }
+            ui_Room.UpdateGuestReadyImg(isReady);
         }
         
         private void HandleDeckListClicked()

@@ -27,6 +27,7 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI txt_GuestName;
         [SerializeField] private TextMeshProUGUI txt_GuestRank;
         [SerializeField] private TextMeshProUGUI txt_GuestScore;
+        [SerializeField] private GameObject img_GuestReadyCheck;
         [SerializeField] private GameObject inviteButton;
 
         
@@ -120,12 +121,7 @@ namespace DefaultNamespace
             
             inviteButton.SetActive(true);
         }
-
-        // 방장에게만 게임 시작 버튼 활성화
-        public void SetStartButtonActive(bool isActive)
-        {
-            btn_GameStart.gameObject.SetActive(isActive);
-        }
+        
         
         // ==========================================
         // 게임 시작 & 준비 완료
@@ -148,6 +144,10 @@ namespace DefaultNamespace
         public void UpdateReadyButton(bool isReady) {
             txt_ReadyBtnText.text = isReady ? "준비 취소" : "준 비";
             img_Ready.sprite = isReady ? img_active : img_inactive;
+        }
+
+        public void UpdateGuestReadyImg(bool isReady) {
+            img_GuestReadyCheck.SetActive(isReady);
         }
         
         
