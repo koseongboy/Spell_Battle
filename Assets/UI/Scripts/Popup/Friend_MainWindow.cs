@@ -20,7 +20,8 @@ namespace DefaultNamespace
         
         [Header("UI Buttons")]
         [SerializeField] private Button btn_AddFriend;
-        [FormerlySerializedAs("btn_Alert")] [SerializeField] private Button btn_Request;
+        [SerializeField] private Button btn_Request;
+        [SerializeField] private GameObject obj_AlertRedDot;
         
         [Header("Friend List Element")]
         [SerializeField] private Transform friendListContent; // 🌟 추가: 스크롤 뷰의 Content Transform
@@ -84,10 +85,15 @@ namespace DefaultNamespace
             btn_Request.onClick.AddListener(() => OnClick_Request?.Invoke());
         }
         
-        public void UpdateUI((int,int,string) profileData, List<FriendDataForUI> fDataList) 
+        public void UpdateUI((int,int,string) profileData, List<FriendDataForUI> fDataList, bool hasPendingRequests) 
         {
             UpdateUI_MyProfile(profileData);
             UpdateUI_FriendList(fDataList);
+            
+            if (obj_AlertRedDot != null) 
+            {
+                obj_AlertRedDot.SetActive(hasPendingRequests);
+            }
             OpenAction(); // 데이터 세팅 후 애니메이션 실행
         }
 

@@ -1177,7 +1177,7 @@ GameObject:
   - component: {fileID: 2326186513855686342}
   - component: {fileID: 4035111007833657273}
   m_Layer: 7
-  m_Name: Friend_AlarmBtn
+  m_Name: Friend_RequestBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1404,7 +1404,7 @@ GameObject:
   - component: {fileID: 347257244529453261}
   - component: {fileID: 8023431374523622112}
   m_Layer: 7
-  m_Name: Friend_AlarmImage
+  m_Name: Friend_RequestImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1631,7 +1631,7 @@ GameObject:
   - component: {fileID: 8196044732286039566}
   - component: {fileID: 8185857103318675594}
   m_Layer: 7
-  m_Name: btn-Friend_Alarm
+  m_Name: btn-Friend_Request
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1651,6 +1651,7 @@ RectTransform:
   m_Children:
   - {fileID: 21970112492749712}
   - {fileID: 2621457323809986302}
+  - {fileID: 5380707082147921700}
   m_Father: {fileID: 4062049141315718386}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2061,7 +2062,8 @@ MonoBehaviour:
   txt_Score: {fileID: 6563282288562691528}
   txt_Name: {fileID: 9172064316260818153}
   btn_AddFriend: {fileID: 8053474934578277033}
-  btn_Alert: {fileID: 8185857103318675594}
+  btn_Request: {fileID: 8185857103318675594}
+  obj_AlertRedDot: {fileID: 7310148166702656799}
   friendListContent: {fileID: 3796747633093998529}
   friendItemPrefab: {fileID: 8479658211058995307, guid: ef8700542bfc70044ac74f82c7e0701d, type: 3}
   animDuration: 0.1
@@ -2117,6 +2119,81 @@ RectTransform:
   m_AnchoredPosition: {x: 204, y: -2.5}
   m_SizeDelta: {x: 210, y: 57}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &7310148166702656799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5380707082147921700}
+  - component: {fileID: 5526918622566359976}
+  - component: {fileID: 8821942094213297710}
+  m_Layer: 7
+  m_Name: Friend_RequestAlert
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5380707082147921700
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7310148166702656799}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4925627543589152596}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 14.5, y: 8.1}
+  m_SizeDelta: {x: 8.8232, y: 17.6465}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5526918622566359976
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7310148166702656799}
+  m_CullTransparentMesh: 1
+--- !u!114 &8821942094213297710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7310148166702656799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0.11725056, b: 0.11725056, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 9bbb413649cf2df499bf5167524d9917, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8121779558377142270
 GameObject:
   m_ObjectHideFlags: 0

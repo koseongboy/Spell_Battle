@@ -34,7 +34,10 @@ namespace DefaultNamespace
             var myProfile = LoadMyProfile();
             var friendList = LoadFriendList();
             
-            ui_mainWindow.UpdateUI(myProfile, friendList);
+            var pendingRequests = LoadPendingRequests();
+            bool hasPendingRequests = pendingRequests != null && pendingRequests.Count > 0;
+            
+            ui_mainWindow.UpdateUI(myProfile, friendList, hasPendingRequests);
         }
         
         
@@ -63,6 +66,16 @@ namespace DefaultNamespace
                 new FriendDataForUI { userId = 1, tier = 1, score = 4, name = "name1", onlineStatus = OnlineStatus.Online },
                 new FriendDataForUI { userId = 2, tier = 2, score = 5, name = "name2", onlineStatus = OnlineStatus.Away },
                 new FriendDataForUI { userId = 3, tier = 3, score = 6, name = "name3", onlineStatus = OnlineStatus.Offline }
+            };
+        }
+        private List<FriendDataForUI> LoadPendingRequests()
+        {
+            // TODO: 실제 서버 API(나에게 온 친구 요청 리스트) 연동
+            return new List<FriendDataForUI> 
+            {
+                new FriendDataForUI { userId = 201, name = "Dulgy_1" },
+                new FriendDataForUI { userId = 202, name = "Dulgy_2" },
+                new FriendDataForUI { userId = 203, name = "Dulgy_3" }
             };
         }
         
@@ -195,16 +208,8 @@ namespace DefaultNamespace
             UILoader.Instance.ShowUI("Friend_RequestWindow");
 
             // TODO: 서버에서 나에게 온 친구 요청 리스트 불러오기
-            List<FriendDataForUI> dummyRequests = new List<FriendDataForUI> 
-            {
-                new FriendDataForUI { userId = 201, name = "Dulgy_1" },
-                new FriendDataForUI { userId = 202, name = "Dulgy_2" },
-                new FriendDataForUI { userId = 203, name = "Dulgy_3" }
-            };
-
-            if (ui_requestWindow != null) {
-                ui_requestWindow.UpdateUI_RequestList(dummyRequests);
-            }
+            var pendingRequests = LoadPendingRequests();
+            UILoader.Instance.ShowUI<List<FriendDataForUI>>("Friend_RequestWindow", pendingRequests);
         }
 
         private void CloseRequestWindow() 

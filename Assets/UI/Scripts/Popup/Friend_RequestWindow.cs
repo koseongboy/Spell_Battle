@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace DefaultNamespace
 {
 // 인터페이스명에 맞게 UI_Popup 상속
-    public class Friend_RequestWindow : MonoBehaviour, UI_ILayerInfo, UI_Popup 
+    public class Friend_RequestWindow : MonoBehaviour, UI_ILayerInfo, UI_Popup, UI_IDataReceiver<List<FriendDataForUI>>
     {
         public EUILayer TargetLayer => EUILayer.Popup;
 
@@ -68,7 +68,7 @@ namespace DefaultNamespace
             return piece;
         }
 
-        // 🌟 Controller가 받은 요청 목록을 그리는 함수
+        // Controller가 받은 요청 목록을 그리는 함수
         public void UpdateUI_RequestList(List<FriendDataForUI> requestList)
         {
             foreach (FriendRequestPiece item in activeRequestItems) {
@@ -81,6 +81,10 @@ namespace DefaultNamespace
                 piece.SetData(data);
                 activeRequestItems.Add(piece);
             }
+        }
+
+        public void ReceiveData(List<FriendDataForUI> data) {
+            UpdateUI_RequestList(data);
         }
 
         #region UI_Popup Implementation (변경된 함수명 적용)
