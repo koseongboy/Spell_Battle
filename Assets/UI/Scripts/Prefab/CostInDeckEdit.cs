@@ -1,19 +1,17 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DefaultNamespace
 {
     public class CostInDeckEdit : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
+        public int cost; // 인스펙터에서 0, 1, 2... 10 지정 (10은 10+ 카드를 의미)
+        public Button button;
+        public GameObject highlightObj;
 
-        // Update is called once per frame
-        void Update()
+        private void Reset()
         {
-        
+            button = GetComponent<Button>();
         }
     }
 }

@@ -43,10 +43,18 @@ namespace DefaultNamespace
         {
             ui_DeckEdit = newView;
             
+            // 새로운 View가 등록될 때 기존에 쌓여있던 리스너를 완전히 청소합니다.
+            ui_DeckEdit.saveButton.onClick.RemoveAllListeners();
+            ui_DeckEdit.clearButton.onClick.RemoveAllListeners();
+            ui_DeckEdit.prevPageButton.onClick.RemoveAllListeners();
+            ui_DeckEdit.nextPageButton.onClick.RemoveAllListeners();
+            
             // 2. 버튼 이벤트 연동
             SetupFilterButtons();
             ui_DeckEdit.saveButton.onClick.AddListener(SaveDeck);
             ui_DeckEdit.clearButton.onClick.AddListener(ClearDeck);
+            ui_DeckEdit.prevPageButton.onClick.AddListener(() => ChangePage(-1));
+            ui_DeckEdit.nextPageButton.onClick.AddListener(() => ChangePage(1));
 
             // 3. 최초 화면 갱신
             RefreshLeftDeckList();
@@ -63,6 +71,7 @@ namespace DefaultNamespace
                 Property p = filterUI.property;
             
                 // 버튼 클릭 이벤트 바인딩
+                filterUI.button.onClick.RemoveAllListeners();
                 filterUI.button.onClick.AddListener(() => TogglePropertyFilter(p));
             
                 // 초기 상태는 모두 하이라이트 꺼짐
@@ -70,11 +79,13 @@ namespace DefaultNamespace
                     filterUI.highlightObj.SetActive(false);
             }
 
-            // 2. 코스트 필터 연동 (기존과 동일)
-            for (int i = 0; i <= 10; i++)
-            {
-                int cost = i;
-                ui_DeckEdit.BindCostFilter(i, () => ToggleCostFilter(cost));
+            // 2. [수정됨] 코스트 필터 자동 연동
+            foreach (var filterUI in ui_DeckEdit.costFilters){
+                int cost = filterUI.cost;
+                
+                filterUI.button.onClick.RemoveAllListeners();
+                filterUI.button.onClick.AddListener(() => ToggleCostFilter(cost));
+                if (filterUI.highlightObj != null) filterUI.highlightObj.SetActive(false);
             }
         }
 
@@ -102,9 +113,20 @@ namespace DefaultNamespace
 
         private void ToggleCostFilter(int cost)
         {
-            // 이미 켜진 코스트를 다시 누르면 필터 해제
+        // 이미 선택된 코스트를 다시 누르면 필터 해제(-1)
             currentCostFilter = (currentCostFilter == cost) ? -1 : cost;
-            RefreshCenterCards();
+
+            // 🌟 [UI 시각적 갱신] 선택된 코스트 버튼만 하이라이트 활성화
+            foreach (var filterUI in ui_DeckEdit.costFilters)
+            {
+                if (filterUI.highlightObj != null)
+                {
+                    bool isSelected = (filterUI.cost == currentCostFilter);
+                    filterUI.highlightObj.SetActive(isSelected);
+                }
+            }
+
+            ApplyFilters(); // 데이터 재필터링 및 화면 갱신
         }
         
         // 필터링 적용 및 페이지 리셋
