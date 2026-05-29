@@ -19,10 +19,9 @@ namespace Cards.CardUIDatas
         Thunder,
         Wind,
         Ice,
-        Vacuity,
+        Void,
         Vision,
         Life,
-        Void
     }
     [System.Serializable]
     public class CardUIData

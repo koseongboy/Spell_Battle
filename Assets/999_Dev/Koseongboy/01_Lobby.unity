@@ -2069,6 +2069,7 @@ GameObject:
   - component: {fileID: 767537960}
   - component: {fileID: 767537961}
   - component: {fileID: 767537962}
+  - component: {fileID: 767537963}
   m_Layer: 0
   m_Name: UI_Controller
   m_TagString: Untagged
@@ -2153,6 +2154,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62479867cfd4fd4fa2a330fc4f90fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.FriendPopupController
+--- !u!114 &767537963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767537956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7a6d2179356b24786dbeb51b351c5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.DeckEditController
+  view: {fileID: 0}
 --- !u!1 &784845763
 GameObject:
   m_ObjectHideFlags: 0

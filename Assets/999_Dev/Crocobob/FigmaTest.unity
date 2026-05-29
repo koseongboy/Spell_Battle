@@ -673,7 +673,7 @@ MonoBehaviour:
       id: 0:0
       name: Document
       type: 1
-      selected: 1
+      selected: 0
       childs:
       - rid: 5425250473822126265
   EditorEventHandlers:
@@ -824,6 +824,34 @@ MonoBehaviour:
             FontStyle: 0
           bytes: 
           font: {fileID: 11400000, guid: e1b8ab9b5fdcc1046bfc282f54fce3d9, type: 2}
+        - fontSubset: 1
+          fontMetadata:
+            Family: Inter
+            Weight: 400
+            FontStyle: 0
+          bytes: 
+          font: {fileID: 11400000, guid: aceeaab4911e1c7439da7babc5f79cbe, type: 2}
+        - fontSubset: 134217728
+          fontMetadata:
+            Family: Inter
+            Weight: 400
+            FontStyle: 0
+          bytes: 
+          font: {fileID: 11400000, guid: 2dd01dbef82802244a56643313e5a6d3, type: 2}
+        - fontSubset: 268435456
+          fontMetadata:
+            Family: Inter
+            Weight: 400
+            FontStyle: 0
+          bytes: 
+          font: {fileID: 11400000, guid: 3babec94fbde60d4e91066e55b249c3c, type: 2}
+        - fontSubset: 536870912
+          fontMetadata:
+            Family: Inter
+            Weight: 400
+            FontStyle: 0
+          bytes: 
+          font: {fileID: 11400000, guid: 8bfbba94aa10ce945905c5aa8f67164c, type: 2}
         - fontSubset: 1
           fontMetadata:
             Family: Noto Sans KR
@@ -1139,7 +1167,7 @@ MonoBehaviour:
         id: 41:2
         name: BattleRoom_ImHost
         type: 3
-        selected: 1
+        selected: 0
         childs: []
     - rid: 5425250473822126281
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}
@@ -1611,7 +1639,7 @@ MonoBehaviour:
         id: 34:444
         name: DeckEdit
         type: 3
-        selected: 0
+        selected: 1
         childs: []
     - rid: 5425250473822126340
       type: {class: SelectableFObject, ns: DA_Assets.FCU, asm: DA_Assets.FCU}

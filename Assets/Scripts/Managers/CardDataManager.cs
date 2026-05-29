@@ -49,6 +49,15 @@ namespace Managers.DataManagers
             
             Debug.Log($"[CardDataManager] 총 {cardDictionary.Count}장의 카드를 성공적으로 메모리에 로드했습니다.");
         }
+        
+        
+        // ==========================================
+        // 🔍 외부에서 모든 Card의 SO를 가져가는 함수
+        // ==========================================
+        public List<GenericCard> GetAllCards()
+        {
+            return new List<GenericCard>(cardDictionary.Values);
+        }
 
         // ==========================================
         // 🔍 외부에서 카드 ID로 SO를 가져갈 때 사용하는 함수
