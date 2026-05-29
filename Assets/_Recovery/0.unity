@@ -559,7 +559,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1279437348525638701, guid: e2e682b966e3f644392ffbfab511e0e2, type: 3}
   m_PrefabInstance: {fileID: 375093194}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &472837654
+--- !u!1 &510812445
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -567,37 +567,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 472837656}
-  - component: {fileID: 472837655}
+  - component: {fileID: 510812447}
+  - component: {fileID: 510812446}
   m_Layer: 0
-  m_Name: PlayerView
+  m_Name: TestPlayerView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &472837655
+--- !u!114 &510812446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 472837654}
+  m_GameObject: {fileID: 510812445}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 712b96b7f1afd644ab4512e2173ab326, type: 3}
+  m_Script: {fileID: 11500000, guid: b7925ab2cef801b41b8a79357c1da6db, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Views.PlayerView.PlayerView
---- !u!4 &472837656
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.TestPlayerView
+--- !u!4 &510812447
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 472837654}
+  m_GameObject: {fileID: 510812445}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.97068, y: 0.30253, z: 10.12982}
+  m_LocalPosition: {x: 6.43546, y: 1.09052, z: 13.25823}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -820,7 +820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2065080997
+  GlobalObjectIdHash: 2722346292
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -903,7 +903,7 @@ MonoBehaviour:
   EnemyPlayer: {fileID: 0}
   model: {fileID: 1015416321}
   view: {fileID: 0}
-  playerPrefab: {fileID: 5534150444609738042, guid: 095936175cf45954184d659c27824bc0, type: 3}
+  playerPrefab: {fileID: 3965741523160770176, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
   hostSpawnPoint: {fileID: 1766443283}
   guestSpawnPoint: {fileID: 1240849230}
 --- !u!1 &1103786266
@@ -1603,4 +1603,4 @@ SceneRoots:
   - {fileID: 1941271199}
   - {fileID: 1972607075}
   - {fileID: 1501006579}
-  - {fileID: 472837656}
+  - {fileID: 510812447}

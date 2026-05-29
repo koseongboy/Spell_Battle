@@ -2,6 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Models.PlayerModels;
 using Views.PlayerView;
+using System;
 
 namespace Controllers.PlayerController
 {
@@ -10,17 +11,39 @@ namespace Controllers.PlayerController
         [Header("MVP References")]
         public PlayerModel model;
         public PlayerView view;
+        public event Action<int> OnHpChanged;
+        public event Action<int> OnManaChanged;
+
+        public int CurrentHp { get; private set; } = 100;
+        public int CurrentMana { get; private set; } = 50;
 
         public override void OnNetworkSpawn() {
             // ==========================================
-            // 1. 초기 화면 세팅 (스폰 직후 한 번 실행)
+            // 🌟 1. 방어선: 내 캐릭터가 아니면 UI 세팅을 '완벽하게' 무시하고 즉시 종료!
+            // (상대방 캐릭터가 스폰될 때 여기서 차단되므로 에러가 절대 안 납니다)
+            // ==========================================
+            if (!IsOwner) return;
+
+            // ==========================================
+            // 🌟 2. 씬에 있는 PlayerView 찾기
+            // ==========================================
+            PlayerView view = PlayerView.Instance;
+            
+            if (view == null)
+            {
+                Debug.LogError("씬에 PlayerView(UI)가 없습니다!");
+                return; // UI가 없으면 아래 코드를 실행하지 않고 안전하게 종료
+            }
+
+            // ==========================================
+            // 3. 초기 화면 세팅 (스폰 직후 한 번 실행)
             // ==========================================
             view.UpdateHealth(model.CurrentHealth.Value);
             view.UpdateMana(model.CurrentMana.Value);
             view.UpdateStatuses(model.ActiveStatuses);
 
             // ==========================================
-            // 2. 데이터 변경 '구독' (핵심 파트!)
+            // 4. 데이터 변경 '구독' (내 캐릭터일 때만 구독함!)
             // ==========================================
             
             // 체력이 변할 때 -> View의 UpdateHealth 실행
@@ -35,7 +58,7 @@ namespace Controllers.PlayerController
                 view.UpdateMana(newValue);
             };
 
-            // 🌟 상태이상(리스트)이 변할 때 -> View의 UpdateStatuses 실행
+            // 상태이상(리스트)이 변할 때 -> View의 UpdateStatuses 실행
             model.ActiveStatuses.OnListChanged += HandleStatusChanged;
         }
 

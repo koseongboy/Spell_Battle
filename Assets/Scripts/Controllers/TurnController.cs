@@ -34,6 +34,20 @@ namespace Controllers.TurnController
         // 🌟 에러 원인 3: 멀리건 레디를 저장할 변수 추가
         [SerializeField] private HashSet<ulong> mulliganReadyPlayers = new HashSet<ulong>();
 
+        [ContextMenu("전투 강제 시작 (테스트용)")]
+        public void ManualStartBattleTest()
+        {
+            if (IsServer)
+            {
+                Debug.Log("🛠️ 수동으로 전투를 초기화합니다!");
+                InitializeRoomAndSpawnPlayers();
+            }
+            else
+            {
+                Debug.LogWarning("방장(Host) 에디터에서만 실행할 수 있습니다!");
+            }
+        }
+
         public void Awake()
         {
             if (Instance == null) Instance = this;
