@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee63e26454f1b8845a989f5b6b7b9694, type: 3}
-  m_Name: Card_4003
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cards.EffectInfos.GenericCard
   uiData:
     id: 4003
     wordName: "\uBD84\uCD9C"
-    cost: 4
-    property: 4
+    cost: 2
+    property: 5
     Effects:
     - effectType: 10
       targetType: 2
@@ -33,4 +33,5 @@ MonoBehaviour:
       conditionalValue1: 0
       conditionalValue2: 0
       conditionalEffectType: 0
-    desc: 
+    desc: "\uB300\uC0C1\uC774 \uC774\uBC88 \uD134\uC5D0 \uBC1C\uD654\uB85C \uC778\uD574
+      \uBC1B\uB294 \uB370\uBBF8\uC9C0\uAC00 2\uBC30 \uC99D\uAC00\uD55C\uB2E4."

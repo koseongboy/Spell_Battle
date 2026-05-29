@@ -1,3 +1,4 @@
+using System;
 using Cards.EffectInfos;
 using UnityEngine;
 using Models.PlayerModels;
@@ -18,7 +19,7 @@ namespace Models.EffectCommands
         LateSystem = 100       // 턴 즉시 종료 등 극후반 처리 (예: 대격변)
     }
     
-    public abstract class EffectCommand
+    public abstract class EffectCommand : IComparable<EffectCommand>
     {
         protected PlayerModel target;
         public virtual CommandPriority Priority => CommandPriority.DamageAndHeal;
@@ -41,7 +42,6 @@ namespace Models.EffectCommands
     public class DamageCommand : EffectCommand
     {
         public override CommandPriority Priority => CommandPriority.CombatAction;
-        private PlayerModel target;
         private int amount;
 
         public DamageCommand(PlayerModel target, int amount) : base(target)
@@ -60,7 +60,6 @@ namespace Models.EffectCommands
     public class HealCommand : EffectCommand
     {
         public override CommandPriority Priority => CommandPriority.CombatAction;
-        private PlayerModel target;
         private int amount;
 
         public HealCommand(PlayerModel target, int amount) : base(target)
@@ -98,7 +97,6 @@ namespace Models.EffectCommands
     public class AddStatusCommand : EffectCommand
     {
         public override CommandPriority Priority => CommandPriority.StatusApply;
-        private PlayerModel target;
         private StatusType status;
         private int stack;
         private int duration;
@@ -122,7 +120,6 @@ namespace Models.EffectCommands
     public class DetonateStatusCommand : EffectCommand
     {
         public override CommandPriority Priority => CommandPriority.StatusDetonate;
-        private PlayerModel target;
         private StatusType status;
 
         public DetonateStatusCommand(PlayerModel target, StatusType status) : base(target)
@@ -142,7 +139,6 @@ namespace Models.EffectCommands
     public class CardMovementCommand : EffectCommand
     {
         public override CommandPriority Priority => CommandPriority.CardMovement;
-        private PlayerModel target;
         private EffectType moveType; 
         private int count;
         private string specificCardId;
@@ -160,6 +156,7 @@ namespace Models.EffectCommands
             // TODO: PlayerModel 내에 ProcessCardMovement 함수가 아직 없습니다.
             // target.Deck, target.Hand, target.Graveyard 컴포넌트를 조작하는 함수를 PlayerModel에 추가해야 합니다.
             target.ProcessCardMovement(moveType, count, specificCardId); 
+            //
         }
     }
 
@@ -167,7 +164,6 @@ namespace Models.EffectCommands
     public class ManaCommand : EffectCommand
     {
         public override CommandPriority Priority => CommandPriority.ManaAndSystem;
-        private PlayerModel target;
         private int amount; 
 
         public ManaCommand(PlayerModel target, int amount) : base(target)

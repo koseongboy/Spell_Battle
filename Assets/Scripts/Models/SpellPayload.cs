@@ -5,6 +5,7 @@ using Models.EffectCommands;
 using Models.EvaluationRequests;
 using Models.PlayerModels;
 using Cards.CardUIDatas;
+using Cards.EffectInfos;
 using Cards.PlayableCards;
 using Newtonsoft.Json;
 
@@ -27,6 +28,11 @@ namespace Models.SpellPayloads
         {
             pendingCards.Add(card);
             UsedCardIds.Add(card.Id);
+            
+            if (card is GenericCard genericCard)
+            {
+                AddProperty(genericCard.uiData.property, 1);
+            }
         }
         
         // 영창 종료 시 턴 매니저가 호출할 핵심 메서드

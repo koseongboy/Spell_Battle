@@ -10,7 +10,8 @@ namespace Cards.CardUIDatas
     {
         None, //이거에 대해선 아무런 UI적 조치 하지 말 것. (혹은 설정 안한 오류임을 티를 마구 내면 더 좋음)
         Attack,
-        Deffence,
+        Deffense,
+        Heal,
         Chain,
         Fire,
         Water,

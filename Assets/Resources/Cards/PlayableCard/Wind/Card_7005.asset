@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee63e26454f1b8845a989f5b6b7b9694, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cards.EffectInfos.GenericCard
+  uiData:
+    id: 7005
+    wordName: "\uACE0\uC694"
+    cost: 2
+    property: 9
+    Effects:
+    - effectType: 0
+      targetType: 6
+      value1: 1
+      value2: 0
+      statusType: 0
+      targetProperty: 0
+      specificCardId: 
+      condition: 0
+      conditionProperty: 0
+      conditionStatus: 0
+      conditionThreshold: 0
+      useConditionalValues: 0
+      conditionalValue1: 0
+      conditionalValue2: 0
+      conditionalEffectType: 0
+    desc: "\uD578\uB4DC\uC5D0 \uC788\uB294 \uBB34\uC791\uC704 \uCE74\uB4DC \uD558\uB098\uB97C
+      \uBB34\uB8CC\uB85C \uC0AC\uC6A9\uD568."
