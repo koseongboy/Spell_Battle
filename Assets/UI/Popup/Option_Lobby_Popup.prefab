@@ -1390,6 +1390,7 @@ GameObject:
   - component: {fileID: 3056639845709628136}
   - component: {fileID: 6624577082726460752}
   - component: {fileID: 7851928563043679193}
+  - component: {fileID: 5113834703843815045}
   m_Layer: 7
   m_Name: Option_Lobby_Popup
   m_TagString: Untagged
@@ -1473,6 +1474,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.Option_Lobby_Popup
   lobbyUI: {fileID: 1574087564601679038}
   ingameUI: {fileID: 8049414405378734246}
+  animDuration: 0.1
+  startScale: {x: 0.8, y: 0.8, z: 0.8}
+--- !u!225 &5113834703843815045
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3968333076030758468}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4340964170296390976
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 182, y: 7.5}
+  m_AnchoredPosition: {x: 182, y: 8.9}
   m_SizeDelta: {x: 292, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9151367193384896274
@@ -187,7 +187,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 182, y: -15}
+  m_AnchoredPosition: {x: 182, y: -12.9}
   m_SizeDelta: {x: 292, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1327260973533763299
@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 6048549889353689903}
   - component: {fileID: 4111186511802894077}
   - component: {fileID: 7846991966126255614}
+  - component: {fileID: 8479658211058995307}
   m_Layer: 5
   m_Name: btn-Friend_FriendPanel
   m_TagString: Untagged
@@ -409,6 +410,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8479658211058995307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218243765700067748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 272487942e831b14ab1c31e3e514e898, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.FriendPanelPiece
+  txt_Name: {fileID: 2265579112910440088}
+  txt_Status: {fileID: 8843782814243975974}
+  btn_Detail: {fileID: 7846991966126255614}
+  img_Status: {fileID: 3761740218079625574}
 --- !u!1 &6116195369509759511
 GameObject:
   m_ObjectHideFlags: 0

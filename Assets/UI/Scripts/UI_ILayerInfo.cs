@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -12,5 +13,10 @@ namespace DefaultNamespace
     public interface UI_ILayerInfo
     {
         EUILayer TargetLayer { get; }
+    }
+
+    public interface UI_Popup {
+        public void OpenAction();
+        public void CloseAction( Action onAnimationComplete );
     }
 }

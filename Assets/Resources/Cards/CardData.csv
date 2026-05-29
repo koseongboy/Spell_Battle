@@ -1,0 +1,132 @@
+Id,WordName,Cost,Property,Desc,EffectType1,TargetType1,Value1_1,Value2_1,StatusType1,Condition1,CondProp1,UseCond1,CondVal1_1,CondVal2_1,SpecificCardId1,EffectType2,TargetType2,Value1_2,Value2_2,StatusType2
+1001,반역,1,Attack,피해를 1 줍니다.,Damage,Enemy,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1002,세례,1,Attack,피해를 1 줍니다.,Damage,Enemy,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1003,낙인,1,Attack,피해를 1 줍니다.,Damage,Enemy,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1004,배덕,1,Attack,피해를 1 줍니다.,Damage,Enemy,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1005,추방,1,Attack,피해를 1 줍니다.,Damage,Enemy,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1006,갈구,1,Attack,피해를 1 줍니다.,Damage,Enemy,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1007,단죄,1,Attack,피해를 1 줍니다.,Damage,Enemy,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1008,서곡,2,Attack,피해를 2 줍니다.,Damage,Enemy,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1009,비명,2,Attack,피해를 2 줍니다.,Damage,Enemy,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1010,궤멸,2,Attack,피해를 2 줍니다.,Damage,Enemy,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1011,모독,2,Attack,피해를 2 줍니다.,Damage,Enemy,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1012,찬탈,2,Attack,피해를 2 줍니다.,Damage,Enemy,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1013,파계,2,Attack,피해를 2 줍니다.,Damage,Enemy,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1014,박멸,2,Attack,피해를 2 줍니다.,Damage,Enemy,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1015,참수,3,Attack,피해를 3 줍니다.,Damage,Enemy,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1016,강림,3,Attack,피해를 3 줍니다.,Damage,Enemy,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1017,공포,3,Attack,피해를 3 줍니다.,Damage,Enemy,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1018,파편,3,Attack,피해를 3 줍니다.,Damage,Enemy,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1019,대죄,3,Attack,피해를 3 줍니다.,Damage,Enemy,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+1020,궁극,3,Attack,피해를 3 줍니다.,Damage,Enemy,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2001,생장,1,Heal,시전자의 생명력을 1 회복합니다.,Heal,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2002,구원,1,Heal,시전자의 생명력을 1 회복합니다.,Heal,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2003,소생,1,Heal,시전자의 생명력을 1 회복합니다.,Heal,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2004,성역,1,Heal,시전자의 생명력을 1 회복합니다.,Heal,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2005,성배,2,Heal,시전자의 생명력을 2 회복합니다.,Heal,Self,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2006,성흔,2,Heal,시전자의 생명력을 2 회복합니다.,Heal,Self,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2007,성사,2,Heal,시전자의 생명력을 2 회복합니다.,Heal,Self,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2008,축제,2,Heal,시전자의 생명력을 2 회복합니다.,Heal,Self,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2009,자애,3,Heal,시전자의 생명력을 3 회복합니다.,Heal,Self,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2010,강복,3,Heal,시전자의 생명력을 3 회복합니다.,Heal,Self,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2011,응고,3,Heal,시전자의 생명력을 3 회복합니다.,Heal,Self,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2012,안식,1,Deffense,시전자가 보호막을 1 얻습니다.,GainShield,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2013,회귀,1,Deffense,시전자가 보호막을 1 얻습니다.,GainShield,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2014,복음,1,Deffense,시전자가 보호막을 1 얻습니다.,GainShield,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2015,전율,2,Deffense,시전자가 보호막을 2 얻습니다.,GainShield,Self,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2016,가호,2,Deffense,시전자가 보호막을 2 얻습니다.,GainShield,Self,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2017,영성,2,Deffense,시전자가 보호막을 2 얻습니다.,GainShield,Self,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2018,현신,3,Deffense,시전자가 보호막을 3 얻습니다.,GainShield,Self,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2019,서약,3,Deffense,시전자가 보호막을 3 얻습니다.,GainShield,Self,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+2020,성화,3,Deffense,시전자가 보호막을 3 얻습니다.,GainShield,Self,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+4001,발화,1,Fire,대상에게 2턴 동안 발화 중첩을 1 적용한다.,AddStatus,Enemy,1,2,Ignite,None,None,FALSE,0,0,,None,None,0,0,None
+4002,잔불,1,Fire,대상에게 2턴 동안 발화 중첩을 1 적용한다. 이전 주문이 불이었을 경우 2 적용.,AddStatus,Enemy,1,2,Ignite,PrevPropertyMatch,Fire,TRUE,2,2,,None,None,0,0,None
+4003,분출,2,Fire,대상이 이번 턴에 발화로 인해 받는 데미지가 2배 증가한다.,AddStatus,Enemy,2,1,IgniteDamageMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+4004,확산,2,Fire,대상이 이번 턴에 발화로 인해 받는 데미지가 2번씩 작용한다.,AddStatus,Enemy,2,1,IgniteDamageMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+4005,업화,2,Fire,대상의 발화 스택들의 지속시간을 2턴씩 증가시킨다.,ModifyStatusDuration,Enemy,2,0,Ignite,None,None,FALSE,0,0,,None,None,0,0,None
+4006,흑섬,2,Fire,이전 주문의 속성이 불이었을 경우 대상에게 발화 중첩을 2 적용한다.,AddStatus,Enemy,0,0,Ignite,PrevPropertyMatch,Fire,TRUE,2,2,,None,None,0,0,None
+4007,폭염,3,Fire,상대의 덱에 폭염 카드를 3장 섞어넣는다.,ShuffleSpecificCardToDeck,EnemyDeck,3,0,None,None,None,FALSE,0,0,Card_폭염,None,None,0,0,None
+4008,화신,4,Fire,대상의 발화 스택을 모두 소모하여 소모한 만큼 1 데미지를 입힌다.,ConsumeStatusForDamage,Enemy,1,0,Ignite,None,None,FALSE,0,0,,None,None,0,0,None
+4009,홍련,4,Fire,대상에게 걸려있는 모든 발화의 효과를 즉시 한 번 발동한다.,TriggerStatusInstantly,Enemy,0,0,Ignite,None,None,FALSE,0,0,,None,None,0,0,None
+5001,해일,2,Water,이 카드 하나로 해당 주문에 물 속성 카드가 3개가 들어간 것으로 취급.,AddPropertyCountToSpell,Self,3,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+5002,신비,2,Water,어떤 카드로 구성된 주문이든 이번 주문의 속성을 물로 설정함.,ChangeCurrentSpellProperty,Self,0,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+5003,만조,1,Water,현재 주문의 속성이 물일 경우 추가 데미지 2. 강굽이: 추가 데미지 4.,Damage,Enemy,2,0,None,CurrentPropertyMatch,Water,TRUE,4,0,,None,None,0,0,None
+5004,격류,1,Water,현재 주문의 속성이 물일 경우 주문의 코스트 1 감소. 강굽이: 코스트 2 감소.,ModifySpellCost,Self,1,0,None,CurrentPropertyMatch,Water,TRUE,2,0,,None,None,0,0,None
+5005,침잠,1,Water,이 카드는 다시 덱으로 섞여 들어감. 강굽이: 데미지가 1 증가.,ShuffleSelfToDeck,SelfDeck,1,0,None,PrevPropertyMatch,Water,TRUE,2,0,,None,None,0,0,None
+5006,심연,2,Water,무덤에 있는 무작위 물 속성 카드 1개를 덱에 섞어넣음. 강굽이: 2개로 증가.,ShuffleGraveToDeck,SelfDeck,1,0,None,PrevPropertyMatch,Water,TRUE,2,0,,None,None,0,0,None
+5007,파문,2,Water,내 손에 있는 무작위 물 속성 카드 하나를 복사하여 덱에 섞음. 강굽이: 선택 가능.,CopyHandToDeck,SelfDeck,1,0,None,PrevPropertyMatch,Water,TRUE,1,0,,None,None,0,0,None
+5008,용오름,10,Water,궁극기. 이번 게임 동안 사용한 물 속성 주문의 수 당 추가 데미지 2.,DamageByPlayedPropertyAmount,Enemy,2,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+6001,지맥,2,Ground,7의 보호막을 얻음.,GainShield,Self,7,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+6002,지평,2,Ground,5의 보호막을 얻음. 이전 주문의 속성이 흙일 경우 10의 보호막을 얻음.,GainShield,Self,5,0,None,PrevPropertyMatch,Ground,TRUE,10,0,,None,None,0,0,None
+6003,대지모신,3,Ground,이번 마법으로 얻는 보호막의 40% 증가.,AddStatus,Self,40,1,ShieldGainBoost,None,None,FALSE,0,0,,None,None,0,0,None
+6004,지핵,2,Ground,내 체력이 10 이하일 때 이번 주문으로 얻는 보호막 양 50% 증가.,AddStatus,Self,50,1,ShieldGainBoost,TargetHPBelow,None,TRUE,50,1,,None,None,0,0,None
+6005,붕괴,2,Ground,현재 보호막 수치의 30%만큼 상대에게 추가 데미지를 가함.,DamageByShieldPercentage,Enemy,30,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+6006,황폐,3,Ground,내 보호막을 모두 소모하여 소모된 수치만큼 상대방에게 데미지.,ConsumeShieldForDamage,Enemy,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+6007,금강,3,Ground,2턴동안 반사 30% 적용.,AddStatus,Self,30,2,DamageReflect,None,None,FALSE,0,0,,None,None,0,0,None
+6008,암주,2,Ground,다음에 처음으로 받는 데미지 30% 감소.,AddStatus,Self,30,1,DamageReduction_Hit,None,None,FALSE,0,0,,None,None,0,0,None
+6009,신념,2,Ground,다음 2턴 동안 받는 데미지 30% 감소.,AddStatus,Self,30,2,DamageReduction_Turn,None,None,FALSE,0,0,,None,None,0,0,None
+6010,암계,2,Ground,보호막이 있을 경우 주문의 공격력 20% 증가.,AddStatus,Self,20,1,DamageMultiplier,CasterShieldAbove,None,TRUE,20,1,,None,None,0,0,None
+6011,맥동,1,Ground,보호막을 5 잃고 핸드에 있는 모든 흙 카드의 코스트 1 감소.,GainShield,Self,-5,0,None,None,None,FALSE,0,0,,ModifySpellCost,SelfHand,-1,0,None
+6012,대격변,10,Ground,상대와 내 손에 있는 카드를 모두 없애고 30 보호막 적용. 턴 종료.,DestroyAllHand,All,0,0,None,None,None,FALSE,0,0,,GainShield,Self,30,0,None
+7001,허공,2,Wind,무작위 카드 2장을 버림. 카드를 2장 더 드로우함.,DiscardRandom,SelfHand,2,0,None,None,None,FALSE,0,0,,DrawCard,Self,2,0,None
+7002,창궁,3,Wind,카드를 4장 드로우함.,DrawCard,Self,4,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+7003,나선,1,Wind,카드를 한 장 드로우함. 그 카드의 코스트가 0이 됨.,DrawCard,Self,1,0,None,None,None,FALSE,0,0,,ModifyNextDrawCost,Self,0,0,None
+7004,무산,2,Wind,무덤에 있는 카드 2장을 드로우함. 이전 주문이 바람일 경우 코스트 1 감소.,DrawCard,Self,2,0,None,PrevPropertyMatch,Wind,TRUE,2,-1,,None,None,0,0,None
+7005,고요,2,Wind,핸드에 있는 무작위 카드 하나를 무료로 사용함.,PlayRandomCardFree,SelfHand,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+7006,명상,0,Wind,마나를 1 획득함.,GainMana,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+7007,깨우침,0,Wind,마나를 2 획득함. 다음 턴에 마나를 사용할 수 없음.,GainMana,Self,2,0,None,None,None,FALSE,0,0,,RestrictNextTurnMana,Self,2,0,None
+7008,마천루,2,Wind,다음 드로우하는 카드의 코스트가 0이 됨.,ModifyNextDrawCost,Self,0,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+7009,사면,1,Wind,해당 주문의 코스트가 절반으로 감소함.,ModifySpellCost,Self,50,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+7010,감시,2,Wind,상대 핸드에 있는 카드 3장 중 하나를 골라 훔쳐옴.,StealCardFromHand,EnemyHand,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+7011,정적,3,Wind,상대방의 덱에 정적 카드를 3장 섞어 넣음.,ShuffleSpecificCardToDeck,EnemyDeck,3,0,None,None,None,FALSE,0,0,Card_정적,None,None,0,0,None
+7012,각성,2,Wind,이번 턴 동안 핸드에 있는 카드의 코스트가 1 감소함.,AddStatus,Self,1,1,CostReduction,None,None,FALSE,0,0,,None,None,0,0,None
+7013,삼라만상,2,Wind,덱에 있는 카드 3개 중 하나를 골라 핸드로 가져옴.,DrawCard,Self,1,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+7014,참풍,2,Wind,젖음 효과가 적용된 상대에게 빙결 부여.,AddStatus,Enemy,1,0,Freeze,TargetHasStatus,Wet,TRUE,1,0,,None,None,0,0,None
+7015,폭주,2,Wind,발화 효과가 적용된 상대의 발화를 즉시 1번 입힘.,TriggerStatusInstantly,Enemy,1,0,Ignite,TargetHasStatus,Ignite,TRUE,1,0,,None,None,0,0,None
+8001,전지전능,3,Thunder,강굽이: 추가 데미지 3.,Damage,Enemy,0,0,None,PrevPropertyMatch,Water,TRUE,3,0,,None,None,0,0,None
+8002,벽력,2,Thunder,연타 공격일 경우 추가 데미지 3.,Damage,Enemy,0,0,None,IsComboAttack,None,TRUE,3,0,,None,None,0,0,None
+8003,천계,2,Thunder,발화 대상에게 사용할 경우 발화 중첩 1 적용.,AddStatus,Enemy,0,0,Ignite,TargetHasStatus,Ignite,TRUE,1,0,,None,None,0,0,None
+8004,성좌,2,Thunder,발화 대상에게 사용할 경우 추가 데미지 3.,Damage,Enemy,0,0,None,TargetHasStatus,Ignite,TRUE,3,0,,None,None,0,0,None
+8005,섬전,2,Thunder,빙결 대상에게 사용할 경우 다음 주문 코스트 2 증가.,AddStatus,Enemy,0,0,CostReduction,TargetHasStatus,Freeze,TRUE,-2,1,,None,None,0,0,None
+8006,분광,2,Thunder,빙결 대상에게 사용할 경우 추가 데미지 3.,Damage,Enemy,0,0,None,TargetHasStatus,Freeze,TRUE,3,0,,None,None,0,0,None
+8007,잔광,2,Thunder,이전 주문이 번개였을 경우 기절 1턴 적용.,AddStatus,Enemy,0,0,Stun,PrevPropertyMatch,Thunder,TRUE,1,1,,None,None,0,0,None
+9001,냉기,1,Ice,대상의 빙결 중첩을 1 증가시킨다.,AddStatus,Enemy,1,0,Freeze,None,None,FALSE,0,0,,None,None,0,0,None
+9002,혹한,2,Ice,대상의 빙결 중첩을 2 증가시킨다.,AddStatus,Enemy,2,0,Freeze,None,None,FALSE,0,0,,None,None,0,0,None
+9003,냉혈한,2,Ice,대상의 빙결 중첩 남은 시간을 3턴 증가.,ModifyStatusDuration,Enemy,3,0,Freeze,None,None,FALSE,0,0,,None,None,0,0,None
+9004,설옥,2,Ice,다음 공격으로 적용되는 빙결 중첩이 2배 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+9005,절대영도,3,Ice,가장 왼쪽 얼음 카드 버리고 빙결 중첩 3 증가.,DiscardSpecificPosition,SelfHand,0,0,None,None,Ice,FALSE,0,0,,AddStatus,Enemy,3,0,Freeze
+9006,설원,2,Ice,빙결 중첩 1 증가. 코스트 1 감소 후 덱에 섞임.,AddStatus,Enemy,1,0,Freeze,None,None,FALSE,0,0,,ShuffleSelfToDeck,SelfDeck,-1,0,None
+9007,진눈깨비,2,Ice,깨뜨림이 2번씩 발동.,AddStatus,Self,2,1,MultiplyStatusTickCount,None,None,FALSE,0,0,,None,None,0,0,None
+9008,만년설,2,Ice,깨뜨림이 치명타로 작용.,AddStatus,Self,1,1,MultiplyStatusDamage,None,None,FALSE,0,0,,None,None,0,0,None
+9009,백야,2,Ice,다음 연발 화살 횟수 2회 증가.,AddStatus,Self,2,1,AddStatusToNextAttack,None,None,FALSE,0,0,,None,None,0,0,None
+9010,영면,2,Ice,다음 모든 얼음 속성 카드 코스트 1 감소.,AddStatus,Self,1,1,CostReduction,None,None,FALSE,0,0,,None,None,0,0,None
+10001,마안,1,Vacuity,예언 스택 1 증가.,AddStatus,Self,1,-1,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
+10002,허무,2,Vacuity,예언 스택 2 증가.,AddStatus,Self,2,-1,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
+10003,저주,2,Vacuity,다음 턴 동안 상대가 주문을 쓸 때마다 예언 1 증가.,AddStatus,Self,1,1,AddStatusToNextAttack,None,None,FALSE,0,0,,None,None,0,0,None
+10004,광신도,2,Vacuity,마나 모두 소모하고 소모한 만큼 예언 스택 증가.,ConsumeAllManaForStatus,Self,1,0,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
+10005,무류,2,Vacuity,예언 증가 수치가 2배로 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+10006,유해,2,Vacuity,무작위 카드 2개 버리고 예언 4 증가.,DiscardRandom,SelfHand,2,0,None,None,None,FALSE,0,0,,AddStatus,Self,4,-1,Prophecy
+10007,황천,2,Vacuity,예고 스택이 10 이상일 경우 주문 공격력 1.5배.,AddStatus,Self,150,1,DamageMultiplier,ProphecyAbove,None,TRUE,150,1,,None,None,0,0,None
+10008,환각,2,Vacuity,1턴 동안 반사 50%. 반사할 때마다 예언 스택 1 증가.,AddStatus,Self,50,1,DamageReflect,None,None,FALSE,0,0,,AddStatus,Self,1,-1,Prophecy
+10009,복종,2,Vacuity,다음 턴 동안 예언 증가 수치가 2배로 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+10010,종말,10,Vacuity,예언 스택 30 시 공허 공격력 3배 받는 피해 2배 코스트 2 감소.,AddStatus,Self,300,-1,DamageMultiplier,ProphecyAbove,None,TRUE,300,-1,,AddStatus,Self,2,-1,CostReduction
+11001,충전,1,Vision,응축 중첩을 1 증가시킨다.,AddStatus,Self,1,-1,ArcaneStack,None,None,FALSE,0,0,,None,None,0,0,None
+11002,성흔,2,Vision,응축 중첩을 2 증가시킨다.,AddStatus,Self,2,-1,ArcaneStack,None,None,FALSE,0,0,,None,None,0,0,None
+11003,궤적,2,Vision,다음 마법으로 적용되는 응축 중첩 2배 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+11004,역린,2,Vision,무작위 비전 속성 카드를 버리고 응축 3 증가.,DiscardRandom,SelfHand,1,0,None,None,Vision,FALSE,0,0,,AddStatus,Self,3,-1,ArcaneStack
+11005,사역마,1,Vision,응축 1 증가 후 코스트 1 감소한 채 덱에 섞임.,AddStatus,Self,1,-1,ArcaneStack,None,None,FALSE,0,0,,ShuffleSelfToDeck,SelfDeck,-1,0,None
+11006,인과,2,Vision,응축 중첩만큼 마나 소모 후 공격력 증가.,ConsumeStatusForDamage,Self,1,0,ArcaneStack,None,None,FALSE,0,0,,None,None,0,0,None
+11007,연성,3,Vision,응축 소모하여 주문 공격력 증가.,ConsumeStatusForDamage,Self,3,0,ArcaneStack,None,None,FALSE,0,0,,None,None,0,0,None
+11008,금령,2,Vision,다음 단일 화살 공격력 30% 증가.,AddStatus,Self,30,1,DamageMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+11009,대폭발,10,Vision,응축을 모두 소모하여 과충전. 데미지 증가 후 턴 종료.,ConsumeStatusForDamage,Self,2,0,ArcaneStack,None,None,FALSE,0,0,,EndTurnInstantly,All,0,0,None
+12001,박동,1,Life,시전자의 체력을 5 회복.,Heal,Self,5,0,None,None,None,FALSE,0,0,,None,None,0,0,None
+12002,원초,2,Life,2턴 동안 생명력 흡수 적용.,AddStatus,Self,50,2,Lifesteal,None,None,FALSE,0,0,,None,None,0,0,None
+12003,영령,2,Life,이번 공격에 생명력 흡수 적용.,AddStatus,Self,50,1,Lifesteal,None,None,FALSE,0,0,,None,None,0,0,None
+12004,근원,2,Life,다음 턴에 체력이 10 이하면 10 회복.,AddStatus,Self,10,1,Heal,TargetHPBelow,None,TRUE,10,1,,None,None,0,0,None
+12005,포식,2,Life,무작위 카드 2장 버리고 체력 8 회복.,DiscardRandom,SelfHand,2,0,None,None,None,FALSE,0,0,,Heal,Self,8,0,None
+12006,태동,2,Life,체력 5를 잃고 카드를 3장 드로우.,Damage,Self,5,0,None,None,None,FALSE,0,0,,DrawCard,Self,3,0,None
+12007,갈망,2,Life,공격력 4 증가. 30%만큼 시전자 피해.,Damage,Enemy,4,0,None,None,None,FALSE,0,0,,Damage,Self,30,0,None
+12008,연수,2,Life,공격력 50% 증가 후 턴 종료 시 10 피해.,AddStatus,Self,50,1,DamageMultiplier,None,None,FALSE,0,0,,AddStatus,Self,10,1,Damage
+12009,이치,2,Life,체력 6 소모하여 마나 3 획득.,Damage,Self,6,0,None,None,None,FALSE,0,0,,GainMana,Self,3,0,None
+12010,연옥,3,Life,턴 종료 시 입은 피해 모두 회복.,AddStatus,Self,100,1,HealByDamageTakenThisTurn,None,None,FALSE,0,0,,None,None,0,0,None
+12011,낙원,10,Life,3턴 동안 10 회복 후 20 피해.,AddStatus,Self,10,3,Heal,None,None,FALSE,0,0,,EndTurnInstantly,All,0,0,None

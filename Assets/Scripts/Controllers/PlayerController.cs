@@ -11,8 +11,7 @@ namespace Controllers.PlayerController
         public PlayerModel model;
         public PlayerView view;
 
-        public override void OnNetworkSpawn()
-        {
+        public override void OnNetworkSpawn() {
             // ==========================================
             // 1. 초기 화면 세팅 (스폰 직후 한 번 실행)
             // ==========================================
