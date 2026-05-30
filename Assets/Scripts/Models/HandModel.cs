@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using Controllers.TurnController;
+using Controllers.TurnControllers;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -59,15 +59,17 @@ namespace Models.CardModels
         // ==========================================
         // 📤 [서버 영역] 카드를 사용하거나 멀리건으로 버릴 때 (TurnController가 호출함)
         // ==========================================
-        public void RemoveCardFromServerHand(int cardId)
+        public bool RemoveCardFromServerHand(int cardId)
         {
-            if (!IsServer) return;
+            if (!IsServer) return false;
             
             if (serverHand.Remove(cardId)) // 성공적으로 지워졌다면 (HandCount 자동 감소)
             {
                 // 주인의 로컬 손패에서도 해당 카드를 지우라고 귓속말 전송
                 RemoveCardClientRpc(cardId, RpcTarget.Single(OwnerClientId, RpcTargetUse.Temp));
+                return true;
             }
+            return false;
         }
         
         // ==========================================
@@ -105,6 +107,33 @@ namespace Models.CardModels
         {
             localHand.Remove(cardId); // 로컬 리스트에서 제거 (UI가 구독하여 화면에서 카드를 치움)
             Debug.Log($"[Client] {cardId}번 카드가 손패에서 제거되었습니다.");
+        }
+
+        // ==========================================
+        // 🔍 [클라이언트 영역] 조작 및 UI 조회를 위한 보조 함수
+        // ==========================================
+
+        /// <summary>
+        /// 내 로컬 손패의 특정 인덱스에 있는 카드 고유 ID를 반환합니다.
+        /// </summary>
+        public int GetCardIdAt(int index)
+        {
+            // 안전망: 요청한 인덱스가 손패 범위를 벗어났는지 확인
+            if (index < 0 || index >= localHand.Count)
+            {
+                Debug.LogError($"[HandModel] 잘못된 카드 인덱스 요청: {index} (현재 손패 장수: {localHand.Count}장)");
+                return -1; // 오류 발생 시 -1을 반환하여 비정상 종료 방지
+            }
+
+            return localHand[index];
+        }
+
+        /// <summary>
+        /// 내 로컬 손패에 현재 몇 장의 카드가 있는지 반환합니다.
+        /// </summary>
+        public int GetLocalHandCount()
+        {
+            return localHand.Count;
         }
     }
 }

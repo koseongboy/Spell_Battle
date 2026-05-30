@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using System;
 using Models.TurnModel;
-using Controllers.TurnController;
+using Controllers.TurnControllers;
 using Cards.CardUIDatas;
 using Cards.EffectInfos;
 using Models.CardModels;
@@ -59,6 +59,18 @@ namespace Models.PlayerModels
         {
             return Type == other.Type && Stacks == other.Stacks && Duration == other.Duration;
         }
+        public string GetTranslateStatus()
+        {
+            switch(Type)
+            {
+                case StatusType.Ignite: return "발화";
+                case StatusType.Freeze: return "빙결";
+                case StatusType.Prophecy: return "예언";
+                case StatusType.ArcaneStack: return "응축";
+                case StatusType.Shield: return "흙보호막";
+                default: return "(알수없음)";
+            }
+        }
     }
     public class PlayerModel : NetworkBehaviour
     {
@@ -95,9 +107,6 @@ namespace Models.PlayerModels
                 {
                     TurnController.Instance.MyPlayer = this;
                     Debug.Log("방장 캐릭 턴 매니져에 등록 완료");
-                    // 중앙 매니저가 스폰되면, 덱 부서에게 "너 팩스 보내!" 라고 지시만 합니다.
-                    // int[] myDeckArray = LocalDataManager.Instance.MyCustomDeck.ToArray();
-                    // Deck.SubmitDeckServerRpc(myDeckArray);
                 } 
                 else
                 {
@@ -348,7 +357,7 @@ namespace Models.PlayerModels
             return totalStacks;
         }
         
- // ==========================================
+        // ==========================================
         // [서버 전용 권한] 카드 이동 메인 로직
         // ==========================================
         public void ProcessCardMovement(EffectType moveType, int count, string specificCardId = "")

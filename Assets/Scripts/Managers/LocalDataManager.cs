@@ -18,7 +18,16 @@ namespace Managers.LocalDataManagers
         public int gold = 0;
         public int selectedAvatarId = 0;
 
-        public static List<int> MyCustomDeck = new List<int>();
+        [SerializeField]private List<int> _equippedDeck = new List<int>();
+        public List<int> equippedDeck
+        {
+            get { return _equippedDeck; }
+            set
+            {
+                _equippedDeck = new List<int>(value);
+                Debug.Log($"[LocalData] 덱 세팅 완료! 현재 {_equippedDeck.Count}장");
+            }
+        }
         void Awake()
         {
             if (Instance == null)
