@@ -1,5 +1,9 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections.Generic;
+using Managers.LocalDataManagers;
+using Controllers.TurnControllers;
+
 
 #if UNITY_EDITOR
 using ParrelSync;
@@ -7,6 +11,24 @@ using ParrelSync;
 
 public class BattleTester : MonoBehaviour
 {
+    public LocalDataManager ldm;
+    public static readonly List<int> FixedTestDeck = new List<int>
+    {
+        // 🔥 1. 사전 구성 (화염) 15장 (4001 ~ 4009)
+        // 최대 3장 중복 규칙 준수 (각 2장씩 + 1장씩)
+        4001, 4001, 4002, 4002, 4003, 4003, 4004, 4004, 4005, 4005, 
+        4006, 4006, 4007, 4008, 4009,
+
+        // ⚔️ 2. 공격 카드 15장 (1001 ~ 1020 중 15종류 1장씩)
+        1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 
+        1011, 1012, 1013, 1014, 1015,
+
+        // 🛡️ 3. 방어 카드 15장 (2012 ~ 2020)
+        // 최대 3장 중복 규칙 준수 (각 2장씩 + 1장씩)
+        2012, 2012, 2013, 2013, 2014, 2014, 2015, 2015, 2016, 2016, 
+        2017, 2017, 2018, 2019, 2020
+    };
+
     private void Start()
     {
         // 1. 네트워크 매니저 강제 생성 로직 (기존 유지)
@@ -40,10 +62,8 @@ public class BattleTester : MonoBehaviour
             NetworkManager.Singleton.StartHost();
             Debug.Log("방장으로 접속 완");
         }
-
-
-
 #endif
+        ldm.equippedDeck = FixedTestDeck;
     }
 
     private void OnApplicationQuit()
@@ -64,5 +84,10 @@ public class BattleTester : MonoBehaviour
             Unity.Netcode.NetworkManager.Singleton.Shutdown();
             Debug.Log("네트워크 매니저를 강제 종료하여 7777번 포트를 비웠습니다!");
         }
+    }
+    [ContextMenu("전투 강제 시작 (테스트용)")]
+    public void battleStarte()
+    {
+        TurnController.Instance.ManualStartBattleTest();
     }
 }

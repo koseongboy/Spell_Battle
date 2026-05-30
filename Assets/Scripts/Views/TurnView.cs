@@ -5,9 +5,12 @@ using Models.TurnModel;
 
 namespace Views.TurnView
 {
-    public abstract class TurnView : MonoBehaviour
+    public class TurnView : MonoBehaviour
     {
-        public abstract void UpdateUI(GamePhase phase, bool isMyTurn); //턴에 대한 진행 상황
+        public void UpdateUI(GamePhase phase, bool isMyTurn)
+        {
+            Debug.Log($"페이즈 변경! 페이즈는: {phase}, 내 턴인가? {isMyTurn}");
+        }
         public void LogMessage(string message)
         {
             Debug.Log($"[View] {message}");

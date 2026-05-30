@@ -308,6 +308,50 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1 &243691743
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 243691744}
+  - component: {fileID: 243691745}
+  m_Layer: 0
+  m_Name: TurnView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &243691744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243691743}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.44377995, y: -1.3158901, z: 0.8508196}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1972607075}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &243691745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243691743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5dcaa71ab3043c448a767564f10b351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Views.TurnView.TurnView
 --- !u!1001 &266217804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -902,7 +946,7 @@ MonoBehaviour:
   MyPlayer: {fileID: 0}
   EnemyPlayer: {fileID: 0}
   model: {fileID: 1015416321}
-  view: {fileID: 0}
+  view: {fileID: 243691745}
   playerPrefab: {fileID: 5534150444609738042, guid: 095936175cf45954184d659c27824bc0, type: 3}
   hostSpawnPoint: {fileID: 1766443283}
   guestSpawnPoint: {fileID: 1240849230}
@@ -935,6 +979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d68e25697b62a394d95c48a886fc9d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleTester
+  ldm: {fileID: 1275501761}
 --- !u!4 &1103786268
 Transform:
   m_ObjectHideFlags: 0
@@ -1105,6 +1150,56 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2222111361405018444, guid: 88f2fd29f58b9734683512546acec310, type: 3}
   m_PrefabInstance: {fileID: 1264987936}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1275501759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1275501760}
+  - component: {fileID: 1275501761}
+  m_Layer: 0
+  m_Name: LocalDataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1275501760
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275501759}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.4674697, y: -1.31523, z: 0.8093395}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1972607075}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1275501761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275501759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c50e3dbc06c8964794badf6739c338b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.LocalDataManagers.LocalDataManager
+  userToken: 
+  nickname: Guest
+  level: 1
+  gold: 0
+  selectedAvatarId: 0
+  _equippedDeck: 
 --- !u!1001 &1294937014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1529,6 +1624,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1103786268}
+  - {fileID: 243691744}
+  - {fileID: 1275501760}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2077153178

@@ -84,5 +84,20 @@ namespace Models.CardModels
 
             if (shuffleAfter) Shuffle(); // 집어넣고 보통 다시 섞음
         }
+
+        [Rpc(SendTo.Server)]
+        public void SubmitDeckServerRpc(int[] deckIds)
+        {
+            // 1. 이미 짜두신 초기화 함수를 재활용해서 서버의 currentDeck에 채워 넣습니다.
+            InitializeDeck(deckIds);
+            
+            // 2. 카드가 다 들어왔으니 서버가 직접 섞습니다.
+            Shuffle();
+            
+            Debug.Log($"[Server] 플레이어 {OwnerClientId}의 덱 세팅 및 셔플 완료! (총 {DeckCount.Value}장)");
+            
+            // 3. 서버 턴 컨트롤러가 감시하고 있는 준비 완료 변수를 true로 바꿉니다!
+            IsDeckReady.Value = true;
+        }
     }
 }

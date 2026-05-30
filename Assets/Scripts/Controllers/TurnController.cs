@@ -9,11 +9,28 @@ using Cards.CardUIDatas;
 using System.Collections.Generic;
 using Models.SpellPayloads;
 using Newtonsoft.Json;
+using NUnit.Framework;
 
-namespace Controllers.TurnController
+namespace Controllers.TurnControllers
 {
     public class TurnController : NetworkBehaviour
     {
+        #region 0. 테스트용 코드
+        public void ManualStartBattleTest()
+        {
+            if (IsServer)
+            {
+                Debug.Log("🛠️ 수동으로 전투를 초기화합니다!");
+                InitializeRoomAndSpawnPlayers();
+            }
+            else
+            {
+                Debug.LogWarning("방장(Host) 에디터에서만 실행할 수 있습니다!");
+            }
+        }
+        #endregion
+
+
         #region 1. 싱글톤 및 기본 변수 세팅 (Initialization)
         
         public static TurnController Instance { get; private set; }
@@ -31,22 +48,10 @@ namespace Controllers.TurnController
         [SerializeField] private Transform hostSpawnPoint; // 방장 위치
         [SerializeField] private Transform guestSpawnPoint; // 손님 위치
         
-        // 🌟 에러 원인 3: 멀리건 레디를 저장할 변수 추가
+        [Header("멀리건 관련")]
         [SerializeField] private HashSet<ulong> mulliganReadyPlayers = new HashSet<ulong>();
 
-        [ContextMenu("전투 강제 시작 (테스트용)")]
-        public void ManualStartBattleTest()
-        {
-            if (IsServer)
-            {
-                Debug.Log("🛠️ 수동으로 전투를 초기화합니다!");
-                InitializeRoomAndSpawnPlayers();
-            }
-            else
-            {
-                Debug.LogWarning("방장(Host) 에디터에서만 실행할 수 있습니다!");
-            }
-        }
+        
 
         public void Awake()
         {
@@ -63,6 +68,8 @@ namespace Controllers.TurnController
                 InitializeRoomAndSpawnPlayers();
             }
         }
+
+        
         
         #endregion
 
@@ -130,6 +137,8 @@ namespace Controllers.TurnController
             bool isHostFirst = Random.value > 0.5f;
             ulong firstPlayerId = isHostFirst ? model.HostId.Value : model.GuestId.Value;
             ulong secondPlayerId = isHostFirst ? model.GuestId.Value : model.HostId.Value;
+            if(isHostFirst) Debug.Log("[Server] 방장 선턴! 방장 4장, 손님 5장 드로우");
+            else Debug.Log("[Server] 손님 선턴! 방장 5장, 손님 4장 드로우");
 
             PlayerModel firstPlayer = GetPlayerById(firstPlayerId);
             PlayerModel secondPlayer = GetPlayerById(secondPlayerId);
@@ -167,11 +176,11 @@ namespace Controllers.TurnController
 
             foreach (int id in replaceCardIds)
             {
-                targetPlayer.Hand.RemoveCardFromServerHand(id); 
-                tempPocket.Add(id);
+                if(targetPlayer.Hand.RemoveCardFromServerHand(id)) tempPocket.Add(id);
+                else Debug.LogWarning("[Server] 보안경고! 없는 카드를 멀리건 하려 하고 있다!!!!!!!");
             }
 
-            for (int i = 0; i < replaceCardIds.Length; i++)
+            for (int i = 0; i < tempPocket.Count; i++)
             {
                 targetPlayer.Deck.DrawCard(); 
             }
@@ -183,7 +192,7 @@ namespace Controllers.TurnController
             
             targetPlayer.Deck.Shuffle();
 
-            Debug.Log($"[Server] 플레이어 {clientId}의 멀리건 완료.");
+            Debug.Log($"[Server] 플레이어 {clientId}의 멀리건 완료. (교체된 카드 수: {tempPocket.Count})");
             ReportMulliganReady(clientId);
         }
 
@@ -206,6 +215,8 @@ namespace Controllers.TurnController
             }
         }
 
+
+        
         #endregion
 
         #region 4. 페이즈 흐름 제어 (Phase Management)

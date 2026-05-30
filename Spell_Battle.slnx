@@ -8,6 +8,7 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="DA_Assets.DAO.csproj" />
   <Project Path="DA_Assets.Figmage.Editor.Tests.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
   <Project Path="DA_Assets.DM.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="DA_Assets.CR.csproj" />
