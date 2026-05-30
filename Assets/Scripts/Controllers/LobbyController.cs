@@ -69,7 +69,7 @@ namespace Controllers.LobbyController
 
         // '덱'
         public void OnDeckPressed() {
-            Debug.Log("[LobbyController] OnDeckPressed");
+            CommonUIController.Instance.ChangeFullScreen("DeckEdit_FullScreen");
         }
 
         // '튜토리얼'

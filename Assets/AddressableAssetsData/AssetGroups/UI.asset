@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: UI
   m_GUID: 4c10a22ad52986144b8a67b17be56c0e
   m_SerializeEntries:
+  - m_GUID: 0dd829cf5e71ed348a700e7be5e11cbe
+    m_Address: DeckEdit_FullScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 153c59c14da2f4c49a09c7f2a1ad524f
     m_Address: Friend_DetailWindow
     m_ReadOnly: 0

@@ -100,16 +100,16 @@ Id,WordName,Cost,Property,Desc,EffectType1,TargetType1,Value1_1,Value2_1,StatusT
 9008,만년설,2,Ice,깨뜨림이 치명타로 작용.,AddStatus,Self,1,1,MultiplyStatusDamage,None,None,FALSE,0,0,,None,None,0,0,None
 9009,백야,2,Ice,다음 연발 화살 횟수 2회 증가.,AddStatus,Self,2,1,AddStatusToNextAttack,None,None,FALSE,0,0,,None,None,0,0,None
 9010,영면,2,Ice,다음 모든 얼음 속성 카드 코스트 1 감소.,AddStatus,Self,1,1,CostReduction,None,None,FALSE,0,0,,None,None,0,0,None
-10001,마안,1,Vacuity,예언 스택 1 증가.,AddStatus,Self,1,-1,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
-10002,허무,2,Vacuity,예언 스택 2 증가.,AddStatus,Self,2,-1,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
-10003,저주,2,Vacuity,다음 턴 동안 상대가 주문을 쓸 때마다 예언 1 증가.,AddStatus,Self,1,1,AddStatusToNextAttack,None,None,FALSE,0,0,,None,None,0,0,None
-10004,광신도,2,Vacuity,마나 모두 소모하고 소모한 만큼 예언 스택 증가.,ConsumeAllManaForStatus,Self,1,0,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
-10005,무류,2,Vacuity,예언 증가 수치가 2배로 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
-10006,유해,2,Vacuity,무작위 카드 2개 버리고 예언 4 증가.,DiscardRandom,SelfHand,2,0,None,None,None,FALSE,0,0,,AddStatus,Self,4,-1,Prophecy
-10007,황천,2,Vacuity,예고 스택이 10 이상일 경우 주문 공격력 1.5배.,AddStatus,Self,150,1,DamageMultiplier,ProphecyAbove,None,TRUE,150,1,,None,None,0,0,None
-10008,환각,2,Vacuity,1턴 동안 반사 50%. 반사할 때마다 예언 스택 1 증가.,AddStatus,Self,50,1,DamageReflect,None,None,FALSE,0,0,,AddStatus,Self,1,-1,Prophecy
-10009,복종,2,Vacuity,다음 턴 동안 예언 증가 수치가 2배로 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
-10010,종말,10,Vacuity,예언 스택 30 시 공허 공격력 3배 받는 피해 2배 코스트 2 감소.,AddStatus,Self,300,-1,DamageMultiplier,ProphecyAbove,None,TRUE,300,-1,,AddStatus,Self,2,-1,CostReduction
+10001,마안,1,Void,예언 스택 1 증가.,AddStatus,Self,1,-1,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
+10002,허무,2,Void,예언 스택 2 증가.,AddStatus,Self,2,-1,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
+10003,저주,2,Void,다음 턴 동안 상대가 주문을 쓸 때마다 예언 1 증가.,AddStatus,Self,1,1,AddStatusToNextAttack,None,None,FALSE,0,0,,None,None,0,0,None
+10004,광신도,2,Void,마나 모두 소모하고 소모한 만큼 예언 스택 증가.,ConsumeAllManaForStatus,Self,1,0,Prophecy,None,None,FALSE,0,0,,None,None,0,0,None
+10005,무류,2,Void,예언 증가 수치가 2배로 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+10006,유해,2,Void,무작위 카드 2개 버리고 예언 4 증가.,DiscardRandom,SelfHand,2,0,None,None,None,FALSE,0,0,,AddStatus,Self,4,-1,Prophecy
+10007,황천,2,Void,예고 스택이 10 이상일 경우 주문 공격력 1.5배.,AddStatus,Self,150,1,DamageMultiplier,ProphecyAbove,None,TRUE,150,1,,None,None,0,0,None
+10008,환각,2,Void,1턴 동안 반사 50%. 반사할 때마다 예언 스택 1 증가.,AddStatus,Self,50,1,DamageReflect,None,None,FALSE,0,0,,AddStatus,Self,1,-1,Prophecy
+10009,복종,2,Void,다음 턴 동안 예언 증가 수치가 2배로 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None
+10010,종말,10,Void,예언 스택 30 시 공허 공격력 3배 받는 피해 2배 코스트 2 감소.,AddStatus,Self,300,-1,DamageMultiplier,ProphecyAbove,None,TRUE,300,-1,,AddStatus,Self,2,-1,CostReduction
 11001,충전,1,Vision,응축 중첩을 1 증가시킨다.,AddStatus,Self,1,-1,ArcaneStack,None,None,FALSE,0,0,,None,None,0,0,None
 11002,성흔,2,Vision,응축 중첩을 2 증가시킨다.,AddStatus,Self,2,-1,ArcaneStack,None,None,FALSE,0,0,,None,None,0,0,None
 11003,궤적,2,Vision,다음 마법으로 적용되는 응축 중첩 2배 증가.,AddStatus,Self,2,1,StatusApplyMultiplier,None,None,FALSE,0,0,,None,None,0,0,None

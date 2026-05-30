@@ -326,7 +326,7 @@ namespace Controllers.TurnController
             SpellPayload serverPayload = new SpellPayload();
             foreach (int id in cardIds)
             {
-                var cardData = CardDatabase.GetCard(id);
+                var cardData = CardDatabase.GetCardById(id);
                 if (cardData != null)
                 {
                     cardData.AddToPayload(serverPayload, caster, target);
