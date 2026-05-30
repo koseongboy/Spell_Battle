@@ -4,7 +4,7 @@ using UnityEngine;
 using Cards.PlayableCards;
 using Cards.CardUIDatas;
 using Cards.EffectInfos;
-using Managers.DataManagers;
+using Models.CardDatabases;
 using UnityEngine.Serialization;
 
 namespace DefaultNamespace
@@ -35,7 +35,7 @@ namespace DefaultNamespace
         private void Start()
         {
             // 1. 모든 카드 데이터 로드
-            allCards = CardDataManager.Instance.GetAllCards();
+            allCards = CardDatabase.GetAllCards();
         }
         
         // View가 OnEnable될 때 스스로 호출하는 함수
@@ -191,7 +191,7 @@ namespace DefaultNamespace
             var groupedCards = currentDeckCardIds
                 .GroupBy(id => id)
                 .Select(group => new { 
-                    Data = CardDataManager.Instance.GetCardById(group.Key), 
+                    Data = CardDatabase.GetCardById(group.Key), 
                     Count = group.Count() 
                 })
                 .OrderBy(c => c.Data.uiData.cost) 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Models.SpellPayloads;
 using Models.PlayerModels;
-using Managers.DataManagers;
+using Models.CardDatabases;
 using Unity.Netcode;
 
 public class CardLogicTester : MonoBehaviour
@@ -51,7 +51,7 @@ public class CardLogicTester : MonoBehaviour
         // 3. 테스트할 카드들을 CardDataManager에서 불러와 Payload에 적재
         foreach (int id in testCardIds)
         {
-            var card = CardDataManager.Instance.GetCardById(id);
+            var card = CardDatabase.GetCardById(id);
             if (card != null)
             {
                 payload.EnqueuePendingCard(card);
