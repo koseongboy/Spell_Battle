@@ -59,6 +59,18 @@ namespace Models.PlayerModels
         {
             return Type == other.Type && Stacks == other.Stacks && Duration == other.Duration;
         }
+        public string GetTranslateStatus()
+        {
+            switch(Type)
+            {
+                case StatusType.Ignite: return "발화";
+                case StatusType.Freeze: return "빙결";
+                case StatusType.Prophecy: return "예언";
+                case StatusType.ArcaneStack: return "응축";
+                case StatusType.Shield: return "흙보호막";
+                default: return "(알수없음)";
+            }
+        }
     }
     public class PlayerModel : NetworkBehaviour
     {
