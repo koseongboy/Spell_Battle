@@ -7,6 +7,7 @@ using System;
 using Managers.LocalDataManagers;
 using System.Collections.Generic;
 using Controllers.TurnControllers;
+using Models.TurnModel;
 
 namespace Controllers.PlayerController
 {
@@ -19,20 +20,68 @@ namespace Controllers.PlayerController
         // ==========================================
         private void Update()
         {
-            // 내 캐릭터 조종석이 아니라면 키보드 입력을 철저히 차단
+            // 1. 내 캐릭터 조종석이 아니라면 입력 차단
             if (!IsOwner) return;
 
-            // 1️⃣ 숫자키 1 ~ 5를 눌러서 교체할 카드 번호 지정 (토글 방식)
+            // 2. 현재 페이즈 정보 가져오기 (PlayerModel에서 쓰신 방식과 동일하게 접근)
+            if (TurnModel.Instance == null) return;
+            GamePhase currentPhase = TurnModel.Instance.CurrentPhase.Value;
+            ulong currentTurnPlayerId = TurnModel.Instance.CurrentTurnPlayerId.Value;
+
+            // ==========================================
+            // 🃏 [페이즈 1] 멀리건 페이즈 조작
+            // ==========================================
+            if (currentPhase == GamePhase.Mulligan)
+            {
+                HandleMulliganInput();
+            }
+            // ==========================================
+            // 🪄 [페이즈 2] 카드 선택 페이즈 조작 (내 턴일 때만)
+            // ==========================================
+            else if (currentPhase == GamePhase.Select && currentTurnPlayerId == NetworkManager.Singleton.LocalClientId)
+            {
+                HandleSelectInput();
+            }
+        }
+
+        // ==========================================
+        // [함수 분리] 멀리건 입력 처리
+        // ==========================================
+        private void HandleMulliganInput()
+        {
             if (Input.GetKeyDown(KeyCode.Alpha1)) ToggleMulliganIndex(0);
             if (Input.GetKeyDown(KeyCode.Alpha2)) ToggleMulliganIndex(1);
             if (Input.GetKeyDown(KeyCode.Alpha3)) ToggleMulliganIndex(2);
             if (Input.GetKeyDown(KeyCode.Alpha4)) ToggleMulliganIndex(3);
             if (Input.GetKeyDown(KeyCode.Alpha5)) ToggleMulliganIndex(4);
 
-            // 2️⃣ M키를 누르면 최종 결정된 카드들을 서버로 전송
             if (Input.GetKeyDown(KeyCode.M))
             {
                 SubmitFinalMulligan();
+            }
+        }
+
+        // ==========================================
+        // 🌟 [추가] 카드 선택 입력 처리
+        // ==========================================
+        private void HandleSelectInput()
+        {
+            // 숫자키 1~9는 인덱스 0~8, 숫자키 0은 인덱스 9 (10번째 카드)
+            if (Input.GetKeyDown(KeyCode.Alpha1)) ToggleSpellIndex(0);
+            if (Input.GetKeyDown(KeyCode.Alpha2)) ToggleSpellIndex(1);
+            if (Input.GetKeyDown(KeyCode.Alpha3)) ToggleSpellIndex(2);
+            if (Input.GetKeyDown(KeyCode.Alpha4)) ToggleSpellIndex(3);
+            if (Input.GetKeyDown(KeyCode.Alpha5)) ToggleSpellIndex(4);
+            if (Input.GetKeyDown(KeyCode.Alpha6)) ToggleSpellIndex(5);
+            if (Input.GetKeyDown(KeyCode.Alpha7)) ToggleSpellIndex(6);
+            if (Input.GetKeyDown(KeyCode.Alpha8)) ToggleSpellIndex(7);
+            if (Input.GetKeyDown(KeyCode.Alpha9)) ToggleSpellIndex(8);
+            if (Input.GetKeyDown(KeyCode.Alpha0)) ToggleSpellIndex(9);
+
+            // 스페이스바를 누르면 선택한 카드들로 마법 영창 준비 완료!
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SubmitSpellSelection();
             }
         }
         #endregion
@@ -44,6 +93,7 @@ namespace Controllers.PlayerController
         public int CurrentHp { get; private set; } = 100;
         public int CurrentMana { get; private set; } = 50;
         private HashSet<int> _selectedMulliganIndices = new HashSet<int>();
+        private HashSet<int> _selectedSpellIndices = new HashSet<int>();
 
         public override void OnNetworkSpawn() {
             // ==========================================
@@ -112,7 +162,7 @@ namespace Controllers.PlayerController
         }
 
         // ==========================================
-        // 🔄 숫자키 입력 시 등록 / 취소를 껐다 켜는 토글 함수
+        // 🔄 숫자키 입력 시 등록 / 취소를 껐다 켜는 토글 함수 (라고는 하지만 실제 ui 구현 시에도 사용하면 좋을 것 같아서 아래 배치)
         // ==========================================
         private void ToggleMulliganIndex(int index)
         {
@@ -131,6 +181,27 @@ namespace Controllers.PlayerController
                 // 목록에 없다면 추가 (등록)
                 _selectedMulliganIndices.Add(index);
                 Debug.Log($"[Mulligan Test] 🛡️ {index + 1}번 카드를 교체 대상으로 '등록'했습니다.");
+            }
+        }
+
+        private void ToggleSpellIndex(int index)
+        {
+            // [안전장치] 손패에 해당 번호의 카드가 있는지 확인
+            if (model.Hand == null || index >= model.Hand.GetLocalHandCount()) 
+            {
+                Debug.LogWarning($"[Select Phase] 손패에 {index + 1}번째 카드가 없습니다.");
+                return;
+            }
+
+            if (_selectedSpellIndices.Contains(index))
+            {
+                _selectedSpellIndices.Remove(index);
+                Debug.Log($"[Select Phase] ❌ {index + 1}번째 카드 선택 취소");
+            }
+            else
+            {
+                _selectedSpellIndices.Add(index);
+                Debug.Log($"[Select Phase] 🪄 {index + 1}번째 카드를 마법 재료로 선택했습니다.");
             }
         }
 
@@ -166,6 +237,26 @@ namespace Controllers.PlayerController
 
             // 다음 테스트를 위해 내가 선택했던 기록 깨끗이 비우기
             _selectedMulliganIndices.Clear();
+        }
+
+        // ==========================================
+        // 🌟 [추가] 마법 영창 제출 로직
+        // ==========================================
+        private void SubmitSpellSelection()
+        {
+            if (_selectedSpellIndices.Count == 0)
+            {
+                Debug.LogWarning("[Select Phase] 선택된 카드가 없습니다! 카드를 먼저 선택해 주세요.");
+                return;
+            }
+
+            Debug.Log($"[Select Phase] 총 {_selectedSpellIndices.Count}장의 카드를 선택 완료했습니다! 턴을 진행합니다.");
+            
+            // (이후 TurnController의 ProcessSpellCast를 호출하거나, 페이즈를 Advance 하는 로직으로 이어집니다)
+            // TurnController.Instance.RequestAdvancePhase(); 
+            
+            // 사용한 뒤에는 선택 기록 비워주기
+            // _selectedSpellIndices.Clear();
         }
 
     }
