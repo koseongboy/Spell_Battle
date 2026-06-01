@@ -29,7 +29,7 @@ namespace DefaultNamespace {
         [SerializeField] private GameObject inviteButton;
 
 
-        [FormerlySerializedAs("btn_Game")] [Header("Lower Buttons")] [SerializeField]
+        [Header("Lower Buttons")] [SerializeField]
         private Button btn_GameStart;
 
         [SerializeField] private Image img_GameStart;
@@ -41,7 +41,13 @@ namespace DefaultNamespace {
         [SerializeField] private Sprite img_active;
         [SerializeField] private Sprite img_inactive;
 
-        [SerializeField] private DeckList_Room_Popup deckListPopup;
+        [Header("Selected Deck UI")] [SerializeField]
+        private DeckList_Room_Popup deckListPopup;
+
+        public TextMeshProUGUI txt_SelectedDeckName;
+        public TextMeshProUGUI txt_SelectedDeckSummary;
+        public Image img_SelectedDeckElement;
+
 
         // Controller가 구독할 이벤트
         public event Action OnLeaveRoomClicked;
@@ -65,6 +71,15 @@ namespace DefaultNamespace {
             // 팝업 초기 상태는 비활성화
             if (deckListPopup != null) {
                 deckListPopup.gameObject.SetActive(false);
+            }
+        }
+
+        private void OnEnable() {
+            // 🌟 대기실 화면이 켜질 때마다 뒤로 가기를 '방 퇴장 로직'으로 덮어씌움
+            if (LeftUpperController.Instance != null) {
+                LeftUpperController.Instance.SetBackAction(() => {
+                    RoomUIController.Instance.OnBackButtonPressedInRoom();
+                });
             }
         }
 
@@ -159,6 +174,16 @@ namespace DefaultNamespace {
         // ==========================================
         // Deck 편집 관련
         // ==========================================
+
+        // 팝업에서 덱 선택 시 호출될 메인 UI 업데이트 함수
+        public void UpdateSelectedDeckUI(string deckName, string summary, Cards.CardUIDatas.Property repProp) {
+            txt_SelectedDeckName.text = deckName;
+
+            txt_SelectedDeckSummary.text = summary;
+
+            // TODO: 속성에 맞는 Sprite를 반환하는 함수나 배열과 연결해주세요.
+            // img_SelectedDeckElement.sprite = GetSpriteByProperty(repProp);
+        }
 
         // 덱 리스트 출력하는 함수
         public void OpenDeckListPopup(List<DeckMetaData> myDecks) {

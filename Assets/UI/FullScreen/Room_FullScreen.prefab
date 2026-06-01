@@ -86,7 +86,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d406ca0f000000000000000000000000, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -676,6 +676,9 @@ MonoBehaviour:
   img_active: {fileID: 21300000, guid: f1d5791b6fa80bf40b039ad3a5918eb0, type: 3}
   img_inactive: {fileID: 21300000, guid: a8718c122ebb2894396b81ec9ba4fb4e, type: 3}
   deckListPopup: {fileID: 9112806786706841745}
+  txt_SelectedDeckName: {fileID: 7396758404917164861}
+  txt_SelectedDeckSummary: {fileID: 7770129552376603155}
+  img_SelectedDeckElement: {fileID: 7015409517893990416}
 --- !u!1 &1986553115596357930
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,7 +1902,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAE30\uBCF8 20  \uC5F0\uD0C0 5  \uBD88 20"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 98351b8dde3fb2e4a978fea0b84444bf, type: 2}
   m_sharedMaterial: {fileID: -8919422442874090205, guid: 98351b8dde3fb2e4a978fea0b84444bf, type: 2}
@@ -3086,7 +3089,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBD88\uC758 \uC138\uB840\uB97C \uBC1B\uC544\uB77C"
+  m_text: "\uB371\uC744 \uC120\uD0DD\uD558\uC138\uC694!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 98351b8dde3fb2e4a978fea0b84444bf, type: 2}
   m_sharedMaterial: {fileID: -8919422442874090205, guid: 98351b8dde3fb2e4a978fea0b84444bf, type: 2}

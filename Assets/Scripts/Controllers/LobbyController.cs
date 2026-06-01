@@ -135,25 +135,39 @@ namespace Controllers.LobbyController {
 
         // --- 액션 1: 커스텀 방 생성 ---
         public async Task OnClick_CreateRoomConfirm() {
-            if (ui_EnterGame == null) return;
+
+            if (ui_EnterGame == null) {
+                Debug.LogError("[CreateRoom] ui_EnterGame이 null입니다! 뷰 등록이 정상적으로 되지 않았습니다.");
+                return;
+            }
 
             string rawTitle = ui_EnterGame.GetInput_RoomName();
             bool isPrivate = ui_EnterGame.GetInput_IsRoomPrivate();
+
             if (string.IsNullOrEmpty(rawTitle)) {
                 CommonUIController.Instance.ShowRedAlert("방 제목을 입력하세요!");
                 return;
             }
 
             string title = FilterTitle(rawTitle);
+            Debug.Log($"[CreateRoom] 2. 필터링된 방 제목: '{title}'");
+
+            // 특수문자만 입력해서 필터링 후 빈 문자열이 된 경우 방어
+            if (string.IsNullOrEmpty(title)) {
+                CommonUIController.Instance.ShowRedAlert("유효하지 않은 방 제목입니다.");
+                return;
+            }
 
             CommonUIController.Instance.ShowLoading();
+
             try {
-                // RoomUIController에 있는 함수를 StartHost 전에 미리 실행
-                if (RoomUIController.Instance != null) {
-                    RoomUIController.Instance.SetupNetworkCallbacks();
+                if (RoomUIController.Instance == null) {
+                    CommonUIController.Instance.ShowRedAlert("시스템 오류: 대기실 컨트롤러를 찾을 수 없습니다.");
+                    return;
                 }
 
-                // TODO : 플레이어 정보 가져와서 넣어주기
+                RoomUIController.Instance.SetupNetworkCallbacks();
+
                 string playerName = "TEST";
                 int playerLevel = 0;
 
@@ -161,11 +175,15 @@ namespace Controllers.LobbyController {
                     await matchmakingService.CreateCustomLobbyAsync(title, isPrivate, playerName, playerLevel);
 
                 if (!string.IsNullOrEmpty(lobbyCode)) {
-                    // 성공 시 대기방 UI 컨트롤러에게 코드 권한을 넘기고 UI 전환
-                    if (RoomUIController.Instance != null) {
-                        RoomUIController.Instance.EnterRoom();
-                    }
+                    RoomUIController.Instance.EnterRoom();
                 }
+                else {
+                    CommonUIController.Instance.ShowRedAlert("방 생성에 실패했습니다. 네트워크를 확인해주세요.");
+                }
+            }
+            catch (Exception e) {
+                Debug.LogError($"[CreateRoom] 치명적 예외(Exception) 발생: {e.Message}\n{e.StackTrace}");
+                CommonUIController.Instance.ShowRedAlert("방 생성 중 오류가 발생했습니다.");
             }
             finally {
                 CommonUIController.Instance.DoneLoading();
@@ -183,7 +201,7 @@ namespace Controllers.LobbyController {
             // TODO : 욕설 필터링
 
             // 4. 허용되지 않은 특수문자 제거
-            inputTxt = Regex.Replace(inputTxt, @"[^a-zA-Z0-9가-힣\s]", "");
+            inputTxt = Regex.Replace(inputTxt, @"[^a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\s!?\-_]", "");
 
             return inputTxt;
         }

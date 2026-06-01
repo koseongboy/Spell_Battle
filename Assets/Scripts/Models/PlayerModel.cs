@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using Models.TurnModel;
 using Controllers.TurnControllers;
 using Cards.CardUIDatas;
@@ -23,17 +24,17 @@ namespace Models.PlayerModels {
         Freeze, // 빙결 (얼음 - 마나 감소 및 스택 폭발)
         Prophecy, // 예언 (공허 - 공격력 강화 스택)
         ArcaneStack, // 응축 (비전 - 터뜨려서 데미지 증가)
-        Shield, // 보호막 (흙)
+        Shield, // 보호막
 
 
         // --- 아래부터 새롭게 추가된 수치 변조용(Modifier) 상태이상 ---
         IgniteDamageMultiplier, // 발화 데미지 배수 (분출, 확산용 / 스택=배수)
         DamageReduction, // 받는 데미지 감소 (암주, 신념용 / 스택=감소율%)
-        DamageReduction_Turn, // '신념'용 (Duration = 턴 수)
-        DamageReduction_Hit, // '암주'용 (Duration = 남은 횟수)
+        DamageReduction_Turn, // 턴 단위 데미지 감소 (Duration = 턴 수)
+        DamageReduction_Hit, // 공격 단위 데미지 감소 (Duration = 남은 횟수)
         ShieldGainBoost, // 보호막 획득량 증가 (대지모신용 / 스택=증가율%)
-        StatusApplyMultiplier, // 특정 상태이상 부여량 배수 (설옥, 무류용 / 스택=배수)
-        DamageReflect // 데미지 반사 (금강, 환각용 / 스택=반사율%)
+        StatusApplyMultiplier, // 상태이상 부여량 증가 (설옥, 무류용 / 스택=배수)
+        DamageReflect // 반사 (금강, 환각용 / 스택=반사율%)
     }
 
     // 🌟 네트워크로 전송할 상태이상 '택배 상자' (구조체)
@@ -60,10 +61,45 @@ namespace Models.PlayerModels {
                 case StatusType.Freeze: return "빙결";
                 case StatusType.Prophecy: return "예언";
                 case StatusType.ArcaneStack: return "응축";
-                case StatusType.Shield: return "흙보호막";
+                case StatusType.Shield: return "보호막";
+                
+                case StatusType.IgniteDamageMultiplier: return "발화 데미지 증가";
+                case StatusType.DamageReduction: return "데미지 감소";
+                case StatusType.DamageReduction_Turn: return "턴 단위 데미지 감소";
+                case StatusType.DamageReduction_Hit: return "공격 단위 데미지 감소";
+                case StatusType.ShieldGainBoost: return "보호막 획득량 증가";
+                case StatusType.StatusApplyMultiplier: return "상태이상 부여량 증가";
+                case StatusType.DamageReflect: return "반사";
+                
+                
                 default: return "(알수없음)";
             }
         }
+    }
+    
+    
+    // 덱 정보
+    [System.Serializable]
+    public class DeckData {
+        public string id; 
+        public string deckName;
+        public List<int> cardIds = new List<int>();
+        public string cardCountSummary; 
+        public Property representativeProperty;
+
+        public DeckData(string id, string name, List<int> ids, string summary, Property repProp) {
+            this.id = string.IsNullOrEmpty(id) ? Guid.NewGuid().ToString() : id;
+            this.deckName = name;
+            this.cardIds = new List<int>(ids);
+            this.cardCountSummary = summary;
+            this.representativeProperty = repProp;
+        }
+    }
+    
+    // PlayerPrefs에 여러 덱을 한 번에 JSON으로 저장하기 위한 래퍼 클래스
+    [System.Serializable]
+    public class DeckStorageWrapper {
+        public List<DeckData> decks = new List<DeckData>();
     }
 
     public class PlayerModel : NetworkBehaviour {

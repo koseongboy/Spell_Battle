@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Managers;
 using Models.RelayMatchmakingService;
 using Unity.Netcode;
 using UnityEngine;
@@ -45,28 +46,32 @@ namespace DefaultNamespace {
         }
 
         private void SetupUI() {
+            // ui_Room이 여전히 Null 상태라면 크래시를 방지하고 리턴합니다.
+            if (ui_Room == null) {
+                return;
+            }
+            
+            if (NetworkManager.Singleton == null) {
+                Debug.LogError("[RoomUIController] SetupUI 실패: NetworkManager.Singleton이 null입니다.");
+                return;
+            }
+
+
             bool isHost = NetworkManager.Singleton.IsHost;
             // 방장/손님 역할에 맞게 버튼 켜기
             ui_Room.SetupRoleButtons(isHost);
 
-
             // 초기 버튼 상태 세팅
             if (isHost) {
-                // 방장은 처음엔 무조건 시작 불가 (손님이 없거나 준비를 안 했으므로)
                 ui_Room.UpdateStartButton(false);
             }
             else {
-                // 손님은 처음 들어왔을 때 무조건 준비 안 된 상태로 UI 세팅
                 ui_Room.UpdateReadyButton(false);
             }
-
             ui_Room.UpdateGuestReadyImg(false);
-
-
-            // Room Info 업데이트
             ui_Room.UpdateRoomInfo(matchmakingService.CurrentLobbyName, matchmakingService.CurrentLobbyCode);
+            
             ui_Room.UpdateHostUI( /* TODO : 호스트의 정보 불러와서 주입해주기 */);
-
             // 게스트 존재 여부 확인
             if (matchmakingService.HasGuest) {
                 ui_Room.UpdateGuestUI( /* TODO : 게스트의 정보 불러와서 주입해주기 */);
@@ -79,14 +84,26 @@ namespace DefaultNamespace {
         public void EnterRoom() {
             // 1. 방 정보 갱신 (Model -> Controller -> View)
             CommonUIController.Instance.ShowLoading();
+            CommonUIController.Instance.ChangeFullScreen("Room_FullScreen");
+            // 2. [방어 로직] UI가 파괴되었다가 새로 떴거나 Start가 밀렸을 경우를 대비해 씬에서 직접 뷰를 찾아 바인딩합니다.
+            if (ui_Room == null) {
+                ui_Room = FindObjectOfType<Room_FullScreen>();
+                if (ui_Room != null) {
+                    // 새로 찾았다면 이벤트 리스너를 다시 등록해줍니다.
+                    RegisterRoomUI(ui_Room);
+                }
+            }
 
-            ui_Room?.ResetRoomUI();
+            // 2. 이미 방에 들어갔다 나온 상태(두 번째 진입)라면 잔재를 지웁니다.
+            if (ui_Room != null) {
+                ui_Room.ResetRoomUI();
+            }
             // 내가 새로 방을 판 Host라면 ReadyStateModel도 초기화합니다.
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost) {
                 readyStateModel?.ResetReadyState();
             }
 
-            CommonUIController.Instance.ChangeFullScreen("Room_FullScreen");
+            SetupUI();
 
             if (NetworkManager.Singleton != null) {
                 // 내가 '방장'이라면 게임 시작 버튼 노출
@@ -190,24 +207,63 @@ namespace DefaultNamespace {
         }
 
         private void HandleDeckEditClicked() {
-            // TODO : 여기서 덱 편집 FullScreen 띄우기
-            Debug.Log("[Room_FullScreen] Deck Edit Clicked. 아직 미구현입니다.");
+            CommonUIController.Instance.ChangeFullScreen("DeckEdit_FullScreen");
+        }
+
+        // 팝업에서 특정 덱을 클릭(선택)했을 때 호출될 함수
+        public void HandleDeckSelectedInPopup(string selectedDeckId) {
+            if (string.IsNullOrEmpty(selectedDeckId)) {
+                CommonUIController.Instance.ShowRedAlert("유효하지 않은 덱입니다.");
+                return;
+            }
+
+            // DeckManager를 통해 덱 장착
+            DeckManager.Instance.EquipDeckById(selectedDeckId);
+
+            var selectedDeck = DeckManager.Instance.GetDeck(selectedDeckId);
+            if (selectedDeck != null && ui_Room != null) {
+                ui_Room.UpdateSelectedDeckUI(
+                    selectedDeck.deckName,
+                    selectedDeck.cardCountSummary,
+                    selectedDeck.representativeProperty
+                );
+            }
+
+            CommonUIController.Instance.ShowBlackAlert("덱이 선택되었습니다.");
+
+            // 팝업 닫기
+            isDeckPopupOpen = false;
+            if (ui_Room != null) {
+                ui_Room.CloseDeckListPopup();
+            }
         }
 
         #endregion View Event
 
         private List<DeckMetaData> GetStoredDeckData() {
-            // TODO : 저장소 또는 데이터 매니저로부터 실제 덱 정보 불러오기
+            // DeckManager에서 유저가 가진 모든 덱 리스트를 가져옵니다.
+            var savedDecks = DeckManager.Instance.GetAllDecks();
+            List<DeckMetaData> result = new List<DeckMetaData>();
 
-            // 테스트용 더미 데이터
-            return new List<DeckMetaData> {
-                new DeckMetaData { Name = "기본 불 덱", CardCount = "기본 30 불 10 생명 5", Element = DeckElement.Fire },
-                new DeckMetaData { Name = "커스텀 물 덱", CardCount = "기본 26 불 14 생명 5", Element = DeckElement.Fire }
-            };
+            if (savedDecks != null && savedDecks.Count > 0) {
+                foreach (var deck in savedDecks) {
+                    result.Add(new DeckMetaData {
+                        Id = deck.id,
+                        Name = deck.deckName,
+                        CardCount = deck.cardCountSummary,
+                        Element = (DeckElement)deck.representativeProperty
+                    });
+                }
+            }
+            else {
+                Debug.Log("[RoomUIController] 저장된 덱이 없습니다.");
+            }
+
+            return result;
         }
 
         // 좌상단 뒤로 가기 버튼이 눌렸을 때 실행될 래퍼(Wrapper) 함수
-        private void OnBackButtonPressedInRoom() {
+        public void OnBackButtonPressedInRoom() {
             // TODO : 진짜 나갈지 Confirm 팝업 
             _ = ReturnToLobbyMain(false);
         }
