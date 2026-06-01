@@ -15,11 +15,14 @@ EditorBuildSettings:
     path: Assets/999_Dev/Koseongboy/01_Lobby.unity
     guid: e2e444f388d42784c8dbba41e52e9943
   - enabled: 1
-    path: Assets/999_Dev/Koseongboy/02_Battle.unity
+    path: Assets/999_Dev/Koseongboy/02_Battle_Koseongboy.unity
     guid: 9bcbc551ac29cc04d8853039526beda6
   - enabled: 1
     path: Assets/999_Dev/Koseongboy/01_Lobby_Crocobob.unity
     guid: 8a68874da22bc2241bad3315b61e640b
+  - enabled: 1
+    path: Assets/999_Dev/Koseongboy/01_Lobby_Koseongboy.unity
+    guid: 95598121febc929409d4617fc4bdd7b1
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 1069dfbb6e28e6c4abbc727abc65b312, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

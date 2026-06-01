@@ -15,7 +15,9 @@ namespace Views.EnemyView
         public TextMeshProUGUI Text_Hp;
         public TextMeshProUGUI Text_Mana;
         public TextMeshProUGUI Text_Status;
-        public TextMeshProUGUI Text_CardCount;
+        public TextMeshProUGUI Text_HandCount;
+        public TextMeshProUGUI Text_DeckCount;
+        public TextMeshProUGUI Text_GraveCount;
 
 
         private void Awake()
@@ -33,6 +35,31 @@ namespace Views.EnemyView
             UpdateHealth(enemyModel.CurrentHealth.Value);
             UpdateMana(enemyModel.CurrentMana.Value);
             UpdateStatuses(enemyModel.ActiveStatuses);
+            if (enemyModel.Hand != null)
+            {
+                // 초기 적군 손패 장수 반영
+                UpdateEnemyCardCount(enemyModel.Hand.HandCount.Value);
+
+                // 상대방 손패 장수가 변할 때마다 텍스트 갱신 구독
+                enemyModel.Hand.HandCount.OnValueChanged += (oldValue, newValue) => UpdateEnemyCardCount(newValue);
+            }
+            if (enemyModel.Deck != null)
+            {
+                // 초기값 세팅
+                UpdateDeckCount(enemyModel.Deck.DeckCount.Value); 
+                
+                // 덱 장수가 변할 때마다 UI 자동 갱신
+                enemyModel.Deck.DeckCount.OnValueChanged += (oldValue, newValue) => UpdateDeckCount(newValue);
+            }
+
+            // ==========================================
+            // 🪦 무덤 장수 동기화
+            // ==========================================
+            if (enemyModel.Graveyard != null)
+            {
+                UpdateGraveyardCount(enemyModel.Graveyard.PublicGraveyard.Count);
+                enemyModel.Graveyard.PublicGraveyard.OnListChanged += (changeEvent) => UpdateGraveyardCount(enemyModel.Graveyard.PublicGraveyard.Count);
+            }
 
             // 2. 데이터 변경 구독 (적군의 데이터가 변하면 내 화면이 반응하도록 세팅)
             enemyModel.CurrentHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(newValue);
@@ -68,7 +95,22 @@ namespace Views.EnemyView
             string finalMsg = string.Join(", ", statusStrings);
             Text_Status.text = "상태이상: " + finalMsg;
         }
+        private void UpdateEnemyCardCount(int count)
+        {
+            Text_HandCount.text = $"패: {count}장";
+            Debug.Log($"😈 적군 손패 장수 UI 갱신: {count}장");
+        }
+        public void UpdateDeckCount(int count)
+        {
+            Text_DeckCount.text = $"덱: {count}장";
+            Debug.Log($"📚 덱 장수 UI 갱신: {count}장");
+        }
 
+        public void UpdateGraveyardCount(int count)
+        {
+            Text_GraveCount.text = $"무덤: {count}장";
+            Debug.Log($"🪦 무덤 장수 UI 갱신: {count}장");
+        }
         
     }
 }
