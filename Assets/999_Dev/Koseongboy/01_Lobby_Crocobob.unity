@@ -4796,6 +4796,7 @@ GameObject:
   - component: {fileID: 1640395180}
   - component: {fileID: 1640395181}
   - component: {fileID: 1640395182}
+  - component: {fileID: 1640395183}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -4848,7 +4849,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 4016378624
+  GlobalObjectIdHash: 3527874231
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -4888,9 +4889,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 1640395177}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 118d9b99508344047adbe2945622ec94, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c50e3dbc06c8964794badf6739c338b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Managers.DataManagers.CardDataManager
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.LocalDataManagers.LocalDataManager
+  userToken: 
+  nickname: Guest
+  level: 1
+  gold: 0
+  selectedAvatarId: 0
+  _equippedDeck: 
+--- !u!114 &1640395183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640395177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4da26659ee788a3499adacefea35128a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.DeckManager
+  savedDecks: []
+  _equippedDeck: 
 --- !u!1 &1641886041
 GameObject:
   m_ObjectHideFlags: 0

@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 923683133228596095}
   - component: {fileID: 1126334119616965957}
   m_Layer: 5
-  m_Name: txt-cardInfo
+  m_Name: txt-summary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -403,6 +403,7 @@ GameObject:
   - component: {fileID: 9001219459025700215}
   - component: {fileID: 983122991616474363}
   - component: {fileID: 3767119893499015652}
+  - component: {fileID: 8635510656845776605}
   m_Layer: 5
   m_Name: DeckListPiece_Room
   m_TagString: Untagged
@@ -483,5 +484,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.DeckListPiece_Room
   txt_DeckName: {fileID: 251784659378787161}
+  txt_DeckSummary: {fileID: 1126334119616965957}
   txt_CardCount: {fileID: 1126334119616965957}
   img_Element: {fileID: 8800788595991886175}
+  btn_Click: {fileID: 8635510656845776605}
+--- !u!114 &8635510656845776605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6075436046936949824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 983122991616474363}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []

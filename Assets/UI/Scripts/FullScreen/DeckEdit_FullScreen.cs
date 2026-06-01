@@ -33,9 +33,24 @@ namespace DefaultNamespace
         [Header("Deck Controls")] public Button saveButton;
         public Button clearButton;
         public TextMeshProUGUI deckCountText;
+        public Button btn_DeleteDeck;
+        public Button btn_RenameDeck;
+        
+        [Header("New Deck UI")]
+        public Button btn_NewDeck;
+        public GameObject popup_NewDeck;
+        public TMP_InputField input_NewDeckName;
+        public Button btn_ConfirmNewDeck;
+        public Button btn_CloseNewDeckPopup;
+        
+        [Header("Rename Deck UI")]
+        public GameObject popup_RenameDeck;
+        public TMP_InputField input_RenameDeckName;
+        public Button btn_ConfirmRenameDeck;
+        public Button btn_CloseRenameDeckPopup;
 
 
-        // --- 🌟 3개의 Object Pool ---
+        // --- 3개의 Object Pool ---
         private IObjectPool<UI_Card> cardPool;
         private IObjectPool<DeckListPiece> deckListPool;
         private IObjectPool<CardInDeckPiece> cardInDeckPool;
@@ -75,11 +90,25 @@ namespace DefaultNamespace
                 (obj) => Destroy(obj.gameObject),
                 true, 20, 50 // 덱 최대 사이즈 고려
             );
+            
+            if (popup_NewDeck != null) {
+                popup_NewDeck.SetActive(false);
+            }
+            
+            if (popup_RenameDeck != null) {
+                popup_RenameDeck.SetActive(false);
+            }
         }
 
         private void OnEnable() {
             DeckEditController controller = FindObjectOfType<DeckEditController>();
             if (controller != null) controller.RegisterView(this);
+            
+            if (LeftUpperController.Instance != null) {
+                LeftUpperController.Instance.SetBackAction(() => {
+                    CommonUIController.Instance.GoBackToPreviousFullScreen();
+                });
+            }
         }
 
         // ==========================================

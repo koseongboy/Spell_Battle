@@ -5,35 +5,33 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace DefaultNamespace
-{
-    public class Room_FullScreen : MonoBehaviour, UI_ILayerInfo
-    {
+namespace DefaultNamespace {
+    public class Room_FullScreen : MonoBehaviour, UI_ILayerInfo {
         public EUILayer TargetLayer => EUILayer.FullScreen;
 
-        [Header("Room Info UI")]
-        [SerializeField] private TextMeshProUGUI txt_RoomTitle;
+        [Header("Room Info UI")] [SerializeField]
+        private TextMeshProUGUI txt_RoomTitle;
+
         [SerializeField] private TextMeshProUGUI txt_RoomCode;
 
-        [Header("Player Slots UI")]
-        [Header("Host")]
-        [SerializeField] private GameObject hostSlotGroup;
+        [Header("Player Slots UI")] [Header("Host")] [SerializeField]
+        private GameObject hostSlotGroup;
+
         [SerializeField] private TextMeshProUGUI txt_HostName;
         [SerializeField] private TextMeshProUGUI txt_HostRank;
         [SerializeField] private TextMeshProUGUI txt_HostScore;
 
-        [Header("Guest")]
-        [SerializeField] private GameObject guestSlotGroup;
+        [Header("Guest")] [SerializeField] private GameObject guestSlotGroup;
         [SerializeField] private TextMeshProUGUI txt_GuestName;
         [SerializeField] private TextMeshProUGUI txt_GuestRank;
         [SerializeField] private TextMeshProUGUI txt_GuestScore;
         [SerializeField] private GameObject img_GuestReadyCheck;
         [SerializeField] private GameObject inviteButton;
 
-        
-        [FormerlySerializedAs("btn_Game")]
-        [Header("Lower Buttons")]
-        [SerializeField] private Button btn_GameStart;
+
+        [Header("Lower Buttons")] [SerializeField]
+        private Button btn_GameStart;
+
         [SerializeField] private Image img_GameStart;
         [SerializeField] private Button btn_Ready;
         [SerializeField] private Image img_Ready;
@@ -42,8 +40,14 @@ namespace DefaultNamespace
         [SerializeField] private Button btn_EditDeck;
         [SerializeField] private Sprite img_active;
         [SerializeField] private Sprite img_inactive;
-        
-        [SerializeField] private DeckList_Room_Popup deckListPopup;
+
+        [Header("Selected Deck UI")] [SerializeField]
+        private DeckList_Room_Popup deckListPopup;
+
+        public TextMeshProUGUI txt_SelectedDeckName;
+        public TextMeshProUGUI txt_SelectedDeckSummary;
+        public Image img_SelectedDeckElement;
+
 
         // Controller가 구독할 이벤트
         public event Action OnLeaveRoomClicked;
@@ -51,12 +55,10 @@ namespace DefaultNamespace
         public event Action OnDeckListClicked;
         public event Action OnEditDeckClicked;
         public event Action OnReadyClicked;
-        
 
-        private void Start()
-        {
-            if (RoomUIController.Instance != null)
-            {
+
+        private void Start() {
+            if (RoomUIController.Instance != null) {
                 RoomUIController.Instance.RegisterRoomUI(this);
             }
 
@@ -65,34 +67,53 @@ namespace DefaultNamespace
             btn_Ready.onClick.AddListener(() => OnReadyClicked?.Invoke());
             btn_DeckList.onClick.AddListener(() => OnDeckListClicked?.Invoke());
             btn_EditDeck.onClick.AddListener(() => OnEditDeckClicked?.Invoke());
-            
+
             // 팝업 초기 상태는 비활성화
-            if (deckListPopup != null)
-            {
+            if (deckListPopup != null) {
                 deckListPopup.gameObject.SetActive(false);
             }
         }
 
-        
+        private void OnEnable() {
+            // 🌟 대기실 화면이 켜질 때마다 뒤로 가기를 '방 퇴장 로직'으로 덮어씌움
+            if (LeftUpperController.Instance != null) {
+                LeftUpperController.Instance.SetBackAction(() => {
+                    RoomUIController.Instance.OnBackButtonPressedInRoom();
+                });
+            }
+        }
+
+
         // ==========================================
         // 1 & 2. 방 정보 UI 업데이트 (Controller가 호출해 줌)
         // ==========================================
-        public void UpdateRoomInfo(string roomName, string roomCode)
-        {
+        public void UpdateRoomInfo(string roomName, string roomCode) {
             txt_RoomTitle.text = roomName;
             txt_RoomCode.text = roomCode;
         }
 
-        
+
         // ==========================================
         // 3. 플레이어 슬롯 UI 업데이트
         // ==========================================
-        
+
+        public void ResetRoomUI() {
+            txt_RoomTitle.text = string.Empty;
+            txt_RoomCode.text = string.Empty;
+
+            // 게스트 슬롯 숨기기 및 텍스트 초기화
+            ClearGuestUI();
+
+            // 버튼 상태 및 체크 이미지 초기화
+            UpdateReadyButton(false);
+            UpdateGuestReadyImg(false);
+            UpdateStartButton(false);
+        }
+
         // 호스트(방장) 정보 세팅
-        public void UpdateHostUI(/* 매개변수로 플레이어 데이터 객체 전달 */)
-        {
+        public void UpdateHostUI( /* 매개변수로 플레이어 데이터 객체 전달 */) {
             hostSlotGroup.SetActive(true);
-            
+
             // TODO
             txt_HostName.text = "Host Player";
             txt_HostRank.text = "5";
@@ -100,11 +121,10 @@ namespace DefaultNamespace
         }
 
         // 게스트(손님) 정보 세팅
-        public void UpdateGuestUI(/* 매개변수로 플레이어 데이터 객체 전달 */)
-        {
+        public void UpdateGuestUI( /* 매개변수로 플레이어 데이터 객체 전달 */) {
             inviteButton.SetActive(false);
             guestSlotGroup.SetActive(true);
-            
+
             // TODO
             txt_GuestName.text = "Guest Player";
             txt_GuestRank.text = "3";
@@ -112,30 +132,30 @@ namespace DefaultNamespace
         }
 
         // 게스트가 나갔을 때 슬롯 비우기
-        public void ClearGuestUI()
-        {
+        public void ClearGuestUI() {
             guestSlotGroup.SetActive(false);
             txt_GuestName.text = string.Empty;
             txt_GuestRank.text = string.Empty;
             txt_GuestScore.text = string.Empty;
-            
+
+            // 확실하게 이미지도 꺼줍니다.
+            img_GuestReadyCheck.SetActive(false);
+
             inviteButton.SetActive(true);
         }
-        
-        
+
+
         // ==========================================
         // 게임 시작 & 준비 완료
         // ==========================================
-        
-        public void SetupRoleButtons(bool isHost)
-        {
+
+        public void SetupRoleButtons(bool isHost) {
             btn_GameStart.gameObject.SetActive(isHost); // 방장만 시작 버튼 노출
-            btn_Ready.gameObject.SetActive(!isHost);    // 손님만 준비 버튼 노출
+            btn_Ready.gameObject.SetActive(!isHost); // 손님만 준비 버튼 노출
         }
 
         // Host의 게임 시작버튼 활성화 비활성화
-        public void UpdateStartButton(bool isInteractable)
-        {
+        public void UpdateStartButton(bool isInteractable) {
             btn_GameStart.interactable = isInteractable;
             img_GameStart.sprite = isInteractable ? img_active : img_inactive;
         }
@@ -149,30 +169,36 @@ namespace DefaultNamespace
         public void UpdateGuestReadyImg(bool isReady) {
             img_GuestReadyCheck.SetActive(isReady);
         }
-        
-        
-        
+
+
         // ==========================================
         // Deck 편집 관련
         // ==========================================
 
+        // 팝업에서 덱 선택 시 호출될 메인 UI 업데이트 함수
+        public void UpdateSelectedDeckUI(string deckName, string summary, Cards.CardUIDatas.Property repProp) {
+            txt_SelectedDeckName.text = deckName;
+
+            txt_SelectedDeckSummary.text = summary;
+
+            // TODO: 속성에 맞는 Sprite를 반환하는 함수나 배열과 연결해주세요.
+            // img_SelectedDeckElement.sprite = GetSpriteByProperty(repProp);
+        }
+
         // 덱 리스트 출력하는 함수
-        public void OpenDeckListPopup(List<DeckMetaData> myDecks)
-        {
+        public void OpenDeckListPopup(List<DeckMetaData> myDecks) {
             if (deckListPopup == null) return;
-    
+
             // 비활성화 상태라면 켜줌
-            if (!deckListPopup.gameObject.activeSelf)
-            {
+            if (!deckListPopup.gameObject.activeSelf) {
                 deckListPopup.gameObject.SetActive(true);
             }
-    
+
             deckListPopup.UpdateDeckListUI(myDecks);
             deckListPopup.ShowPopup();
         }
-        
-        public void CloseDeckListPopup()
-        {
+
+        public void CloseDeckListPopup() {
             if (deckListPopup == null) return;
 
             deckListPopup.HidePopup(); // 닫기 애니메이션 실행

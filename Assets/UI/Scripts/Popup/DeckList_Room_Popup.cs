@@ -87,7 +87,7 @@ namespace DefaultNamespace
             {
                 DeckListPiece_Room piece = deckPool.Get();
                 
-                piece.Setup( deck ); 
+                piece.Setup( deck, RoomUIController.Instance.HandleDeckSelectedInPopup ); 
             
                 activeItems.Add(piece);
             }
@@ -112,8 +112,8 @@ namespace DefaultNamespace
     }
     
     // Deck 데이터 클래스
-    public class DeckMetaData
-    {
+    public class DeckMetaData {
+        public string Id;
         public string Name;
         public string CardCount;
         public DeckElement Element;
