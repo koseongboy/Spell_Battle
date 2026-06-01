@@ -1,8 +1,11 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using Cards.EffectInfos;
 using DG.Tweening;
+using Models.CardDatabases;
 using TMPro;
+using UnityEngine.Pool;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -29,7 +32,13 @@ namespace DefaultNamespace {
         public CanvasGroup popupCanvasGroup;
         public RectTransform popupRect;
         public float animDuration = 0.1f;
-
+        
+        [Header("Keyword Tooltips")]
+        public UI_EffectDetail tooltipPrefab;
+        public Transform tooltipContainer;
+        private IObjectPool<UI_EffectDetail> tooltipPool;
+        private List<UI_EffectDetail> activeTooltips = new List<UI_EffectDetail>();
+        
         private CardDetailPayload currentPayload;
 
         private void Awake() {
@@ -45,6 +54,15 @@ namespace DefaultNamespace {
                     UILoader.Instance.HideUI("CardDetail_Popup");
                 });
             }
+            
+            // 툴팁 오브젝트 풀 초기화
+            tooltipPool = new ObjectPool<UI_EffectDetail>(
+                () => Instantiate(tooltipPrefab, tooltipContainer),
+                (obj) => obj.gameObject.SetActive(true),
+                (obj) => obj.gameObject.SetActive(false),
+                (obj) => Destroy(obj.gameObject),
+                true, 3, 10
+            );
         }
 
         public void ReceiveData(CardDetailPayload data) {
@@ -58,6 +76,24 @@ namespace DefaultNamespace {
 
             // 열람 모드(CanAdd == false)일 경우 아래 '추가' 버튼을 아예 끕니다.
             btn_DetailAdd.gameObject.SetActive(data.CanAdd);
+            
+            // 1. 기존에 켜져 있던 툴팁 전부 회수
+            foreach (var tooltip in activeTooltips) {
+                tooltipPool.Release(tooltip);
+            }
+            activeTooltips.Clear();
+
+            // 2. 카드가 가진 키워드를 기반으로 툴팁 생성
+            var keywordList = data.CardData.uiData.Keywords;
+            if (keywordList != null) {
+                foreach (CardKeyword keyword in keywordList) {
+                    if (KeywordDatabase.TryGetKeywordData(keyword, out string title, out string desc)) {
+                        UI_EffectDetail tooltipObj = tooltipPool.Get();
+                        tooltipObj.Init(title, desc);
+                        activeTooltips.Add(tooltipObj);
+                    }
+                }
+            }
         }
 
         public void OpenAction() {

@@ -34,6 +34,7 @@ namespace Cards.CardUIDatas
 
         [Header("효과 및 설명")]
         public List<EffectInfo> Effects; // 위에서 만든 'EffectInfo'를 끌어다 연결
+        public List<CardKeyword> Keywords;
 
         [TextArea(2, 4)]
         public string desc; // 예: "대상에게 2턴 동안 발화 중첩을 1 적용한다."

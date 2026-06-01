@@ -37,7 +37,7 @@ namespace Cards.EffectInfos
                 // 4. 효과 종류에 따른 Command 매핑
                 switch (effect.effectType)
                 {
-// [1] 데미지
+                    // [1] 데미지
                     case EffectType.Damage:
                     case EffectType.DamageByShieldPercentage: // (수치 연산이 필요하다면 여기서 finalValue1을 미리 계산해서 넘김)
                         payload.AddCommand(new DamageCommand(finalTarget, finalValue1));
@@ -92,5 +92,17 @@ namespace Cards.EffectInfos
                 }
             }
         }
+    }
+    
+    public enum CardKeyword {
+        None = 0,
+        Ignite,      // 발화
+        Riverbend,   // 강굽이
+        Freeze,      // 빙결
+        Prophecy,    // 예언
+        Condense,    // 응축
+        Reflect      // 반사
+        ,
+        Expose
     }
 }

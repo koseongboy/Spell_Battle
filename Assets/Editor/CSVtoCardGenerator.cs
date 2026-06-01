@@ -120,7 +120,27 @@ namespace DefaultNamespace.Editor {
                     newCard.uiData.Effects.Add(effect2);
                 }
                 
-                // 5. 속성(Property)별 폴더 경로 지정 및 에셋 파일(.asset) 저장
+                // ==========================================
+                // 5. 키워드(Keywords) 파싱 (21번째 열 이후) 추가
+                // ==========================================
+                newCard.uiData.Keywords = new List<CardKeyword>();
+                
+                // CSV에 21번째 열(인덱스 21)이 존재하고 데이터가 비어있지 않은지 확인
+                if (row.Length >= 22 && !string.IsNullOrWhiteSpace(row[21]) && row[21].Trim() != "None") {
+                    string rawKeywordString = row[21];
+                    string[] splitKeywords = rawKeywordString.Split('|');
+
+                    foreach (string kwText in splitKeywords) {
+                        // 대소문자 무시(true)하여 Enum으로 파싱
+                        if (Enum.TryParse(kwText.Trim(), true, out CardKeyword parsedKeyword)) {
+                            newCard.uiData.Keywords.Add(parsedKeyword);
+                        } else {
+                            Debug.LogWarning($"[CSV Parser] ID {newCard.uiData.id}의 키워드 파싱 실패: '{kwText}'는 올바른 CardKeyword가 아닙니다.");
+                        }
+                    }
+                }
+                
+                // 6. 속성(Property)별 폴더 경로 지정 및 에셋 파일(.asset) 저장
                 string propertyName = newCard.uiData.property.ToString(); // 예: "Fire", "Water"
                 string targetFolderPath = $"{savePath}/{propertyName}";
 

@@ -7,7 +7,6 @@ using Controllers.TurnControllers;
 using Cards.CardUIDatas;
 using Cards.EffectInfos;
 using Models.CardModels;
-using Managers.LocalDataManagers;
 
 namespace Models.PlayerModels {
     // 데미지의 출처를 명시
@@ -42,8 +41,7 @@ namespace Models.PlayerModels {
         public StatusType Type;
         public int Stacks; // 중첩 수
         public int Duration; // 지속 턴 수
-
-
+        
         // NGO가 이 데이터를 0과 1로 변환(직렬화)하는 규칙
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter {
             serializer.SerializeValue(ref Type);

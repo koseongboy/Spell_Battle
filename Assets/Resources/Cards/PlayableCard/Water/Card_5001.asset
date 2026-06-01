@@ -33,6 +33,7 @@ MonoBehaviour:
       conditionalValue1: 0
       conditionalValue2: 0
       conditionalEffectType: 0
+    Keywords: 
     desc: "\uC774 \uCE74\uB4DC \uD558\uB098\uB85C \uD574\uB2F9 \uC8FC\uBB38\uC5D0
       \uBB3C \uC18D\uC131 \uCE74\uB4DC\uAC00 3\uAC1C\uAC00 \uB4E4\uC5B4\uAC04 \uAC83\uC73C\uB85C
       \uCDE8\uAE09."
