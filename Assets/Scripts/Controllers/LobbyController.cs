@@ -7,10 +7,8 @@ using Unity.Netcode;
 using System.Threading.Tasks;
 using DefaultNamespace;
 
-namespace Controllers.LobbyController
-{
-    public class LobbyController : MonoBehaviour
-    {
+namespace Controllers.LobbyController {
+    public class LobbyController : MonoBehaviour {
         public static LobbyController Instance { get; private set; }
 
         private RelayMatchmakingService matchmakingService;
@@ -20,20 +18,18 @@ namespace Controllers.LobbyController
         private EnterGame_FullScreen ui_EnterGame;
 
         // 현재 유저가 대결방에 들어가 있는지 여부를 추적 (뒤로가기 버튼 로직 처리용)
-        private bool isInWaitingRoom = false; 
+        private bool isInWaitingRoom = false;
 
-        private void Awake()
-        {
+        private void Awake() {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
-            
+
             matchmakingService = RelayMatchmakingService.Instance;
         }
 
-        private async void Start()
-        {
+        private async void Start() {
             CommonUIController.Instance.ShowLoading();
-            
+
             // 서버 로그인 진행
             await matchmakingService.InitializeAndSignInAsync();
 
@@ -49,21 +45,21 @@ namespace Controllers.LobbyController
         public void RegisterEnterGameUI(EnterGame_FullScreen ui) {
             ui_EnterGame = ui;
         }
+
         public void UnregisterEnterGameUI() {
             ui_EnterGame = null;
         }
-        
 
 
         // '게임 시작'
         public void OnGameStartPressed() {
             Debug.Log("[LobbyController] OnGameStartPressed");
-            
+
             if (ui_Lobby == null) {
                 Debug.Log("[LobbyController] 잘못된 호출입니다. ui_Lobby null입니다.");
                 return;
             }
-            
+
             CommonUIController.Instance.ChangeFullScreen("EnterGame_FullScreen");
         }
 
@@ -86,101 +82,92 @@ namespace Controllers.LobbyController
 
         public void GoBackToLobby() {
             // TODO : '로비로 돌아가시겠습니까?' confirm
-            
         }
-        
+
 
         // --- 탭 이동: 방 찾기 ---
-        public async void OnClick_FindRoom() 
-        {
+        public async void OnClick_FindRoom() {
             if (lobbyView == null) return;
-            
+
             CommonUIController.Instance.ShowLoading();
-            
+
             var lobbies = await matchmakingService.GetPublicLobbyListAsync();
-            
+
             CommonUIController.Instance.DoneLoading();
-            ui_EnterGame.UpdateUI_RoomList( lobbies );
+            ui_EnterGame.UpdateUI_RoomList(lobbies);
         }
-        
+
         // [추가] 로딩창 없이 뒤에서 조용히 방 리스트만 갱신하는 함수
-        public async void RefreshRoomListSilent()
-        {
+        public async void RefreshRoomListSilent() {
             if (lobbyView == null || ui_EnterGame == null) return;
-    
+
             var lobbies = await matchmakingService.GetPublicLobbyListAsync();
             ui_EnterGame.UpdateUI_RoomList(lobbies);
         }
-        
+
         // --- 액션 : 랜덤 방 진입 ---
         public async Task OnClick_RandomJoin() {
             CommonUIController.Instance.ShowLoading();
 
             var (isHost, joinCode) = await matchmakingService.QuickMatchAsync();
             // 3. 반환된 릴레이 접속 코드(joinCode)가 정상적으로 존재하는지 체크
-            if (!string.IsNullOrEmpty(joinCode))
-            {
+            if (!string.IsNullOrEmpty(joinCode)) {
                 Debug.Log($"[랜덤 매치 성공] Host 여부: {isHost} | JoinCode: {joinCode}");
 
                 // 4. 기존에 이미 구현되어 있는 대기실 진입 함수 호출
                 RoomUIController.Instance.EnterRoom();
             }
 
-            if (joinCode != null)
-            {
-                if (isHost)
-                {
+            if (joinCode != null) {
+                if (isHost) {
                     Debug.Log("기존 방이 없어 새로운 방의 방장(Host)으로 매칭을 대기합니다.");
                 }
-                else
-                {
+                else {
                     Debug.Log("기존에 존재하던 방에 게스트(Client)로 매칭되었습니다.");
                 }
             }
-            else
-            {
+            else {
                 CommonUIController.Instance.ShowRedAlert("오류가 발생했습니다. 다시 시도해주세요.");
             }
-            
+
             CommonUIController.Instance.DoneLoading();
         }
-        
+
         // --- 액션 1: 커스텀 방 생성 ---
-        public async Task OnClick_CreateRoomConfirm()
-        {
+        public async Task OnClick_CreateRoomConfirm() {
             if (ui_EnterGame == null) return;
-            
+
             string rawTitle = ui_EnterGame.GetInput_RoomName();
             bool isPrivate = ui_EnterGame.GetInput_IsRoomPrivate();
-            if (string.IsNullOrEmpty(rawTitle)) { CommonUIController.Instance.ShowRedAlert("방 제목을 입력하세요!"); return; }
+            if (string.IsNullOrEmpty(rawTitle)) {
+                CommonUIController.Instance.ShowRedAlert("방 제목을 입력하세요!");
+                return;
+            }
+
             string title = FilterTitle(rawTitle);
-            
+
             CommonUIController.Instance.ShowLoading();
-            try
-            {
+            try {
                 // RoomUIController에 있는 함수를 StartHost 전에 미리 실행
-                if (RoomUIController.Instance != null)
-                {
+                if (RoomUIController.Instance != null) {
                     RoomUIController.Instance.SetupNetworkCallbacks();
                 }
-                
+
                 // TODO : 플레이어 정보 가져와서 넣어주기
                 string playerName = "TEST";
                 int playerLevel = 0;
-                
-                string lobbyCode = await matchmakingService.CreateCustomLobbyAsync(title, isPrivate, playerName, playerLevel);
 
-                if (!string.IsNullOrEmpty(lobbyCode))
-                {
+                string lobbyCode =
+                    await matchmakingService.CreateCustomLobbyAsync(title, isPrivate, playerName, playerLevel);
+
+                if (!string.IsNullOrEmpty(lobbyCode)) {
                     // 성공 시 대기방 UI 컨트롤러에게 코드 권한을 넘기고 UI 전환
-                    if (RoomUIController.Instance != null)
-                    {
+                    if (RoomUIController.Instance != null) {
                         RoomUIController.Instance.EnterRoom();
                     }
                 }
             }
-            finally
-            {
+            finally {
                 CommonUIController.Instance.DoneLoading();
             }
         }
@@ -203,35 +190,35 @@ namespace Controllers.LobbyController
 
 
         // --- 액션 2: 코드로 비공개 방 참여 ---
-        public async void OnClick_JoinByCode( string code )
-        {
+        public async void OnClick_JoinByCode(string code) {
             Debug.Log(code);
             CommonUIController.Instance.ShowLoading();
-            try
-            {
+            try {
                 string title = await matchmakingService.JoinCustomLobbyByCodeAsync(code);
-                
+
                 if (title != null) RoomUIController.Instance.EnterRoom();
                 else CommonUIController.Instance.ShowRedAlert("접속 실패. 코드를 다시 확인하세요.");
             }
-            finally
-            {
+            finally {
                 CommonUIController.Instance.DoneLoading();
             }
         }
 
         // --- 액션 3: 리스트에서 선택하여 참여 ---
-        public async void OnClick_JoinFromList(string lobbyId)
-        {
-            if (string.IsNullOrEmpty(lobbyId)) { CommonUIController.Instance.ShowRedAlert("입장할 방을 선택하세요."); return; }
-    
+        public async void OnClick_JoinFromList(string lobbyId) {
+            if (string.IsNullOrEmpty(lobbyId)) {
+                CommonUIController.Instance.ShowRedAlert("입장할 방을 선택하세요.");
+                return;
+            }
+
             CommonUIController.Instance.ShowLoading();
             string title = await matchmakingService.JoinCustomLobbyByIdAsync(lobbyId);
             CommonUIController.Instance.DoneLoading();
-    
+
             if (title != null) {
                 RoomUIController.Instance.EnterRoom();
-            } else {
+            }
+            else {
                 CommonUIController.Instance.ShowRedAlert("지금은 닫힌 방입니다.");
                 RefreshRoomListSilent();
             }

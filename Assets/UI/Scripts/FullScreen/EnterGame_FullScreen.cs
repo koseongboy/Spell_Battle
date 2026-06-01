@@ -9,59 +9,60 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.Pool;
 
-namespace DefaultNamespace
-{
+namespace DefaultNamespace {
     public enum EnterGame_UIMode {
         CreateRoom,
         FindRoom,
         Other
     }
-    
+
     public class EnterGame_FullScreen : MonoBehaviour, UI_ILayerInfo {
         public EUILayer TargetLayer => EUILayer.FullScreen;
 
         private EnterGame_UIMode mode = EnterGame_UIMode.CreateRoom;
         private bool isCreatingRoomPrivate = false;
 
-        [Header("Buttons")]
-        [SerializeField] private Button btn_RandomEnter;
+        [Header("Buttons")] [SerializeField] private Button btn_RandomEnter;
         [SerializeField] private Button btn_CreateRoom;
         [SerializeField] private Button btn_FindRoom;
         [SerializeField] private Button btn_SearchRoom;
-        
-        [Header("Images")]
-        [SerializeField] private Image CreateRoom_BtnImage;
+
+        [Header("Images")] [SerializeField] private Image CreateRoom_BtnImage;
         [SerializeField] private Image FindRoom_BtnImage;
 
         [SerializeField] private Sprite Default_BtnSprite;
         [SerializeField] private Sprite Seleted_BtnSprite;
-        
-        [Header("Create Room")]
-        [SerializeField] private TMP_InputField input_RoomName;
+
+        [Header("Create Room")] [SerializeField]
+        private TMP_InputField input_RoomName;
+
         [SerializeField] private Button btn_ConfirmCreateRoom;
         [SerializeField] private Button btn_PublicToggle;
-        [FormerlySerializedAs("rt_CreateRoom_PublicToggle")] [SerializeField] private RectTransform rt_CreateRoom_PrivateToggle;
-        
-        [Header("Find Room")]
-        [SerializeField] private Transform contentParent;    // Scroll View 안의 Content 객체를 드래그 앤 드롭
+
+        [FormerlySerializedAs("rt_CreateRoom_PublicToggle")] [SerializeField]
+        private RectTransform rt_CreateRoom_PrivateToggle;
+
+        [Header("Find Room")] [SerializeField] private Transform contentParent; // Scroll View 안의 Content 객체를 드래그 앤 드롭
         [SerializeField] private FindRoom_RoomPiece roomPiecePrefab;
         [SerializeField] private Button btn_FindRoom_Enter;
-        
-        [Header("Search Room")]
-        [SerializeField] private TMP_InputField input_RoomCode;
-        
+
+        [Header("Search Room")] [SerializeField]
+        private TMP_InputField input_RoomCode;
+
         // 현재 화면에 활성화되어 있는(풀에서 꺼낸) 아이템들을 추적하는 리스트
         private List<FindRoom_RoomPiece> activeItems = new List<FindRoom_RoomPiece>();
+
         // 오브젝트 풀 인터페이스 선언
         private IObjectPool<FindRoom_RoomPiece> roomPool;
         private string selectedLobbyId = string.Empty;
-        
+
         // 자동 갱신 코루틴을 관리할 변수
         private Coroutine autoRefreshCoroutine;
-        
-        
-        [Header("Menu Element")]
-        [SerializeField] private GameObject createRoomMenuElement;
+
+
+        [Header("Menu Element")] [SerializeField]
+        private GameObject createRoomMenuElement;
+
         [SerializeField] private GameObject findRoomMenuElement;
 
         private Action<string> OnSearchRoomByCode;
@@ -74,51 +75,47 @@ namespace DefaultNamespace
                 ReadyRoomPiecePool();
             }
         }
-        
+
         // EnterGame_FullScreen.cs 내부 (Start 함수 위나 아래 등 적당한 위치에 추가)
 
-        private void OnEnable() 
-        {
-            if (LobbyController.Instance != null) 
-            {
+        private void OnEnable() {
+            if (LobbyController.Instance != null) {
                 // 방 찾기 탭이 켜져 있을 때만 데이터를 불러오도록 최적화 (선택 사항)
-                if (mode == EnterGame_UIMode.FindRoom) 
-                {
+                if (mode == EnterGame_UIMode.FindRoom) {
                     LobbyController.Instance.OnClick_FindRoom();
                 }
             }
         }
-        
-        private void OnDisable() 
-        {
+
+        private void OnDisable() {
             StopAutoRefresh();
         }
 
         private void BindEvents() {
             var cont = LobbyController.Instance;
-            
+
             // TODO : 랜덤입장
             // btn_RandomEnter.onClick.AddListener( () => cont. );
-            
+
             // 좌측 메뉴
-            btn_RandomEnter.onClick.AddListener( () => _ = cont.OnClick_RandomJoin() );
-            
-            btn_CreateRoom.onClick.AddListener( OnCreateRoomMenuPressed );
-            
-            btn_FindRoom.onClick.AddListener( OnFindRoomMenuPressed );
-            btn_FindRoom.onClick.AddListener( cont.OnClick_FindRoom );
-            
-            btn_SearchRoom.onClick.AddListener( OnSearchRoomMenuPressed );
+            btn_RandomEnter.onClick.AddListener(() => _ = cont.OnClick_RandomJoin());
+
+            btn_CreateRoom.onClick.AddListener(OnCreateRoomMenuPressed);
+
+            btn_FindRoom.onClick.AddListener(OnFindRoomMenuPressed);
+            btn_FindRoom.onClick.AddListener(cont.OnClick_FindRoom);
+
+            btn_SearchRoom.onClick.AddListener(OnSearchRoomMenuPressed);
             OnSearchRoomByCode = cont.OnClick_JoinByCode;
 
             // Create Room
             btn_PublicToggle.onClick.AddListener(OnPublicTogglePressed);
-            btn_ConfirmCreateRoom.onClick.AddListener( () => _ = cont.OnClick_CreateRoomConfirm());
-            
+            btn_ConfirmCreateRoom.onClick.AddListener(() => _ = cont.OnClick_CreateRoomConfirm());
+
             // Find Room
-            btn_FindRoom_Enter.onClick.AddListener( () => cont.OnClick_JoinFromList(selectedLobbyId) );
+            btn_FindRoom_Enter.onClick.AddListener(() => cont.OnClick_JoinFromList(selectedLobbyId));
         }
-        
+
 
         private void OnCreateRoomMenuPressed() {
             SetMenuMode(EnterGame_UIMode.CreateRoom);
@@ -130,10 +127,11 @@ namespace DefaultNamespace
 
         private void OnSearchRoomMenuPressed() {
             string roomCode = GetInput_RoomCode();
-            if (string.IsNullOrEmpty(roomCode)) { CommonUIController.Instance.ShowRedAlert("코드를 입력하세요!");
+            if (string.IsNullOrEmpty(roomCode)) {
+                CommonUIController.Instance.ShowRedAlert("코드를 입력하세요!");
                 return;
             }
-            
+
             OnSearchRoomByCode(roomCode);
         }
 
@@ -141,34 +139,34 @@ namespace DefaultNamespace
             isCreatingRoomPrivate = !isCreatingRoomPrivate;
             // 이동할 목표 X 좌표 설정
             float targetX = isCreatingRoomPrivate ? 120f : -120f;
-    
+
             // 기존에 실행 중인 동일 객체의 트윈을 취소 (빠른 연타 버그 방지)
             rt_CreateRoom_PrivateToggle.DOKill();
-    
+
             rt_CreateRoom_PrivateToggle.DOAnchorPosX(targetX, 0.2f).SetEase(Ease.OutQuint);
         }
 
 
-        private void SetMenuMode( EnterGame_UIMode newMode ) {
+        private void SetMenuMode(EnterGame_UIMode newMode) {
             mode = newMode;
 
             if (mode == EnterGame_UIMode.CreateRoom) {
                 CreateRoom_BtnImage.sprite = Seleted_BtnSprite;
                 FindRoom_BtnImage.sprite = Default_BtnSprite;
-        
+
                 createRoomMenuElement.gameObject.SetActive(true);
                 findRoomMenuElement.gameObject.SetActive(false);
-        
+
                 // 방 생성 탭으로 오면 갱신 중지
                 StopAutoRefresh();
             }
             else {
                 CreateRoom_BtnImage.sprite = Default_BtnSprite;
                 FindRoom_BtnImage.sprite = Seleted_BtnSprite;
-        
+
                 createRoomMenuElement.gameObject.SetActive(false);
                 findRoomMenuElement.gameObject.SetActive(true);
-        
+
                 // 방 찾기 탭으로 오면 즉시 한 번 로딩창 띄우며 검색하고, 이후 자동 갱신 시작
                 LobbyController.Instance.OnClick_FindRoom();
                 StartAutoRefresh();
@@ -177,17 +175,16 @@ namespace DefaultNamespace
 
         public void UpdateUI_RoomList(List<Lobby> lobbies) {
             Debug.Log(lobbies);
-            
+
             // 1. 기존 리스트 초기화 (Destroy 대신 풀에 반환)
-            foreach (FindRoom_RoomPiece item in activeItems)
-            {
+            foreach (FindRoom_RoomPiece item in activeItems) {
                 roomPool.Release(item);
             }
+
             activeItems.Clear(); // 추적 리스트 비우기
 
             // 2. 새 리스트로 채워넣기
-            foreach (Lobby lobby in lobbies) 
-            {
+            foreach (Lobby lobby in lobbies) {
                 // 풀에서 잠자고 있는 UI 객체를 하나 가져옴 (부족하면 createFunc 자동 실행)
                 FindRoom_RoomPiece newItem = roomPool.Get();
                 // 프리팹 내부의 텍스트 및 데이터 갱신
@@ -201,7 +198,7 @@ namespace DefaultNamespace
             selectedLobbyId = lobbyId;
         }
 
-        
+
         // 방 생성 - 입력된 방 이름을 가져오는 함수
         public string GetInput_RoomName() {
             string inputTxt = input_RoomName.text;
@@ -224,41 +221,35 @@ namespace DefaultNamespace
             // 씬 시작 시 오브젝트 풀 초기화 및 규칙 셋업
             roomPool = new ObjectPool<FindRoom_RoomPiece>(
                 createFunc: () => Instantiate(roomPiecePrefab, contentParent), // 1. 풀에 여분이 없을 때 새로 생성하는 로직
-                actionOnGet: (item) => item.gameObject.SetActive(true),   // 2. 풀에서 꺼낼 때 실행할 로직 (활성화)
+                actionOnGet: (item) => item.gameObject.SetActive(true), // 2. 풀에서 꺼낼 때 실행할 로직 (활성화)
                 actionOnRelease: (item) => item.gameObject.SetActive(false), // 3. 풀로 반환할 때 실행할 로직 (비활성화)
-                actionOnDestroy: (item) => Destroy(item.gameObject),      // 4. 최대 보관 용량 초과 시 파괴 로직
+                actionOnDestroy: (item) => Destroy(item.gameObject), // 4. 최대 보관 용량 초과 시 파괴 로직
                 defaultCapacity: 5, // 기본 할당량
-                maxSize: 200          // 최대 보관량 (이 수치를 넘어가면 반환 시 객체를 파괴함)
+                maxSize: 200 // 최대 보관량 (이 수치를 넘어가면 반환 시 객체를 파괴함)
             );
         }
-        
+
         // ==========================================
         // RoomList 자동 갱신 코루틴 제어부 추가
         // ==========================================
-        private void StartAutoRefresh()
-        {
+        private void StartAutoRefresh() {
             StopAutoRefresh(); // 중복 실행 방지
             autoRefreshCoroutine = StartCoroutine(AutoRefreshRoutine());
         }
 
-        private void StopAutoRefresh()
-        {
-            if (autoRefreshCoroutine != null)
-            {
+        private void StopAutoRefresh() {
+            if (autoRefreshCoroutine != null) {
                 StopCoroutine(autoRefreshCoroutine);
                 autoRefreshCoroutine = null;
             }
         }
 
-        private System.Collections.IEnumerator AutoRefreshRoutine()
-        {
-            while (true)
-            {
+        private System.Collections.IEnumerator AutoRefreshRoutine() {
+            while (true) {
                 // 5초 대기 (UGS 로비 API의 호출 제한(Rate Limit)을 피하기 위한 안전한 시간)
                 yield return new WaitForSeconds(5f);
 
-                if (LobbyController.Instance != null)
-                {
+                if (LobbyController.Instance != null) {
                     // 로딩창 없이 갱신만 수행
                     LobbyController.Instance.RefreshRoomListSilent();
                 }
