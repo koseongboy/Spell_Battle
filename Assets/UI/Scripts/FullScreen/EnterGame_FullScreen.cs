@@ -56,6 +56,9 @@ namespace DefaultNamespace
         private IObjectPool<FindRoom_RoomPiece> roomPool;
         private string selectedLobbyId = string.Empty;
         
+        // 자동 갱신 코루틴을 관리할 변수
+        private Coroutine autoRefreshCoroutine;
+        
         
         [Header("Menu Element")]
         [SerializeField] private GameObject createRoomMenuElement;
@@ -70,6 +73,25 @@ namespace DefaultNamespace
                 SetMenuMode(EnterGame_UIMode.CreateRoom);
                 ReadyRoomPiecePool();
             }
+        }
+        
+        // EnterGame_FullScreen.cs 내부 (Start 함수 위나 아래 등 적당한 위치에 추가)
+
+        private void OnEnable() 
+        {
+            if (LobbyController.Instance != null) 
+            {
+                // 방 찾기 탭이 켜져 있을 때만 데이터를 불러오도록 최적화 (선택 사항)
+                if (mode == EnterGame_UIMode.FindRoom) 
+                {
+                    LobbyController.Instance.OnClick_FindRoom();
+                }
+            }
+        }
+        
+        private void OnDisable() 
+        {
+            StopAutoRefresh();
         }
 
         private void BindEvents() {
@@ -123,7 +145,6 @@ namespace DefaultNamespace
             // 기존에 실행 중인 동일 객체의 트윈을 취소 (빠른 연타 버그 방지)
             rt_CreateRoom_PrivateToggle.DOKill();
     
-            // 0.2초 동안 X 좌표를 targetX로 이동하며, 통통 튀는 텐션(OutBack) 부여
             rt_CreateRoom_PrivateToggle.DOAnchorPosX(targetX, 0.2f).SetEase(Ease.OutQuint);
         }
 
@@ -134,16 +155,23 @@ namespace DefaultNamespace
             if (mode == EnterGame_UIMode.CreateRoom) {
                 CreateRoom_BtnImage.sprite = Seleted_BtnSprite;
                 FindRoom_BtnImage.sprite = Default_BtnSprite;
-                
+        
                 createRoomMenuElement.gameObject.SetActive(true);
                 findRoomMenuElement.gameObject.SetActive(false);
+        
+                // 방 생성 탭으로 오면 갱신 중지
+                StopAutoRefresh();
             }
             else {
                 CreateRoom_BtnImage.sprite = Default_BtnSprite;
                 FindRoom_BtnImage.sprite = Seleted_BtnSprite;
-                
+        
                 createRoomMenuElement.gameObject.SetActive(false);
                 findRoomMenuElement.gameObject.SetActive(true);
+        
+                // 방 찾기 탭으로 오면 즉시 한 번 로딩창 띄우며 검색하고, 이후 자동 갱신 시작
+                LobbyController.Instance.OnClick_FindRoom();
+                StartAutoRefresh();
             }
         }
 
@@ -202,6 +230,39 @@ namespace DefaultNamespace
                 defaultCapacity: 5, // 기본 할당량
                 maxSize: 200          // 최대 보관량 (이 수치를 넘어가면 반환 시 객체를 파괴함)
             );
+        }
+        
+        // ==========================================
+        // RoomList 자동 갱신 코루틴 제어부 추가
+        // ==========================================
+        private void StartAutoRefresh()
+        {
+            StopAutoRefresh(); // 중복 실행 방지
+            autoRefreshCoroutine = StartCoroutine(AutoRefreshRoutine());
+        }
+
+        private void StopAutoRefresh()
+        {
+            if (autoRefreshCoroutine != null)
+            {
+                StopCoroutine(autoRefreshCoroutine);
+                autoRefreshCoroutine = null;
+            }
+        }
+
+        private System.Collections.IEnumerator AutoRefreshRoutine()
+        {
+            while (true)
+            {
+                // 5초 대기 (UGS 로비 API의 호출 제한(Rate Limit)을 피하기 위한 안전한 시간)
+                yield return new WaitForSeconds(5f);
+
+                if (LobbyController.Instance != null)
+                {
+                    // 로딩창 없이 갱신만 수행
+                    LobbyController.Instance.RefreshRoomListSilent();
+                }
+            }
         }
     }
 }

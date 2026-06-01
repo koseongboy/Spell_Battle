@@ -103,6 +103,15 @@ namespace Controllers.LobbyController
             ui_EnterGame.UpdateUI_RoomList( lobbies );
         }
         
+        // [추가] 로딩창 없이 뒤에서 조용히 방 리스트만 갱신하는 함수
+        public async void RefreshRoomListSilent()
+        {
+            if (lobbyView == null || ui_EnterGame == null) return;
+    
+            var lobbies = await matchmakingService.GetPublicLobbyListAsync();
+            ui_EnterGame.UpdateUI_RoomList(lobbies);
+        }
+        
         // --- 액션 : 랜덤 방 진입 ---
         public async Task OnClick_RandomJoin() {
             CommonUIController.Instance.ShowLoading();
@@ -136,7 +145,7 @@ namespace Controllers.LobbyController
             CommonUIController.Instance.DoneLoading();
         }
         
-// --- 액션 1: 커스텀 방 생성 ---
+        // --- 액션 1: 커스텀 방 생성 ---
         public async Task OnClick_CreateRoomConfirm()
         {
             if (ui_EnterGame == null) return;
@@ -215,13 +224,17 @@ namespace Controllers.LobbyController
         public async void OnClick_JoinFromList(string lobbyId)
         {
             if (string.IsNullOrEmpty(lobbyId)) { CommonUIController.Instance.ShowRedAlert("입장할 방을 선택하세요."); return; }
-            
+    
             CommonUIController.Instance.ShowLoading();
             string title = await matchmakingService.JoinCustomLobbyByIdAsync(lobbyId);
             CommonUIController.Instance.DoneLoading();
-            
-            if (title != null) RoomUIController.Instance.EnterRoom();
-            else CommonUIController.Instance.ShowRedAlert("이미 꽉 찼거나 없는 방입니다.");
+    
+            if (title != null) {
+                RoomUIController.Instance.EnterRoom();
+            } else {
+                CommonUIController.Instance.ShowRedAlert("지금은 닫힌 방입니다.");
+                RefreshRoomListSilent();
+            }
         }
     }
 }

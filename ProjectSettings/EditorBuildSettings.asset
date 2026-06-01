@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/999_Dev/Koseongboy/01_Lobby.unity
     guid: e2e444f388d42784c8dbba41e52e9943
   - enabled: 1
-    path: Assets/999_Dev/Koseongboy/02_Battle.unity
+    path: Assets/999_Dev/Koseongboy/02_Battle_Koseongboy.unity
     guid: 9bcbc551ac29cc04d8853039526beda6
   - enabled: 1
     path: Assets/999_Dev/Koseongboy/01_Lobby_Crocobob.unity

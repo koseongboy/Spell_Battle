@@ -128,9 +128,9 @@ namespace Models.RelayMatchmakingService
                     Count = 25, // 최대 25개까지만 가져오기
                     Filters = new List<QueryFilter>
                     {
-                        // 조건 1: 빈자리가 0개보다 많은(GT, Greater Than) 방
-                        new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, "0", QueryFilter.OpOptions.GT),
-                        // 조건 2: 잠기지 않은 방 (IsLocked가 0인 방)
+                        // 1. 방에 1명만 있는(빈자리가 정확히 1개인) 방만 검색 (2명이 꽉 찬 방은 배제)
+                        new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, "1", QueryFilter.OpOptions.EQ),
+                        // 2. 잠기지 않은 방 (LockLobbyAsync가 불린 방은 삭제 처리 중이거나 게임 시작 상태이므로 배제)
                         new QueryFilter(QueryFilter.FieldOptions.IsLocked, "0", QueryFilter.OpOptions.EQ)
                     }
                 };
@@ -277,54 +277,41 @@ namespace Models.RelayMatchmakingService
                 heartbeatTokenSource.Dispose();
                 heartbeatTokenSource = null;
             }
+    
             try
             {
                 if (currentLobby != null)
                 {
-                    // 이벤트 구독 해제 (싱글톤 잔존 찌꺼기 제거)
                     if (lobbyEvents != null)
                     {
                         lobbyEvents.LobbyChanged -= OnLobbyChanged;
                         lobbyEvents = null;
                     }
-                    
+            
                     if (currentLobby.HostId == AuthenticationService.Instance.PlayerId)
                     {
-                        await LockLobbyAsync();
+                        // 팩트: LockLobby를 하면 잠금 처리에 시간이 소요되어 Delete가 씹히거나 지연될 수 있습니다.
+                        // 이미 방을 터트릴 것이므로 Lock 과정 없이 즉시 Delete 합니다.
                         await LobbyService.Instance.DeleteLobbyAsync(currentLobby.Id);
+                        Debug.Log("[Lobby] 방장이 로비를 완전히 삭제했습니다.");
                     }
                     else
                     {
                         await LobbyService.Instance.RemovePlayerAsync(currentLobby.Id, AuthenticationService.Instance.PlayerId);
+                        Debug.Log("[Lobby] 게스트가 로비에서 정상 퇴장했습니다.");
                     }
-                }
-
-                if (NetworkManager.Singleton != null)
-                {
-                    NetworkManager.Singleton.Shutdown();
-
-                    while (NetworkManager.Singleton.ShutdownInProgress)
-                    {
-                        await Task.Yield(); 
-                    }
-                    
-                    Debug.Log("네트워크 매니저가 완전히 종료되고 포트가 정리되었습니다.");
                 }
             }
             catch (LobbyServiceException e)
             {
-                Debug.LogError($"로비 퇴장 중 오류: {e.Message}");
+                // 에러가 났더라도 방 데이터가 이미 만료되었을 확률이 높습니다.
+                Debug.LogWarning($"로비 퇴장/삭제 통신 지연 (무시 가능): {e.Message}");
             }
             finally
             {
-                // 중요: 통신 실패 여부와 상관없이 상태 변수들을 완벽히 초기화하여 다음 매칭에 영향이 없도록 함
+                // 팩트: NetworkManager.Shutdown은 여기(Model)서 빼고 Controller에게 맡깁니다.
                 currentLobby = null;
                 isProcessing = false;
-
-                if (NetworkManager.Singleton != null)
-                {
-                    NetworkManager.Singleton.Shutdown();
-                }
             }
         }
 

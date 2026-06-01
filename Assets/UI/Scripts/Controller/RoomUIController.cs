@@ -82,6 +82,14 @@ namespace DefaultNamespace
         {
             // 1. 방 정보 갱신 (Model -> Controller -> View)
             CommonUIController.Instance.ShowLoading();
+            
+            ui_Room?.ResetRoomUI();
+            // 내가 새로 방을 판 Host라면 ReadyStateModel도 초기화합니다.
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost)
+            {
+                readyStateModel?.ResetReadyState();
+            }
+            
             CommonUIController.Instance.ChangeFullScreen("Room_FullScreen");
 
             if (NetworkManager.Singleton != null)
@@ -191,7 +199,6 @@ namespace DefaultNamespace
         private List<DeckMetaData> GetStoredDeckData()
         {
             // TODO : 저장소 또는 데이터 매니저로부터 실제 덱 정보 불러오기
-            // 아 아아아
             
             // 테스트용 더미 데이터
             return new List<DeckMetaData>
@@ -258,26 +265,53 @@ namespace DefaultNamespace
         // 내가 방에서 나가는 코드
         private async Task ReturnToLobbyMain(bool isForce = false)
         {
+            string role = NetworkManager.Singleton?.IsHost == true ? "Host" : "Guest";
+
             CommonUIController.Instance.ShowLoading();
-            // 뒤로가기 버튼 반납
-            if (LeftUpperController.Instance != null)
+            LeftUpperController.Instance?.SetBackAction(null);
+
+            var nm = NetworkManager.Singleton;
+            if (nm != null)
             {
-                LeftUpperController.Instance.SetBackAction(null);
+                nm.OnClientConnectedCallback -= OnClientConnected;
+                nm.OnClientDisconnectCallback -= OnClientDisconnected;
             }
-            
-            // 1. 이벤트 구독 해제 (중복 호출 방지)
-            if (NetworkManager.Singleton != null)
-            {
-                NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-                NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+    
+            if (readyStateModel != null) 
                 readyStateModel.OnGuestReadyChanged -= HandleGuestReadyStateChanged;
-            }
-            if(!isForce)
+
+            // 🌟 1. 내부 네트워크 정리를 가장 먼저 실행 (Lobby 통신 전에 RPC부터 쏩니다)
+            if (nm != null && nm.IsListening)
             {
-                // 2. 서버 통신 및 네트워크 매니저 끄기 (LeaveLobbyAsync 내부에서 알아서 Host/Client 구분해 처리함)
-                await matchmakingService.LeaveLobbyAsync();
+                if (nm.IsHost && !isForce)
+                {
+                    readyStateModel?.NotifyRoomClosedRpc();
+
+                    float t = 3f;
+                    while (nm.ConnectedClientsList.Count > 1 && t > 0) 
+                    { 
+                        await Task.Delay(100); 
+                        t -= 0.1f; 
+                    }
+                }
+        
+                nm.Shutdown();
             }
-            // 3. 화면을 다시 로비 탭으로 스위칭
+
+            // 🌟 2. 외부 UGS Lobby 정리는 그 다음에 실행 (에러가 나도 진행되도록 try-catch 적용)
+            if (!isForce) 
+            {
+                try
+                {
+                    await matchmakingService.LeaveLobbyAsync();
+                }
+                catch (Exception e)
+                {
+                    // 여기서 UGS 통신이 왜 멈췄었는지 진짜 에러 원인이 찍힐 것입니다.
+                    Debug.LogWarning($"[경고] LeaveLobbyAsync 처리 중 예외 발생 (UI 전환은 정상 진행됨): {e.Message}");
+                }
+            }
+
             CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
             CommonUIController.Instance.DoneLoading();
         }
@@ -302,26 +336,35 @@ namespace DefaultNamespace
         }
         
         // 누군가 방에서 나갔을 때
-        private async void OnClientDisconnected(ulong clientId)
-        {
-            if (NetworkManager.Singleton.IsHost)
-            {
+        private async void OnClientDisconnected(ulong clientId) {
+            Debug.Log("OnClientDisconnected 진입");
+
+            if (NetworkManager.Singleton.IsHost) {
                 // [방장 시점] 손님이 나간 경우: 다시 [+] 버튼 띄우기
-                if (NetworkManager.Singleton.ConnectedClientsList.Count <= 1)
-                {
+                if (NetworkManager.Singleton.ConnectedClientsList.Count <= 1) {
                     ui_Room?.ClearGuestUI(); // 손님 UI 지우기
+                    ui_Room?.UpdateStartButton(false); // 손님이 나갔으므로 시작 버튼도 다시 잠금
                 }
             }
-            else
-            {
+            else {
+                Debug.Log("OnClientDisconnected !IsHost 진입");
+
                 // [손님 시점] 서버(방장)와의 연결이 끊어진 경우
                 // (방장이 Shutdown을 하면 손님의 LocalClientId로 연결 끊김 콜백이 들어옵니다)
-                if (clientId == NetworkManager.Singleton.LocalClientId || clientId == 0)
-                {
+                if (clientId == NetworkManager.Singleton.LocalClientId || clientId == 0) {
                     CommonUIController.Instance.ShowBlackAlert("방이 삭제되어 퇴장합니다.");
                     await ReturnToLobbyMain(true); // 방 폭파 알림과 함께 강제 퇴장 처리
                 }
             }
+
+        }
+
+        // 손님이 RPC를 받았을 때 실행할 함수
+        public void HandleHostClosedRoom()
+        {
+            CommonUIController.Instance.ShowBlackAlert("방장이 방을 종료하여 퇴장합니다.");
+            // 스스로 넷코드를 셧다운하고 로비로 돌아감
+            _ = ReturnToLobbyMain(true); 
         }
 
 

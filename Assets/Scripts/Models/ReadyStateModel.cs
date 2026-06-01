@@ -1,6 +1,6 @@
-using Unity.Netcode;
-using UnityEngine;
+using Unity.Netcode;using UnityEngine;
 using System;
+using DefaultNamespace;
 
 namespace Models.RelayMatchmakingService
 {
@@ -24,6 +24,19 @@ namespace Models.RelayMatchmakingService
         public void ResetReadyState()
         {
             if(IsServer) isGuestReady.Value = false;
+        }
+        
+        [Rpc(SendTo.NotServer, InvokePermission = RpcInvokePermission.Server)]
+        public void NotifyRoomClosedRpc()
+        {
+            if (RoomUIController.Instance != null)
+            {
+                RoomUIController.Instance.HandleHostClosedRoom();
+            }
+            else
+            {
+                Debug.LogError("[Guest Error] RoomUIController.Instance가 null입니다! (UI 이벤트를 넘겨줄 수 없음)");
+            }
         }
     }
 }

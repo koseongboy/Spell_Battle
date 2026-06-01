@@ -88,6 +88,20 @@ namespace DefaultNamespace
         // 3. 플레이어 슬롯 UI 업데이트
         // ==========================================
         
+        public void ResetRoomUI()
+        {
+            txt_RoomTitle.text = string.Empty;
+            txt_RoomCode.text = string.Empty;
+    
+            // 게스트 슬롯 숨기기 및 텍스트 초기화
+            ClearGuestUI();
+    
+            // 버튼 상태 및 체크 이미지 초기화
+            UpdateReadyButton(false);
+            UpdateGuestReadyImg(false);
+            UpdateStartButton(false);
+        }
+        
         // 호스트(방장) 정보 세팅
         public void UpdateHostUI(/* 매개변수로 플레이어 데이터 객체 전달 */)
         {
@@ -110,7 +124,7 @@ namespace DefaultNamespace
             txt_GuestRank.text = "3";
             txt_GuestScore.text = "54321";
         }
-
+        
         // 게스트가 나갔을 때 슬롯 비우기
         public void ClearGuestUI()
         {
@@ -118,7 +132,10 @@ namespace DefaultNamespace
             txt_GuestName.text = string.Empty;
             txt_GuestRank.text = string.Empty;
             txt_GuestScore.text = string.Empty;
-            
+    
+            // 확실하게 이미지도 꺼줍니다.
+            img_GuestReadyCheck.SetActive(false); 
+    
             inviteButton.SetActive(true);
         }
         
