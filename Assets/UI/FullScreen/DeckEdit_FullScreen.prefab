@@ -402,7 +402,7 @@ MonoBehaviour:
   centerCardContent: {fileID: 6917326302732656406}
   leftDeckListContent: {fileID: 3282458303111870514}
   rightCardInDeckContent: {fileID: 6597880259862202268}
-  uiCardPrefab: {fileID: 9054048108323132008, guid: 00df9042218770a408f5ed59371c9b75, type: 3}
+  uiCardDeckEditPrefab: {fileID: 9054048108323132008, guid: 00df9042218770a408f5ed59371c9b75, type: 3}
   deckListPiecePrefab: {fileID: 8429168833947864846, guid: 08f909c427b0151468976b29b4fda91c, type: 3}
   cardInDeckPiecePrefab: {fileID: 663227107506103485, guid: a5473ed4dac01a94b8bcef3abe105724, type: 3}
   prevPageButton: {fileID: 7980269099920130262}
@@ -435,6 +435,7 @@ MonoBehaviour:
   input_RenameDeckName: {fileID: 957424085646439824}
   btn_ConfirmRenameDeck: {fileID: 8948375621807736567}
   btn_CloseRenameDeckPopup: {fileID: 8123366791472957369}
+  dropZoneRect: {fileID: 6056883929334283441}
 --- !u!1 &889222059757855678
 GameObject:
   m_ObjectHideFlags: 0

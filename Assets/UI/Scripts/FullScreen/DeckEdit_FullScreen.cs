@@ -14,7 +14,7 @@ namespace DefaultNamespace
         public Transform leftDeckListContent;
         public Transform rightCardInDeckContent;
 
-        [Header("Prefabs")] public UI_Card uiCardPrefab;
+        [Header("Prefabs")] public UI_Card_DeckEdit uiCardDeckEditPrefab;
         public DeckListPiece deckListPiecePrefab;
         public CardInDeckPiece cardInDeckPiecePrefab;
 
@@ -49,14 +49,17 @@ namespace DefaultNamespace
         public Button btn_ConfirmRenameDeck;
         public Button btn_CloseRenameDeckPopup;
 
+        [Header("Drop Zone")]
+        // 카드를 놓았을 때 추가로 인정할 우측 영역
+        public RectTransform dropZoneRect;
 
         // --- 3개의 Object Pool ---
-        private IObjectPool<UI_Card> cardPool;
+        private IObjectPool<UI_Card_DeckEdit> cardPool;
         private IObjectPool<DeckListPiece> deckListPool;
         private IObjectPool<CardInDeckPiece> cardInDeckPool;
 
         // 활성화된 객체 추적 리스트
-        private List<UI_Card> activeCards = new List<UI_Card>();
+        private List<UI_Card_DeckEdit> activeCards = new List<UI_Card_DeckEdit>();
         private List<DeckListPiece> activeDeckLists = new List<DeckListPiece>();
         private List<CardInDeckPiece> activeCardsInDeck = new List<CardInDeckPiece>();
 
@@ -65,8 +68,8 @@ namespace DefaultNamespace
             costFilters = costFilterContainer.GetComponentsInChildren<CostInDeckEdit>(); // 🌟 자동 수집
 
             // 1. 중앙 카드 풀
-            cardPool = new ObjectPool<UI_Card>(
-                () => Instantiate(uiCardPrefab, centerCardContent),
+            cardPool = new ObjectPool<UI_Card_DeckEdit>(
+                () => Instantiate(uiCardDeckEditPrefab, centerCardContent),
                 (obj) => obj.gameObject.SetActive(true),
                 (obj) => obj.gameObject.SetActive(false),
                 (obj) => Destroy(obj.gameObject),
@@ -114,7 +117,7 @@ namespace DefaultNamespace
         // ==========================================
         // Controller에서 호출할 [Get] 함수들
         // ==========================================
-        public UI_Card GetCardFromPool() {
+        public UI_Card_DeckEdit GetCardFromPool() {
             var obj = cardPool.Get();
             activeCards.Add(obj);
             return obj;

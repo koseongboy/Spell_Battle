@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 3826051033763332782}
   - component: {fileID: 2144241438652582592}
   - component: {fileID: 663227107506103485}
+  - component: {fileID: 7893135877885879281}
   m_Layer: 5
   m_Name: CardInDeckPiece
   m_TagString: Untagged
@@ -405,6 +406,18 @@ MonoBehaviour:
   nameText: {fileID: 8953058764484584552}
   countText: {fileID: 6570044080097990204}
   clickButton: {fileID: 2144241438652582592}
+--- !u!225 &7893135877885879281
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2241512348946015965}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2999626559445414912
 GameObject:
   m_ObjectHideFlags: 0
