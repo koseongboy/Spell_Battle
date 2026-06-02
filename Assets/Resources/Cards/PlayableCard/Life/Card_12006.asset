@@ -15,7 +15,7 @@ MonoBehaviour:
   uiData:
     id: 12006
     wordName: "\uD0DC\uB3D9"
-    cost: 2
+    cost: 3
     property: 13
     Effects:
     - effectType: 1
@@ -25,6 +25,7 @@ MonoBehaviour:
       statusType: 0
       targetProperty: 0
       specificCardId: 
+      isAbsoluteValue: 0
       condition: 0
       conditionProperty: 0
       conditionStatus: 0
@@ -40,6 +41,7 @@ MonoBehaviour:
       statusType: 0
       targetProperty: 0
       specificCardId: 
+      isAbsoluteValue: 0
       condition: 0
       conditionProperty: 0
       conditionStatus: 0
@@ -48,4 +50,5 @@ MonoBehaviour:
       conditionalValue1: 0
       conditionalValue2: 0
       conditionalEffectType: 0
-    desc: "\uCCB4\uB825 5\uB97C \uC783\uACE0 \uCE74\uB4DC\uB97C 3\uC7A5 \uB4DC\uB85C\uC6B0."
+    Keywords: 
+    desc: "\uC0DD\uBA85\uB825\uC744 5 \uC783\uACE0 \uCE74\uB4DC\uB97C 3\uC7A5 \uB4DC\uB85C\uC6B0\uD569\uB2C8\uB2E4."

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee63e26454f1b8845a989f5b6b7b9694, type: 3}
-  m_Name: 
+  m_Name: Card_7011
   m_EditorClassIdentifier: Assembly-CSharp::Cards.EffectInfos.GenericCard
   uiData:
     id: 7011
@@ -25,6 +25,7 @@ MonoBehaviour:
       statusType: 0
       targetProperty: 0
       specificCardId: "Card_\uC815\uC801"
+      isAbsoluteValue: 0
       condition: 0
       conditionProperty: 0
       conditionStatus: 0
@@ -33,5 +34,6 @@ MonoBehaviour:
       conditionalValue1: 0
       conditionalValue2: 0
       conditionalEffectType: 0
-    desc: "\uC0C1\uB300\uBC29\uC758 \uB371\uC5D0 \uC815\uC801 \uCE74\uB4DC\uB97C
-      3\uC7A5 \uC11E\uC5B4 \uB123\uC74C."
+    Keywords: 
+    desc: "\uC0C1\uB300 \uB371\uC5D0 \uC815\uC801 \uCE74\uB4DC\uB97C 3\uC7A5 \uC11E\uC5B4
+      \uB123\uC2B5\uB2C8\uB2E4."

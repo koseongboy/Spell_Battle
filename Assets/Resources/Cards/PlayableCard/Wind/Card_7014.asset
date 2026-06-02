@@ -25,6 +25,7 @@ MonoBehaviour:
       statusType: 2
       targetProperty: 0
       specificCardId: 
+      isAbsoluteValue: 0
       condition: 3
       conditionProperty: 0
       conditionStatus: 0
@@ -33,5 +34,6 @@ MonoBehaviour:
       conditionalValue1: 1
       conditionalValue2: 0
       conditionalEffectType: 0
+    Keywords: 08000000030000000a000000
     desc: "\uC816\uC74C \uD6A8\uACFC\uAC00 \uC801\uC6A9\uB41C \uC0C1\uB300\uC5D0\uAC8C
-      \uBE59\uACB0 \uBD80\uC5EC."
+      \uBE59\uACB0 \uD6A8\uACFC\uB97C 1 \uBD80\uC5EC\uD569\uB2C8\uB2E4."

@@ -1,25 +1,43 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cards.CardUIDatas;
+using Managers.LocalDataManagers;
 using Models.CardDatabases;
 using UnityEngine;
 using Models.PlayerModels;
 
 namespace Managers {
+    // 덱 정보
+    [System.Serializable]
+    public class DeckData {
+        public string id; 
+        public string deckName;
+        public List<int> cardIds = new List<int>();
+        public string cardCountSummary; 
+        public Property representativeProperty;
+
+        public DeckData(string id, string name, List<int> ids, string summary, Property repProp) {
+            this.id = string.IsNullOrEmpty(id) ? Guid.NewGuid().ToString() : id;
+            this.deckName = name;
+            this.cardIds = new List<int>(ids);
+            this.cardCountSummary = summary;
+            this.representativeProperty = repProp;
+        }
+    }
+    
+    // PlayerPrefs에 여러 덱을 한 번에 JSON으로 저장하기 위한 래퍼 클래스
+    [System.Serializable]
+    public class DeckStorageWrapper {
+        public List<DeckData> decks = new List<DeckData>();
+    }
+    
+    
     public class DeckManager : MonoBehaviour {
         public static DeckManager Instance { get; private set; }
 
         public List<DeckData> savedDecks = new List<DeckData>(); 
-
-        [SerializeField] private List<int> _equippedDeck = new List<int>();
-        public List<int> equippedDeck {
-            get { return _equippedDeck; }
-            set {
-                _equippedDeck = new List<int>(value);
-                Debug.Log($"[DeckManager] 덱 장착 완료! 현재 {_equippedDeck.Count}장");
-            }
-        }
 
         private void Awake() {
             if (Instance == null) {
@@ -37,7 +55,7 @@ namespace Managers {
         // 🔍 CRUD: Read (불러오기 / 조회)
         // ==========================================
         public async Task LoadDecksAsync() {
-            bool isServerActive = false; 
+            bool isServerActive = false;  // TODO : 서버 붙으면 수정
 
             if (isServerActive) {
                 Debug.Log("🌐 [서버] 유저의 덱 리스트를 요청합니다...");
@@ -240,7 +258,7 @@ namespace Managers {
             DeckData targetDeck = GetDeck(targetDeckId);
     
             if (targetDeck != null) {
-                this.equippedDeck = targetDeck.cardIds;
+                LocalDataManager.Instance.equippedDeck = targetDeck.cardIds;
                 Debug.Log($"[DeckManager] 덱 장착 완료 (ID: {targetDeckId})");
             } else {
                 Debug.LogError($"[DeckManager] 장착하려는 덱(ID: {targetDeckId})을 찾을 수 없습니다!");

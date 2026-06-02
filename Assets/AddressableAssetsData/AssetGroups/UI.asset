@@ -75,6 +75,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 83078fb12859c1e4faf079c985e606f8
+    m_Address: Ingame_FullScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 865bc487665166d4fbf090b32c19ca49
     m_Address: EnterGame_FullScreen
     m_ReadOnly: 0
@@ -82,6 +87,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bac211063fb17b9448b0b74fc1ce3392
     m_Address: Lobby_FullScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d56049bcb006bef4990637a2718c768b
+    m_Address: CardDetail_Popup
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

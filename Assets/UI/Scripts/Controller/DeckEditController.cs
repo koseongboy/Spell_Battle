@@ -32,6 +32,9 @@ namespace DefaultNamespace {
 
         private const int MAX_DECK_SIZE = 45;
         private const int MAX_SAME_CARD = 3;
+        
+        // 현재 팝업에 띄워진 카드가 무엇인지 기억할 변수 추가
+        private Cards.EffectInfos.GenericCard currentlyViewedCard = null;
 
         private void Start() {
             // 1. 모든 카드 데이터 로드
@@ -73,7 +76,7 @@ namespace DefaultNamespace {
             ui_DeckEdit.btn_ConfirmRenameDeck.onClick.AddListener(ConfirmRenameDeck);
             ui_DeckEdit.btn_CloseRenameDeckPopup.onClick.AddListener(CloseRenameDeckPopup);
             
-            // 3. 최초 화면 갱신
+            // 최초 화면 갱신
             RefreshLeftDeckList();
             ApplyFilters(); // 필터 적용 후 페이징 연산 & 화면 갱신
             RefreshRightDeckCards();
@@ -81,7 +84,7 @@ namespace DefaultNamespace {
 
 
         private void SetupFilterButtons() {
-            // 1. 속성 필터 연동 (View에 세팅된 리스트를 그대로 순회)
+            // 속성 필터 연동 (View에 세팅된 리스트를 그대로 순회)
             foreach (var filterUI in ui_DeckEdit.propertyFilters) {
                 Property p = filterUI.property;
 
@@ -94,7 +97,7 @@ namespace DefaultNamespace {
                     filterUI.highlightObj.SetActive(false);
             }
 
-            // 2. 코스트 필터 자동 연동
+            // 코스트 필터 자동 연동
             foreach (var filterUI in ui_DeckEdit.costFilters) {
                 int cost = filterUI.cost;
 
@@ -141,10 +144,13 @@ namespace DefaultNamespace {
         // 필터링 적용 및 페이지 리셋
         private void ApplyFilters() {
             currentFilteredCards = allCards.Where(c =>
-                (currentPropertyFilter == Property.None || c.uiData.property == currentPropertyFilter) &&
-                (currentCostFilter == -1 || c.uiData.cost == currentCostFilter ||
-                 (currentCostFilter == 10 && c.uiData.cost >= 10))
-            ).ToList();
+                    (currentPropertyFilter == Property.None || c.uiData.property == currentPropertyFilter) &&
+                    (currentCostFilter == -1 || c.uiData.cost == currentCostFilter ||
+                     (currentCostFilter == 10 && c.uiData.cost >= 10))
+                )
+                .OrderBy(c => c.uiData.cost)      // 코스트 기준 오름차순
+                .ThenBy(c => c.uiData.id)         // 코스트가 같으면 ID 기준 오름차순
+                .ToList();
 
             currentPage = 0; // 필터가 바뀌면 무조건 첫 페이지로 돌아감
             RefreshCenterCards();
@@ -161,20 +167,18 @@ namespace DefaultNamespace {
         // 화면 갱신 로직 (View 업데이트)
         // ==========================================
         private void RefreshCenterCards() {
-            // 1. 기존에 표시된 카드들을 전부 풀(Pool)로 회수 (오브젝트 파괴 X)
             ui_DeckEdit.ReturnAllCardsToPool();
 
-            // 2. 현재 페이지에 맞는 8개의 데이터만 슬라이싱(Skip & Take)
             int startIndex = currentPage * CARDS_PER_PAGE;
             var pageCards = currentFilteredCards.Skip(startIndex).Take(CARDS_PER_PAGE).ToList();
 
-            // 3. 풀에서 카드를 꺼내 데이터 덮어씌우기
             foreach (var cardData in pageCards) {
-                UI_Card cardObj = ui_DeckEdit.GetCardFromPool();
-                cardObj.Init(cardData, OnCardClickedToAdd);
+                UI_Card_DeckEdit cardObj = ui_DeckEdit.GetCardFromPool();
+                
+                // 클릭(팝업), 드롭(추가), 그리고 드롭을 판별할 우측 영역(dropZoneRect)을 넘겨줍니다.
+                cardObj.Init(cardData, OnCardClickedToShowPopup, OnCardDroppedToAdd, ui_DeckEdit.dropZoneRect);
             }
 
-            // 4. 화살표 표시/숨김 갱신
             UpdatePaginationUI();
         }
 
@@ -214,9 +218,6 @@ namespace DefaultNamespace {
             
             // 저장된 덱이 없을 때 임시 덱 띄우기
             if (allSavedDecks == null || allSavedDecks.Count == 0) {
-                DeckListPiece piece = ui_DeckEdit.GetDeckListFromPool();
-                // 팩트: 빈 덱이므로 속성은 Property.None 전달
-                piece.Init(currentDeckName, "빈 덱", Cards.CardUIDatas.Property.None, true, (name) => OnDeckSelected(""));
                 return;
             }
 
@@ -285,11 +286,81 @@ namespace DefaultNamespace {
             RefreshLeftDeckList();
             RefreshRightDeckCards();
         }
+        
+        // ==========================================
+        // 카드 클릭 시 팝업 호출 로직
+        // ==========================================
+        private void OnCardClickedToShowPopup(GenericCard card) {
+            // 팩트: 현재 선택된 덱이 없으면 추가 불가(열람 모드)
+            bool canAdd = !string.IsNullOrEmpty(currentDeckId);
+
+            CardDetailPayload payload = new CardDetailPayload {
+                CardData = card,
+                CanAdd = canAdd,
+                OnConfirmAdd = ConfirmAddCardFromPopup // 아래 정의된 함수를 델리게이트로 넘김
+            };
+
+            // UILoader를 통해 팝업 프리팹을 띄우고 데이터 전달
+            UILoader.Instance.ShowUI("CardDetail_Popup", payload);
+        }
+        
+        // ==========================================
+        // 드롭: 오른쪽 영역에 놓았을 때 덱에 추가
+        // ==========================================
+        private void OnCardDroppedToAdd(Cards.EffectInfos.GenericCard card) {
+            if (string.IsNullOrEmpty(currentDeckId)) {
+                CommonUIController.Instance.ShowRedAlert("편집할 덱을 먼저 선택하거나 새로 만들어주세요.");
+                return;
+            }
+
+            if (currentDeckCardIds.Count >= MAX_DECK_SIZE) {
+                CommonUIController.Instance.ShowRedAlert("덱에 카드를 더 추가할 수 없습니다.");
+                return;
+            }
+
+            int currentCount = currentDeckCardIds.Count(id => id == card.uiData.id);
+            if (currentCount >= MAX_SAME_CARD) {
+                CommonUIController.Instance.ShowRedAlert($"동일한 카드는 {MAX_SAME_CARD}장까지만 넣을 수 있습니다!");
+                return;
+            }
+
+            currentDeckCardIds.Add(card.uiData.id);
+            RefreshRightDeckCards(); 
+        }
+        
+        // ==========================================
+        // 팝업에서 '추가' 버튼을 눌렀을 때 콜백될 함수
+        // ==========================================
+        private void ConfirmAddCardFromPopup(Cards.EffectInfos.GenericCard cardToAdd) {
+            if (string.IsNullOrEmpty(currentDeckId)) {
+                CommonUIController.Instance.ShowRedAlert("편집할 덱을 먼저 선택해주세요.");
+                return;
+            }
+
+            if (currentDeckCardIds.Count >= MAX_DECK_SIZE) {
+                CommonUIController.Instance.ShowRedAlert("덱에 카드를 더 추가할 수 없습니다.");
+                return;
+            }
+
+            int currentCount = currentDeckCardIds.Count(id => id == cardToAdd.uiData.id);
+            if (currentCount >= MAX_SAME_CARD) {
+                CommonUIController.Instance.ShowRedAlert($"동일한 카드는 {MAX_SAME_CARD}장까지만 넣을 수 있습니다!");
+                return;
+            }
+
+            currentDeckCardIds.Add(cardToAdd.uiData.id);
+            RefreshRightDeckCards(); 
+        }
+        
 
         // ==========================================
         // 카드 추가 / 제거 로직
         // ==========================================
         private void OnCardClickedToAdd(GenericCard card) {
+            if (string.IsNullOrEmpty(currentDeckId)) {
+                return;
+            }
+            
             if (currentDeckCardIds.Count >= MAX_DECK_SIZE) {
                 CommonUIController.Instance.ShowRedAlert("덱에 카드를 더 추가할 수 없습니다.");
                 return;

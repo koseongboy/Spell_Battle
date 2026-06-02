@@ -150,7 +150,7 @@ namespace DefaultNamespace {
                         Debug.Log("게임 시작! 02_Battle_Koseongboy 씬으로 전환합니다.");
 
                         // 4. Netcode 전용 씬 로드 (Host가 호출하면 모든 Client가 함께 씬 이동)
-                        NetworkManager.Singleton.SceneManager.LoadScene("02_Battle_Koseongboy", LoadSceneMode.Single);
+                        NetworkManager.Singleton.SceneManager.LoadScene("02_Battle_Crocobob", LoadSceneMode.Single);
                     }
                     else {
                         CommonUIController.Instance.ShowRedAlert("게스트가 아직 준비하지 않았습니다.");
@@ -213,6 +213,7 @@ namespace DefaultNamespace {
         // 팝업에서 특정 덱을 클릭(선택)했을 때 호출될 함수
         public void HandleDeckSelectedInPopup(string selectedDeckId) {
             if (string.IsNullOrEmpty(selectedDeckId)) {
+                Debug.Log("Selected Deck : "+selectedDeckId);
                 CommonUIController.Instance.ShowRedAlert("유효하지 않은 덱입니다.");
                 return;
             }
@@ -328,7 +329,7 @@ namespace DefaultNamespace {
             if (readyStateModel != null)
                 readyStateModel.OnGuestReadyChanged -= HandleGuestReadyStateChanged;
 
-            // 🌟 1. 내부 네트워크 정리를 가장 먼저 실행 (Lobby 통신 전에 RPC부터 쏩니다)
+            // 1. 내부 네트워크 정리를 가장 먼저 실행 (Lobby 통신 전에 RPC부터 쏩니다)
             if (nm != null && nm.IsListening) {
                 if (nm.IsHost && !isForce) {
                     readyStateModel?.NotifyRoomClosedRpc();
@@ -343,7 +344,7 @@ namespace DefaultNamespace {
                 nm.Shutdown();
             }
 
-            // 🌟 2. 외부 UGS Lobby 정리는 그 다음에 실행 (에러가 나도 진행되도록 try-catch 적용)
+            // 2. 외부 UGS Lobby 정리는 그 다음에 실행 (에러가 나도 진행되도록 try-catch 적용)
             if (!isForce) {
                 try {
                     await matchmakingService.LeaveLobbyAsync();
@@ -425,7 +426,7 @@ namespace DefaultNamespace {
         }
 
         // ==========================================
-        // ⏱️ 5초 타임아웃 코루틴
+        // 5초 타임아웃 코루틴
         // ==========================================
         private System.Collections.IEnumerator ConnectionTimeoutRoutine(ulong clientId) {
             // 🌟 정확히 5초를 기다립니다.

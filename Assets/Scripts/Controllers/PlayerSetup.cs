@@ -37,8 +37,8 @@ namespace Controllers.PlayerSetup
                 mainCam.SetParent(this.transform);
                 
                 // 숄더뷰 느낌으로 위치와 각도를 예쁘게 잡아줍니다.
-                mainCam.localPosition = new Vector3(0, 2.5f, -3f); 
-                mainCam.localRotation = Quaternion.Euler(15f, 0, 0);
+                mainCam.localPosition = new Vector3(2f, 1.6f, -2f); 
+                mainCam.localRotation = Quaternion.Euler(7.5f, -21f, 0f);
             }
 
 
