@@ -1,0 +1,18 @@
+# 핵심 웹 프레임워크 및 서버 구동
+fastapi
+uvicorn
+python-multipart
+
+# AI 모델(Wav2Vec2 등) 및 트랜스포머 라이브러리
+transformers
+huggingface_hub
+safetensors
+
+# 오디오 분석 및 데이터 처리
+librosa
+soundfile
+numpy
+scipy
+
+# 딥러닝 핵심 엔진
+torch>=2.0.0
