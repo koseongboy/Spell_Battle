@@ -76,7 +76,6 @@ namespace Models.PlayerModels {
             }
         }
     }
-<<<<<<< HEAD
     
     
     // 덱 정보
@@ -103,9 +102,6 @@ namespace Models.PlayerModels {
         public List<DeckData> decks = new List<DeckData>();
     }
 
-    public class PlayerModel : NetworkBehaviour {
-        [Header("Stats")] public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
-=======
     public class PlayerModel : NetworkBehaviour
     {
         [ContextMenu("마나 즉시 10으로")]
@@ -116,7 +112,6 @@ namespace Models.PlayerModels {
 
         [Header("Stats")]
         public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
->>>>>>> koseongboy
         public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(30);
 
         public NetworkVariable<int> MaxMana = new NetworkVariable<int>(1);
@@ -131,9 +126,6 @@ namespace Models.PlayerModels {
 
         [Header("Card Modules")] public DeckModel Deck;
         public GraveyardModel Graveyard;
-<<<<<<< HEAD
-        public HandModel Hand;
-=======
         public HandModel Hand; 
         private int _expectedManaCost = 0;
         public int ExpectedManaCost
@@ -149,7 +141,6 @@ namespace Models.PlayerModels {
             }
         }
         public event Action<int> OnExpectedManaChanged;
->>>>>>> koseongboy
 
         private void Awake() {
             // NetworkList는 반드시 Awake에서 공간을 할당해 주어야 합니다.
