@@ -74,6 +74,12 @@ namespace Models.PlayerModels
     }
     public class PlayerModel : NetworkBehaviour
     {
+        [ContextMenu("마나 즉시 10으로")]
+        public void makemanaTen()
+        {
+            CurrentMana.Value = 10;
+        }
+
         [Header("Stats")]
         public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
         public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(30);
@@ -284,7 +290,7 @@ namespace Models.PlayerModels
         public void IncreaseMaxMana(int amount)
         {
             if (!IsServer) return;
-            MaxMana.Value = Mathf.Max(MaxMana.Value + amount, FinalMana.Value);
+            MaxMana.Value = Mathf.Min(MaxMana.Value + amount, FinalMana.Value);
         }
 
         public void AddShield(int amount)

@@ -88,6 +88,7 @@ namespace Models.CardModels
         [Rpc(SendTo.Server)]
         public void SubmitDeckServerRpc(int[] deckIds)
         {
+            Debug.Log($"덱 초기화 실행됨!");
             // 1. 이미 짜두신 초기화 함수를 재활용해서 서버의 currentDeck에 채워 넣습니다.
             InitializeDeck(deckIds);
             

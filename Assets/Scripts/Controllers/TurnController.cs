@@ -224,7 +224,7 @@ namespace Controllers.TurnControllers
         #endregion
 
         #region 4. 페이즈 흐름 제어 (Phase Management)
-
+        // ui띄우는 건 여기다 하면 됨 (todo)
         private void HandlePhaseChanged(GamePhase newPhase, bool isMyTurn)
         {
             view.UpdateUI(newPhase, isMyTurn);
@@ -292,8 +292,13 @@ namespace Controllers.TurnControllers
                 case GamePhase.Draw: model.CurrentPhase.Value = GamePhase.Select; break;
                 case GamePhase.Select: model.CurrentPhase.Value = GamePhase.Incantation; break;
                 case GamePhase.Incantation: model.CurrentPhase.Value = GamePhase.Battle; break;
-                case GamePhase.Battle: model.CurrentPhase.Value = GamePhase.End; break;
+                case GamePhase.Battle: model.CurrentPhase.Value = GamePhase.Select; break; // 일단 기본적으로는 select로 돌아감.
                 case GamePhase.End:
+                    PlayerModel endingPlayer = GetPlayerById(model.CurrentTurnPlayerId.Value);
+                    if (endingPlayer != null)
+                    {
+                        endingPlayer.IncreaseMaxMana(1);
+                    }
                     model.CurrentTurnPlayerId.Value = 
                         (model.CurrentTurnPlayerId.Value == model.HostId.Value) 
                         ? model.GuestId.Value 
@@ -316,6 +321,28 @@ namespace Controllers.TurnControllers
             // 지금은 테스트 중이므로, 임시로 1초 대기하는 작업을 넘겨줍니다.
             System.Collections.IEnumerator testTask = DummyWaitTask(1f);
             StartCoroutine(ForceAdvancePhaseAfterTask(testTask, GamePhase.Draw));
+        }
+
+        //턴 엔드 로직
+        public void RequestEndTurn()
+        {
+            EndTurnServerRpc();
+        }
+
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        private void EndTurnServerRpc(RpcParams rpcParams = default)
+        {
+            ulong senderId = rpcParams.Receive.SenderClientId;
+            
+            // 1. 방어선: 내 턴이 아니거나, 선택 페이즈가 아니면 무시
+            if (senderId != model.CurrentTurnPlayerId.Value) return;
+            if (model.CurrentPhase.Value != GamePhase.Select) return;
+
+            Debug.Log($"[Server] 🛑 플레이어 {senderId}가 턴을 종료했습니다.");
+            
+            // 2. 현재 페이즈를 End로 강제로 밀어넣고, 다음 사람의 턴으로 넘김
+            model.CurrentPhase.Value = GamePhase.End;
+            AdvancePhaseLogic(); 
         }
 
         #endregion
@@ -346,6 +373,8 @@ namespace Controllers.TurnControllers
                 Debug.LogWarning($"마나가 부족합니다. (필요: {totalCost} / 보유: {MyPlayer.CurrentMana.Value})");
                 return;
             }
+            // 배틀 페이즈로
+            RequestAdvancePhase();
 
             // 검증을 통과했다면 영창(마이크 대기) 코루틴으로 진입!
             StartCoroutine(IncantationRoutine(selectedCards, selectedCardIds, totalCost));
@@ -415,15 +444,28 @@ namespace Controllers.TurnControllers
         {
             ulong senderId = rpcParams.Receive.SenderClientId;
             PlayerModel caster = GetPlayerById(senderId);
+            ulong targetClientId = (senderId == model.HostId.Value) ? model.GuestId.Value : model.HostId.Value;
+            PlayerModel target = GetPlayerById(targetClientId);
             
             if (!caster.TryUseMana(declaredCost)) return;
 
             // 1. 상대방에게 오디오 URL 공유 (즉시 실행)
-            ulong targetClientId = (senderId == model.HostId.Value) ? model.GuestId.Value : model.HostId.Value;
             PlayOpponentAudioClientRpc(audioUrl, RpcTarget.Single(targetClientId, RpcTargetUse.Temp));
 
+            SpellPayload serverPayload = new SpellPayload();
+            foreach (int id in cardIds)
+            {
+                var card = CardDatabase.GetCardById(id) as PlayableCard;
+                if (card != null) 
+                {
+                    serverPayload.EnqueuePendingCard(card); //
+                }
+            }
+
+            serverPayload.CompileSpell(caster, target);
+
             // 2. 서버가 직접 웹 서버에 점수를 물어보러 출발!
-            StartCoroutine(FetchScoreAndExecuteBattle(cardIds, caster, targetClientId, taskId));
+            StartCoroutine(FetchScoreAndExecuteBattle(serverPayload, caster, targetClientId, taskId));
         }
 
         [Rpc(SendTo.SpecifiedInParams)]
@@ -437,7 +479,7 @@ namespace Controllers.TurnControllers
         // ==========================================
         // 🛡️ [서버 전용] 웹 서버와 S2S 직접 통신 및 배틀 집행
         // ==========================================
-        private IEnumerator FetchScoreAndExecuteBattle(int[] cardIds, PlayerModel caster, ulong targetId, string taskId)
+        private IEnumerator FetchScoreAndExecuteBattle(SpellPayload serverPayload, PlayerModel caster, ulong targetId, string taskId)
         {
             float finalScore = 0f;
             bool isEvaluationDone = false;
@@ -475,19 +517,15 @@ namespace Controllers.TurnControllers
 
             Debug.Log($"[Server] 🛡️ 검증 완료! 조작 없는 순수 점수 확보: {finalScore}");
 
-            // 3. 점수 확보 완료! 조작이 불가능한 안전한 점수로 배틀 집행
-            SpellPayload serverPayload = new SpellPayload();
-            foreach (int id in cardIds)
-            {
-                var cardData = Models.CardDatabases.CardDatabase.GetCardById(id);
-                if (cardData != null) cardData.AddToPayload(serverPayload, caster, target);
-            }
+            model.CurrentPhase.Value = GamePhase.Battle;
 
             float serverMultiplier = CalculateMultiplierFromScore(finalScore); 
             ApplyPayloadToModels(serverPayload, serverMultiplier, caster);
-            AdvancePhaseLogic(); 
+
+            IEnumerator battleTask = DummyWaitTask(2f);
+            StartCoroutine(ForceAdvancePhaseAfterTask(battleTask, GamePhase.Battle));
         }
-        // 기획에 따라 점수를 배율로 바꿔주는 헬퍼 함수
+        // 기획에 따라 점수를 배율로 바꿔주는 헬퍼 함수 (todo)
         private float CalculateMultiplierFromScore(float score)
         {
             // 임시 공식: 기본 1.0배 (점수에 따라 0.5배 ~ 1.5배까지 변동)

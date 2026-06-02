@@ -117,6 +117,23 @@ namespace Controllers.PlayerController
                 {
                     Debug.LogError("씬에 PlayerView(UI)가 없습니다!");
                 }
+                // ==========================================
+                // 🌟 3. [핵심] 내 로컬 덱을 꺼내서 서버로 제출!
+                // ==========================================
+                if (LocalDataManager.Instance != null && model.Deck != null)
+                {
+                    // 내 주머니에서 덱 리스트를 꺼내옵니다.
+                    List<int> myDeck = LocalDataManager.Instance.equippedDeck;
+                    
+                    // 리스트를 배열(.ToArray())로 변환해서 서버(DeckModel)로 쏴줍니다!
+                    model.Deck.SubmitDeckServerRpc(myDeck.ToArray());
+                    
+                    Debug.Log("🌐 내 덱을 서버(DeckModel)로 성공적으로 발송했습니다.");
+                }
+                else
+                {
+                    Debug.LogError("LocalDataManager 또는 DeckModel이 없어서 덱을 제출할 수 없습니다!");
+                }
             }
             else
             {
@@ -131,23 +148,7 @@ namespace Controllers.PlayerController
                 }
             }
 
-            // ==========================================
-            // 🌟 3. [핵심] 내 로컬 덱을 꺼내서 서버로 제출!
-            // ==========================================
-            if (LocalDataManager.Instance != null && model.Deck != null)
-            {
-                // 내 주머니에서 덱 리스트를 꺼내옵니다.
-                List<int> myDeck = LocalDataManager.Instance.equippedDeck;
-                
-                // 리스트를 배열(.ToArray())로 변환해서 서버(DeckModel)로 쏴줍니다!
-                model.Deck.SubmitDeckServerRpc(myDeck.ToArray());
-                
-                Debug.Log("🌐 내 덱을 서버(DeckModel)로 성공적으로 발송했습니다.");
-            }
-            else
-            {
-                Debug.LogError("LocalDataManager 또는 DeckModel이 없어서 덱을 제출할 수 없습니다!");
-            }
+            
         }
 
         public override void OnNetworkDespawn()
@@ -155,6 +156,14 @@ namespace Controllers.PlayerController
             // 구독 해제 (메모리 누수 방지)
             model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => view.UpdateHealth(newValue);
             model.CurrentMana.OnValueChanged -= (oldValue, newValue) => view.UpdateMana(newValue);
+            model.Shield.OnValueChanged -= (oldValue, newValue) => view.UpdateShield(newValue);
+            model.LastProperty.OnValueChanged -= (oldValue, newValue) => view.UpdateLastProperty(newValue);
+            model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+            
+            model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateHealth(newValue);
+            model.CurrentMana.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateMana(newValue);
+            model.Shield.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateShield(newValue);
+            model.LastProperty.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateLastProperty(newValue);
             model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
         }
 
