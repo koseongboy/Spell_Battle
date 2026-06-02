@@ -1129,10 +1129,11 @@ MonoBehaviour:
   Color_AvailableMana: {r: 0.4, g: 0.8, b: 1, a: 1}
   Color_UsedMana: {r: 0.1, g: 0.3, b: 0.5, a: 1}
   Color_LockedMana: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  Text_HandInfo: {fileID: 0}
   StatusGrid: {fileID: 9134981454106237754}
   StatusIconPrefab: {fileID: 3691735194588302465, guid: 3c87727fefc732a40a36f5d386c4f338, type: 3}
   IconDatabase: {fileID: 11400000, guid: 760e29c50075f61418d5933c719d8b07, type: 2}
+  HandContainer: {fileID: 3937008921051327612}
+  CardPrefab: {fileID: 5434026315024681407, guid: 9dfc2030b80421b428650185418b23f1, type: 3}
 --- !u!1 &2522247071329421790
 GameObject:
   m_ObjectHideFlags: 0
@@ -3683,6 +3684,8 @@ GameObject:
   - component: {fileID: 3937008921051327612}
   - component: {fileID: 6715751546217036181}
   - component: {fileID: 1045046554008908013}
+  - component: {fileID: 9059171258194395403}
+  - component: {fileID: 3515314980514431751}
   m_Layer: 5
   m_Name: Ingame_Hand
   m_TagString: Untagged
@@ -3747,6 +3750,47 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9059171258194395403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7161529708794547155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &3515314980514431751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7161529708794547155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aa02660e6905fb40b0c98ededab3db7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.HandLayoutManager
+  cardSpacing: 120
+  curveHeight: 15
+  anglePerCard: 5
 --- !u!1 &7322866158994780679
 GameObject:
   m_ObjectHideFlags: 0

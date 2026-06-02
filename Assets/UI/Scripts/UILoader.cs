@@ -40,7 +40,6 @@ namespace DefaultNamespace
                 return;
             }
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         #endregion
@@ -200,6 +199,7 @@ namespace DefaultNamespace
                             _ => canvas_FullScreen
                         };
                     }
+                    Debug.Log("Target Canvas : " + targetParent.name);
                     GameObject uiInstance = Instantiate(uiPrefab, targetParent);
                     
                     // 딕셔너리에 인스턴스 등록 시 중복 체크 방어

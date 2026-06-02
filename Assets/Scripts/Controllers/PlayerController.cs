@@ -114,6 +114,7 @@ namespace Controllers.PlayerController
                 if (ui != null) 
                 {
                     ui.Bind(model); // 찾은 'ui'에 직접 바인딩
+                    ui.OnCardClickedAction += ToggleSpellIndex;
                     Debug.Log("내 UI 바인딩 완료");
                 }
                 else 
@@ -121,7 +122,7 @@ namespace Controllers.PlayerController
                     Debug.LogError("씬에 PlayerUI가 없습니다!");
                 }
                 // ==========================================
-                // 🌟 3. [핵심] 내 로컬 덱을 꺼내서 서버로 제출!
+                // 내 로컬 덱을 꺼내서 서버로 제출
                 // ==========================================
                 if (LocalDataManager.Instance != null && model.Deck != null)
                 {
@@ -137,6 +138,19 @@ namespace Controllers.PlayerController
                 {
                     Debug.LogError("LocalDataManager 또는 DeckModel이 없어서 덱을 제출할 수 없습니다!");
                 }
+                
+                if (TurnModel.Instance != null)
+                {
+                    // NetworkVariable 대신 TurnModel이 제공하는 커스텀 이벤트 사용
+                    TurnModel.Instance.OnPhaseChangedEvent += HandlePhaseChange;
+            
+                    // 스폰 시점에 이미 멀리건 페이즈라면 즉시 실행
+                    if (TurnModel.Instance.CurrentPhase.Value == GamePhase.Mulligan)
+                    {
+                        // 초기 실행 시 isMyTurn 값은 당장 중요하지 않으므로 임시로 false 전달
+                        HandlePhaseChange(GamePhase.Mulligan, false); 
+                    }
+                }
             }
             else
             {
@@ -151,8 +165,6 @@ namespace Controllers.PlayerController
                     Debug.LogError("씬에 EnemyUI가 없습니다!");
                 }
             }
-
-            
         }
 
         public override void OnNetworkDespawn()
@@ -171,6 +183,28 @@ namespace Controllers.PlayerController
             model.Shield.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateShield(newValue);
             model.LastProperty.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateLastProperty(newValue);
             model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+            
+            TurnModel.Instance.OnPhaseChangedEvent -= HandlePhaseChange;
+            PlayerUI.Instance.OnCardClickedAction -= ToggleSpellIndex;
+        }
+        
+        private void HandlePhaseChange(GamePhase phase, bool isMyTurn)
+        {
+            // 내 캐릭터 컨트롤러가 아니면 무시
+            if (!IsOwner) return;
+
+            // 멀리건은 선공/후공 상관없이 양쪽 플레이어 모두 진행해야 하므로 isMyTurn을 따지지 않음
+            if (phase == GamePhase.Mulligan)
+            {
+                UILoader.Instance.ShowUI("Mulligan_FullScreen", this);
+                Debug.Log("🃏 멀리건 페이즈 진입: 멀리건 UI를 엽니다.");
+            } // 멀리건이 무사히 끝나고 Draw 페이즈로 넘어가면 화면을 닫음
+            else if (phase == GamePhase.Draw)
+            {
+                UILoader.Instance.HideUI("Mulligan_FullScreen");
+                Debug.Log("🃏 멀리건 종료: 게임을 시작합니다.");
+                UILoader.Instance.ShowUI("Ingame_FullScreen");
+            }
         }
 
         // NetworkList의 이벤트 핸들러
@@ -184,9 +218,10 @@ namespace Controllers.PlayerController
         // ==========================================
         // 🔄 숫자키 입력 시 등록 / 취소를 껐다 켜는 토글 함수 (라고는 하지만 실제 ui 구현 시에도 사용하면 좋을 것 같아서 아래 배치)
         // ==========================================
-        private void ToggleMulliganIndex(int index)
+        public void ToggleMulliganIndex(int index)
         {
             // [안전장치] 현재 내 손패 장수보다 큰 숫자를 누르면 무시
+            // TODO : 여기 이거 뭐임?
             // 🚨 주석 해제하여 본인의 HandModel 구조에 맞게 수정하세요 (예: model.Hand.CurrentHand.Count 등)
             // if (model.Hand == null || model.Hand.GetTotalCardCount() <= index) return;
 
@@ -204,7 +239,7 @@ namespace Controllers.PlayerController
             }
         }
 
-        private void ToggleSpellIndex(int index)
+        public void ToggleSpellIndex(int index)
         {
             if (model.Hand == null || index >= model.Hand.GetLocalHandCount()) return;
 
@@ -242,7 +277,7 @@ namespace Controllers.PlayerController
         // ==========================================
         // 🚀 M키 입력 시 서버로 Rpc 통신을 날리는 함수
         // ==========================================
-        private void SubmitFinalMulligan()
+        public void SubmitFinalMulligan()
         {
             List<int> replaceCardIds = new List<int>();
 

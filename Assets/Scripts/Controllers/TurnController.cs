@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using Models.TurnModel;
@@ -11,6 +12,7 @@ using Models.SpellPayloads;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 namespace Controllers.TurnControllers {
     public class TurnController : NetworkBehaviour {
@@ -31,6 +33,7 @@ namespace Controllers.TurnControllers {
             Debug.Log($"[Server] ⏳ 테스트 모드: {delaySeconds}초 임시 대기 중...");
             yield return new WaitForSeconds(delaySeconds);
         }
+
         #endregion
 
 
