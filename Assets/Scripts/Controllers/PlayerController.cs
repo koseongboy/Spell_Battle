@@ -8,6 +8,8 @@ using Managers.LocalDataManagers;
 using System.Collections.Generic;
 using Controllers.TurnControllers;
 using Models.TurnModel;
+using Cards.PlayableCards;
+using Models.CardDatabases;
 
 namespace Controllers.PlayerController
 {
@@ -88,12 +90,15 @@ namespace Controllers.PlayerController
         [Header("MVP References")]
         public PlayerModel model;
         public PlayerView view;
-        public EnemyView enemyView;
+        public EnemyView enemyView;        
 
         public int CurrentHp { get; private set; } = 100;
         public int CurrentMana { get; private set; } = 50;
         private HashSet<int> _selectedMulliganIndices = new HashSet<int>();
         private HashSet<int> _selectedSpellIndices = new HashSet<int>();
+
+        
+        
 
         public override void OnNetworkSpawn() {
             // ==========================================
@@ -112,6 +117,23 @@ namespace Controllers.PlayerController
                 {
                     Debug.LogError("씬에 PlayerView(UI)가 없습니다!");
                 }
+                // ==========================================
+                // 🌟 3. [핵심] 내 로컬 덱을 꺼내서 서버로 제출!
+                // ==========================================
+                if (LocalDataManager.Instance != null && model.Deck != null)
+                {
+                    // 내 주머니에서 덱 리스트를 꺼내옵니다.
+                    List<int> myDeck = LocalDataManager.Instance.equippedDeck;
+                    
+                    // 리스트를 배열(.ToArray())로 변환해서 서버(DeckModel)로 쏴줍니다!
+                    model.Deck.SubmitDeckServerRpc(myDeck.ToArray());
+                    
+                    Debug.Log("🌐 내 덱을 서버(DeckModel)로 성공적으로 발송했습니다.");
+                }
+                else
+                {
+                    Debug.LogError("LocalDataManager 또는 DeckModel이 없어서 덱을 제출할 수 없습니다!");
+                }
             }
             else
             {
@@ -126,23 +148,7 @@ namespace Controllers.PlayerController
                 }
             }
 
-            // ==========================================
-            // 🌟 3. [핵심] 내 로컬 덱을 꺼내서 서버로 제출!
-            // ==========================================
-            if (LocalDataManager.Instance != null && model.Deck != null)
-            {
-                // 내 주머니에서 덱 리스트를 꺼내옵니다.
-                List<int> myDeck = LocalDataManager.Instance.equippedDeck;
-                
-                // 리스트를 배열(.ToArray())로 변환해서 서버(DeckModel)로 쏴줍니다!
-                model.Deck.SubmitDeckServerRpc(myDeck.ToArray());
-                
-                Debug.Log("🌐 내 덱을 서버(DeckModel)로 성공적으로 발송했습니다.");
-            }
-            else
-            {
-                Debug.LogError("LocalDataManager 또는 DeckModel이 없어서 덱을 제출할 수 없습니다!");
-            }
+            
         }
 
         public override void OnNetworkDespawn()
@@ -150,6 +156,14 @@ namespace Controllers.PlayerController
             // 구독 해제 (메모리 누수 방지)
             model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => view.UpdateHealth(newValue);
             model.CurrentMana.OnValueChanged -= (oldValue, newValue) => view.UpdateMana(newValue);
+            model.Shield.OnValueChanged -= (oldValue, newValue) => view.UpdateShield(newValue);
+            model.LastProperty.OnValueChanged -= (oldValue, newValue) => view.UpdateLastProperty(newValue);
+            model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+            
+            model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateHealth(newValue);
+            model.CurrentMana.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateMana(newValue);
+            model.Shield.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateShield(newValue);
+            model.LastProperty.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateLastProperty(newValue);
             model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
         }
 
@@ -186,23 +200,37 @@ namespace Controllers.PlayerController
 
         private void ToggleSpellIndex(int index)
         {
-            // [안전장치] 손패에 해당 번호의 카드가 있는지 확인
-            if (model.Hand == null || index >= model.Hand.GetLocalHandCount()) 
-            {
-                Debug.LogWarning($"[Select Phase] 손패에 {index + 1}번째 카드가 없습니다.");
-                return;
-            }
+            if (model.Hand == null || index >= model.Hand.GetLocalHandCount()) return;
+
+            // 1. 선택한 카드의 정보와 코스트를 데이터베이스에서 가져옵니다.
+            int cardId = model.Hand.GetCardIdAt(index);
+            var cardData = Models.CardDatabases.CardDatabase.GetCardById(cardId);
+            int cost = cardData != null ? cardData.uiData.cost : 0;
 
             if (_selectedSpellIndices.Contains(index))
             {
+                // 2-A. 선택 취소 시 마나 비용 반환
                 _selectedSpellIndices.Remove(index);
-                Debug.Log($"[Select Phase] ❌ {index + 1}번째 카드 선택 취소");
+                model.ExpectedManaCost -= cost;
+                Debug.Log($"[Select] ❌ {index + 1}번 취소. (예상 마나 소모: {model.ExpectedManaCost} / {model.CurrentMana.Value})");
             }
             else
             {
+                // 2-B. 새로운 카드 선택 시 마나 초과 검증
+                if (model.ExpectedManaCost + cost > model.CurrentMana.Value)
+                {
+                    Debug.LogWarning("[Select] 🚫 마나가 부족하여 이 카드를 선택할 수 없습니다!");
+                    // TODO: PlayerView를 통해 화면 중앙에 "마나 부족!" 경고 텍스트 띄우기
+                    return; 
+                }
+
                 _selectedSpellIndices.Add(index);
-                Debug.Log($"[Select Phase] 🪄 {index + 1}번째 카드를 마법 재료로 선택했습니다.");
+                model.ExpectedManaCost += cost;
+                Debug.Log($"[Select] 🪄 {index + 1}번 추가. (예상 마나 소모: {model.ExpectedManaCost} / {model.CurrentMana.Value})");
             }
+
+            // 3. todo: UI 업데이트 지시 (PlayerView에 예상 코스트를 전달하여 텍스트 색상을 바꾸는 등 시각화)
+            // view.UpdateExpectedManaUI(_expectedManaCost, model.CurrentMana.Value);
         }
 
         // ==========================================
@@ -239,24 +267,22 @@ namespace Controllers.PlayerController
             _selectedMulliganIndices.Clear();
         }
 
-        // ==========================================
-        // 🌟 [추가] 마법 영창 제출 로직
-        // ==========================================
         private void SubmitSpellSelection()
         {
-            if (_selectedSpellIndices.Count == 0)
+            List<PlayableCard> selectedCards = new List<PlayableCard>();
+            foreach (int index in _selectedSpellIndices)
             {
-                Debug.LogWarning("[Select Phase] 선택된 카드가 없습니다! 카드를 먼저 선택해 주세요.");
-                return;
+                int cardId = model.Hand.GetCardIdAt(index);
+                var card = CardDatabase.GetCardById(cardId) as PlayableCard;
+
+                if(card != null) selectedCards.Add(card);
             }
 
-            Debug.Log($"[Select Phase] 총 {_selectedSpellIndices.Count}장의 카드를 선택 완료했습니다! 턴을 진행합니다.");
+            // 선택 완료! 서버에 '이 카드들로 마법을 준비하겠다'고 선언하고 Incantation 페이즈로 넘어갑니다.
+            TurnController.Instance.ProcessSpellCast(selectedCards);
             
-            // (이후 TurnController의 ProcessSpellCast를 호출하거나, 페이즈를 Advance 하는 로직으로 이어집니다)
-            // TurnController.Instance.RequestAdvancePhase(); 
-            
-            // 사용한 뒤에는 선택 기록 비워주기
-            // _selectedSpellIndices.Clear();
+            _selectedSpellIndices.Clear();
+            model.ExpectedManaCost = 0;
         }
 
     }

@@ -19,7 +19,12 @@ namespace Cards.PlayableCards
         // 실제 발동 로직 (자식 클래스들이 반드시 구현해야 함)
         public void AddToPayload(SpellPayload payload, PlayerModel caster, PlayerModel enemy)
         {
-            payload.AddWord(uiData.wordName);
+            if (uiData == null)
+            {
+                Debug.LogError($"[PlayableCard 에러] {this.name} 카드의 uiData가 인스펙터에 연결되지 않았습니다!");
+                return;
+            }
+            payload.AddWord(Name);
             payload.AddProperty(Prop);
             payload.EnqueuePendingCard(this); // 카드 등록만 수행
         }

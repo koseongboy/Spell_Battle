@@ -9,6 +9,8 @@ namespace Views.TurnView
     {
         [Header("턴 정보")]
         public TextMeshProUGUI Text_TurnInfo;
+        public Button Btn_EndTurn;
+        
         public void UpdateUI(GamePhase phase, bool isMyTurn)
         {
             Debug.Log($"페이즈 변경! 페이즈는: {phase}, 내 턴인가? {isMyTurn}");

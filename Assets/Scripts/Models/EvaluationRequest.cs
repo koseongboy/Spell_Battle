@@ -8,7 +8,7 @@ namespace Models.EvaluationRequests
     {
         public string Concept;
         public string RequiredPrefix;
-        public List<string> Words;
+        public List<string> Words = new List<string>();
         public string AudioBase64;
         public string ToJson()
         {

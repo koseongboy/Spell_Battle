@@ -76,6 +76,7 @@ namespace Models.PlayerModels {
             }
         }
     }
+<<<<<<< HEAD
     
     
     // 덱 정보
@@ -104,6 +105,18 @@ namespace Models.PlayerModels {
 
     public class PlayerModel : NetworkBehaviour {
         [Header("Stats")] public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
+=======
+    public class PlayerModel : NetworkBehaviour
+    {
+        [ContextMenu("마나 즉시 10으로")]
+        public void makemanaTen()
+        {
+            CurrentMana.Value = 10;
+        }
+
+        [Header("Stats")]
+        public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
+>>>>>>> koseongboy
         public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(30);
 
         public NetworkVariable<int> MaxMana = new NetworkVariable<int>(1);
@@ -118,7 +131,25 @@ namespace Models.PlayerModels {
 
         [Header("Card Modules")] public DeckModel Deck;
         public GraveyardModel Graveyard;
+<<<<<<< HEAD
         public HandModel Hand;
+=======
+        public HandModel Hand; 
+        private int _expectedManaCost = 0;
+        public int ExpectedManaCost
+        {
+            get { return _expectedManaCost; }
+            set 
+            {
+                if (_expectedManaCost != value) 
+                {
+                    _expectedManaCost = value;
+                    OnExpectedManaChanged?.Invoke(_expectedManaCost);
+                }
+            }
+        }
+        public event Action<int> OnExpectedManaChanged;
+>>>>>>> koseongboy
 
         private void Awake() {
             // NetworkList는 반드시 Awake에서 공간을 할당해 주어야 합니다.
@@ -267,7 +298,7 @@ namespace Models.PlayerModels {
 
         public void IncreaseMaxMana(int amount) {
             if (!IsServer) return;
-            MaxMana.Value = Mathf.Max(MaxMana.Value + amount, FinalMana.Value);
+            MaxMana.Value = Mathf.Min(MaxMana.Value + amount, FinalMana.Value);
         }
 
         public void AddShield(int amount) {
