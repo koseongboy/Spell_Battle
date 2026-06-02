@@ -23,7 +23,8 @@ namespace DefaultNamespace
         
         [Header("체력 UI")]
         public TextMeshProUGUI Text_Hp;
-        public Slider Slider_Hp; // 체력 바
+
+        public Slider Slider_Hp;
 
         [Header("마나 UI")]
         public TextMeshProUGUI Text_Mana;
@@ -33,31 +34,16 @@ namespace DefaultNamespace
         public Color Color_AvailableMana = new Color(0.4f, 0.8f, 1f); // 2. 사용 가능한 마나 (밝은 하늘색)
         public Color Color_UsedMana = new Color(0.1f, 0.3f, 0.5f);    // 3. 이미 사용한 마나 (어두운 하늘색)
         public Color Color_LockedMana = Color.gray;                   // 1. 아직 도달하지 않은 최대 마나 (회색)
-
-        [Header("내 카드 및 상태이상 정보")]
-        public TextMeshProUGUI Text_DeckInfo;
-        public TextMeshProUGUI Text_GraveInfo;
-        public TextMeshProUGUI Text_HandInfo;
         
         [Header("상태이상 UI 설정")]
         public Transform StatusGrid;           // GridLayoutGroup이 붙은 상태이상 부모 객체
         public GameObject StatusIconPrefab;    // StatusIcon.cs가 붙은 프리팹
-        public List<StatusIconMapping> StatusIconMappings; // 인스펙터에서 아이콘 할당
-
-        // 매핑 리스트를 Dictionary로 변환해서 빠르게 찾기 위한 캐싱용
-        private Dictionary<StatusType, Sprite> _iconDict = new Dictionary<StatusType, Sprite>();
-
+        public StatusIconDatabase IconDatabase;
+        
         private void Awake()
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
-            
-            // 리스트로 받은 매핑 정보를 Dictionary로 변환
-            foreach (var mapping in StatusIconMappings)
-            {
-                if (!_iconDict.ContainsKey(mapping.Type))
-                    _iconDict.Add(mapping.Type, mapping.IconSprite);
-            }
         }
 
         public void Bind(PlayerModel model)
@@ -75,18 +61,6 @@ namespace DefaultNamespace
             // 3. 기타 상태 및 카드 정보 바인딩
             UpdateStatuses(model.ActiveStatuses);
             model.ActiveStatuses.OnListChanged += (changeEvent) => UpdateStatuses(model.ActiveStatuses);
-
-            if (model.Deck != null)
-            {
-                UpdateDeckInfo(model.Deck.DeckCount.Value); 
-                model.Deck.DeckCount.OnValueChanged += (oldValue, newValue) => UpdateDeckInfo(newValue);
-            }
-
-            if (model.Graveyard != null)
-            {
-                UpdateGraveInfo(model.Graveyard.PublicGraveyard.Count);
-                model.Graveyard.PublicGraveyard.OnListChanged += (changeEvent) => UpdateGraveInfo(model.Graveyard.PublicGraveyard.Count);
-            }
 
             if (model.Hand != null)
             {
@@ -138,8 +112,6 @@ namespace DefaultNamespace
             }
         }
 
-        private void UpdateDeckInfo(int count) => Text_DeckInfo.text = $"내 덱: {count}장 남음";
-        private void UpdateGraveInfo(int count) => Text_GraveInfo.text = $"내 무덤: {count}장";
 
         public void UpdateStatuses(NetworkList<StatusData> statuses)
         {
@@ -149,34 +121,26 @@ namespace DefaultNamespace
                 Destroy(child.gameObject);
             }
 
-            // 2. 여러 개로 나뉘어 있을 수 있는 상태이상을 타입별로 합산 (예: 발화 1 + 발화 2 = 발화 3)
+            // 2. 스택 합산 로직 (기존과 동일)
             Dictionary<StatusType, int> displayStatusTotals = new Dictionary<StatusType, int>();
-
             foreach (var status in statuses)
             {
                 if (displayStatusTotals.ContainsKey(status.Type))
-                {
                     displayStatusTotals[status.Type] += status.Stacks;
-                }
                 else
-                {
                     displayStatusTotals[status.Type] = status.Stacks;
-                }
             }
 
-            // 3. 합산된 데이터를 바탕으로 프리팹 생성 및 설정
+            // 3. 아이콘 생성 로직
             foreach (var kvp in displayStatusTotals)
             {
                 StatusType type = kvp.Key;
                 int totalStacks = kvp.Value;
 
-                // 스택이 0 이하라면 표시하지 않음
                 if (totalStacks <= 0) continue;
+                
+                Sprite iconSprite = IconDatabase != null ? IconDatabase.GetIcon(type) : null;
 
-                // 매핑된 아이콘 이미지가 있는지 확인
-                Sprite iconSprite = _iconDict.ContainsKey(type) ? _iconDict[type] : null;
-
-                // 프리팹 생성 후 세팅
                 GameObject iconObj = Instantiate(StatusIconPrefab, StatusGrid);
                 UI_StatusIcon statusIcon = iconObj.GetComponent<UI_StatusIcon>();
                 
@@ -189,12 +153,6 @@ namespace DefaultNamespace
 
         private void UpdateHandInfo(System.Collections.ObjectModel.ObservableCollection<int> localHand)
         {
-            if (localHand.Count == 0)
-            {
-                Text_HandInfo.text = "손패: 없음";
-                return;
-            }
-
             List<string> cardNames = new List<string>();
             foreach (int cardId in localHand)
             {
@@ -202,7 +160,6 @@ namespace DefaultNamespace
                 string name = (cardData != null && cardData.uiData != null) ? cardData.uiData.wordName : $"카드({cardId})";
                 cardNames.Add(name);
             }
-            Text_HandInfo.text = $"손패({localHand.Count}장): {string.Join(", ", cardNames)}";
         }
     }
 }
