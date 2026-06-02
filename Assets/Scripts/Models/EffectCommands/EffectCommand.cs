@@ -205,4 +205,91 @@ namespace Models.EffectCommands
             }
         }
     }    
+    
+    // 🌟 동적으로 계산할 값의 종류를 정의
+    public enum DynamicValueType {
+        None,
+        CurrentShield,         // 현재 보호막
+        WaterSpellsCast,       // 이번 게임에 사용한 물 속성 주문 수
+        ConsumedStatusStack,   // 방금 소모한 상태이상 중첩 수
+        MissingHealth          // 잃은 체력
+    }
+
+    public class DynamicDamageCommand : EffectCommand {
+        public override CommandPriority Priority => CommandPriority.DamageAndHeal;
+        private DynamicValueType valueType;
+        private float ratio; // 예: 30%면 0.3f
+
+        public DynamicDamageCommand(PlayerModel target, DynamicValueType valueType, float ratio) : base(target) {
+            this.valueType = valueType;
+            this.ratio = ratio;
+        }
+
+        public override void Execute(float multiplier = 1.0f) {
+            int calculatedAmount = 0;
+            
+            // 실행되는 순간의 타겟 상태를 읽어와서 계산
+            switch (valueType) {
+                case DynamicValueType.CurrentShield:
+                    calculatedAmount = Mathf.RoundToInt(target.Shield.Value * ratio);
+                    break;
+                case DynamicValueType.WaterSpellsCast:
+                    // TODO: BattleManager 등에서 카운트 가져오기
+                    calculatedAmount = Mathf.RoundToInt(10 /* 임시값 */ * ratio); 
+                    break;
+            }
+
+            target.TakeDamage(Mathf.RoundToInt(calculatedAmount * multiplier));
+        }
+    }
+    
+    public class ModifyCostCommand : EffectCommand {
+        public override CommandPriority Priority => CommandPriority.ManaAndSystem;
+        private TargetType cardTargetLocation; // 핸드, 덱, 다음 드로우 등
+        private int amount;
+        private bool isSetToZero; // 코스트를 아예 0으로 만드는 경우
+
+        public ModifyCostCommand(PlayerModel target, TargetType location, int amount, bool isSetToZero = false) : base(target) {
+            this.cardTargetLocation = location;
+            this.amount = amount;
+            this.isSetToZero = isSetToZero;
+        }
+
+        public override void Execute(float multiplier = 1.0f) {
+            // TODO: PlayerModel.Deck이나 Hand에 접근하여 조건에 맞는 카드의 Cost를 직접 수정하는 로직 구현
+        }
+    }
+    
+    public enum StatusActionType {
+        ExtendDuration, // 지속시간 연장
+        TriggerOnce,    // 스택 소모 없이 1회 강제 발동
+        DoubleStacks    // 현재 스택 2배
+    }
+
+    public class ManipulateStatusCommand : EffectCommand {
+        public override CommandPriority Priority => CommandPriority.StatusDetonate;
+        private StatusType status;
+        private StatusActionType actionType;
+        private int value;
+
+        public ManipulateStatusCommand(PlayerModel target, StatusType status, StatusActionType actionType, int value = 0) : base(target) {
+            this.status = status;
+            this.actionType = actionType;
+            this.value = value;
+        }
+
+        public override void Execute(float multiplier = 1.0f) {
+            switch(actionType) {
+                case StatusActionType.ExtendDuration:
+                    target.ExtendStatusDuration(status, value);
+                    break;
+                case StatusActionType.TriggerOnce:
+                    target.TriggerStatusEffect(status);
+                    break;
+                case StatusActionType.DoubleStacks:
+                    target.MultiplyStatusStack(status, 2);
+                    break;
+            }
+        }
+    }
 }

@@ -144,10 +144,13 @@ namespace DefaultNamespace {
         // 필터링 적용 및 페이지 리셋
         private void ApplyFilters() {
             currentFilteredCards = allCards.Where(c =>
-                (currentPropertyFilter == Property.None || c.uiData.property == currentPropertyFilter) &&
-                (currentCostFilter == -1 || c.uiData.cost == currentCostFilter ||
-                 (currentCostFilter == 10 && c.uiData.cost >= 10))
-            ).ToList();
+                    (currentPropertyFilter == Property.None || c.uiData.property == currentPropertyFilter) &&
+                    (currentCostFilter == -1 || c.uiData.cost == currentCostFilter ||
+                     (currentCostFilter == 10 && c.uiData.cost >= 10))
+                )
+                .OrderBy(c => c.uiData.cost)      // 코스트 기준 오름차순
+                .ThenBy(c => c.uiData.id)         // 코스트가 같으면 ID 기준 오름차순
+                .ToList();
 
             currentPage = 0; // 필터가 바뀌면 무조건 첫 페이지로 돌아감
             RefreshCenterCards();
@@ -172,7 +175,7 @@ namespace DefaultNamespace {
             foreach (var cardData in pageCards) {
                 UI_Card_DeckEdit cardObj = ui_DeckEdit.GetCardFromPool();
                 
-                // 🌟 클릭(팝업), 드롭(추가), 그리고 드롭을 판별할 우측 영역(dropZoneRect)을 넘겨줍니다.
+                // 클릭(팝업), 드롭(추가), 그리고 드롭을 판별할 우측 영역(dropZoneRect)을 넘겨줍니다.
                 cardObj.Init(cardData, OnCardClickedToShowPopup, OnCardDroppedToAdd, ui_DeckEdit.dropZoneRect);
             }
 

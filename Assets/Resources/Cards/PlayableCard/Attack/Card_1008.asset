@@ -25,6 +25,7 @@ MonoBehaviour:
       statusType: 0
       targetProperty: 0
       specificCardId: 
+      isAbsoluteValue: 0
       condition: 0
       conditionProperty: 0
       conditionStatus: 0

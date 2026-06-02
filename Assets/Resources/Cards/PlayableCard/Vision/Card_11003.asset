@@ -15,7 +15,7 @@ MonoBehaviour:
   uiData:
     id: 11003
     wordName: "\uADA4\uC801"
-    cost: 2
+    cost: 4
     property: 12
     Effects:
     - effectType: 10
@@ -25,6 +25,7 @@ MonoBehaviour:
       statusType: 11
       targetProperty: 0
       specificCardId: 
+      isAbsoluteValue: 0
       condition: 0
       conditionProperty: 0
       conditionStatus: 0
@@ -33,6 +34,6 @@ MonoBehaviour:
       conditionalValue1: 0
       conditionalValue2: 0
       conditionalEffectType: 0
-    Keywords: 
+    Keywords: 0500000007000000
     desc: "\uB2E4\uC74C \uB9C8\uBC95\uC73C\uB85C \uC801\uC6A9\uB418\uB294 \uC751\uCD95
       \uC911\uCCA9 2\uBC30 \uC99D\uAC00."

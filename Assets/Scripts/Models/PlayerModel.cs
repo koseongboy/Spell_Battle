@@ -74,31 +74,6 @@ namespace Models.PlayerModels {
             }
         }
     }
-    
-    
-    // 덱 정보
-    [System.Serializable]
-    public class DeckData {
-        public string id; 
-        public string deckName;
-        public List<int> cardIds = new List<int>();
-        public string cardCountSummary; 
-        public Property representativeProperty;
-
-        public DeckData(string id, string name, List<int> ids, string summary, Property repProp) {
-            this.id = string.IsNullOrEmpty(id) ? Guid.NewGuid().ToString() : id;
-            this.deckName = name;
-            this.cardIds = new List<int>(ids);
-            this.cardCountSummary = summary;
-            this.representativeProperty = repProp;
-        }
-    }
-    
-    // PlayerPrefs에 여러 덱을 한 번에 JSON으로 저장하기 위한 래퍼 클래스
-    [System.Serializable]
-    public class DeckStorageWrapper {
-        public List<DeckData> decks = new List<DeckData>();
-    }
 
     public class PlayerModel : NetworkBehaviour {
         [Header("Stats")] public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
@@ -110,7 +85,7 @@ namespace Models.PlayerModels {
         public NetworkVariable<int> Shield = new NetworkVariable<int>(0);
         public NetworkVariable<Property> LastProperty = new NetworkVariable<Property>(Property.None);
 
-        // 🌟 핵심: 네트워크로 자동 동기화되는 상태이상 리스트
+        // 네트워크로 자동 동기화되는 상태이상 리스트
         // (일반 List나 Dictionary는 동기화가 안 되기 때문에 반드시 NetworkList를 써야 합니다!)
         public NetworkList<StatusData> ActiveStatuses;
 
@@ -341,6 +316,62 @@ namespace Models.PlayerModels {
 
             return totalStacks;
         }
+        
+        // 상태이상의 연장 (예: 발화 지속시간 증가)
+        public void ExtendStatusDuration(StatusType type, int amountToExtend) {
+            if (!IsServer) return;
+
+            // NetworkList를 순회하면서 같은 타입의 상태이상을 모두 찾음
+            for (int i = 0; i < ActiveStatuses.Count; i++) {
+                if (ActiveStatuses[i].Type == type) {
+                    var status = ActiveStatuses[i];
+                    
+                    // 영구 지속(-1)이 아닐 때만 연장
+                    if (status.Duration > 0) {
+                        status.Duration += amountToExtend;
+                        ActiveStatuses[i] = status; // 변경된 값 덮어쓰기
+                        Debug.Log($"[Player {OwnerClientId}] {type}의 지속 턴 수가 {amountToExtend}만큼 증가했습니다.");
+                    }
+                }
+            }
+        }
+        
+        // 상태이상 소모 없이 1회 강제 발동 (예: 빙결 폭발, 발화 강제 1회 틱)
+        public void TriggerStatusEffect(StatusType type) {
+            if (!IsServer) return;
+
+            int totalStacks = GetStatusStack(type);
+            if (totalStacks <= 0) return;
+
+            // 팩트: 기획상 발화와 빙결에 대한 강제 발동 효과만 명시되어 있습니다.
+            switch (type) {
+                case StatusType.Ignite:
+                    // 도트 데미지 강제 1회 적용
+                    TakeDamage(totalStacks, DamageType.Ignite);
+                    Debug.Log($"🔥 {type} 강제 1회 발동! 데미지: {totalStacks}");
+                    break;
+                case StatusType.Freeze:
+                    // 빙결 폭발 (추가 데미지) 구현 - 기획에 맞게 데미지 공식 세팅 (예: 스택 * 2)
+                    int freezeDamage = totalStacks * 2; 
+                    TakeDamage(freezeDamage, DamageType.Direct);
+                    Debug.Log($"❄️ {type} 강제 폭발! 데미지: {freezeDamage}");
+                    break;
+            }
+        }
+        
+        // 상태이상 중첩 수 배수 증가 (예: 다음 발화 스택 적용량 2배)
+        public void MultiplyStatusStack(StatusType type, int multiplier) {
+            if (!IsServer) return;
+
+            for (int i = 0; i < ActiveStatuses.Count; i++) {
+                if (ActiveStatuses[i].Type == type) {
+                    var status = ActiveStatuses[i];
+                    status.Stacks *= multiplier;
+                    ActiveStatuses[i] = status; // 변경된 값 덮어쓰기
+                    Debug.Log($"[Player {OwnerClientId}] {type}의 스택이 {multiplier}배로 증가했습니다! (현재: {status.Stacks})");
+                }
+            }
+        }
 
         // ==========================================
         // [서버 전용 권한] 카드 이동 메인 로직
@@ -408,7 +439,6 @@ namespace Models.PlayerModels {
                 }
 
                 // 2. 턴 지속시간 감소 및 만료된 상태이상 제거
-                // 🌟 주의: 리스트의 항목을 삭제할 때는 무조건 '뒤에서부터(역순으로)' 검사해야 버그가 안 납니다!
                 for (int i = ActiveStatuses.Count - 1; i >= 0; i--) {
                     var status = ActiveStatuses[i];
 
@@ -455,5 +485,75 @@ namespace Models.PlayerModels {
         private ulong GetEnemyClientId() {
             return OwnerClientId == 0 ? 1ul : 0ul;
         }
+        
+        
+        #region DEV
+        // 주의: NetworkVariable은 플레이 모드에서 스폰된 이후, 서버(호스트) 권한으로만 변경 가능합니다.
+
+        [ContextMenu("TEST: 데미지 5 받기")]
+        public void TestTakeDamage()
+        {
+            if (!Application.isPlaying) { Debug.LogWarning("플레이 모드에서 실행해주세요."); return; }
+            if (!IsServer) { Debug.LogWarning("서버(호스트) 권한이 필요합니다."); return; }
+    
+            TakeDamage(5); 
+            Debug.Log("[Test] 데미지 5 적용 완료. 체력 UI가 깎였는지 확인하세요.");
+        }
+
+        [ContextMenu("TEST: 체력 10 회복")]
+        public void TestHeal()
+        {
+            if (!Application.isPlaying || !IsServer) return;
+    
+            Heal(10);
+        }
+
+        [ContextMenu("TEST: 마나 2 사용")]
+        public void TestUseMana()
+        {
+            if (!Application.isPlaying || !IsServer) return;
+
+            if(TryUseMana(2))
+                Debug.Log("[Test] 마나 2 사용 완료. 마나 UI 색상이 변했는지 확인하세요.");
+            else
+                Debug.LogWarning("[Test] 마나가 부족하여 사용할 수 없습니다.");
+        }
+
+        [ContextMenu("TEST: 마나 전체 회복")]
+        public void TestRestoreMana()
+        {
+            if (!Application.isPlaying || !IsServer) return;
+    
+            ManaHeal(MaxMana.Value); // MaxMana만큼 회복
+        }
+
+        [ContextMenu("TEST: 발화 2스택 (3턴) 추가")]
+        public void TestAddIgnite()
+        {
+            if (!Application.isPlaying || !IsServer) return;
+    
+            AddStatus(StatusType.Ignite, 2, 3);
+            Debug.Log("[Test] 발화 상태이상 부여 완료. UI에 아이콘이 생성되었는지 확인하세요.");
+        }
+
+        [ContextMenu("TEST: 빙결 1스택 (2턴) 추가")]
+        public void TestAddFreeze()
+        {
+            if (!Application.isPlaying || !IsServer) return;
+    
+            AddStatus(StatusType.Freeze, 1, 2);
+        }
+
+        [ContextMenu("TEST: 보호막 5 획득")]
+        public void TestAddShield()
+        {
+            if (!Application.isPlaying || !IsServer) return;
+    
+            AddShield(5);
+            // 참고: 현재 코드는 보호막 스택을 상태이상 아이콘으로 띄우는 것이 아니라 
+            // Shield NetworkVariable로 관리하고 있습니다. UI에 반영하려면 UI 코드 수정이 필요할 수 있습니다.
+        }
+
+        #endregion
     }
 }

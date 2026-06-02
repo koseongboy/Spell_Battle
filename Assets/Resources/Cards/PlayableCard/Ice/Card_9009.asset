@@ -25,6 +25,7 @@ MonoBehaviour:
       statusType: 0
       targetProperty: 0
       specificCardId: 
+      isAbsoluteValue: 0
       condition: 0
       conditionProperty: 0
       conditionStatus: 0
@@ -34,4 +35,5 @@ MonoBehaviour:
       conditionalValue2: 0
       conditionalEffectType: 0
     Keywords: 
-    desc: "\uB2E4\uC74C \uC5F0\uBC1C \uD654\uC0B4 \uD69F\uC218 2\uD68C \uC99D\uAC00."
+    desc: "\uC8FC\uBB38\uC758 \uC18D\uC131\uC774 \uC5BC\uC74C\uC77C \uACBD\uC6B0
+      \uD53C\uD574\uB97C 3 \uC90D\uB2C8\uB2E4."

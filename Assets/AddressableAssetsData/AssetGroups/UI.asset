@@ -75,6 +75,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 83078fb12859c1e4faf079c985e606f8
+    m_Address: Ingame_FullScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 865bc487665166d4fbf090b32c19ca49
     m_Address: EnterGame_FullScreen
     m_ReadOnly: 0

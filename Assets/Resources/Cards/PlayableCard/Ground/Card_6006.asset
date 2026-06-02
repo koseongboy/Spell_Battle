@@ -15,7 +15,7 @@ MonoBehaviour:
   uiData:
     id: 6006
     wordName: "\uD669\uD3D0"
-    cost: 3
+    cost: 6
     property: 7
     Effects:
     - effectType: 9
@@ -25,6 +25,7 @@ MonoBehaviour:
       statusType: 0
       targetProperty: 0
       specificCardId: 
+      isAbsoluteValue: 0
       condition: 0
       conditionProperty: 0
       conditionStatus: 0
@@ -34,6 +35,6 @@ MonoBehaviour:
       conditionalValue2: 0
       conditionalEffectType: 0
     Keywords: 
-    desc: "\uB0B4 \uBCF4\uD638\uB9C9\uC744 \uBAA8\uB450 \uC18C\uBAA8\uD558\uC5EC
+    desc: "\uD604\uC7AC \uBCF4\uD638\uB9C9\uC744 \uBAA8\uB450 \uC18C\uBAA8\uD558\uC5EC
       \uC18C\uBAA8\uB41C \uC218\uCE58\uB9CC\uD07C \uC0C1\uB300\uBC29\uC5D0\uAC8C
-      \uB370\uBBF8\uC9C0."
+      \uB370\uBBF8\uC9C0\uB97C \uC90D\uB2C8\uB2E4."

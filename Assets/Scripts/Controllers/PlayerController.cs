@@ -7,6 +7,7 @@ using System;
 using Managers.LocalDataManagers;
 using System.Collections.Generic;
 using Controllers.TurnControllers;
+using DefaultNamespace;
 using Models.TurnModel;
 
 namespace Controllers.PlayerController
@@ -87,8 +88,8 @@ namespace Controllers.PlayerController
         #endregion
         [Header("MVP References")]
         public PlayerModel model;
-        public PlayerView view;
-        public EnemyView enemyView;
+        public PlayerUI playerUI;
+        public EnemyUI enemyUI;
 
         public int CurrentHp { get; private set; } = 100;
         public int CurrentMana { get; private set; } = 50;
@@ -97,32 +98,33 @@ namespace Controllers.PlayerController
 
         public override void OnNetworkSpawn() {
             // ==========================================
-            // 🌟 1. 방어선: 내 캐릭터가 아니면 UI 세팅을 '완벽하게' 무시하고 즉시 종료!
-            // (상대방 캐릭터가 스폰될 때 여기서 차단되므로 에러가 절대 안 납니다)
+            // 내 캐릭터가 아니면 UI 세팅을 무시하고 즉시 종료
+            // 상대방 캐릭터가 스폰될 때 여기서 차단됨
             // ==========================================
             if(IsOwner)
             {
-                // 내 캐릭터라면 내 화면 아래쪽(PlayerView)에 연결!
-                PlayerView view = PlayerView.Instance;
-                if (view != null) 
+                PlayerUI ui = PlayerUI.Instance; // 싱글톤으로 찾기
+                if (ui != null) 
                 {
-                    view.Bind(this.model); 
+                    ui.Bind(model); // 찾은 'ui'에 직접 바인딩
+                    Debug.Log("내 UI 바인딩 완료");
                 }
                 else 
                 {
-                    Debug.LogError("씬에 PlayerView(UI)가 없습니다!");
+                    Debug.LogError("씬에 PlayerUI가 없습니다!");
                 }
             }
             else
             {
-                EnemyView enemyView = EnemyView.Instance;
-                if (enemyView != null) 
+                EnemyUI enemyUi = EnemyUI.Instance; // 싱글톤으로 찾기
+                if (enemyUi != null) 
                 {
-                    enemyView.Bind(this.model); 
+                    enemyUi.Bind(this.model); // 찾은 'enemyUi'에 바인딩
+                    Debug.Log("적 UI 바인딩 완료");
                 }
                 else 
                 {
-                    Debug.LogError("씬에 EnemyView(UI)가 없습니다!");
+                    Debug.LogError("씬에 EnemyUI가 없습니다!");
                 }
             }
 
@@ -148,8 +150,8 @@ namespace Controllers.PlayerController
         public override void OnNetworkDespawn()
         {
             // 구독 해제 (메모리 누수 방지)
-            model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => view.UpdateHealth(newValue);
-            model.CurrentMana.OnValueChanged -= (oldValue, newValue) => view.UpdateMana(newValue);
+            model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => playerUI.UpdateHealth(newValue, model.MaxHealth.Value);
+            model.CurrentMana.OnValueChanged -= (oldValue, newValue) => playerUI.UpdateMana(newValue, model.MaxMana.Value, 10);
             model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
         }
 
@@ -158,7 +160,7 @@ namespace Controllers.PlayerController
         {
             // 리스트에 추가, 삭제, 갱신 등 어떤 변화가 생기든
             // View에게 "리스트 전체 줄 테니까 다시 그려!" 라고 던져줌
-            view.UpdateStatuses(model.ActiveStatuses);
+            playerUI.UpdateStatuses(model.ActiveStatuses);
         }
 
         // ==========================================

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee63e26454f1b8845a989f5b6b7b9694, type: 3}
-  m_Name: Card_10003
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cards.EffectInfos.GenericCard
   uiData:
     id: 10003
     wordName: "\uC800\uC8FC"
-    cost: 2
+    cost: 4
     property: 11
     Effects:
     - effectType: 10
@@ -25,6 +25,7 @@ MonoBehaviour:
       statusType: 0
       targetProperty: 0
       specificCardId: 
+      isAbsoluteValue: 0
       condition: 0
       conditionProperty: 0
       conditionStatus: 0
@@ -33,6 +34,6 @@ MonoBehaviour:
       conditionalValue1: 0
       conditionalValue2: 0
       conditionalEffectType: 0
-    Keywords: 
+    Keywords: 04000000
     desc: "\uB2E4\uC74C \uD134 \uB3D9\uC548 \uC0C1\uB300\uAC00 \uC8FC\uBB38\uC744
-      \uC4F8 \uB54C\uB9C8\uB2E4 \uC608\uC5B8 1 \uC99D\uAC00."
+      \uC4F8 \uB54C\uB9C8\uB2E4 \uB0B4 \uC608\uC5B8 \uC911\uCCA9\uC774 1 \uC99D\uAC00\uD569\uB2C8\uB2E4."

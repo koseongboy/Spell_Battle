@@ -16,14 +16,12 @@ namespace Cards.EffectInfos
 
             foreach (var effect in uiData.Effects)
             {
-                // 1. 조건 검사 (팩트 체크: 이전 주문 속성 일치 여부)
+                // 1. 조건 검사 (이전 주문 속성 일치 여부)
                 bool isConditionMet = false;
                 if (effect.condition == ConditionType.PrevPropertyMatch)
                 {
-                     // if (payload.LastSpellProperty == effect.conditionProperty)
-                     if (true) // TODO : 이전 주문 속성 가져오는 기능
-                     {
-                          isConditionMet = true;
+                     if (caster.LastProperty.Value == effect.conditionProperty) {
+                         isConditionMet = true;
                      }
                 }
 
@@ -35,17 +33,19 @@ namespace Cards.EffectInfos
                 PlayerModel finalTarget = (effect.targetType == TargetType.Enemy) ? enemy : caster;
 
                 // 4. 효과 종류에 따른 Command 매핑
-                switch (effect.effectType)
-                {
+                switch (effect.effectType) {
                     // [1] 데미지
                     case EffectType.Damage:
-                    case EffectType.DamageByShieldPercentage: // (수치 연산이 필요하다면 여기서 finalValue1을 미리 계산해서 넘김)
                         payload.AddCommand(new DamageCommand(finalTarget, finalValue1));
+                        break;
+
+                    case EffectType.DamageByShieldPercentage: 
+                        // 팩트: 실행 시점의 보호막을 깎아 데미지를 주기 위해 동적 커맨드로 변경 위임
+                        payload.AddCommand(new DynamicDamageCommand(finalTarget, DynamicValueType.CurrentShield, finalValue1 / 100f));
                         break;
 
                     // [2] 회복
                     case EffectType.Heal:
-                    case EffectType.HealByDamageTakenThisTurn:
                         payload.AddCommand(new HealCommand(finalTarget, finalValue1));
                         break;
 
@@ -54,38 +54,55 @@ namespace Cards.EffectInfos
                         payload.AddCommand(new ShieldCommand(finalTarget, finalValue1));
                         break;
 
-                    // [4] 상태 이상 부여 및 변경 ('분출' 효과 포함)
+                    // [4] 상태 이상 부여 및 세두 조작
                     case EffectType.AddStatus:
-                    case EffectType.MultiplyStatusDamage: // 분출: 타겟에게 '특정 상태이상 데미지 배수 증가' 디버프를 거는 것으로 처리
                         payload.AddCommand(new AddStatusCommand(finalTarget, effect.statusType, finalValue1, finalValue2));
                         break;
 
-                    // [5] 상태 이상 기폭 및 소모
+                    case EffectType.ModifyStatusDuration:
+                        // 대상의 발화 스택 등 지속시간을 증가시키는 기획 대응
+                        payload.AddCommand(new ManipulateStatusCommand(finalTarget, effect.statusType, StatusActionType.ExtendDuration, finalValue1));
+                        break;
+
+                    case EffectType.MultiplyStatusDamage:
+                        // 스택 혹은 데미지 배수를 증가시키는 기획 대응
+                        payload.AddCommand(new ManipulateStatusCommand(finalTarget, effect.statusType, StatusActionType.DoubleStacks));
+                        break;
+
+                    // [5] 상태 이상 즉시 기폭 및 소모
                     case EffectType.TriggerStatusInstantly:
+                        // 소모 없이 즉시 효과만 1회 발동하는 기획 대응
+                        payload.AddCommand(new ManipulateStatusCommand(finalTarget, effect.statusType, StatusActionType.TriggerOnce));
+                        break;
+
                     case EffectType.ConsumeStatusForDamage:
+                        // 기존의 모든 스택 소모/기폭 커맨드
                         payload.AddCommand(new DetonateStatusCommand(finalTarget, effect.statusType));
                         break;
 
-                    // [6] 카드 이동 및 덱 조작 (여러 개의 EffectType을 하나의 Command로 묶음)
+                    // [6] 코스트 조작 커맨드 매핑 추가
+                    case EffectType.ModifySpellCost:
+                        payload.AddCommand(new ModifyCostCommand(finalTarget, effect.targetType, finalValue1));
+                        break;
+
+                    // [7] 카드 이동 및 덱 조작
                     case EffectType.DrawCard:
                     case EffectType.DiscardRandom:
                     case EffectType.ShuffleSpecificCardToDeck:
                     case EffectType.ShuffleGraveToDeck:
-                        // finalValue1은 count(장수)로 사용되며, specificCardId는 특정 카드 생성 시 사용됩니다.
                         payload.AddCommand(new CardMovementCommand(finalTarget, effect.effectType, finalValue1, effect.specificCardId));
                         break;
 
-                    // [7] 마나 조작
+                    // [8] 마나 조작
                     case EffectType.GainMana:
                         payload.AddCommand(new ManaCommand(finalTarget, finalValue1));
                         break;
 
-                    // [8] 특수 시스템 제어
+                    // [9] 특수 시스템 제어
                     case EffectType.EndTurnInstantly:
                         payload.AddCommand(new SystemControlCommand(finalTarget, effect.effectType));
                         break;
 
-                    // 예외 처리
                     default:
                         Debug.LogWarning($"[GenericCard] 아직 매핑되지 않은 EffectType입니다: {effect.effectType}");
                         break;
@@ -101,8 +118,14 @@ namespace Cards.EffectInfos
         Freeze,      // 빙결
         Prophecy,    // 예언
         Condense,    // 응축
-        Reflect      // 반사
-        ,
-        Expose
+        Reflect,      // 반사
+        Expose,     // 방출
+        Wet,        // 젖음 (water)
+        Stun,       // 스턴 (1턴 쉬기)
+        Smash,      // 깨뜨림 (빙결 3스택)
+        Critical,       // 치명타
+        OverCharge,      // 과충전
+        Drain,       // 생명력 흡수
+        Ultimate        // 궁극기
     }
 }
