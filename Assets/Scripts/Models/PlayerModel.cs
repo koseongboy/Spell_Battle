@@ -92,6 +92,20 @@ namespace Models.PlayerModels
         public DeckModel Deck;
         public GraveyardModel Graveyard;
         public HandModel Hand; 
+        private int _expectedManaCost = 0;
+        public int ExpectedManaCost
+        {
+            get { return _expectedManaCost; }
+            set 
+            {
+                if (_expectedManaCost != value) 
+                {
+                    _expectedManaCost = value;
+                    OnExpectedManaChanged?.Invoke(_expectedManaCost);
+                }
+            }
+        }
+        public event Action<int> OnExpectedManaChanged;
 
         private void Awake()
         {

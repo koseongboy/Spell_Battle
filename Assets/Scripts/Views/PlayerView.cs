@@ -20,6 +20,7 @@ namespace Views.PlayerView // 기존에 쓰시던 네임스페이스 그대로 �
         public TextMeshProUGUI Text_Name;
         public TextMeshProUGUI Text_Hp;
         public TextMeshProUGUI Text_Mana;
+        public TextMeshProUGUI Text_ExpectedMana;
         public TextMeshProUGUI Text_Status;
         public TextMeshProUGUI Text_HandCount;
         public TextMeshProUGUI Text_DeckCount;
@@ -46,6 +47,7 @@ namespace Views.PlayerView // 기존에 쓰시던 네임스페이스 그대로 �
             // 2. 데이터 변경 구독 (NetworkVariable의 OnValueChanged 활용)
             model.CurrentHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(newValue);
             model.CurrentMana.OnValueChanged += (oldValue, newValue) => UpdateMana(newValue);
+            
             
             // 상태이상 리스트 구독
             model.ActiveStatuses.OnListChanged += (changeEvent) => UpdateStatuses(model.ActiveStatuses);
@@ -143,6 +145,25 @@ namespace Views.PlayerView // 기존에 쓰시던 네임스페이스 그대로 �
             Text_HandCount.text = $"손패: {handCount}장";
             
             Debug.Log($"🃏 내 손패 UI 업데이트 완료: {finalHandText}");
+        }
+
+        // ==========================================
+        // 🎨 예상 마나 갱신 로직
+        // ==========================================
+        public void UpdateExpectedMana(int expectedCost)
+        {
+            if (Text_ExpectedMana != null)
+            {
+                if (expectedCost == 0)
+                {
+                    Text_ExpectedMana.text = ""; // 선택한 게 없으면 글씨 숨기기
+                }
+                else
+                {
+                    Text_ExpectedMana.text = $"사용 예정 마나: -{expectedCost}";
+                    Text_ExpectedMana.color = Color.yellow; // 눈에 띄게 노란색으로!
+                }
+            }
         }
 
         private string ConvertIdToCardName(int id)
