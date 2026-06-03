@@ -40,6 +40,8 @@ namespace Controllers.TurnControllers {
         #region 1. 싱글톤 및 기본 변수 세팅 (Initialization)
 
         public static TurnController Instance { get; private set; }
+        [Header("배틀 씬 진짜 메인 카메라 (인스펙터 할당)")]
+        public Camera BattleMainCamera;
 
         [Header("연결된 플레이어 모델. 동적 할당이니 인스펙터에 박을 필요 X")]
         public PlayerModel MyPlayer; // 클라이언트 본인

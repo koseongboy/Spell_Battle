@@ -306,7 +306,7 @@ namespace DefaultNamespace {
 
             // 2. 접속을 허가해 줍니다. (이 처리를 해야 OnClientConnected로 넘어갑니다)
             response.Approved = true;
-            response.CreatePlayerObject = true;
+            response.CreatePlayerObject = false;
             response.Pending = false;
         }
 
