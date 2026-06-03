@@ -47,7 +47,7 @@ namespace DefaultNamespace
             _animSequence.Append(bgCanvasGroup.DOFade(0f, fadeDuration))
                          .Join(centerObject.DOAnchorPosX(-slideOffset, slideDuration).SetEase(Ease.InBack)); // InBack: 출발할 때 뒤로 살짝 당겼다 나가는 연출
 
-            // 7. [페이즈 4: 종료] 모든 연출이 끝나면 스스로 비활성화
+            // 7. [페이즈 4: 종료] 모든 연출이 끝나면 비활성화
             _animSequence.OnComplete(() => {
                 UILoader.Instance.HideUI("EnemyTurn_Top");
             });
