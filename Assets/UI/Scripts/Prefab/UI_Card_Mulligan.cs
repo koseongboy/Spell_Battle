@@ -38,6 +38,8 @@ namespace DefaultNamespace
 
         public void OnMulliganClicked()
         {
+            Debug.Log("OnMulliganClicked");
+            
             // 1. 시각적 상태 토글 (선택 <-> 해제)
             isSelected = !isSelected;
             UpdateVisuals();
@@ -48,7 +50,7 @@ namespace DefaultNamespace
 
         private void UpdateVisuals()
         {
-            if (checkMark != null) checkMark.SetActive(isSelected);
+            checkMark.SetActive(isSelected);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.UI;
 using Models.CardDatabases;
@@ -26,6 +27,8 @@ namespace DefaultNamespace
         private PlayerController localPlayer;
         private IObjectPool<UI_Card_Mulligan> _cardPool;
         private List<UI_Card_Mulligan> _activeCards = new List<UI_Card_Mulligan>();
+        
+        private bool isSubmitted = false;
 
         private void Awake()
         {
@@ -56,26 +59,60 @@ namespace DefaultNamespace
         
         private void OnDisable()
         {
+            if (localPlayer != null && localPlayer.model.Hand != null)
+            {
+                localPlayer.model.Hand.localHand.CollectionChanged -= OnHandChanged;
+            }
             ReleaseAllCards();
         }
         
         public void ReceiveData(PlayerController player) {
-            Debug.Log("Mulligan_Popup ReceiveData 진입");
             localPlayer = player;
-            MulliganPanel.SetActive(true);
+            isSubmitted = false;
             
+            MulliganPanel.SetActive(true);
             ExchangeButton.gameObject.SetActive(true);
             if (WaitingText != null) WaitingText.gameObject.SetActive(false);
             
             ReleaseAllCards();
 
-            // 기존에 컨테이너에 있던 더미 카드들 삭제
-            foreach (Transform child in CardContainer)
+            // 손패 변화 구독 (서버가 카드를 바꿔주면 감지함)
+            if (localPlayer.model.Hand != null)
             {
-                Destroy(child.gameObject);
+                localPlayer.model.Hand.localHand.CollectionChanged -= OnHandChanged; // 중복 방지
+                localPlayer.model.Hand.localHand.CollectionChanged += OnHandChanged;
             }
 
-            // 내 초기 손패를 읽어와서 멀리건 카드 UI 생성
+            // 화면에 카드 그리기
+            RefreshCards();
+        }
+
+        private void OnExchangeButtonClicked()
+        {
+            if (localPlayer != null)
+            {
+                isSubmitted = true;
+                localPlayer.SubmitFinalMulligan();
+            }
+            
+            ExchangeButton.gameObject.SetActive(false);
+            if (WaitingText != null) {
+                WaitingText.gameObject.SetActive(true);
+                WaitingText.text = "상대방을 기다리는 중...";
+            }
+        }
+        
+        // 서버에서 내 손패를 변경할 때마다 자동으로 실행되는 함수
+        private void OnHandChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            RefreshCards();
+        }
+        
+        // 카드 생성 로직을 별도 함수로 분리
+        private void RefreshCards()
+        {
+            ReleaseAllCards();
+
             var initialHand = localPlayer.model.Hand.localHand;
             for (int i = 0; i < initialHand.Count; i++)
             {
@@ -87,30 +124,18 @@ namespace DefaultNamespace
                 {
                     UI_Card_Mulligan cardUI = _cardPool.Get();
                     cardUI.transform.SetAsLastSibling();
-                    
-                    // Init: 클릭 시 PlayerController의 ToggleMulliganIndex를 호출하도록 람다식 전달
+
                     cardUI.Init(genericCard, i, (clickedIndex) => 
                     {
-                        localPlayer.ToggleMulliganIndex(clickedIndex);
+                        // 제출 전(isSubmitted == false)일 때만 카드 선택/취소 가능!
+                        if (!isSubmitted)
+                        {
+                            localPlayer.ToggleMulliganIndex(clickedIndex);
+                        }
                     });
-                    
-                    // 활성화된 카드 리스트에 추적 추가
+
                     _activeCards.Add(cardUI);
                 }
-            }
-        }
-
-        private void OnExchangeButtonClicked()
-        {
-            if (localPlayer != null)
-            {
-                localPlayer.SubmitFinalMulligan();
-            }
-            
-            ExchangeButton.gameObject.SetActive(false);
-            if (WaitingText != null) {
-                WaitingText.gameObject.SetActive(true);
-                WaitingText.text = "상대방을 기다리는 중...";
             }
         }
         
