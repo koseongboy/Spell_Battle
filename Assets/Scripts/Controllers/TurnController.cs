@@ -12,6 +12,7 @@ using Models.SpellPayloads;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Collections;
+using DefaultNamespace;
 using Random = UnityEngine.Random;
 
 namespace Controllers.TurnControllers {
@@ -51,14 +52,17 @@ namespace Controllers.TurnControllers {
         [Header("MVP References")] [SerializeField]
         private TurnModel model;
 
-        [SerializeField] private TurnView view;
-
+        // [SerializeField] private TurnView view;
+        [SerializeField] private UpperTurnUI ui;
+        
         [Header("Spawning")] [SerializeField] private GameObject playerPrefab; // 플레이어 캐릭터 프리팹
         [SerializeField] private Transform hostSpawnPoint; // 방장 위치
         [SerializeField] private Transform guestSpawnPoint; // 손님 위치
 
         [Header("멀리건 관련")] [SerializeField] private HashSet<ulong> mulliganReadyPlayers = new HashSet<ulong>();
 
+        // 턴 변경 시 Action
+        public static event Action<bool> OnTurnStateDetermined;
 
         public void Awake() {
             if (Instance == null) Instance = this;
@@ -68,12 +72,27 @@ namespace Controllers.TurnControllers {
         public override void OnNetworkSpawn() {
             // Model의 데이터 변경 구독 -> View 업데이트
             model.OnPhaseChangedEvent += HandlePhaseChanged;
+            // model.CurrentTurnPlayerId.OnValueChanged += HandleTurnChanged;
             if (IsServer) {
                 InitializeRoomAndSpawnPlayers();
             }
         }
+        
+        public override void OnNetworkDespawn() {
+            if (model != null) {
+                model.OnPhaseChangedEvent -= HandlePhaseChanged;
+                // model.CurrentTurnPlayerId.OnValueChanged -= HandleTurnChanged;
+            }
+        }
 
         #endregion
+        
+        // TurnController.cs 내부 어딘가
+        private void OnEnable()
+        {
+            model.OnPhaseChangedEvent += HandlePhaseChanged;
+            // model.CurrentTurnPlayerId.OnValueChanged += HandleTurnChanged;
+        }
 
         #region 2. 게임 준비 및 스폰 (Ready & Spawn)
 
@@ -204,16 +223,25 @@ namespace Controllers.TurnControllers {
         #endregion
 
         #region 4. 페이즈 흐름 제어 (Phase Management)
-        // ui띄우는 건 여기다 하면 됨 (todo)
+        // private void HandleTurnChanged(ulong previousTurnId, ulong newTurnId)
+        // {
+        //     bool isMyTurn = (newTurnId == NetworkManager.Singleton.LocalClientId);
+        //     ui.SetTurnState(isMyTurn);
+        // }
+
         private void HandlePhaseChanged(GamePhase newPhase, bool isMyTurn)
         {
-            view.UpdateUI(newPhase, isMyTurn);
+            ui.SetTurnState(isMyTurn);
 
             switch (newPhase) {
                 case GamePhase.Draw:
-                    if (isMyTurn) view.LogMessage("내 턴 시작! 카드를 드로우합니다.");
-                    
-                    // 🌟 서버인 경우: 현재 턴인 플레이어 모델을 찾아서 인자로 넘겨줍니다!
+                    if (isMyTurn) {
+                        // TODO : "내 턴" Popup
+                    }
+                    else {
+                        // TODO : "상태 턴" Popup
+                    }
+
                     if (IsServer) 
                     {
                         ulong currentPlayerId = model.CurrentTurnPlayerId.Value;
@@ -226,7 +254,7 @@ namespace Controllers.TurnControllers {
                     }
                     break;
                 case GamePhase.Incantation:
-                    if (isMyTurn) view.LogMessage("스페이스바를 눌러 마법을 영창하세요!");
+                    // if (isMyTurn) view.LogMessage("스페이스바를 눌러 마법을 영창하세요!");
                     break;
                 case GamePhase.Battle:
                     //todo 배틀 어쩌고 하기

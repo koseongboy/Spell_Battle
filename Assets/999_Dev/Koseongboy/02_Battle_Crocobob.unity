@@ -1408,6 +1408,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8031339192871210686, guid: 3f9b178ccd3b86f4ebbfc1f5a2815e56, type: 3}
   m_PrefabInstance: {fileID: 580750380}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &674544198 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6279490103633068966, guid: 83078fb12859c1e4faf079c985e606f8, type: 3}
+  m_PrefabInstance: {fileID: 838979455}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0e744889cb1eee4e8010737d2594613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.UpperTurnUI
 --- !u!1 &677525867
 GameObject:
   m_ObjectHideFlags: 0
@@ -2278,7 +2289,7 @@ MonoBehaviour:
   MyPlayer: {fileID: 0}
   EnemyPlayer: {fileID: 0}
   model: {fileID: 1015416321}
-  view: {fileID: 41178057}
+  ui: {fileID: 674544198}
   playerPrefab: {fileID: 5534150444609738042, guid: 095936175cf45954184d659c27824bc0, type: 3}
   hostSpawnPoint: {fileID: 1766443283}
   guestSpawnPoint: {fileID: 1240849230}

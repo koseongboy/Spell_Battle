@@ -233,7 +233,7 @@ namespace Controllers.PlayerController
 
             // 1. 선택한 카드의 정보와 코스트를 데이터베이스에서 가져옵니다.
             int cardId = model.Hand.GetCardIdAt(index);
-            var cardData = Models.CardDatabases.CardDatabase.GetCardById(cardId);
+            var cardData = CardDatabase.GetCardById(cardId);
             int cost = cardData != null ? cardData.uiData.cost : 0;
 
             if (_selectedSpellIndices.Contains(index))
@@ -241,21 +241,29 @@ namespace Controllers.PlayerController
                 // 2-A. 선택 취소 시 마나 비용 반환
                 _selectedSpellIndices.Remove(index);
                 model.ExpectedManaCost -= cost;
-                Debug.Log($"[Select] ❌ {index + 1}번 취소. (예상 마나 소모: {model.ExpectedManaCost} / {model.CurrentMana.Value})");
+                
+                if (PlayerUI.Instance != null)
+                {
+                    PlayerUI.Instance.ToggleCardHighlight(index, false);
+                }
             }
             else
             {
                 // 2-B. 새로운 카드 선택 시 마나 초과 검증
                 if (model.ExpectedManaCost + cost > model.CurrentMana.Value)
                 {
-                    Debug.LogWarning("[Select] 🚫 마나가 부족하여 이 카드를 선택할 수 없습니다!");
-                    // TODO: PlayerView를 통해 화면 중앙에 "마나 부족!" 경고 텍스트 띄우기
+                    CommonUIController.Instance.ShowRedAlert("마나가 부족합니다!");
                     return; 
                 }
 
                 _selectedSpellIndices.Add(index);
                 model.ExpectedManaCost += cost;
                 Debug.Log($"[Select] 🪄 {index + 1}번 추가. (예상 마나 소모: {model.ExpectedManaCost} / {model.CurrentMana.Value})");
+
+                if (PlayerUI.Instance != null)
+                {
+                    PlayerUI.Instance.ToggleCardHighlight(index, true);
+                }
             }
 
             // 3. todo: UI 업데이트 지시 (PlayerView에 예상 코스트를 전달하여 텍스트 색상을 바꾸는 등 시각화)
