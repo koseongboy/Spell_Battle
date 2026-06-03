@@ -15,6 +15,7 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI costText;
         [SerializeField] private TextMeshProUGUI descText;
         [SerializeField] private Image image;
+        [SerializeField] private GameObject highlight;
         
         [Header("비주얼 오브젝트 (자식 객체 연결)")]
         [SerializeField] private Transform visualTransform;
@@ -35,6 +36,7 @@ namespace DefaultNamespace
 
         // 상태 변수들
         private Vector3 originalScale;
+        private bool isSelected = false;
         private bool isHovering = false;
         private float hoverTimer = 0f;
         
@@ -44,8 +46,10 @@ namespace DefaultNamespace
         }
 
         // Init: 클릭 시 넘겨줄 index와 Action<int>로 수정됨
-        public void Init(GenericCard data, int index, Action<int> clickAction) 
-        {
+        public void Init(GenericCard data, int index, Action<int> clickAction) {
+            isSelected = false;
+            highlight.SetActive(isSelected);
+            
             cardData = data;
             handIndex = index;
             onClickAction = clickAction;
@@ -103,7 +107,6 @@ namespace DefaultNamespace
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                // 🌟 클릭했을 때도 롱 호버 타이머를 꺼버림 (클릭했는데 창이 뜨면 안 되니까)
                 if (hoverCoroutine != null)
                 {
                     StopCoroutine(hoverCoroutine);
@@ -111,6 +114,15 @@ namespace DefaultNamespace
                 }
 
                 onClickAction?.Invoke(handIndex);
+            }
+        }
+        
+        public void SetHighlight(bool isOn)
+        {
+            isSelected = isOn;
+            if (highlight != null)
+            {
+                highlight.SetActive(isSelected);
             }
         }
         

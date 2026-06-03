@@ -22,22 +22,28 @@ namespace DefaultNamespace {
         public static PlayerUI Instance { get; private set; }
 
 
-        [Header("체력 UI")] public TextMeshProUGUI Text_Hp;
+        [Header("체력 UI")] 
+        public TextMeshProUGUI Text_Hp;
 
         public Slider Slider_Hp;
 
-        [Header("마나 UI")] public TextMeshProUGUI Text_Mana;
+        [Header("마나 UI")] 
+        public TextMeshProUGUI Text_Mana;
         public Image[] ManaSlots; // 하스스톤 스타일 마나 아이콘 10개 배열
 
-        [Header("마나 색상 설정")] public Color Color_AvailableMana = new Color(0.4f, 0.8f, 1f); // 2. 사용 가능한 마나 (밝은 하늘색)
+        [Header("마나 색상 설정")] 
+        public Color Color_ExpectedMana = Color.white; // 소모 예정 마나 (흰색)
+        public Color Color_AvailableMana = new Color(0.4f, 0.8f, 1f); // 2. 사용 가능한 마나 (밝은 하늘색)
         public Color Color_UsedMana = new Color(0.1f, 0.3f, 0.5f); // 3. 이미 사용한 마나 (어두운 하늘색)
         public Color Color_LockedMana = Color.gray; // 1. 아직 도달하지 않은 최대 마나 (회색)
 
-        [Header("상태이상 UI 설정")] public Transform StatusGrid; // GridLayoutGroup이 붙은 상태이상 부모 객체
+        [Header("상태이상 UI 설정")] 
+        public Transform StatusGrid; // GridLayoutGroup이 붙은 상태이상 부모 객체
         public GameObject StatusIconPrefab; // StatusIcon.cs가 붙은 프리팹
         public StatusIconDatabase IconDatabase;
 
-        [Header("손패 UI 설정")] public Transform HandContainer;
+        [Header("손패 UI 설정")] 
+        public Transform HandContainer;
         public GameObject CardPrefab;
         public Action<int> OnCardClickedAction;
 
@@ -73,11 +79,13 @@ namespace DefaultNamespace {
             model.MaxHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(model.CurrentHealth.Value, newValue);
 
             // 2. 마나 바인딩 (Current, Max, Final 모두 추적)
-            UpdateMana(model.CurrentMana.Value, model.MaxMana.Value, model.FinalMana.Value);
+            UpdateMana(model.CurrentMana.Value, model.MaxMana.Value, model.FinalMana.Value, model.ExpectedManaCost);
             model.CurrentMana.OnValueChanged += (oldValue, newValue) =>
                 UpdateMana(newValue, model.MaxMana.Value, model.FinalMana.Value);
             model.MaxMana.OnValueChanged += (oldValue, newValue) =>
                 UpdateMana(model.CurrentMana.Value, newValue, model.FinalMana.Value);
+            model.OnExpectedManaChanged += (newExpectedMana) => 
+                UpdateMana(model.CurrentMana.Value, model.MaxMana.Value, model.FinalMana.Value, newExpectedMana);
 
             // 3. 기타 상태 및 카드 정보 바인딩
             UpdateStatuses(model.ActiveStatuses);
@@ -97,27 +105,32 @@ namespace DefaultNamespace {
             }
         }
 
-        public void UpdateMana(int currentMana, int maxMana, int finalMana) {
+        public void UpdateMana(int currentMana, int maxMana, int finalMana, int expectedMana = 0) {
             Text_Mana.text = currentMana.ToString();
 
             if (ManaSlots == null || ManaSlots.Length == 0) return;
 
+            // 소모 후 남을 진짜 가용 마나 계산
+            int remainingMana = currentMana - expectedMana;
+
             for (int i = 0; i < ManaSlots.Length; i++) {
                 if (i >= finalMana) {
-                    // 최대 한계치(FinalMana)를 넘어가는 슬롯은 아예 숨김 처리
                     ManaSlots[i].gameObject.SetActive(false);
                 }
                 else {
                     ManaSlots[i].gameObject.SetActive(true);
 
-                    if (i < currentMana) {
-                        ManaSlots[i].color = Color_AvailableMana; // 현재 사용 가능한 마나
+                    if (i < remainingMana) {
+                        ManaSlots[i].color = Color_AvailableMana; // 아직 안 쓰고 남는 마나
+                    }
+                    else if (i < currentMana) {
+                        ManaSlots[i].color = Color_ExpectedMana; // 이번에 선택한 카드로 인해 소모될 마나 (하얗게 하이라이트)
                     }
                     else if (i < maxMana) {
-                        ManaSlots[i].color = Color_UsedMana; // 이번 턴에 이미 사용한 마나
+                        ManaSlots[i].color = Color_UsedMana; // 이미 소비해서 비어있는 마나
                     }
                     else {
-                        ManaSlots[i].color = Color_LockedMana; // 아직 해금되지 않은 마나 슬롯
+                        ManaSlots[i].color = Color_LockedMana; // 아직 해금되지 않은 마나
                     }
                 }
             }
@@ -187,6 +200,15 @@ namespace DefaultNamespace {
             // 3. 🌟 생성된 카드들을 부채꼴로 예쁘게 정렬하도록 매니저 호출
             if (HandLayoutManager.Instance != null) {
                 HandLayoutManager.Instance.ArrangeCards(activeCards);
+            }
+        }
+        
+        public void ToggleCardHighlight(int index, bool isOn)
+        {
+            // 안전망: 인덱스가 범위를 벗어나지 않았는지 체크
+            if (index >= 0 && index < activeCards.Count)
+            {
+                activeCards[index].SetHighlight(isOn);
             }
         }
     }
