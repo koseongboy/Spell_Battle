@@ -7,6 +7,7 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Cards.EffectInfos;
+using Controllers.TurnControllers;
 using Models.CardDatabases;
 using UnityEngine.Pool;
 
@@ -46,6 +47,10 @@ namespace DefaultNamespace {
         public Transform HandContainer;
         public GameObject CardPrefab;
         public Action<int> OnCardClickedAction;
+        
+        [Header("우하단 버튼")]
+        public Button btn_endTurn;
+        public Button btn_spell;
 
         private IObjectPool<UI_Card_InHand> cardPool;
         private List<UI_Card_InHand> activeCards = new List<UI_Card_InHand>();
@@ -95,6 +100,9 @@ namespace DefaultNamespace {
                 UpdateHandInfo(model.Hand.localHand);
                 model.Hand.localHand.CollectionChanged += (sender, e) => UpdateHandInfo(model.Hand.localHand);
             }
+            
+            btn_endTurn.onClick.AddListener( ()=>TurnController.Instance.RequestEndTurn() );
+            
         }
 
         public void UpdateHealth(int currentHp, int maxHp) {
