@@ -360,9 +360,10 @@ namespace Controllers.TurnControllers {
         {
             SpellPayload payload = new SpellPayload();
             
-            //todo ㅜㅜ
-            payload.EvalData.Concept = "건방지게";
-            payload.EvalData.RequiredPrefix = "칠흑의 심연에서 눈뜬 자여";
+            var randomIncantation = Managers.IncantationManager.Instance.GetRandomIncantation();
+            
+            payload.EvalData.Concept = randomIncantation.concept;
+            payload.EvalData.RequiredPrefix = randomIncantation.prefix;
 
             List<string> keywordList = new List<string>();
             foreach (var card in selectedCards)
