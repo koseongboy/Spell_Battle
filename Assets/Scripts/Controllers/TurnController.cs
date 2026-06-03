@@ -236,10 +236,10 @@ namespace Controllers.TurnControllers {
             switch (newPhase) {
                 case GamePhase.Draw:
                     if (isMyTurn) {
-                        // TODO : "내 턴" Popup
+                        UILoader.Instance.ShowUI("MyTurn_Top");
                     }
                     else {
-                        // TODO : "상태 턴" Popup
+                        UILoader.Instance.ShowUI("EnemyTurn_Top");
                     }
 
                     if (IsServer) 

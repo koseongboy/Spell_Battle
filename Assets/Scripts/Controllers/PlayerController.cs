@@ -330,7 +330,7 @@ namespace Controllers.PlayerController
             // 서버 TurnController의 Rpc 접수처로 발송
             TurnController.Instance.SubmitMulliganServerRpc(replaceCardIds.ToArray());
 
-            // 다음 테스트를 위해 내가 선택했던 기록 깨끗이 비우기
+            // 내가 선택했던 기록 깨끗이 비우기
             _selectedMulliganIndices.Clear();
         }
 
