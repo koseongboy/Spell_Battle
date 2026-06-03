@@ -4,6 +4,7 @@ using Models.PlayerModels;
 using Views.PlayerView;
 using Views.EnemyView;
 using System;
+using System.Collections;
 using Managers.LocalDataManagers;
 using System.Collections.Generic;
 using Controllers.TurnControllers;
@@ -101,58 +102,56 @@ namespace Controllers.PlayerController
         private HashSet<int> _selectedSpellIndices = new HashSet<int>();
 
         
-        
-
         public override void OnNetworkSpawn() {
+            // NGO의 스폰 속보다 UI 초기화보다 빨라져서, 준비될 때까지 기다리게 함
+            StartCoroutine(WaitAndInitialize());
+        }
+        
+        private IEnumerator WaitAndInitialize()
+        {
             // ==========================================
             // 내 캐릭터가 아니면 UI 세팅을 무시하고 즉시 종료
             // 상대방 캐릭터가 스폰될 때 여기서 차단됨
             // ==========================================
+
             if(IsOwner)
             {
-                PlayerUI ui = PlayerUI.Instance; // 싱글톤으로 찾기
-                if (ui != null) 
+                // 1. 내 캐릭터에 필요한 3대장(UI, TurnModel, DataManager)이 켜질 때까지 무한 대기!
+                while (PlayerUI.Instance == null || TurnModel.Instance == null || LocalDataManager.Instance == null)
                 {
-                    ui.Bind(model); // 찾은 'ui'에 직접 바인딩
-                    Debug.Log("내 UI 바인딩 완료");
+                    yield return null; // 다음 프레임까지 대기
                 }
-                else 
+
+                // 2. 모두 준비가 끝났으므로 안전하게 기존 로직 실행
+                PlayerUI.Instance.Bind(model); 
+                PlayerUI.Instance.OnCardClickedAction += ToggleSpellIndex;
+                Debug.Log("✅ 내 UI 바인딩 완료");
+                
+                if (model.Deck != null)
                 {
-                    Debug.LogError("씬에 PlayerUI가 없습니다!");
-                }
-                // ==========================================
-                // 🌟 3. [핵심] 내 로컬 덱을 꺼내서 서버로 제출!
-                // ==========================================
-                if (LocalDataManager.Instance != null && model.Deck != null)
-                {
-                    // 내 주머니에서 덱 리스트를 꺼내옵니다.
                     List<int> myDeck = LocalDataManager.Instance.equippedDeck;
-                    
-                    // 리스트를 배열(.ToArray())로 변환해서 서버(DeckModel)로 쏴줍니다!
                     model.Deck.SubmitDeckServerRpc(myDeck.ToArray());
-                    
                     Debug.Log("🌐 내 덱을 서버(DeckModel)로 성공적으로 발송했습니다.");
                 }
-                else
+
+                TurnModel.Instance.OnPhaseChangedEvent += HandlePhaseChange;
+                
+                if (TurnModel.Instance.CurrentPhase.Value == GamePhase.Mulligan)
                 {
-                    Debug.LogError("LocalDataManager 또는 DeckModel이 없어서 덱을 제출할 수 없습니다!");
+                    HandlePhaseChange(GamePhase.Mulligan, false); 
                 }
             }
             else
             {
-                EnemyUI enemyUi = EnemyUI.Instance; // 싱글톤으로 찾기
-                if (enemyUi != null) 
+                // 상대방 캐릭터는 적 UI만 기다림
+                while (EnemyUI.Instance == null)
                 {
-                    enemyUi.Bind(this.model); // 찾은 'enemyUi'에 바인딩
-                    Debug.Log("적 UI 바인딩 완료");
+                    yield return null;
                 }
-                else 
-                {
-                    Debug.LogError("씬에 EnemyUI가 없습니다!");
-                }
-            }
 
-            
+                EnemyUI.Instance.Bind(this.model);
+                Debug.Log("✅ 적 UI 바인딩 완료");
+            }
         }
 
         public override void OnNetworkDespawn()
@@ -171,6 +170,29 @@ namespace Controllers.PlayerController
             model.Shield.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateShield(newValue);
             model.LastProperty.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateLastProperty(newValue);
             model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+            
+            // 🌟 팝업이 꺼질 때 Instance가 null일 수 있으므로 널 체크 추가 (? 기호 사용)
+            if (TurnModel.Instance != null) TurnModel.Instance.OnPhaseChangedEvent -= HandlePhaseChange;
+            if (PlayerUI.Instance != null) PlayerUI.Instance.OnCardClickedAction -= ToggleSpellIndex;
+        }
+        
+        private void HandlePhaseChange(GamePhase phase, bool isMyTurn)
+        {
+            // 내 캐릭터 컨트롤러가 아니면 무시
+            if (!IsOwner) return;
+
+            // 멀리건은 선공/후공 상관없이 양쪽 플레이어 모두 진행해야 하므로 isMyTurn을 따지지 않음
+            if (phase == GamePhase.Mulligan)
+            {
+                UILoader.Instance.ShowUI("Mulligan_FullScreen", this);
+                Debug.Log("🃏 멀리건 페이즈 진입: 멀리건 UI를 엽니다.");
+            } // 멀리건이 무사히 끝나고 Draw 페이즈로 넘어가면 화면을 닫음
+            else if (phase == GamePhase.Draw)
+            {
+                UILoader.Instance.HideUI("Mulligan_FullScreen");
+                Debug.Log("🃏 멀리건 종료: 게임을 시작합니다.");
+                UILoader.Instance.ShowUI("Ingame_FullScreen");
+            }
         }
 
         // NetworkList의 이벤트 핸들러
@@ -184,9 +206,10 @@ namespace Controllers.PlayerController
         // ==========================================
         // 🔄 숫자키 입력 시 등록 / 취소를 껐다 켜는 토글 함수 (라고는 하지만 실제 ui 구현 시에도 사용하면 좋을 것 같아서 아래 배치)
         // ==========================================
-        private void ToggleMulliganIndex(int index)
+        public void ToggleMulliganIndex(int index)
         {
             // [안전장치] 현재 내 손패 장수보다 큰 숫자를 누르면 무시
+            // TODO : 여기 이거 뭐임?
             // 🚨 주석 해제하여 본인의 HandModel 구조에 맞게 수정하세요 (예: model.Hand.CurrentHand.Count 등)
             // if (model.Hand == null || model.Hand.GetTotalCardCount() <= index) return;
 
@@ -204,7 +227,7 @@ namespace Controllers.PlayerController
             }
         }
 
-        private void ToggleSpellIndex(int index)
+        public void ToggleSpellIndex(int index)
         {
             if (model.Hand == null || index >= model.Hand.GetLocalHandCount()) return;
 
@@ -242,7 +265,7 @@ namespace Controllers.PlayerController
         // ==========================================
         // 🚀 M키 입력 시 서버로 Rpc 통신을 날리는 함수
         // ==========================================
-        private void SubmitFinalMulligan()
+        public void SubmitFinalMulligan()
         {
             List<int> replaceCardIds = new List<int>();
 

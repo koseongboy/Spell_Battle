@@ -26,7 +26,6 @@ namespace DefaultNamespace {
         [SerializeField] private TextMeshProUGUI txt_GuestRank;
         [SerializeField] private TextMeshProUGUI txt_GuestScore;
         [SerializeField] private GameObject img_GuestReadyCheck;
-        [SerializeField] private GameObject inviteButton;
 
 
         [Header("Lower Buttons")] [SerializeField]
@@ -122,7 +121,6 @@ namespace DefaultNamespace {
 
         // 게스트(손님) 정보 세팅
         public void UpdateGuestUI( /* 매개변수로 플레이어 데이터 객체 전달 */) {
-            inviteButton.SetActive(false);
             guestSlotGroup.SetActive(true);
 
             // TODO
@@ -140,8 +138,6 @@ namespace DefaultNamespace {
 
             // 확실하게 이미지도 꺼줍니다.
             img_GuestReadyCheck.SetActive(false);
-
-            inviteButton.SetActive(true);
         }
 
 
