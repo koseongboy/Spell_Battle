@@ -181,17 +181,21 @@ namespace Controllers.PlayerController
             // 내 캐릭터 컨트롤러가 아니면 무시
             if (!IsOwner) return;
 
+            // 내 턴이 아니게 되거나, 카드 선택(Select) 페이즈를 벗어나면 선택을 강제 초기화합니다.
+            if (!isMyTurn || phase != GamePhase.Select)
+            {
+                ClearSpellSelections();
+            }
+
             // 멀리건은 선공/후공 상관없이 양쪽 플레이어 모두 진행해야 하므로 isMyTurn을 따지지 않음
             if (phase == GamePhase.Mulligan)
             {
                 UILoader.Instance.ShowUI("Mulligan_FullScreen", this);
-                Debug.Log("🃏 멀리건 페이즈 진입: 멀리건 UI를 엽니다.");
-            } // 멀리건이 무사히 끝나고 Draw 페이즈로 넘어가면 화면을 닫음
+            } 
+            // 멀리건이 무사히 끝나고 Draw 페이즈로 넘어가면 화면을 닫음
             else if (phase == GamePhase.Draw)
             {
                 UILoader.Instance.HideUI("Mulligan_FullScreen");
-                Debug.Log("🃏 멀리건 종료: 게임을 시작합니다.");
-                UILoader.Instance.ShowUI("Ingame_FullScreen");
             }
         }
 
@@ -230,6 +234,13 @@ namespace Controllers.PlayerController
         public void ToggleSpellIndex(int index)
         {
             if (model.Hand == null || index >= model.Hand.GetLocalHandCount()) return;
+            // 1. 내 턴(Select 페이즈)이 아니면 조작 불가하도록 방어
+            if (TurnModel.Instance == null || 
+                TurnModel.Instance.CurrentPhase.Value != GamePhase.Select || 
+                TurnModel.Instance.CurrentTurnPlayerId.Value != NetworkManager.Singleton.LocalClientId) 
+            {
+                return; 
+            }
 
             // 1. 선택한 카드의 정보와 코스트를 데이터베이스에서 가져옵니다.
             int cardId = model.Hand.GetCardIdAt(index);
@@ -268,6 +279,25 @@ namespace Controllers.PlayerController
 
             // 3. todo: UI 업데이트 지시 (PlayerView에 예상 코스트를 전달하여 텍스트 색상을 바꾸는 등 시각화)
             // view.UpdateExpectedManaUI(_expectedManaCost, model.CurrentMana.Value);
+        }
+        
+        private void ClearSpellSelections()
+        {
+            if (_selectedSpellIndices.Count == 0) return;
+
+            // 1. UI의 모든 하이라이트(Selected) 표현 끄기
+            if (PlayerUI.Instance != null)
+            {
+                foreach (int index in _selectedSpellIndices)
+                {
+                    PlayerUI.Instance.ToggleCardHighlight(index, false);
+                }
+            }
+
+            // 2. 데이터 및 마나 초기화
+            _selectedSpellIndices.Clear();
+            model.ExpectedManaCost = 0;
+            Debug.Log("카드 선택 및 UI 하이라이트가 모두 초기화되었습니다.");
         }
 
         // ==========================================
@@ -318,8 +348,7 @@ namespace Controllers.PlayerController
             // 선택 완료! 서버에 '이 카드들로 마법을 준비하겠다'고 선언하고 Incantation 페이즈로 넘어갑니다.
             TurnController.Instance.ProcessSpellCast(selectedCards);
             
-            _selectedSpellIndices.Clear();
-            model.ExpectedManaCost = 0;
+            ClearSpellSelections();
         }
 
     }
