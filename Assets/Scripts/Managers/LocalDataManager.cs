@@ -13,7 +13,7 @@ namespace Managers.LocalDataManagers
         public string userToken = "";
 
         [Header("필수 플레이어 정보 (항상 들고 다니는 데이터)")]
-        public string nickname = "Guest";
+        public string nickname = "비로그인맨";
         public int level = 1;
         public int gold = 0;
         public int selectedAvatarId = 0;

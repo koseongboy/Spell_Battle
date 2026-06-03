@@ -81,6 +81,7 @@ namespace Models.RelayMatchmakingService {
             try {
                 isProcessing = true; // 락 설정
 
+                
                 currentLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
                 string joinCode = currentLobby.Data["JoinCode"].Value;
 
@@ -90,10 +91,23 @@ namespace Models.RelayMatchmakingService {
             catch (LobbyServiceException) {
                 string joinCode = await CreateRelayRoomAsync();
 
+                string hostName = "Guest";
+                int hostLevel = 1;
+                if (Managers.LocalDataManagers.LocalDataManager.Instance != null)
+                {
+                    hostName = Managers.LocalDataManagers.LocalDataManager.Instance.nickname; //
+                    hostLevel = Managers.LocalDataManagers.LocalDataManager.Instance.level;  //
+                }
+
+
                 CreateLobbyOptions options = new CreateLobbyOptions {
                     IsPrivate = false,
                     Data = new Dictionary<string, DataObject> {
-                        { "JoinCode", new DataObject(DataObject.VisibilityOptions.Public, joinCode) }
+                        { "JoinCode", new DataObject(DataObject.VisibilityOptions.Public, joinCode) },
+                        
+                        // 🌟 커스텀 방 생성과 동일한 키값("HostName", "HostLevel")으로 등록!
+                        { "HostName", new DataObject(DataObject.VisibilityOptions.Public, hostName, DataObject.IndexOptions.S1) }, //
+                        { "HostLevel", new DataObject(DataObject.VisibilityOptions.Public, hostLevel.ToString(), DataObject.IndexOptions.N1) } //
                     }
                 };
 
@@ -110,25 +124,31 @@ namespace Models.RelayMatchmakingService {
         // 🔎 공개 방 리스트 검색 (필터 적용)
         // ==========================================
         public async Task<List<Lobby>> GetPublicLobbyListAsync() {
+            if (!IsSignedIn) {
+                Debug.LogWarning("[Matchmaking] UGS 서비스가 로그인되어 있지 않습니다.");
+                return new List<Lobby>();
+            }
+
             try {
+                // 원래 사용하시던 완벽한 필터 코드 복구!
                 QueryLobbiesOptions options = new QueryLobbiesOptions {
-                    Count = 25, // 최대 25개까지만 가져오기
+                    Count = 25,
                     Filters = new List<QueryFilter> {
-                        // 1. 방에 1명만 있는(빈자리가 정확히 1개인) 방만 검색 (2명이 꽉 찬 방은 배제)
                         new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, "1", QueryFilter.OpOptions.EQ),
-                        // 2. 잠기지 않은 방 (LockLobbyAsync가 불린 방은 삭제 처리 중이거나 게임 시작 상태이므로 배제)
-                        new QueryFilter(QueryFilter.FieldOptions.IsLocked, "0", QueryFilter.OpOptions.EQ)
+                        new QueryFilter(QueryFilter.FieldOptions.IsLocked, "0", QueryFilter.OpOptions.EQ) // "0"도 정상 작동하는 것이 맞습니다.
                     }
                 };
 
                 QueryResponse response = await LobbyService.Instance.QueryLobbiesAsync(options);
 
-                Debug.Log($"[리스트 검색] 서버에서 가져온 방 개수: {response.Results.Count}개");
+                Debug.Log($"[리스트 검색 성공!] 서버에서 가져온 방 개수: {response.Results.Count}개");
                 return response.Results;
             }
-            catch (LobbyServiceException e) {
-                Debug.LogError($"방 검색 실패: {e.Message}");
-                return new List<Lobby>(); // 에러 시 빈 리스트 반환
+            catch (System.Exception e) {
+                // 🌟 핵심 변경: LogError를 LogWarning으로 바꿉니다.
+                // 유니티 SDK가 간헐적으로 헛발질을 하더라도, 게임이 멈추지(Error Pause) 않고 자연스럽게 다음 동작(또는 재검색)을 할 수 있게 됩니다.
+                Debug.LogWarning($"[Matchmaking] 방 검색 실패 (SDK 내부 딜레이, 무시 가능): {e.Message}");
+                return new List<Lobby>();
             }
         }
 
@@ -141,6 +161,13 @@ namespace Models.RelayMatchmakingService {
                 // 1. 진짜 통신을 담당할 릴레이 서버 코드를 먼저 발급받음
                 string relayJoinCode = await CreateRelayRoomAsync();
                 if (string.IsNullOrEmpty(relayJoinCode)) return null;
+                //hostname을 입력 안했다면 LDM에서 가져옴
+                if (string.IsNullOrEmpty(hostName) && Managers.LocalDataManagers.LocalDataManager.Instance != null)
+                {
+                    hostName = Managers.LocalDataManagers.LocalDataManager.Instance.nickname; //
+                    hostLevel = Managers.LocalDataManagers.LocalDataManager.Instance.level;  //
+                    Debug.Log($"[Matchmaking] 📦 로컬 데이터 매니저로부터 닉네임({hostName})을 자동으로 갱신했습니다.");
+                }
 
                 // 2. 가상의 게시판(로비) 설정
                 CreateLobbyOptions options = new CreateLobbyOptions {

@@ -168,11 +168,8 @@ namespace Controllers.LobbyController {
 
                 RoomUIController.Instance.SetupNetworkCallbacks();
 
-                string playerName = "TEST";
-                int playerLevel = 0;
-
                 string lobbyCode =
-                    await matchmakingService.CreateCustomLobbyAsync(title, isPrivate, playerName, playerLevel);
+                    await matchmakingService.CreateCustomLobbyAsync(title, isPrivate);
 
                 if (!string.IsNullOrEmpty(lobbyCode)) {
                     RoomUIController.Instance.EnterRoom();
