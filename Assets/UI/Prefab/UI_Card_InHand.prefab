@@ -546,7 +546,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8104231644885798290}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -567,9 +567,9 @@ MonoBehaviour:
   descText: {fileID: 3373025837663107384}
   image: {fileID: 1955248336293473737}
   visualTransform: {fileID: 2926234934995630992}
-  hoverOffsetY: 30
-  hoverScale: 1.2
-  longHoverTime: 1
+  hoverOffsetY: 50
+  hoverScale: 1.4
+  longHoverTime: 0.5
 --- !u!222 &3550002309926791906
 CanvasRenderer:
   m_ObjectHideFlags: 0

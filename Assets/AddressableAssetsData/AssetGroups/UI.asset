@@ -70,6 +70,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 773507bcfd9db434ba22931445cfa215
+    m_Address: CardDetailInGame_Popup
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 77e00c7b473e2ea488fc1189c6767bf5
     m_Address: DeckList_Room_Popup
     m_ReadOnly: 0

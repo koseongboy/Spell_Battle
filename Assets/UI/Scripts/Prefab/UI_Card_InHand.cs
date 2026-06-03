@@ -95,7 +95,7 @@ namespace DefaultNamespace
                 hoverCoroutine = null;
             }
             
-            // TODO: 만약 디테일 창이 떠 있는 상태라면 여기서 닫아주는 로직 필요
+            UILoader.Instance.HideUI("CardDetailInGame_Popup");
         }
 
         // 3. 카드를 클릭했을 때
@@ -130,8 +130,7 @@ namespace DefaultNamespace
         // ==========================================
         private void ShowDetailWindow()
         {
-            Debug.Log($"[Card UI] 1초 경과: {cardData.uiData.wordName} 카드의 상세 정보 창 띄우기!");
-            // TODO: 디테일 창 프리팹을 활성화하고 cardData.uiData 정보를 주입하는 로직
+            UILoader.Instance.ShowUI("CardDetailInGame_Popup", cardData.uiData);
         }
     }
 }
