@@ -1147,8 +1147,8 @@ MonoBehaviour:
   IconDatabase: {fileID: 11400000, guid: 760e29c50075f61418d5933c719d8b07, type: 2}
   HandContainer: {fileID: 3937008921051327612}
   CardPrefab: {fileID: 5434026315024681407, guid: 9dfc2030b80421b428650185418b23f1, type: 3}
-  btn_endTurn: {fileID: 0}
-  btn_spell: {fileID: 0}
+  btn_endTurn: {fileID: 5898505093492108735}
+  btn_spell: {fileID: 5828432583211210137}
 --- !u!1 &2522247071329421790
 GameObject:
   m_ObjectHideFlags: 0

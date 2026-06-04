@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using TMPro;
 
 namespace DefaultNamespace
@@ -22,7 +23,7 @@ namespace DefaultNamespace
         private bool isSelected = false;
         private System.Action<int> onClickCallback;
 
-        public void Init(GenericCard data, int index, System.Action<int> onClick)
+        public void Init(PlayableCard data, int index, System.Action<int> onClick)
         {
             myIndex = index;
             onClickCallback = onClick;

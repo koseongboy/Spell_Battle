@@ -7,6 +7,7 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using Controllers.TurnControllers;
 using Models.CardDatabases;
 using UnityEngine.Pool;
@@ -191,7 +192,7 @@ namespace DefaultNamespace {
                 int cardId = localHand[i];
                 var rawCardData = CardDatabase.GetCardById(cardId);
 
-                GenericCard genericCard = rawCardData as GenericCard;
+                PlayableCard genericCard = rawCardData;
                 if (genericCard == null) continue;
 
                 // 풀에서 가져오기

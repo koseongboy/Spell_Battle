@@ -7,16 +7,16 @@ namespace Models.CardDatabases
 {
     public static class CardDatabase
     {
-        private static Dictionary<int, GenericCard> cardDictionary;
+        private static Dictionary<int, PlayableCard> cardDictionary;
         private static void Initialize()
         {
             // 이미 로드되었다면 중복 실행 방지
             if (cardDictionary != null) return;
 
-            cardDictionary = new Dictionary<int, GenericCard>();
+            cardDictionary = new Dictionary<int, PlayableCard>();
 
             // CardDataManager의 경로를 사용하여 데이터 로드
-            GenericCard[] allCards = Resources.LoadAll<GenericCard>("Cards/PlayableCard");
+            PlayableCard[] allCards = Resources.LoadAll<PlayableCard>("Cards/PlayableCard");
 
             foreach (var card in allCards)
             {
@@ -40,24 +40,24 @@ namespace Models.CardDatabases
         // ==========================================
         // 🔍 외부에서 모든 Card의 SO를 가져가는 함수
         // ==========================================
-        public static List<GenericCard> GetAllCards()
+        public static List<PlayableCard> GetAllCards()
         {
             // 데이터가 아직 로드되지 않았다면 초기화
             if (cardDictionary == null) Initialize();
         
-            return new List<GenericCard>(cardDictionary.Values);
+            return new List<PlayableCard>(cardDictionary.Values);
         }
         
 
         // ==========================================
         // 🔍 외부에서 카드 ID로 SO를 가져갈 때 사용하는 함수
         // ==========================================
-        public static GenericCard GetCardById(int id)
+        public static PlayableCard GetCardById(int id)
         {
             // 데이터가 아직 로드되지 않았다면 초기화
             if (cardDictionary == null) Initialize();
 
-            if (cardDictionary.TryGetValue(id, out GenericCard card))
+            if (cardDictionary.TryGetValue(id, out PlayableCard card))
             {
                 return card;
             }

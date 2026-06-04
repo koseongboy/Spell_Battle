@@ -29,9 +29,9 @@ namespace Models.SpellPayloads
             pendingCards.Add(card);
             UsedCardIds.Add(card.Id);
             
-            if (card is GenericCard genericCard)
+            if (card is PlayableCard playableCard)
             {
-                AddProperty(genericCard.uiData.property, 1);
+                AddProperty(playableCard.uiData.property, 1);
             }
         }
         
@@ -81,6 +81,13 @@ namespace Models.SpellPayloads
         }
         
         public void SetConcept(string concept) => EvalData.Concept = concept;
+        
+        
+        // 김명준이 추가
+        public string GetConcept() => EvalData.Concept;
+        public string GetPrefix() => EvalData.RequiredPrefix;
+        public List<string> GetWords() => EvalData.Words;
+        public List<PlayableCard> GetCards() => pendingCards;
 
         // 영창 종료 후
         public void CalculateMainProperty()

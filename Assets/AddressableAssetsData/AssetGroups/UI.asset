@@ -95,6 +95,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a2c4fc0e12e5fbc4785b4f3279c24c3f
+    m_Address: SpellResult_FullScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bac211063fb17b9448b0b74fc1ce3392
     m_Address: Lobby_FullScreen
     m_ReadOnly: 0
@@ -107,6 +112,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e76f30f64ed5bf843aacc6f78aefcbdd
     m_Address: LeftUpper_Common
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f00a05cb99ca81e45be763b0b87b8dad
+    m_Address: SpellWordPiece
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
