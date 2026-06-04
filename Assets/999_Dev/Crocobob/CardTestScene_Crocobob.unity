@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 128509083}
-  - component: {fileID: 128509082}
   m_Layer: 0
   m_Name: CardDataManager
   m_TagString: Untagged
@@ -136,18 +135,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &128509082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 128509081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 118d9b99508344047adbe2945622ec94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Managers.DataManagers.CardDataManager
 --- !u!4 &128509083
 Transform:
   m_ObjectHideFlags: 0
@@ -524,78 +511,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1374637253
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3965741523160770176, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_Name
-      value: Player_Wizard
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342301597954735162, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5028429270521886171, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 4013309561
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
---- !u!114 &1585215763 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1895730800818004533, guid: 0f8caa3d8676c9644b966a37106d95eb, type: 3}
-  m_PrefabInstance: {fileID: 1374637253}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddb56dd64390e284e9d0bbff6011bf53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Models.PlayerModels.PlayerModel
 --- !u!1 &1761309343
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,8 +540,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a24e9bde78d8654e8bcb6b05bce9e17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardLogicTester
-  casterPrefab: {fileID: 1585215763}
-  enemyPrefab: {fileID: 1585215763}
+  casterPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 0}
   testCardIds: e9030000ea030000eb030000ec030000
 --- !u!4 &1761309345
 Transform:
@@ -651,5 +566,4 @@ SceneRoots:
   - {fileID: 212226488}
   - {fileID: 1761309345}
   - {fileID: 243973623}
-  - {fileID: 1374637253}
   - {fileID: 128509083}
