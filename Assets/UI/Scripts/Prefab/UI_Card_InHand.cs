@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,7 +28,7 @@ namespace DefaultNamespace
         
         private Coroutine hoverCoroutine;
         
-        private GenericCard cardData;
+        private PlayableCard cardData;
         private int handIndex; // PlayerController에 넘겨줄 내 손패 번호
         private Action<int> onClickAction; 
         
@@ -46,7 +47,7 @@ namespace DefaultNamespace
         }
 
         // Init: 클릭 시 넘겨줄 index와 Action<int>로 수정됨
-        public void Init(GenericCard data, int index, Action<int> clickAction) {
+        public void Init(PlayableCard data, int index, Action<int> clickAction) {
             isSelected = false;
             highlight.SetActive(isSelected);
             

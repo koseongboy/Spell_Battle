@@ -1,7 +1,7 @@
 using UnityEngine;
 using Cards.EffectInfos;
 using System.Collections.Generic;
-
+using Cards.PlayableCards;
 
 
 namespace Cards.CardUIDatas

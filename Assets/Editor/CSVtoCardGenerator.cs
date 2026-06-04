@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using Models.PlayerModels;
 using UnityEditor;
 using UnityEngine;
@@ -62,7 +63,7 @@ namespace DefaultNamespace.Editor {
                 }
 
                 // 1. ScriptableObject 인스턴스 메모리 상에 생성
-                GenericCard newCard = ScriptableObject.CreateInstance<GenericCard>();
+                PlayableCard newCard = ScriptableObject.CreateInstance<PlayableCard>();
                 newCard.uiData = new Cards.CardUIDatas.CardUIData();
                 
                 // 2. 기본 정보 파싱 (0열 ~ 4열)
@@ -155,7 +156,7 @@ namespace DefaultNamespace.Editor {
                 string assetPath = $"{targetFolderPath}/Card_{newCard.uiData.id}.asset";
 
                 // 덮어쓰기 로직 (프리팹 참조 끊김 방지)
-                GenericCard existingCard = AssetDatabase.LoadAssetAtPath<GenericCard>(assetPath);
+                PlayableCard existingCard = AssetDatabase.LoadAssetAtPath<PlayableCard>(assetPath);
             
                 if (existingCard != null)
                 {

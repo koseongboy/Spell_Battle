@@ -13,8 +13,8 @@ namespace DefaultNamespace {
         [SerializeField] private DeckEdit_FullScreen ui_DeckEdit;
 
         // --- 데이터 상태 ---
-        private List<GenericCard> allCards = new List<GenericCard>();
-        private List<GenericCard> currentFilteredCards = new List<GenericCard>();
+        private List<PlayableCard> allCards = new List<PlayableCard>();
+        private List<PlayableCard> currentFilteredCards = new List<PlayableCard>();
 
         // --- 데이터 상태 ---
         // 이름과 별개로 고유 ID 추적용 변수 추가
@@ -34,7 +34,7 @@ namespace DefaultNamespace {
         private const int MAX_SAME_CARD = 3;
         
         // 현재 팝업에 띄워진 카드가 무엇인지 기억할 변수 추가
-        private Cards.EffectInfos.GenericCard currentlyViewedCard = null;
+        private PlayableCard currentlyViewedCard = null;
 
         private void Start() {
             // 1. 모든 카드 데이터 로드
@@ -290,7 +290,7 @@ namespace DefaultNamespace {
         // ==========================================
         // 카드 클릭 시 팝업 호출 로직
         // ==========================================
-        private void OnCardClickedToShowPopup(GenericCard card) {
+        private void OnCardClickedToShowPopup(PlayableCard card) {
             // 팩트: 현재 선택된 덱이 없으면 추가 불가(열람 모드)
             bool canAdd = !string.IsNullOrEmpty(currentDeckId);
 
@@ -307,7 +307,7 @@ namespace DefaultNamespace {
         // ==========================================
         // 드롭: 오른쪽 영역에 놓았을 때 덱에 추가
         // ==========================================
-        private void OnCardDroppedToAdd(Cards.EffectInfos.GenericCard card) {
+        private void OnCardDroppedToAdd(PlayableCard card) {
             if (string.IsNullOrEmpty(currentDeckId)) {
                 CommonUIController.Instance.ShowRedAlert("편집할 덱을 먼저 선택하거나 새로 만들어주세요.");
                 return;
@@ -331,7 +331,7 @@ namespace DefaultNamespace {
         // ==========================================
         // 팝업에서 '추가' 버튼을 눌렀을 때 콜백될 함수
         // ==========================================
-        private void ConfirmAddCardFromPopup(Cards.EffectInfos.GenericCard cardToAdd) {
+        private void ConfirmAddCardFromPopup(PlayableCard cardToAdd) {
             if (string.IsNullOrEmpty(currentDeckId)) {
                 CommonUIController.Instance.ShowRedAlert("편집할 덱을 먼저 선택해주세요.");
                 return;
@@ -356,7 +356,7 @@ namespace DefaultNamespace {
         // ==========================================
         // 카드 추가 / 제거 로직
         // ==========================================
-        private void OnCardClickedToAdd(GenericCard card) {
+        private void OnCardClickedToAdd(PlayableCard card) {
             if (string.IsNullOrEmpty(currentDeckId)) {
                 return;
             }
@@ -376,7 +376,7 @@ namespace DefaultNamespace {
             RefreshRightDeckCards(); // 덱이 변했으니 우측 리스트 갱신
         }
 
-        private void OnCardClickedToRemove(GenericCard card) {
+        private void OnCardClickedToRemove(PlayableCard card) {
             currentDeckCardIds.Remove(card.uiData.id); // 한 장만 제거
             RefreshRightDeckCards();
         }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Cards.CardUIDatas;
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using DG.Tweening;
 using Models.CardDatabases;
 using TMPro;

@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using DG.Tweening;
 using Models.CardDatabases;
 using TMPro;
@@ -11,9 +12,9 @@ using UnityEngine.UI;
 
 namespace DefaultNamespace {
     public struct CardDetailPayload {
-        public GenericCard CardData;
+        public PlayableCard CardData;
         public bool CanAdd; // 열람 모드일 경우 false
-        public Action<GenericCard> OnConfirmAdd; // 추가 버튼을 눌렀을 때 실행될 컨트롤러의 함수
+        public Action<PlayableCard> OnConfirmAdd; // 추가 버튼을 눌렀을 때 실행될 컨트롤러의 함수
     }
 
     public class CardDetail_Popup : MonoBehaviour, UI_ILayerInfo, UI_IDataReceiver<CardDetailPayload>, UI_Popup {
