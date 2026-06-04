@@ -4,6 +4,7 @@ using Models.PlayerModels;
 using Unity.Netcode;
 using TMPro;
 using System.Collections.Generic;
+using Controllers.PlayerController;
 
 namespace DefaultNamespace
 {
@@ -32,9 +33,11 @@ namespace DefaultNamespace
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
         }
-
-        public void Bind(PlayerModel model)
+        
+        public void ReceiveData(PlayerController controller) 
         {
+            PlayerModel model = controller.model;
+
             UpdateHealth(model.CurrentHealth.Value, model.MaxHealth.Value);
             model.CurrentHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(newValue, model.MaxHealth.Value);
             model.MaxHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(model.CurrentHealth.Value, newValue);
@@ -58,7 +61,7 @@ namespace DefaultNamespace
                 model.Hand.HandCount.OnValueChanged += (oldValue, newValue) => UpdateHandCount(newValue);
             }
         }
-
+        
         private void UpdateHealth(int currentHp, int maxHp)
         {
             Text_Hp.text = currentHp.ToString();
