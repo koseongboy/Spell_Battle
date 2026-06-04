@@ -48,7 +48,7 @@ namespace DefaultNamespace.Editor {
 
             // 안전한 파싱을 위한 로컬 헬퍼 함수
             int ParseInt(string s) => int.TryParse(s, out int result) ? result : 0;
-            bool ParseBool(string s) => bool.TryParse(s, out bool result) ? result : false;
+            bool ParseBool(string s) => bool.TryParse(s, out bool result) && result;
 
             for (int i = 1; i < lines.Length; i++)
             {
@@ -63,7 +63,7 @@ namespace DefaultNamespace.Editor {
                 }
 
                 // 1. ScriptableObject 인스턴스 메모리 상에 생성
-                PlayableCard newCard = ScriptableObject.CreateInstance<PlayableCard>();
+                PlayableCard newCard = CreateInstance<PlayableCard>();
                 newCard.uiData = new Cards.CardUIDatas.CardUIData();
                 
                 // 2. 기본 정보 파싱 (0열 ~ 4열)

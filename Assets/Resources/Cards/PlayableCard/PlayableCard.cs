@@ -27,7 +27,7 @@ namespace Cards.PlayableCards
     }
     
     [CreateAssetMenu(fileName = "NewPlayableCard", menuName = "Cards/PlayableCard")]
-    public abstract class PlayableCard : ScriptableObject
+    public class PlayableCard : ScriptableObject
     {
         [Header("카드 데이터 연결")]
         public CardUIData uiData; 
