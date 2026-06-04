@@ -20,7 +20,7 @@ namespace Models.SpellPayloads
         public List<Property> PropertyHistory = new List<Property>();
         
         public Property MainProperty = Property.None;
-        private Property? forcedMainProperty = null; // '신비' 카드와 같은 강제 속성 변경용
+        private Property? forcedMainProperty = null;
 
         // 영창 중인 카드들을 보관할 대기열
         private List<PlayableCard> pendingCards = new List<PlayableCard>();

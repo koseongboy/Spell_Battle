@@ -88,6 +88,6 @@ public class BattleTester : MonoBehaviour
     [ContextMenu("전투 강제 시작 (테스트용)")]
     public void battleStarte()
     {
-        TurnController.Instance.ManualStartBattleTest();
+        // TurnController.Instance.ManualStartBattleTest();
     }
 }

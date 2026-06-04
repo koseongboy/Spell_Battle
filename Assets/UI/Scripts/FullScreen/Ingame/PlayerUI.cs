@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Cards.EffectInfos;
 using Cards.PlayableCards;
+using Controllers.PlayerController;
 using Controllers.TurnControllers;
 using Models.CardDatabases;
 using UnityEngine.Pool;
@@ -78,7 +79,11 @@ namespace DefaultNamespace {
             );
         }
 
-        public void Bind(PlayerModel model) {
+        
+        public void ReceiveData(PlayerController controller) 
+        {
+            PlayerModel model = controller.model;
+            
             // 1. 체력 바인딩 (MaxHealth와 CurrentHealth 모두 추적)
             UpdateHealth(model.CurrentHealth.Value, model.MaxHealth.Value);
             model.CurrentHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(newValue, model.MaxHealth.Value);
@@ -102,9 +107,12 @@ namespace DefaultNamespace {
                 model.Hand.localHand.CollectionChanged += (sender, e) => UpdateHandInfo(model.Hand.localHand);
             }
             
-            btn_endTurn.onClick.AddListener( ()=>TurnController.Instance.RequestEndTurn() );
-            
+            btn_endTurn.onClick.AddListener( ()=>PhaseManager.Instance.RequestEndTurn() );
+            this.OnCardClickedAction += controller.ToggleSpellIndex;
+        
+            Debug.Log("✅ PlayerUI가 스스로 컨트롤러 데이터를 받아 바인딩을 완료했습니다!");
         }
+
 
         public void UpdateHealth(int currentHp, int maxHp) {
             Text_Hp.text = currentHp.ToString();

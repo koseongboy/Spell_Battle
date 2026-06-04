@@ -12,7 +12,7 @@ using UnityEngine.Pool;
 
 namespace DefaultNamespace
 {
-    public class Mulligan_FullScreen : MonoBehaviour, UI_ILayerInfo, UI_IDataReceiver<PlayerController>
+    public class Mulligan_FullScreen : MonoBehaviour, UI_ILayerInfo, UI_IDataReceiver<MulliganHandler>
     {
         public EUILayer TargetLayer => EUILayer.FullScreen;
         
@@ -25,11 +25,12 @@ namespace DefaultNamespace
         public Button ExchangeButton;          // 하단 "교환" 버튼
         public TextMeshProUGUI WaitingText;     // "상대방을 기다리고 있습니다..."
         
-        private PlayerController localPlayer;
+        private MulliganHandler mulliganHandler;
         private IObjectPool<UI_Card_Mulligan> _cardPool;
         private List<UI_Card_Mulligan> _activeCards = new List<UI_Card_Mulligan>();
         
         private bool isSubmitted = false;
+        private bool isRefreshQueued = false;
 
         private void Awake()
         {
@@ -60,15 +61,15 @@ namespace DefaultNamespace
         
         private void OnDisable()
         {
-            if (localPlayer != null && localPlayer.model.Hand != null)
+            if (mulliganHandler != null && mulliganHandler.model.Hand != null)
             {
-                localPlayer.model.Hand.localHand.CollectionChanged -= OnHandChanged;
+                mulliganHandler.model.Hand.localHand.CollectionChanged -= OnHandChanged;
             }
             ReleaseAllCards();
         }
         
-        public void ReceiveData(PlayerController player) {
-            localPlayer = player;
+        public void ReceiveData(MulliganHandler handler) {
+            mulliganHandler = handler;
             isSubmitted = false;
             
             MulliganPanel.SetActive(true);
@@ -78,10 +79,10 @@ namespace DefaultNamespace
             ReleaseAllCards();
 
             // 손패 변화 구독 (서버가 카드를 바꿔주면 감지함)
-            if (localPlayer.model.Hand != null)
+            if (mulliganHandler.model.Hand != null)
             {
-                localPlayer.model.Hand.localHand.CollectionChanged -= OnHandChanged; // 중복 방지
-                localPlayer.model.Hand.localHand.CollectionChanged += OnHandChanged;
+                mulliganHandler.model.Hand.localHand.CollectionChanged -= OnHandChanged; // 중복 방지
+                mulliganHandler.model.Hand.localHand.CollectionChanged += OnHandChanged;
             }
 
             // 화면에 카드 그리기
@@ -90,10 +91,10 @@ namespace DefaultNamespace
 
         private void OnExchangeButtonClicked()
         {
-            if (localPlayer != null)
+            if (mulliganHandler != null)
             {
                 isSubmitted = true;
-                localPlayer.SubmitFinalMulligan();
+                mulliganHandler.SubmitFinalMulligan();
             }
             
             ExchangeButton.gameObject.SetActive(false);
@@ -106,7 +107,19 @@ namespace DefaultNamespace
         // 서버에서 내 손패를 변경할 때마다 자동으로 실행되는 함수
         private void OnHandChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            RefreshCards();
+            // 이벤트가 여러 번 들어와도 큐가 차있으면 무시
+            if (!isRefreshQueued)
+            {
+                isRefreshQueued = true;
+                // 다음 프레임이나 약간의 딜레이 후 한 번만 실행되도록 코루틴이나 Invoke 호출
+                Invoke(nameof(ExecuteRefresh), 0.05f); 
+            }
+        }
+        
+        private void ExecuteRefresh()
+        {
+            isRefreshQueued = false;
+            RefreshCards(); // 여기서 실제 렌더링을 1회만 수행!
         }
         
         // 카드 생성 로직을 별도 함수로 분리
@@ -114,7 +127,7 @@ namespace DefaultNamespace
         {
             ReleaseAllCards();
 
-            var initialHand = localPlayer.model.Hand.localHand;
+            var initialHand = mulliganHandler.model.Hand.localHand;
             for (int i = 0; i < initialHand.Count; i++)
             {
                 int cardId = initialHand[i];
@@ -131,7 +144,7 @@ namespace DefaultNamespace
                         // 제출 전(isSubmitted == false)일 때만 카드 선택/취소 가능!
                         if (!isSubmitted)
                         {
-                            localPlayer.ToggleMulliganIndex(clickedIndex);
+                            mulliganHandler.ToggleMulliganIndex(clickedIndex);
                         }
                     });
 
