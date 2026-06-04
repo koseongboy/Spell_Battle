@@ -19,9 +19,9 @@ namespace Managers.LocalDataManagers
         public int selectedAvatarId = 0;
 
         [Header("마이크 설정 세팅 값")]
-        public int deviceIndex;
-        public float micVol;
-        public float outVol;
+        public int deviceIndex = 0;
+        public float micVol = 0.5f;
+        public float outVol = 0.5f;
 
         [SerializeField]private List<int> _equippedDeck = new List<int>();
         public List<int> equippedDeck
