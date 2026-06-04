@@ -1,4 +1,5 @@
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ namespace DefaultNamespace
         [SerializeField] TextMeshProUGUI txt_Word;
         [SerializeField] Image img_BG;
 
-        public void UpdateUI( GenericCard cardData ) {
+        public void UpdateUI( PlayableCard cardData ) {
             var word = cardData.uiData.wordName;
             var element = cardData.uiData.property;
             

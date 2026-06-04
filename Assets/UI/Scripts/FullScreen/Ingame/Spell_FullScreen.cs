@@ -60,6 +60,10 @@ namespace DefaultNamespace
                 activeWords.Add(piece);
             }
         }
+
+        public void OnClicked_Record() {
+            //TODO : 여기서 녹음
+        }
         
         // 풀 piece 모두 반납하는 함수. 초기화용.
         private void ReleaseAllPieces()
