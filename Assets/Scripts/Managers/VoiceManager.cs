@@ -85,27 +85,38 @@ namespace Managers.VoiceManagers
         // ==========================================
         public float GetMicVolumeGauge()
         {
-            if (!isTesting) return 0f;
+            if (!isTesting || testAudioSource == null || testAudioSource.clip == null) return 0f;
 
-            // 현재 스피커에서 나고 있는 소리의 파형 샘플 256개를 추출합니다.
-            float[] samples = new float[256];
-            testAudioSource.GetOutputData(samples, 0);
+            // 1. 마이크가 현재 녹음 중인 위치(인덱스)를 가져옵니다.
+            int micPosition = Microphone.GetPosition(testDeviceName);
+            if (micPosition < 0) return 0f;
 
+            // 2. 파형을 분석할 샘플 개수 (너무 크면 느려지고, 너무 작으면 부정확합니다)
+            int sampleCount = 256;
+            float[] samples = new float[sampleCount];
+
+            // 녹음된 위치가 샘플 개수보다 적으면 패스 (에러 방지)
+            int startPosition = micPosition - sampleCount;
+            if (startPosition < 0) return 0f;
+
+            // 🌟 핵심: 스피커 출력이 아닌, 마이크 원본 클립에서 직접 데이터를 뽑아옵니다!
+            testAudioSource.clip.GetData(samples, startPosition);
+
+            // 3. 소리의 실제 크기를 측정하는 정석적인 연산법 (RMS: Root Mean Square)
             float sum = 0f;
             for (int i = 0; i < samples.Length; i++)
             {
-                // 파형의 절대값을 모두 더합니다.
-                sum += Mathf.Abs(samples[i]);
+                sum += samples[i] * samples[i]; // 파형을 제곱해서 더함 (음수 방지 및 큰 소리 강조)
             }
+            float rmsValue = Mathf.Sqrt(sum / samples.Length); // 평균의 제곱근
 
-            // 평균을 구합니다. (순수 평균값은 수치가 너무 작습니다)
-            float averageVolume = sum / samples.Length;
+            // rmsValue는 보통 0.01 ~ 0.1 사이의 매우 작은 값입니다.
+            // 🌟 게이지 민감도 (안 오르면 이 숫자를 20f -> 50f -> 100f 로 팍팍 올려보세요!)
+            float sensitivity = 30f; 
 
-            // 🌟 UI 게이지(0.0 ~ 1.0)에 맞게 시각적 보정치(예: 50f)를 곱해줍니다.
-            // 테스트해보시고 게이지가 너무 안 차면 50f를 100f 등으로 늘리시면 됩니다.
-            return Mathf.Clamp01(averageVolume * micVolumeMultiplier * 50f);
+            return Mathf.Clamp01(rmsValue * sensitivity); // 0.0 ~ 1.0 사이로 강제 고정하여 반환
         }
-
+        
         // 설정이 변경되었을 때 LocalDataManager로 쏴주는 로직
         public void UpdateSettings(int deviceIndex, float micVol, float outVol)
         {
