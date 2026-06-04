@@ -1,5 +1,6 @@
 using System;
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,14 +14,14 @@ namespace DefaultNamespace {
         [SerializeField] private TextMeshProUGUI descText;
         [SerializeField] private CardInDeckPiece dragPiece;
 
-        private GenericCard cardData;
-        private Action<GenericCard> onClick;
-        private Action<GenericCard> onDrop;
+        private PlayableCard cardData;
+        private Action<PlayableCard> onClick;
+        private Action<PlayableCard> onDrop;
         private RectTransform dropZone;
         
         private CardInDeckPiece dragProxy;
 
-        public void Init(GenericCard data, Action<GenericCard> clickAction, Action<GenericCard> dropAction, RectTransform dropZoneRect) {
+        public void Init(PlayableCard data, Action<PlayableCard> clickAction, Action<PlayableCard> dropAction, RectTransform dropZoneRect) {
             cardData = data;
             onClick = clickAction;
             onDrop = dropAction;

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Models.CardDatabases;
 using Cards.EffectInfos;
+using Cards.PlayableCards;
 using Controllers.PlayerController;
 using TMPro;
 using UnityEngine.Pool;
@@ -118,14 +119,14 @@ namespace DefaultNamespace
             {
                 int cardId = initialHand[i];
                 var rawCardData = CardDatabase.GetCardById(cardId);
-                GenericCard genericCard = rawCardData as GenericCard;
+                PlayableCard card = rawCardData as PlayableCard;
 
-                if (genericCard != null)
+                if (card != null)
                 {
                     UI_Card_Mulligan cardUI = _cardPool.Get();
                     cardUI.transform.SetAsLastSibling();
 
-                    cardUI.Init(genericCard, i, (clickedIndex) => 
+                    cardUI.Init(card, i, (clickedIndex) => 
                     {
                         // 제출 전(isSubmitted == false)일 때만 카드 선택/취소 가능!
                         if (!isSubmitted)

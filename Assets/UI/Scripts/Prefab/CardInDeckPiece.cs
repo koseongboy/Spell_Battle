@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Cards.PlayableCards;
 
 namespace DefaultNamespace
 {
@@ -13,7 +14,7 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI countText; // 예: "2"
         [SerializeField] private Button clickButton;
 
-        public void Init(GenericCard data, int count, Action<GenericCard> onRemoveClick)
+        public void Init(PlayableCard data, int count, Action<PlayableCard> onRemoveClick)
         {
             costText.text = data.uiData.cost.ToString();
             nameText.text = data.uiData.wordName;

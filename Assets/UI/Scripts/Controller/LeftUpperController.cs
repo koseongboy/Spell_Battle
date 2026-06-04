@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace DefaultNamespace
 {
@@ -10,6 +11,8 @@ namespace DefaultNamespace
 
         private LeftUpper_Common ui_leftUpper;
         private Action backAction = null;
+        
+        private bool isOptionOpen = false;
         
         private void Awake() 
         {
@@ -29,6 +32,11 @@ namespace DefaultNamespace
         public void RegisterView( LeftUpper_Common ui ) {
             ui_leftUpper = ui;
             
+            // 일단 뒤로가기 버튼을 꺼
+            if (IsBattle()) {
+                ui_leftUpper.SetBackButtonActive(false);
+            }
+            
             // View의 이벤트 구독
             ui_leftUpper.OnClicked_Option += HandleOptionClicked;
             ui_leftUpper.OnClicked_Friend += HandleFriendClicked;
@@ -37,7 +45,14 @@ namespace DefaultNamespace
         
         private void HandleOptionClicked() {
             bool isLobby = IsLobby();
-            UILoader.Instance.ShowUI(isLobby ? "Option_Lobby_Popup" : "Option_InGame_Popup");
+            
+            if (!isOptionOpen) {
+                UILoader.Instance.ShowUI(isLobby ? "Option_Lobby_Popup" : "Option_InGame_Popup");
+            }
+            else {
+                UILoader.Instance.HideUI(isLobby ? "Option_Lobby_Popup" : "Option_InGame_Popup");
+            }
+            isOptionOpen = !isOptionOpen;
         }
         
         private void HandleFriendClicked() {
@@ -75,7 +90,13 @@ namespace DefaultNamespace
         }
         
         private bool IsLobby() {
-            return true; // TODO
+            var currentScene = SceneManager.GetActiveScene();
+            return currentScene.name == "01_Lobby_Crocobob";
+        }
+
+        private bool IsBattle() {
+            var currentScene = SceneManager.GetActiveScene();
+            return currentScene.name == "02_Battle_Crocobob";
         }
     }
 }

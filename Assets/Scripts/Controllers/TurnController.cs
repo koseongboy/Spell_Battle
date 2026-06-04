@@ -223,12 +223,7 @@ namespace Controllers.TurnControllers {
         #endregion
 
         #region 4. 페이즈 흐름 제어 (Phase Management)
-        // private void HandleTurnChanged(ulong previousTurnId, ulong newTurnId)
-        // {
-        //     bool isMyTurn = (newTurnId == NetworkManager.Singleton.LocalClientId);
-        //     ui.SetTurnState(isMyTurn);
-        // }
-
+        
         private void HandlePhaseChanged(GamePhase newPhase, bool isMyTurn)
         {
             ui.SetTurnState(isMyTurn);
@@ -236,10 +231,10 @@ namespace Controllers.TurnControllers {
             switch (newPhase) {
                 case GamePhase.Draw:
                     if (isMyTurn) {
-                        // TODO : "내 턴" Popup
+                        UILoader.Instance.ShowUI("MyTurn_Top");
                     }
                     else {
-                        // TODO : "상태 턴" Popup
+                        UILoader.Instance.ShowUI("EnemyTurn_Top");
                     }
 
                     if (IsServer) 
@@ -399,11 +394,9 @@ namespace Controllers.TurnControllers {
                 card.AddToPayload(payload, MyPlayer, EnemyPlayer);
                 keywordList.Add(card.uiData.wordName); 
             }
-
-            //todo ui에 표시해야 함.
-            string fullIncantation = $"접두어: {payload.EvalData.RequiredPrefix}\n 영창용 단어들: {string.Join(", ", keywordList)}";
-
-            Debug.Log($"[Incantation UI] 🗣️ 낭독할 문장: {fullIncantation}");
+            
+            // TODO : Payload를 통채로 UI에 넘겨줌. 그러니 이쪽 구조 바뀌면 UI담당자 불러야 함.
+            UILoader.Instance.ShowUI("SpellWordPiece", payload);
 
             // ----------------------------------------------------
             // 🎙️ STEP 1: 마이크 녹음 대기 (어절 단위 UI 피드백 연동)
