@@ -18,6 +18,11 @@ namespace Managers.LocalDataManagers
         public int gold = 0;
         public int selectedAvatarId = 0;
 
+        [Header("마이크 설정 세팅 값")]
+        public int deviceIndex;
+        public float micVol;
+        public float outVol;
+
         [SerializeField]private List<int> _equippedDeck = new List<int>();
         public List<int> equippedDeck
         {
@@ -75,6 +80,17 @@ namespace Managers.LocalDataManagers
 
             await Task.Delay(300); 
             return "최근 전적 데이터 JSON 문자열 (또는 파싱된 객체)";
+        }
+
+        public void UpdateMicSetting(int idx, float micV, float outV)
+        {
+            deviceIndex = idx;
+            micVol = micV;
+            outVol = outV;
+        }
+        public (int deviceIdx, float micV, float outV) GetMicSettings()
+        {
+            return (deviceIndex, micVol, outVol);
         }
     }
 }
