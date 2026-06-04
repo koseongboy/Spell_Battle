@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using Cards.EffectInfos;
+using Models.SpellPayloads;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Pool;
+
+namespace DefaultNamespace
+{
+    public class Spell_FullScreen : MonoBehaviour, UI_ILayerInfo, UI_IDataReceiver<SpellPayload>
+    {
+        public EUILayer TargetLayer => EUILayer.FullScreen;
+        
+        [SerializeField] private TextMeshProUGUI txt_concept;
+        [SerializeField] private TextMeshProUGUI txt_prefix;
+        [SerializeField] private Transform wordPanel;
+        [SerializeField] private SpellWordPiece wordPiecePrefab;
+
+        private IObjectPool<SpellWordPiece> wordPiecePool;
+        private List<SpellWordPiece> activeWords = new List<SpellWordPiece>();
+
+        private void Awake() {
+            // 오브젝트 풀 초기화
+            wordPiecePool = new ObjectPool<SpellWordPiece>(
+                createFunc: () => 
+                {
+                    SpellWordPiece obj = Instantiate(wordPiecePrefab, wordPanel);
+                    return obj.GetComponent<SpellWordPiece>();
+                },
+                actionOnGet: (card) => card.gameObject.SetActive(true),
+                actionOnRelease: (card) => 
+                {
+                    card.gameObject.SetActive(false);
+                    card.transform.SetParent(wordPanel); // 반납 시 부모 원상복구
+                },
+                actionOnDestroy: (card) => Destroy(card.gameObject),
+                collectionCheck: false,
+                defaultCapacity: 3,
+                maxSize: 10
+            );
+        }
+        
+        private void OnDisable()
+        {
+            ReleaseAllPieces();
+        }
+        
+        // 데이터 받아서 화면 구성하는 함수.
+        public void ReceiveData(SpellPayload payload) {
+            txt_concept.text = payload.GetConcept();
+            txt_prefix.text = payload.GetPrefix();
+            
+            ReleaseAllPieces();
+            var cardList = payload.GetCards();
+            for (int i = 0; i < cardList.Count; i++) {
+                var piece = wordPiecePool.Get();
+                piece.UpdateUI(cardList[i]);
+                
+                activeWords.Add(piece);
+            }
+        }
+        
+        // 풀 piece 모두 반납하는 함수. 초기화용.
+        private void ReleaseAllPieces()
+        {
+            foreach (var piece in activeWords)
+            {
+                wordPiecePool.Release(piece);
+            }
+            wordPiecePool.Clear();
+        }
+        
+    }
+}

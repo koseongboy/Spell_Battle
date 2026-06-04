@@ -4,12 +4,26 @@ using Cards.EffectInfos;
 using Models.EffectCommands;
 using Models.PlayerModels;
 using Models.SpellPayloads;
+using UnityEngine.UIElements;
 
 namespace Cards.EffectInfos
 {
     [CreateAssetMenu(fileName = "NewGenericCard", menuName = "Cards/Generic Card")]
     public class GenericCard : PlayableCard
     {
+        // 실제 발동 로직 (자식 클래스들이 반드시 구현해야 함)
+        public override void AddToPayload(SpellPayload payload, PlayerModel caster, PlayerModel enemy)
+        {
+            if (uiData == null)
+            {
+                Debug.LogError($"[PlayableCard 에러] {this.name} 카드의 uiData가 인스펙터에 연결되지 않았습니다!");
+                return;
+            }
+            payload.AddWord(Name);
+            payload.AddProperty(Prop);
+            payload.EnqueuePendingCard(this); // 카드 등록만 수행
+        }
+        
         public override void ApplyCardEffects(SpellPayload payload, PlayerModel caster, PlayerModel enemy)
         {
             if (uiData.Effects == null) return;

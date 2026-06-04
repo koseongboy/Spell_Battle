@@ -17,16 +17,19 @@ namespace Cards.PlayableCards
         public Property Prop => uiData.property;
 
         // 실제 발동 로직 (자식 클래스들이 반드시 구현해야 함)
-        public void AddToPayload(SpellPayload payload, PlayerModel caster, PlayerModel enemy)
+        public virtual void AddToPayload(SpellPayload payload, PlayerModel caster, PlayerModel enemy)
         {
-            if (uiData == null)
-            {
-                Debug.LogError($"[PlayableCard 에러] {this.name} 카드의 uiData가 인스펙터에 연결되지 않았습니다!");
-                return;
-            }
-            payload.AddWord(Name);
-            payload.AddProperty(Prop);
-            payload.EnqueuePendingCard(this); // 카드 등록만 수행
+            // GenericCard에서 구현하겠음.
+            // 다른 곳에서 Card에 대한 걸 다루려다가, 문제가 생기길래 옮겨버림.
+            
+            // if (uiData == null)
+            // {
+            //     Debug.LogError($"[PlayableCard 에러] {this.name} 카드의 uiData가 인스펙터에 연결되지 않았습니다!");
+            //     return;
+            // }
+            // payload.AddWord(Name);
+            // payload.AddProperty(Prop);
+            // payload.EnqueuePendingCard(this); // 카드 등록만 수행
         }
 
         public abstract void ApplyCardEffects(SpellPayload payload, PlayerModel caster, PlayerModel enemy);

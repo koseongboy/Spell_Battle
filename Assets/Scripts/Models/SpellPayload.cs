@@ -23,8 +23,8 @@ namespace Models.SpellPayloads
         private Property? forcedMainProperty = null; // '신비' 카드와 같은 강제 속성 변경용
 
         // 영창 중인 카드들을 보관할 대기열
-        private List<PlayableCard> pendingCards = new List<PlayableCard>();
-        public void EnqueuePendingCard(PlayableCard card)
+        private List<GenericCard> pendingCards = new List<GenericCard>();
+        public void EnqueuePendingCard(GenericCard card)
         {
             pendingCards.Add(card);
             UsedCardIds.Add(card.Id);
@@ -81,6 +81,13 @@ namespace Models.SpellPayloads
         }
         
         public void SetConcept(string concept) => EvalData.Concept = concept;
+        
+        
+        // 김명준이 추가
+        public string GetConcept() => EvalData.Concept;
+        public string GetPrefix() => EvalData.RequiredPrefix;
+        public List<string> GetWords() => EvalData.Words;
+        public List<GenericCard> GetCards() => pendingCards;
 
         // 영창 종료 후
         public void CalculateMainProperty()
