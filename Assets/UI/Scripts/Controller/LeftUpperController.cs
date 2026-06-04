@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace DefaultNamespace
 {
@@ -28,6 +29,12 @@ namespace DefaultNamespace
 
         public void RegisterView( LeftUpper_Common ui ) {
             ui_leftUpper = ui;
+            
+            // 일단 뒤로가기 버튼을 꺼
+            if (IsBattle()) {
+                ui_leftUpper.SetBackButtonActive(false);
+                return;
+            }
             
             // View의 이벤트 구독
             ui_leftUpper.OnClicked_Option += HandleOptionClicked;
@@ -75,7 +82,13 @@ namespace DefaultNamespace
         }
         
         private bool IsLobby() {
-            return true; // TODO
+            var currentScene = SceneManager.GetActiveScene();
+            return currentScene.name == "01_Lobby_Crocobob";
+        }
+
+        private bool IsBattle() {
+            var currentScene = SceneManager.GetActiveScene();
+            return currentScene.name == "02_Battle_Crocobob";
         }
     }
 }
