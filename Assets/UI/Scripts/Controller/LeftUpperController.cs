@@ -12,6 +12,8 @@ namespace DefaultNamespace
         private LeftUpper_Common ui_leftUpper;
         private Action backAction = null;
         
+        private bool isOptionOpen = false;
+        
         private void Awake() 
         {
             if (Instance == null) Instance = this;
@@ -33,7 +35,6 @@ namespace DefaultNamespace
             // 일단 뒤로가기 버튼을 꺼
             if (IsBattle()) {
                 ui_leftUpper.SetBackButtonActive(false);
-                return;
             }
             
             // View의 이벤트 구독
@@ -44,7 +45,14 @@ namespace DefaultNamespace
         
         private void HandleOptionClicked() {
             bool isLobby = IsLobby();
-            UILoader.Instance.ShowUI(isLobby ? "Option_Lobby_Popup" : "Option_InGame_Popup");
+            
+            if (!isOptionOpen) {
+                UILoader.Instance.ShowUI(isLobby ? "Option_Lobby_Popup" : "Option_InGame_Popup");
+            }
+            else {
+                UILoader.Instance.HideUI(isLobby ? "Option_Lobby_Popup" : "Option_InGame_Popup");
+            }
+            isOptionOpen = !isOptionOpen;
         }
         
         private void HandleFriendClicked() {
