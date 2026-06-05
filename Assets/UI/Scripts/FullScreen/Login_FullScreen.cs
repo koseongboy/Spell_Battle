@@ -1,0 +1,122 @@
+using System;
+using System.Threading.Tasks;
+using DG.Tweening;
+using UnityEngine;
+using TMPro;
+using Managers.LocalDataManagers;
+
+namespace DefaultNamespace
+{
+    public class Login_FullScreen : MonoBehaviour
+    {
+        [Header("UI 요소 연결")]
+        public TMP_InputField idInputField;
+        public TMP_InputField pwInputField;
+        
+        [Header("회원가입 팝업")] 
+        public GameObject registerPanel;
+        public TMP_InputField regIdInput;
+        public TMP_InputField regPwInput;
+        public RectTransform registerRect;
+        public CanvasGroup registerCanvasGroup;
+        
+        [Header("DOTween Settings")]
+        public float animDuration = 0.4f; // 애니메이션 재생 시간
+        public Vector2 startOffset = new Vector2(0, -500f); // 아래에서 올라올 시작 위치 (화면 해상도에 맞춰 조절)
+
+        private bool isRegisterOn = false;
+
+        private void OnEnable() {
+            isRegisterOn = false;
+            registerPanel.SetActive(false);
+        }
+
+        public async void OnLoginButtonClick()
+        {
+            string id = idInputField.text;
+            string pw = pwInputField.text;
+
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(pw))
+            {
+                CommonUIController.Instance.ShowRedAlert("아이디와 비밀번호를 모두 입력하세요.");
+                return;
+            }
+
+            CommonUIController.Instance.ShowLoading();
+            
+            bool isSuccess = await AuthManager.Instance.RequestLoginAsync(id, pw);
+
+            if (isSuccess)
+            {
+                await Controllers.LobbyController.LobbyController.Instance.InitializeNetworkAsync();
+
+                CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
+                CommonUIController.Instance.DoneLoading();
+            }
+            else
+            {
+                CommonUIController.Instance.DoneLoading();
+                CommonUIController.Instance.ShowRedAlert("로그인에 실패했습니다. 계정 정보를 확인하세요.");
+            }
+        }
+
+        public void TogglePopup_Register() {
+            isRegisterOn = !isRegisterOn;
+            
+            registerRect.DOKill();
+            registerCanvasGroup.DOKill();
+
+            if (isRegisterOn)
+            {
+                registerPanel.SetActive(true);
+                registerRect.anchoredPosition = startOffset;
+                registerRect.localScale = Vector3.one * 0.5f;
+                registerCanvasGroup.alpha = 0f;
+
+                registerRect.DOAnchorPos(Vector2.zero, animDuration).SetEase(Ease.OutQuint);
+                registerRect.DOScale(Vector3.one, animDuration).SetEase(Ease.OutQuint);
+                registerCanvasGroup.DOFade(1f, animDuration).SetEase(Ease.OutQuint);
+            }
+            else
+            {
+                registerRect.DOAnchorPos(startOffset, animDuration).SetEase(Ease.InQuint);
+                registerRect.DOScale(Vector3.one * 0.5f, animDuration).SetEase(Ease.InQuint);
+                registerCanvasGroup.DOFade(0f, animDuration).SetEase(Ease.InQuint)
+                    .OnComplete(() => 
+                    {
+                        registerPanel.SetActive(false);
+                    });
+            }
+        }
+        
+        // --- 회원가입 버튼 클릭 이벤트 ---
+        public async void OnRegisterButtonClick()
+        {
+            string id = regIdInput.text;
+            string pw = regPwInput.text;
+
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(pw))
+            {
+                CommonUIController.Instance.ShowRedAlert("아이디와 비밀번호를 모두 입력하세요.");
+                return;
+            }
+
+            CommonUIController.Instance.ShowLoading();
+
+            // 로직(Controller) 호출
+            bool isSuccess = await AuthManager.Instance.RequestRegisterAsync(id, pw);
+
+            if (isSuccess)
+            {
+                CommonUIController.Instance.DoneLoading();
+                CommonUIController.Instance.ShowBlackAlert("가입 완료! 로그인해주세요.");
+            }
+            else
+            {
+                CommonUIController.Instance.DoneLoading();
+                CommonUIController.Instance.ShowRedAlert("회원가입 실패. 이미 존재하는 아이디일 수 있습니다.");
+
+            }
+        }
+    }
+}

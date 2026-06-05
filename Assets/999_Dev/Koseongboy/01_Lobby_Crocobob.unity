@@ -4796,6 +4796,7 @@ GameObject:
   - component: {fileID: 1640395181}
   - component: {fileID: 1640395182}
   - component: {fileID: 1640395183}
+  - component: {fileID: 1640395184}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -4874,10 +4875,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.LocalDataManagers.LocalDataManager
   userToken: 
+  userId: 
   nickname: Guest
   level: 1
   gold: 0
   selectedAvatarId: 0
+  score: 0
+  rank: Bronze
+  defaultPitch: 150
+  deviceIndex: 0
+  micVol: 0.5
+  outVol: 0.5
   _equippedDeck: 
 --- !u!114 &1640395183
 MonoBehaviour:
@@ -4892,6 +4900,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.DeckManager
   savedDecks: []
+--- !u!114 &1640395184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640395177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4442d45185927074db2d3db8d7cd6467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.AuthManager
+  serverURL: http://3.107.201.71:5000
 --- !u!1 &1641886041
 GameObject:
   m_ObjectHideFlags: 0
@@ -5583,6 +5604,7 @@ MonoBehaviour:
   devGrid: {fileID: 0}
   awakeUIList:
   - LeftUpper_Common
+  - Login_FullScreen
 --- !u!4 &1857123819
 Transform:
   m_ObjectHideFlags: 0
@@ -5941,7 +5963,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1
