@@ -32,7 +32,7 @@ namespace DefaultNamespace {
     public class AuthManager : MonoBehaviour {
         public static AuthManager Instance { get; private set; }
 
-        [Header("서버 주소")] public string serverURL = "http://3.107.201.71:5000";
+        [Header("서버 주소")] public string serverURL = "http://3.107.201.71:3000";
 
         void Awake() {
             if (Instance == null) Instance = this;
@@ -88,6 +88,8 @@ namespace DefaultNamespace {
         public async Task<bool> RequestRegisterAsync(string id, string pw) {
             AuthRequestDto requestData = new AuthRequestDto { userId = id, password = pw };
             string jsonData = JsonUtility.ToJson(requestData);
+            Debug.Log($"[디버그] 요청 주소 확인: {serverURL + "/register"}");
+            
 
             using (UnityWebRequest request = new UnityWebRequest(serverURL + "/register", "POST")) {
                 byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);

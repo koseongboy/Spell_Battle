@@ -23,8 +23,13 @@ namespace DefaultNamespace
         [Header("DOTween Settings")]
         public float animDuration = 0.4f; // 애니메이션 재생 시간
         public Vector2 startOffset = new Vector2(0, -500f); // 아래에서 올라올 시작 위치 (화면 해상도에 맞춰 조절)
-
+        
+        private Vector2 registerOriginalPosition;
         private bool isRegisterOn = false;
+
+        private void Awake() {
+            registerOriginalPosition = registerRect.anchoredPosition;
+        }
 
         private void OnEnable() {
             isRegisterOn = false;
@@ -69,17 +74,17 @@ namespace DefaultNamespace
             if (isRegisterOn)
             {
                 registerPanel.SetActive(true);
-                registerRect.anchoredPosition = startOffset;
+                registerRect.anchoredPosition = registerOriginalPosition + startOffset;
                 registerRect.localScale = Vector3.one * 0.5f;
                 registerCanvasGroup.alpha = 0f;
 
-                registerRect.DOAnchorPos(Vector2.zero, animDuration).SetEase(Ease.OutQuint);
+                registerRect.DOAnchorPos(registerOriginalPosition, animDuration).SetEase(Ease.OutQuint);
                 registerRect.DOScale(Vector3.one, animDuration).SetEase(Ease.OutQuint);
                 registerCanvasGroup.DOFade(1f, animDuration).SetEase(Ease.OutQuint);
             }
             else
             {
-                registerRect.DOAnchorPos(startOffset, animDuration).SetEase(Ease.InQuint);
+                registerRect.DOAnchorPos(registerOriginalPosition + startOffset, animDuration).SetEase(Ease.InQuint);
                 registerRect.DOScale(Vector3.one * 0.5f, animDuration).SetEase(Ease.InQuint);
                 registerCanvasGroup.DOFade(0f, animDuration).SetEase(Ease.InQuint)
                     .OnComplete(() => 
