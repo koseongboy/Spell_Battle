@@ -71,7 +71,7 @@ namespace DefaultNamespace {
             ui_DeckEdit.btn_ConfirmNewDeck.onClick.AddListener(ConfirmNewDeck);
             
             // 삭제 및 이름 변경 로직
-            ui_DeckEdit.btn_DeleteDeck.onClick.AddListener(DeleteDeck);
+            ui_DeckEdit.btn_DeleteDeck.onClick.AddListener(ConfirmDeleteDeck);
             ui_DeckEdit.btn_RenameDeck.onClick.AddListener(OpenRenameDeckPopup);
             ui_DeckEdit.btn_ConfirmRenameDeck.onClick.AddListener(ConfirmRenameDeck);
             ui_DeckEdit.btn_CloseRenameDeckPopup.onClick.AddListener(CloseRenameDeckPopup);
@@ -406,12 +406,24 @@ namespace DefaultNamespace {
         // ==========================================
         // 삭제 로직
         // ==========================================
-        private async void DeleteDeck() {
+        private async void ConfirmDeleteDeck() {
             if (string.IsNullOrEmpty(currentDeckId)) {
                 CommonUIController.Instance.ShowRedAlert("삭제할 덱이 선택되지 않았습니다.");
                 return;
             }
+            
+            ConfirmPopupData data = new ConfirmPopupData
+            {
+                message = "덱을 삭제하시겠습니까?",
+                onConfirm = DeleteDeck,
+                onCancel = () => { }
+            };
 
+            UILoader.Instance.ShowUI<ConfirmPopupData>("ConfirmPopup", data);
+        }
+
+        private async void DeleteDeck() {
+            
             // DeckManager를 통해 삭제 처리
             await DeckManager.Instance.DeleteDeckAsync(currentDeckId);
             CommonUIController.Instance.ShowBlackAlert($"'{currentDeckName}' 덱이 삭제되었습니다.");

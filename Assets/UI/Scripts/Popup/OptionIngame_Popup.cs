@@ -27,7 +27,19 @@ namespace DefaultNamespace
 
         public void SurrenderPressed() {
             Debug.Log("[Option_Lobby] Surrender Pressed");
-            // TODO : Confirm 창 띄우기
+
+            ConfirmPopupData data = new ConfirmPopupData
+            {
+                message = "항복하시겠습니까?",
+                onConfirm = () => 
+                {
+                    CommonUIController.Instance.ShowBlackAlert("미안합니다. 아직 미구현입니다. 힘내요! 할 수 있어요!");
+                },
+                onCancel = () => 
+                {
+                }
+            };
+            UILoader.Instance.ShowUI<ConfirmPopupData>("Confirm_Popup", data);
         }
 
         private void OnEnable() {

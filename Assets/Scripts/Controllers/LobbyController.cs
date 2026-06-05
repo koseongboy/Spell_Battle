@@ -84,7 +84,12 @@ namespace Controllers.LobbyController {
 
 
         public void GoBackToLobby() {
-            // TODO : '로비로 돌아가시겠습니까?' confirm
+            var confirmData = new ConfirmPopupData() {
+                message = "로비로 돌아가시겠습니까?",
+                onConfirm = () => { CommonUIController.Instance.ChangeFullScreen("Lobby"); },
+                onCancel = () => { }
+            };
+            UILoader.Instance.ShowUI("Confirm_Popup", confirmData);
         }
 
 

@@ -55,7 +55,8 @@ namespace DefaultNamespace
             {
                 await Controllers.LobbyController.LobbyController.Instance.InitializeNetworkAsync();
 
-                CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
+                UILoader.Instance.HideUI("Login_FullScreen");
+                UILoader.Instance.ShowUI("Lobby_FullScreen");
                 CommonUIController.Instance.DoneLoading();
             }
             else

@@ -47,7 +47,6 @@ namespace DefaultNamespace {
             txt_DetailName.text = data.wordName;
             txt_DetailCost.text = data.cost.ToString();
 
-            // TODO: 추후 구현하실 디테일 설명/용어 처리
             txt_DetailDesc.text = data.desc;
 
             // 1. 기존에 켜져 있던 툴팁 전부 회수

@@ -265,8 +265,20 @@ namespace DefaultNamespace {
 
         // 좌상단 뒤로 가기 버튼이 눌렸을 때 실행될 래퍼(Wrapper) 함수
         public void OnBackButtonPressedInRoom() {
-            // TODO : 진짜 나갈지 Confirm 팝업 
-            _ = ReturnToLobbyMain(false);
+            ConfirmPopupData data = new ConfirmPopupData
+            {
+                message = "대기실에서 나가시겠습니까?",
+                onConfirm = () => 
+                {
+                    _ = ReturnToLobbyMain(false);
+                },
+                onCancel = () => 
+                {
+                }
+            };
+
+            // 제네릭 T 타입으로 ConfirmPopupData를 담아서 가동
+            UILoader.Instance.ShowUI<ConfirmPopupData>("Confirm_Popup", data);
         }
 
         #region Network

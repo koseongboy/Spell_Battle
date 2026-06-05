@@ -72,7 +72,6 @@ namespace DefaultNamespace {
             txt_DetailName.text = data.CardData.Name;
             txt_DetailCost.text = data.CardData.Cost.ToString();
 
-            // TODO: 추후 구현하실 디테일 설명/용어 처리
             txt_DetailDesc.text = data.CardData.uiData.desc;
 
             // 열람 모드(CanAdd == false)일 경우 아래 '추가' 버튼을 아예 끕니다.
