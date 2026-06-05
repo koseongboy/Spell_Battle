@@ -26,16 +26,19 @@ namespace Controllers.LobbyController {
 
             matchmakingService = RelayMatchmakingService.Instance;
         }
-
-        private async void Start() {
+        
+        /// <summary>
+        /// 웹 서버 로그인이 완전히 끝난 후, 외부에서 명시적으로 호출할 UGS 및 릴레이 초기화 함수
+        /// </summary>
+        public async Task InitializeNetworkAsync() {
             CommonUIController.Instance.ShowLoading();
+            Debug.Log("[LobbyController] 웹 로그인 인증 확인 완료. UGS 및 릴레이 서비스 세션을 초기화합니다.");
 
-            // 서버 로그인 진행
+            // 서버 로그인 및 익명 세션 발급 진행 (RelayMatchmakingService 내부 함수 호출)
             await matchmakingService.InitializeAndSignInAsync();
 
+            Debug.Log("[LobbyController] 네트워킹 초기화 및 익명 로그인 완료.");
             CommonUIController.Instance.DoneLoading();
-            // Lobby UI 불러오기
-            CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
         }
 
         public void RegisterLobbyUI(Lobby_FullScreen ui) {
