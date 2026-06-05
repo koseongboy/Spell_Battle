@@ -72,6 +72,10 @@ namespace DefaultNamespace
 
             // 실제 UI 활성화 처리
             SwitchUI(target);
+
+            if (currentFullScreenUI == "Lobby_FullScreen") {
+                LeftUpperController.Instance.SetBackAction(null);
+            }
         }
         
         // 실제 게임오브젝트를 켜고 끄는 내부 로직

@@ -30,10 +30,36 @@ namespace DefaultNamespace
         private void Awake() {
             registerOriginalPosition = registerRect.anchoredPosition;
         }
+        
+        private void Start()
+        {
+            // TODO : AutoLogin. 서버쪽 준비되면 주석 해제. 
+            // TryAutoLogin();
+        }
 
         private void OnEnable() {
             isRegisterOn = false;
             registerPanel.SetActive(false);
+        }
+
+        private async void TryAutoLogin() {
+            if (PlayerPrefs.HasKey("Saved_JWT_Token"))
+            {
+                string savedToken = PlayerPrefs.GetString("Saved_JWT_Token");
+                
+                CommonUIController.Instance.ShowLoading();
+
+                // 2. AuthManager에게 자동 로그인 통신 처리를 위임합니다.
+                bool isAutoSuccess = await AuthManager.Instance.RequestAutoLoginAsync(savedToken);
+
+                if (isAutoSuccess)
+                {
+                    await Controllers.LobbyController.LobbyController.Instance.InitializeNetworkAsync();
+
+                    UILoader.Instance.HideUI("Login_FullScreen");
+                    CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
+                }
+            }
         }
 
         public async void OnLoginButtonClick()
@@ -54,10 +80,9 @@ namespace DefaultNamespace
             if (isSuccess)
             {
                 await Controllers.LobbyController.LobbyController.Instance.InitializeNetworkAsync();
-
+                
                 UILoader.Instance.HideUI("Login_FullScreen");
-                UILoader.Instance.ShowUI("Lobby_FullScreen");
-                CommonUIController.Instance.DoneLoading();
+                CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
             }
             else
             {

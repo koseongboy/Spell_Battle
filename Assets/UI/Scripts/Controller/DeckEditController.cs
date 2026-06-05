@@ -419,7 +419,7 @@ namespace DefaultNamespace {
                 onCancel = () => { }
             };
 
-            UILoader.Instance.ShowUI<ConfirmPopupData>("ConfirmPopup", data);
+            UILoader.Instance.ShowUI<ConfirmPopupData>("Confirm_Popup", data);
         }
 
         private async void DeleteDeck() {

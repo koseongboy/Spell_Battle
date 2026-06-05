@@ -69,6 +69,10 @@ namespace DefaultNamespace {
                     localData.score = response.score;
                     localData.rank = response.rank;
                     localData.defaultPitch = response.defaultPitch;
+                    
+                    // TODO : 이거 ES3 쓴다고?
+                    PlayerPrefs.SetString("Saved_JWT_Token", response.token);
+                    PlayerPrefs.Save(); // 디스크에 즉시 기록
 
                     return true;
                 }
@@ -77,6 +81,48 @@ namespace DefaultNamespace {
                     // 🛠️ [수정 부분] 로그인 실패 시 에러 코드와 서버가 보낸 에러 메시지 Body를 같이 출력
                     string errorResponse = request.downloadHandler?.text;
                     Debug.LogError($"<color=#FF0000>[AuthManager] 로그인 서버 통신 실패.</color>\nError: {request.error}\nServer Message: {errorResponse}");
+                    return false;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 로컬에 저장된 토큰을 이용해 서버에 자동 로그인을 요청합니다.
+        /// </summary>
+        public async Task<bool> RequestAutoLoginAsync(string token)
+        {
+            // 친구가 만들어준 토큰 검증용 엔드포인트 주소 (예시: /me)
+            using (UnityWebRequest request = UnityWebRequest.Get(serverURL + "/me"))
+            {
+                // 🛠️ [수정 부분] 헤더에 JWT 토큰을 Bearer 규격으로 첨부합니다.
+                request.SetRequestHeader("Authorization", "Bearer " + token);
+
+                var operation = request.SendWebRequest();
+                while (!operation.isDone) await Task.Yield();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    string responseText = request.downloadHandler.text;
+                    Debug.Log($"<color=#00FF00>[AuthManager] 자동 로그인 성공!</color>\nRaw JSON: {responseText}");
+
+                    // 로그인과 동일하게 응답 데이터를 파싱하여 로컬 데이터 매니저에 캐싱
+                    LoginResponse response = JsonUtility.FromJson<LoginResponse>(responseText);
+            
+                    var localData = Managers.LocalDataManagers.LocalDataManager.Instance;
+                    localData.userToken = token; // 매개변수로 받은 토큰 유지
+                    localData.userId = response.userId;
+                    localData.nickname = response.userId; 
+                    localData.score = response.score;
+                    localData.rank = response.rank;
+                    localData.defaultPitch = response.defaultPitch;
+
+                    return true;
+                }
+                else
+                {
+                    Debug.LogWarning($"[AuthManager] 자동 로그인 실패 (토큰 만료 또는 서버 에러): {request.error}");
+                    // 🛠️ [수정 부분] 토큰이 만료되었거나 유효하지 않으므로 로컬 저장소에서 삭제
+                    PlayerPrefs.DeleteKey("Saved_JWT_Token");
                     return false;
                 }
             }
