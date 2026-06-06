@@ -168,7 +168,7 @@ namespace Controllers.PlayerController
 
             // 1. 선택한 카드의 정보와 코스트를 데이터베이스에서 가져옵니다.
             int cardId = model.Hand.GetCardIdAt(index);
-            var cardData = CardDatabase.GetCardById(cardId);
+            var cardData = CardDatabase.Instance.GetCardById(cardId);
             int cost = cardData != null ? cardData.uiData.cost : 0;
 
             if (_selectedSpellIndices.Contains(index))
@@ -230,7 +230,7 @@ namespace Controllers.PlayerController
             foreach (int index in _selectedSpellIndices)
             {
                 int cardId = model.Hand.GetCardIdAt(index);
-                var card = CardDatabase.GetCardById(cardId) as PlayableCard;
+                var card = CardDatabase.Instance.GetCardById(cardId) as PlayableCard;
 
                 if(card != null) selectedCards.Add(card);
             }

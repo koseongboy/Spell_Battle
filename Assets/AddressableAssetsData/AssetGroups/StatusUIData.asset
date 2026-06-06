@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: StatusUIData
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: StatusUIData
+  m_GUID: 04d22e0f9bdf39e4f80f42ad0ad85c1d
+  m_SerializeEntries:
+  - m_GUID: 180264f5063accb4fbe014db19629e83
+    m_Address: Assets/ScriptableObject/StatusUIData/DamageReduction_Turn.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e5f866e9bc50c74686d8402d6992e9f
+    m_Address: Assets/ScriptableObject/StatusUIData/ArcaneStack.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e6cf36750d56c2408bb207ca2ce3f33
+    m_Address: Assets/ScriptableObject/StatusUIData/Freeze.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35246bbcfe7205c4694ef7d8b21b9a30
+    m_Address: Assets/ScriptableObject/StatusUIData/ShieldGainBoost.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3ee86d09a1de7ad41bf338d174f96631
+    m_Address: Assets/ScriptableObject/StatusUIData/DamageReduction.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80e129a5180092c46be9c4be1bd658a4
+    m_Address: Assets/ScriptableObject/StatusUIData/IgniteDamageMultiplier.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4b916cc3d3ba11499676fe49acb8d1c
+    m_Address: Assets/ScriptableObject/StatusUIData/Shield.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e6030de1152f3164492793e7351f089b
+    m_Address: Assets/ScriptableObject/StatusUIData/Prophecy.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7014611dbaca244497211be159a0c60
+    m_Address: Assets/ScriptableObject/StatusUIData/DamageReduction_Hit.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ee68398ad1e3cea438a3de9a2148cbcd
+    m_Address: Assets/ScriptableObject/StatusUIData/Ignite.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eeb8e5da984c364479be2dc50b03c127
+    m_Address: Assets/ScriptableObject/StatusUIData/StatusApplyMultiplier.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7da3bb5828938948b95a31fa6e17143
+    m_Address: Assets/ScriptableObject/StatusUIData/DamageReflect.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StatusUIData
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: a31b7ebbe5fbb3347804711c4be53676, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 0f37aa790b0128c4ba70917b6de9efed, type: 2}
+    - {fileID: 11400000, guid: d9874adfdda8e834f8f378ad699017fa, type: 2}

@@ -105,17 +105,17 @@ namespace DefaultNamespace
                 int totalStacks = kvp.Value;
 
                 if (totalStacks <= 0) continue;
-
-                // TODO : Element Image
-                // Sprite iconSprite = StatusDataUtility.GetStatusIcon(type);
-                Sprite iconSprite = null;
+                
+                
+                if (totalStacks <= 0) continue;
+                
+                var uiData = StatusUIDataManager.Instance.GetStatusData(type);
 
                 GameObject iconObj = Instantiate(StatusIconPrefab, StatusGrid);
                 UI_StatusIcon statusIcon = iconObj.GetComponent<UI_StatusIcon>();
-                
-                if (statusIcon != null)
-                {
-                    statusIcon.Setup(iconSprite, totalStacks);
+
+                if (statusIcon != null) {
+                    statusIcon.Setup(uiData.Icon, totalStacks);
                 }
             }
         }

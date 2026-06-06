@@ -37,13 +37,13 @@ namespace DefaultNamespace {
         private PlayableCard currentlyViewedCard = null;
 
         private void Start() {
-            // 1. 모든 카드 데이터 로드
-            allCards = CardDatabase.GetAllCards();
+            CommonUIController.Instance.DoneLoading();
         }
 
         // View가 OnEnable될 때 스스로 호출하는 함수
         public void RegisterView(DeckEdit_FullScreen newView) {
             ui_DeckEdit = newView;
+            allCards = CardDatabase.Instance.GetAllCards();
 
             // 새로운 View가 등록될 때 기존에 쌓여있던 리스너를 완전히 청소합니다.
             ui_DeckEdit.saveButton.onClick.RemoveAllListeners();
@@ -197,7 +197,7 @@ namespace DefaultNamespace {
             var groupedCards = currentDeckCardIds
                 .GroupBy(id => id)
                 .Select(group => new {
-                    Data = CardDatabase.GetCardById(group.Key),
+                    Data = CardDatabase.Instance.GetCardById(group.Key),
                     Count = group.Count()
                 })
                 .OrderBy(c => c.Data.uiData.cost)

@@ -23,7 +23,7 @@ namespace DefaultNamespace
         #endregion
         
         [SerializeField] private Stack<string> fullScreenUiHistoryStack = new Stack<string>();
-        private string currentFullScreenUI = string.Empty;
+        public string currentFullScreenUI = string.Empty;
         
         public bool CanGoBack => fullScreenUiHistoryStack.Count > 0;
         
@@ -75,6 +75,7 @@ namespace DefaultNamespace
             SwitchUI(target);
 
             if (currentFullScreenUI == "Lobby_FullScreen") {
+                fullScreenUiHistoryStack = new Stack<string>();
                 LeftUpperController.Instance.SetBackAction(null);
             }
         }

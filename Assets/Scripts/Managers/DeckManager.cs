@@ -286,7 +286,7 @@ namespace Managers {
             Dictionary<Property, int> propertyCounts = new Dictionary<Property, int>();
 
             foreach (int id in cardIds) {
-                var card = CardDatabase.GetCardById(id);
+                var card = CardDatabase.Instance.GetCardById(id);
                 if (card != null) {
                     Property prop = card.uiData.property;
                     if (propertyCounts.ContainsKey(prop)) {
@@ -378,7 +378,7 @@ namespace Managers {
 
             // 1. 순회하며 개수와 최초 등장 위치(Index) 기록
             for (int i = 0; i < cardIds.Count; i++) {
-                var card = CardDatabase.GetCardById(cardIds[i]);
+                var card = CardDatabase.Instance.GetCardById(cardIds[i]);
                 if (card != null) {
                     Property prop = card.uiData.property;
 

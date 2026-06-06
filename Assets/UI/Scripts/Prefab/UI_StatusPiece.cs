@@ -17,13 +17,13 @@ namespace DefaultNamespace
         public TextMeshProUGUI txt_Desc;
         
         public void UpdateUI(StatusData data) {
-            // TODO : Element Image
-            // img_Element.sprite = StatusDataUtility.GetStatusIcon(data.Type);
-            
-            txt_Name.text = data.Type.ToString();
+            var uiData = StatusUIDataManager.Instance.GetStatusData(data.Type);
+
+            img_Element.sprite = uiData.Icon;
+            txt_Name.text = uiData.Name;
             txt_Turn.text = data.Duration + "턴";
             txt_Stack.text = data.Stacks + "스택";
-            txt_Desc.text = StatusDataUtility.GetStatusDesc(data.Type);
+            txt_Desc.text = uiData.Desc;
         }
     }
 }

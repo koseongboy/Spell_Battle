@@ -51,7 +51,7 @@ public class CardLogicTester : MonoBehaviour
         // 3. 테스트할 카드들을 CardDataManager에서 불러와 Payload에 적재
         foreach (int id in testCardIds)
         {
-            var card = CardDatabase.GetCardById(id);
+            var card = CardDatabase.Instance.GetCardById(id);
             if (card != null)
             {
                 payload.EnqueuePendingCard(card);

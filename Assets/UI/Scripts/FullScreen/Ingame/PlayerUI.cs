@@ -176,15 +176,15 @@ namespace DefaultNamespace {
                 int totalStacks = kvp.Value;
 
                 if (totalStacks <= 0) continue;
+                
+                var uiData = StatusUIDataManager.Instance.GetStatusData(type);
 
-                // TODO : Element Image
-                // Sprite iconSprite = StatusDataUtility.GetStatusIcon(type);
                 Sprite iconSprite = null;
                 GameObject iconObj = Instantiate(StatusIconPrefab, StatusGrid);
                 UI_StatusIcon statusIcon = iconObj.GetComponent<UI_StatusIcon>();
 
                 if (statusIcon != null) {
-                    statusIcon.Setup(iconSprite, totalStacks);
+                    statusIcon.Setup(uiData.Icon, totalStacks);
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace DefaultNamespace {
             // 2. 현재 손패 장수만큼 풀에서 카드를 꺼내와서 데이터 세팅
             for (int i = 0; i < localHand.Count; i++) {
                 int cardId = localHand[i];
-                var rawCardData = CardDatabase.GetCardById(cardId);
+                var rawCardData = CardDatabase.Instance.GetCardById(cardId);
 
                 PlayableCard genericCard = rawCardData;
                 if (genericCard == null) continue;

@@ -29,6 +29,7 @@ namespace Controllers.LobbyController {
 
         private void OnEnable() {
             // 혹시 있을까 꺼주기
+            Debug.LogWarning("바로 다음에 NULL 뜰 수 있음!! 문제없으니 괜찮음!!");
             CommonUIController.Instance.DoneLoading();
         }
 

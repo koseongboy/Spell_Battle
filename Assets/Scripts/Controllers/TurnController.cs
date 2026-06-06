@@ -96,9 +96,8 @@ namespace Controllers.TurnControllers
             PlayOpponentAudioClientRpc(audioUrl, RpcTarget.Single(targetClientId, RpcTargetUse.Temp));
 
             SpellPayload serverPayload = new SpellPayload();
-            foreach (int id in cardIds)
-            {
-                var card = CardDatabase.GetCardById(id) as PlayableCard;
+            foreach (int id in cardIds) {
+                var card = CardDatabase.Instance.GetCardById(id);
                 if (card != null) serverPayload.EnqueuePendingCard(card);
             }
 

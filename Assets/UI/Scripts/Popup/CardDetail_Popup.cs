@@ -87,7 +87,7 @@ namespace DefaultNamespace {
             var keywordList = data.CardData.uiData.Keywords;
             if (keywordList != null) {
                 foreach (CardKeyword keyword in keywordList) {
-                    if (KeywordDatabase.TryGetKeywordData(keyword, out string title, out string desc)) {
+                    if (CardDatabase.Instance.TryGetKeywordData(keyword, out string title, out string desc)) {
                         UI_EffectDetail tooltipObj = tooltipPool.Get();
                         tooltipObj.Init(title, desc);
                         activeTooltips.Add(tooltipObj);
