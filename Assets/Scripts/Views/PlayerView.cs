@@ -131,7 +131,7 @@ namespace Views.PlayerView // 기존에 쓰시던 네임스페이스 그대로 �
                 case Property.None: prop_text = "없음"; break;
                 default: prop_text = "(알 수 없음)"; break;
             }
-            Text_LastProperty.text = $"마지막 속성: {prop_text}";
+            Text_LastProperty.text = prop_text;
         }
         public  void UpdateStatuses(NetworkList<StatusData> statuses)
         {

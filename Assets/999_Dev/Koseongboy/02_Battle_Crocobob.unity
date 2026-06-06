@@ -2778,10 +2778,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.LocalDataManagers.LocalDataManager
   userToken: 
+  userId: 
   nickname: Guest
   level: 1
   gold: 0
   selectedAvatarId: 0
+  score: 0
+  rank: 
+  defaultPitch: 150
   deviceIndex: 0
   micVol: 0
   outVol: 0

@@ -125,6 +125,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c0544f067c06a2e4e82a6f23e6c285bd
+    m_Address: StatusDetail_Popup
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d56049bcb006bef4990637a2718c768b
     m_Address: CardDetail_Popup
     m_ReadOnly: 0
