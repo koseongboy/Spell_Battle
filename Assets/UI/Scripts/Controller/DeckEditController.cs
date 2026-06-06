@@ -395,6 +395,7 @@ namespace DefaultNamespace {
                 return;
             }
             
+            // TODO : Deck 정보 저장
             currentDeckId = await DeckManager.Instance.CreateOrUpdateDeckAsync(currentDeckId, currentDeckName, currentDeckCardIds);
     
             CommonUIController.Instance.ShowBlackAlert($"{currentDeckName} 덱 저장 완료!");

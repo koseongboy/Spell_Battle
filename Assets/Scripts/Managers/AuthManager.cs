@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using Managers.LocalDataManagers;
+using Unity.Netcode;
 
 namespace DefaultNamespace {
     // 1. 요청(Request) 데이터 포맷 (로그인, 회원가입 공통)
@@ -121,7 +122,6 @@ namespace DefaultNamespace {
                 else
                 {
                     Debug.LogWarning($"[AuthManager] 자동 로그인 실패 (토큰 만료 또는 서버 에러): {request.error}");
-                    // 🛠️ [수정 부분] 토큰이 만료되었거나 유효하지 않으므로 로컬 저장소에서 삭제
                     PlayerPrefs.DeleteKey("Saved_JWT_Token");
                     return false;
                 }
@@ -159,6 +159,45 @@ namespace DefaultNamespace {
                     return false;
                 }
             }
+        }
+        
+        public async Task<UserProfileResponse> RequestUserProfileAsync(string targetUserId)
+        {
+            string token = LocalDataManager.Instance.userToken;
+    
+            if (string.IsNullOrEmpty(token)) return null;
+
+            using (UnityWebRequest request = UnityWebRequest.Get(serverURL + "/users/" + targetUserId))
+            {
+                request.SetRequestHeader("Authorization", "Bearer " + token);
+
+                var operation = request.SendWebRequest();
+                while (!operation.isDone) await Task.Yield();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    string responseText = request.downloadHandler.text;
+                    return JsonUtility.FromJson<UserProfileResponse>(responseText);
+                }
+                else
+                {
+                    Debug.LogError($"[AuthManager] 유저 프로필 조회 실패 ({targetUserId}): {request.error}");
+                    return null;
+                }
+            }
+        }
+
+        public void Logout() {
+            PlayerPrefs.DeleteKey("Saved_JWT_Token");
+            PlayerPrefs.Save();
+
+            LocalDataManager.Instance.ClearData();
+
+            // TODO : 서버 소켓이 연결되어 있다면 여기서 끊어주는 로직 추가 (필요 시)
+            // NetworkManager.Instance.Disconnect(); 
+
+            CommonUIController.Instance.InitFullScreenStack();
+            CommonUIController.Instance.ChangeFullScreen("LoginUI_FullScreen");
         }
     }
 }

@@ -2,12 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Managers;
+using Managers.LocalDataManagers;
 using Models.RelayMatchmakingService;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace DefaultNamespace {
+    
+    [Serializable]
+    public class UserProfileResponse 
+    {
+        public string userId;
+        public string nickname;
+        public int score;
+        public string rank;
+        public string[] equippedDeck;
+    }
+    
     public class RoomUIController : MonoBehaviour {
         public static RoomUIController Instance { get; private set; }
         private RelayMatchmakingService matchmakingService;
@@ -71,14 +83,7 @@ namespace DefaultNamespace {
             ui_Room.UpdateGuestReadyImg(false);
             ui_Room.UpdateRoomInfo(matchmakingService.CurrentLobbyName, matchmakingService.CurrentLobbyCode);
             
-            ui_Room.UpdateHostUI( /* TODO : 호스트의 정보 불러와서 주입해주기 */);
-            // 게스트 존재 여부 확인
-            if (matchmakingService.HasGuest) {
-                ui_Room.UpdateGuestUI( /* TODO : 게스트의 정보 불러와서 주입해주기 */);
-            }
-            else {
-                ui_Room.ClearGuestUI();
-            }
+            _ = RefreshRoomPlayersInfoAsync();
         }
 
         public void EnterRoom() {
@@ -113,7 +118,6 @@ namespace DefaultNamespace {
                 // 내가 '손님'으로 들어왔다면
                 else if (NetworkManager.Singleton.IsClient) {
                     ui_Room?.SetupRoleButtons(false);
-                    ui_Room?.UpdateGuestUI( /* TODO : 게스트의 정보 불러와서 주입해주기 */);
                 }
             }
 
@@ -123,6 +127,61 @@ namespace DefaultNamespace {
             }
 
             CommonUIController.Instance.DoneLoading();
+        }
+        
+        /// <summary>
+        /// 🛠️ [새로 추가] 로비 네트워크 상황과 웹 백엔드를 매핑하여 플레이어 프로필 UI를 새로고침합니다.
+        /// </summary>
+        private async Task RefreshRoomPlayersInfoAsync()
+        {
+            if (ui_Room == null) return;
+
+            var myLocalData = LocalDataManager.Instance;
+            bool isHost = NetworkManager.Singleton.IsHost;
+
+            // 1. 호스트(방장) 정보 처리
+            if (isHost)
+            {
+                // 내가 방장이라면: 서버 통신을 생략하고 내 기기의 데이터를 즉시 주입
+                ui_Room.UpdateHostUI(myLocalData.nickname, myLocalData.score, myLocalData.rank);
+            }
+            else
+            {
+                // 내가 게스트라면: 로비 명찰에서 방장의 웹서버 userId를 추출합니다.
+                string hostWebId = matchmakingService.GetHostWebUserId(); 
+                
+                if (!string.IsNullOrEmpty(hostWebId)) {
+                    var hostProfile = await AuthManager.Instance.RequestUserProfileAsync(hostWebId);
+                    if (hostProfile != null)
+                        ui_Room.UpdateHostUI(hostProfile.nickname, hostProfile.score, hostProfile.rank);
+                }
+            }
+
+            // 2. 게스트(손님) 정보 처리
+            if (matchmakingService.HasGuest) 
+            {
+                if (isHost)
+                {
+                    // 내가 방장이라면: 들어온 게스트의 로비 명찰에서 웹서버 userId를 추출하여 프로필을 조회합니다.
+                    string guestWebId = matchmakingService.GetGuestWebUserId();
+                    
+                    if (!string.IsNullOrEmpty(guestWebId)) {
+                        var guestProfile = await AuthManager.Instance.RequestUserProfileAsync(guestWebId);
+                        if (guestProfile != null)
+                            ui_Room.UpdateGuestUI(guestProfile.nickname, guestProfile.score, guestProfile.rank);
+                    }
+                }
+                else
+                {
+                    // 내가 게스트라면: 내 정보이므로 로컬 캐시에서 즉시 주입
+                    ui_Room.UpdateGuestUI(myLocalData.nickname, myLocalData.score, myLocalData.rank);
+                }
+            }
+            else 
+            {
+                // 방에 게스트가 없다면 손님 슬롯 UI를 비워줍니다.
+                ui_Room.ClearGuestUI();
+            }
         }
 
 
@@ -383,7 +442,7 @@ namespace DefaultNamespace {
 
             // 방장(나) 외에 누군가 들어왔다면 손님 UI 켜기
             if (NetworkManager.Singleton.IsHost && NetworkManager.Singleton.ConnectedClientsList.Count > 1) {
-                ui_Room?.UpdateGuestUI( /* 게스트 정보 주입 필요 */); // 손님 들어옴 처리
+                _ = RefreshRoomPlayersInfoAsync();
             }
         }
 

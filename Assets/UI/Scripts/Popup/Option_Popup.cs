@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Managers.LocalDataManagers;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -43,7 +44,14 @@ namespace DefaultNamespace
         }
         
         public void LogoutPressed() {
-            Debug.Log("[Option_Lobby] Logout Pressed");
+            ConfirmPopupData data = new ConfirmPopupData
+            {
+                message = "덱을 삭제하시겠습니까?",
+                onConfirm = AuthManager.Instance.Logout,
+                onCancel = () => { }
+            };
+
+            UILoader.Instance.ShowUI<ConfirmPopupData>("Confirm_Popup", data);
         }
         
         public void ExitGamePressed() {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WebSocketSharp;
 
 namespace DefaultNamespace
 {
@@ -81,7 +82,9 @@ namespace DefaultNamespace
         // 실제 게임오브젝트를 켜고 끄는 내부 로직
         private void SwitchUI(string targetUIName)
         {
-            UILoader.Instance.HideUI(currentFullScreenUI);
+            if (!currentFullScreenUI.IsNullOrEmpty()) {
+                UILoader.Instance.HideUI(currentFullScreenUI);
+            }
             UILoader.Instance.ShowUI(targetUIName);
             
             currentFullScreenUI = targetUIName;
@@ -94,6 +97,11 @@ namespace DefaultNamespace
             
             string previousUI = fullScreenUiHistoryStack.Peek(); 
             ChangeFullScreen(previousUI);
+        }
+
+        public void InitFullScreenStack() {
+            fullScreenUiHistoryStack.Clear();
+            currentFullScreenUI = string.Empty;
         }
     }
 }

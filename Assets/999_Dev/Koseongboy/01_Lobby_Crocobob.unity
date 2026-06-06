@@ -5603,7 +5603,6 @@ MonoBehaviour:
   canvas_Top: {fileID: 949277315}
   devGrid: {fileID: 0}
   awakeUIList:
-  - LeftUpper_Common
   - Login_FullScreen
 --- !u!4 &1857123819
 Transform:
