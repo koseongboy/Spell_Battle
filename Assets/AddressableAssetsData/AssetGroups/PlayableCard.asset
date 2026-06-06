@@ -1,0 +1,737 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: PlayableCard
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: PlayableCard
+  m_GUID: 26ec908aafae20a4a9864cd953c6d341
+  m_SerializeEntries:
+  - m_GUID: 0121e8970d3b63645ac8bc306bccd092
+    m_Address: Assets/ScriptableObject/PlayableCard/Water/Card_5005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 023d04666758f9a4098a8e3f4c690b5f
+    m_Address: Assets/ScriptableObject/PlayableCard/Water/Card_5001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 024cac52bdd50b245b177f150f8e02fd
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 028c13fc8b125764d8f59bd565484164
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 028e8e372df93f148a1a438c69e49938
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2020.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 03842abf05f01f042bef4202aaa7e2a4
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1012.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0647d60cbbe5a7d48b53609230181356
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0b9449326ec082c4786804b78786c57f
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0dcf7258932967a4ea616ec01c0645cc
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1018.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0f2a6dec787566e48ad24d142dc5d0c0
+    m_Address: Assets/ScriptableObject/PlayableCard/Fire/Card_4005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0fe288274c3471c4987823c24b276075
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2012.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 103f850d961ff524985e33ee007d5f00
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13e81a3e9cc199f40aed7faf69f6721e
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7009.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1661104bce861fc47b139b18a5b07aed
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 183d92299b37f954a8c82b644c38d0d1
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 18bf6314ee37993478c82d45eb1703af
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9009.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 19622e75e60eaff4ea274707d50fbc3a
+    m_Address: Assets/ScriptableObject/PlayableCard/Fire/Card_4003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ac023acccb1cc241886874ab51977ed
+    m_Address: Assets/ScriptableObject/PlayableCard/Thunder/Card_8003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1c774196e6908114f9e1ed2bc25324fe
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7011.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ce36ee02c6223e43abfe23e62e84067
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d81c91fc707597418c0fd15082c91d6
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1019.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 211ae74fb2244d34e9ef143f6786dc3e
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2534838a065a2374a8b9930896949054
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 294bb5e5c795f83469b593964cb1e1c8
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 29d2700c9da8c644a90f1bf4259ccf91
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2bdc18df1ab48e64e9a2def7b24c99e2
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2dc943100ebd6e04e8014dfd989d8f22
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3257632eba7d4164e9b25a67a670d0b8
+    m_Address: Assets/ScriptableObject/PlayableCard/Fire/Card_4004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 34ca3e790aee40b459f6fb9a1574a493
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3753cb23fe7e8104ba78b44310c80fe5
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b5e9e56ef594874ea441d0ed6b78b09
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d1a083c468d162419b3a808136bc152
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6012.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3e4002e75c47b5249a112f1575a0e75e
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3e781553a440eb94a9e83d600626636e
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3f7297d24eaa09943bc251e186f231ba
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6011.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 46d84858dbced084bbb024996d4325b0
+    m_Address: Assets/ScriptableObject/PlayableCard/Water/Card_5007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4a54f8daa9ba9d44ea6284d18d57b963
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1011.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4aed56107dd8be04c8425c712203be45
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2019.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ed6c4a6f96e5c54ba54cd7195dcf826
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2014.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 508eaf863b25b794684ef933dcc9a361
+    m_Address: Assets/ScriptableObject/PlayableCard/Thunder/Card_8002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 54734784cbc8cbc4a8b893a0650830a1
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1020.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 54e92d1249f486942b11de3033fa776d
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 554f98cdb3d8e024ea7a342fd3bc27f8
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7014.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 578ecc01d75216247a07b4a858190549
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6019842b66c9ba741b1f63b9e5c9c5c8
+    m_Address: Assets/ScriptableObject/PlayableCard/Fire/Card_4006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6083475a0532dd94884bc92ffdfb421d
+    m_Address: Assets/ScriptableObject/PlayableCard/Water/Card_5006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 631168e22d6e3304f99eb54d1a3c75f0
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 64566d002de67ee428d2e42b256ee68b
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 69fab700510065f4eb50982627e5e327
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a20df2d3d6eea24d8e2c6044b791103
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b1a4cb1d1e14d74f9db61d9551c5e28
+    m_Address: Assets/ScriptableObject/PlayableCard/Thunder/Card_8006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b8f4fe69ca2a1246a344cb391bf5dc3
+    m_Address: Assets/ScriptableObject/PlayableCard/Water/Card_5008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c269e49653463d4b9905758d54d0321
+    m_Address: Assets/ScriptableObject/PlayableCard/Thunder/Card_8001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c3036c435959b34a84340794d6dbcb0
+    m_Address: Assets/ScriptableObject/PlayableCard/Water/Card_5003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6d77b660b0a1e6e42ac3262a12a8fd35
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2013.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e0f5091b7bcff343b38583047db4722
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 72182554e8a857743b96fa43ae374ef9
+    m_Address: Assets/ScriptableObject/PlayableCard/Thunder/Card_8005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76181b0883ee64e4e8f186dad3e7ec0a
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1013.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 778ee523ea2233d429b1db78cfa5d0a7
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2009.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 779dcedba8a661f4ea49929d26c90fe8
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 78c14707ba185844c8097bdd11798284
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a56d44d7681b9340a298008f86fa32b
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7aef052eadc62654e8dfbe2caabc08ca
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1009.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 800181811bd94484282bf34024f9bbde
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2018.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8468441cd9fd18d42a65f3a6b3e85561
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8cd2a0d421b99cb46a23399835ff390c
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7012.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91e052d0019eba749b30a91148a51e23
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9370248e8d18aa84ba576d571c0baa6a
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1016.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 939d1d11584426c47afcf002ca57d37a
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 976b9730737f6a6468145fa35f7e5ab7
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9d83e940addc898439ffa89c7d690cdf
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0d685b8d5ec65545b2ee3d4bd8ede26
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a262545b426fb55478c7ef9ccdfcd482
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a43dcf0061330b44494e9a7f58d3e8bb
+    m_Address: Assets/ScriptableObject/PlayableCard/Thunder/Card_8004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4cd4f8e8982e534b9e8a84403994124
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7015.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a52332cde38df3e4498035187ef11f74
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a8476b350dec6ff438fc9e0dd7d95ea5
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7013.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac1cd8abbc903a146a906c08daa4423d
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1015.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b0661f5b3dee7e4479aa496caa40042b
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6009.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b7cad3d246cc13b488157d468d1c8a99
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b9a0ae51f9438644ba4f7d1a6eea4f16
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb951246c7b24e845b8aa77e5b55aa4d
+    m_Address: Assets/ScriptableObject/PlayableCard/Thunder/Card_8007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bbde0d08e8521484d8cb5a5ac8168d9f
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10010.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc64099886485f944ade48141969e823
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bd2f7ee0989e3d249ba30b30d5f11d20
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: be176e4e154c6fe40939c836ebd8c73c
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2015.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c179f6f77109b124792b992bd994b8af
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2011.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c24345f7b16e18b45848acb0f8ea07a6
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10009.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c281c02c35a9d7241b88b49d6463530f
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7010.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c3becdb5ec3368249949e3b16518f4f3
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c563899cd2cc29e4593b9e69426718e3
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c589d091f70bdc9438317cc11506583e
+    m_Address: Assets/ScriptableObject/PlayableCard/Fire/Card_4008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c7213809e276b904591852ab360d2337
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6010.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c7f68ca8f6a9b974b91cda2ce1c0567e
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2017.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc935768f9f79724cbac09eadd5dd962
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ce8bc21d1dc82644ea4c0fdafd252596
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d02c1e50d681f304eb8cd0702ac17df1
+    m_Address: Assets/ScriptableObject/PlayableCard/Fire/Card_4007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d05bad8ddc009aa48aaa6e465a6a9153
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d14a41186e7a4d24ea7ec484494be9b3
+    m_Address: Assets/ScriptableObject/PlayableCard/Deffense/Card_2016.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7c18af8d0cd7e643a7c9e7334a84d1b
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc4be09cf97b8b649b879682dc565fb7
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1017.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de1b30c28e28755448de3d95c037cf32
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de2a15bbcfec2de4995f3e471b7c99e9
+    m_Address: Assets/ScriptableObject/PlayableCard/Void/Card_10007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e169c15f8d6d0ff478b650d4d15b51bf
+    m_Address: Assets/ScriptableObject/PlayableCard/Water/Card_5002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e2c3f30b53991dd4d84a865b3208f8d9
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11009.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e752349b0d7c1e94bbd9d8af2b378622
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e874f5994656bda40a2d535899a2adea
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1014.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e8ac45906977d164b8a7c652d97ebcca
+    m_Address: Assets/ScriptableObject/PlayableCard/Water/Card_5004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb595ab55c9373c489c72aa7973d9d69
+    m_Address: Assets/ScriptableObject/PlayableCard/Wind/Card_7004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb5a1db4898674a4abcd3153c402cc2c
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6003.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec301ad9147d8104e8e7db0d26b9bbec
+    m_Address: Assets/ScriptableObject/PlayableCard/Vision/Card_11001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eda1fb4bc7a2b9f479ef217abe5ca6bb
+    m_Address: Assets/ScriptableObject/PlayableCard/Fire/Card_4001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef6df192d1f88b74bb354d9db8e44ce7
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9010.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efd3b77ac9477e942a825fd29a98d1be
+    m_Address: Assets/ScriptableObject/PlayableCard/Fire/Card_4002.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f002f64ec4721214fab74b09509b484c
+    m_Address: Assets/ScriptableObject/PlayableCard/Ground/Card_6006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3fc85316be5e5947ac39d835f28ddf4
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1010.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7467f6d9514325418515e76ac7862d5
+    m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f8f5f55858f4c6242b6655bd5b2941f7
+    m_Address: Assets/ScriptableObject/PlayableCard/Heal/Card_2010.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa87c032e9c3e85448de80075a2b2b45
+    m_Address: Assets/ScriptableObject/PlayableCard/Attack/Card_1008.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: a31b7ebbe5fbb3347804711c4be53676, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: de4bfa035573d0f4f8796ca8a270ab04, type: 2}
+    - {fileID: 11400000, guid: 4e28396e11254f14381f5bf4c404179a, type: 2}

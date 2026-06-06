@@ -6,28 +6,23 @@ using Unity.Netcode;
 using TMPro;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Cards.CardUIDatas;
 using Cards.EffectInfos;
 using Cards.PlayableCards;
 using Controllers.PlayerController;
 using Controllers.TurnControllers;
+using DefaultNamespace.Utilities;
 using Models.CardDatabases;
 using UnityEngine.Pool;
 
 namespace DefaultNamespace {
-    // 인스펙터에서 상태이상 종류별로 이미지를 매핑하기 위한 구조체
-    [Serializable]
-    public struct StatusIconMapping {
-        public StatusType Type;
-        public Sprite IconSprite;
-    }
-
+    
     public class PlayerUI : MonoBehaviour {
         public static PlayerUI Instance { get; private set; }
 
 
         [Header("체력 UI")] 
         public TextMeshProUGUI Text_Hp;
-
         public Slider Slider_Hp;
 
         [Header("마나 UI")] 
@@ -49,6 +44,10 @@ namespace DefaultNamespace {
         public Transform HandContainer;
         public GameObject CardPrefab;
         public Action<int> OnCardClickedAction;
+
+        [Header("이전 속성")] 
+        public Image img_LastElement;
+        public TextMeshProUGUI txt_LastElement;
         
         [Header("우하단 버튼")]
         public Button btn_endTurn;
@@ -97,7 +96,9 @@ namespace DefaultNamespace {
                 UpdateMana(model.CurrentMana.Value, newValue, model.FinalMana.Value);
             model.OnExpectedManaChanged += (newExpectedMana) => 
                 UpdateMana(model.CurrentMana.Value, model.MaxMana.Value, model.FinalMana.Value, newExpectedMana);
-
+            model.LastProperty.OnValueChanged += (oldValue, newValue) => UpdateLastProperty(newValue);
+            
+            
             // 3. 기타 상태 및 카드 정보 바인딩
             UpdateStatuses(model.ActiveStatuses);
             model.ActiveStatuses.OnListChanged += (changeEvent) => UpdateStatuses(model.ActiveStatuses);
@@ -175,16 +176,40 @@ namespace DefaultNamespace {
                 int totalStacks = kvp.Value;
 
                 if (totalStacks <= 0) continue;
+                
+                var uiData = StatusUIDataManager.Instance.GetStatusData(type);
 
-                Sprite iconSprite = IconDatabase != null ? IconDatabase.GetIcon(type) : null;
-
+                Sprite iconSprite = null;
                 GameObject iconObj = Instantiate(StatusIconPrefab, StatusGrid);
                 UI_StatusIcon statusIcon = iconObj.GetComponent<UI_StatusIcon>();
 
                 if (statusIcon != null) {
-                    statusIcon.Setup(iconSprite, totalStacks);
+                    statusIcon.Setup(uiData.Icon, totalStacks);
                 }
             }
+        }
+        
+        public void UpdateLastProperty(Property prop)
+        {
+            string prop_text = "";
+            switch(prop)
+            {
+                case Property.Attack: prop_text = "공격"; break;
+                case Property.Deffense: prop_text = "방어"; break;
+                case Property.Fire: prop_text = "불"; break;
+                case Property.Water: prop_text = "물"; break;
+                case Property.Ground: prop_text = "흙"; break;
+                case Property.Wind: prop_text = "바람"; break;
+                case Property.Thunder: prop_text = "번개"; break;
+                case Property.Ice: prop_text = "얼음"; break;
+                case Property.Void: prop_text = "공허"; break;
+                case Property.Vision: prop_text = "비전"; break;
+                case Property.Life: prop_text = "생명"; break;
+                case Property.None: prop_text = "없음"; break;
+                default: prop_text = "(알 수 없음)"; break;
+            }
+            txt_LastElement.text = prop_text;
+            // TODO : Element Image
         }
 
         private void UpdateHandInfo(ObservableCollection<int> localHand) {
@@ -198,7 +223,7 @@ namespace DefaultNamespace {
             // 2. 현재 손패 장수만큼 풀에서 카드를 꺼내와서 데이터 세팅
             for (int i = 0; i < localHand.Count; i++) {
                 int cardId = localHand[i];
-                var rawCardData = CardDatabase.GetCardById(cardId);
+                var rawCardData = CardDatabase.Instance.GetCardById(cardId);
 
                 PlayableCard genericCard = rawCardData;
                 if (genericCard == null) continue;

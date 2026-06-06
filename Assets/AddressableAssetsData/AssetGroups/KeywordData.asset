@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: KeywordData
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: KeywordData
+  m_GUID: d0aecb166dff9274f8e433cefcdceedf
+  m_SerializeEntries:
+  - m_GUID: 0a6471a768b932a4e8e377c19d2e7d1e
+    m_Address: Assets/ScriptableObject/KeywordData/Expose.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0e3272701a359344ca4c79866a5ecad8
+    m_Address: Assets/ScriptableObject/KeywordData/Reflect.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e8901091c3f2dd47ba688b0c0914efc
+    m_Address: Assets/ScriptableObject/KeywordData/Freeze.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2eacd16bc1df90f44b08d551e119fb00
+    m_Address: Assets/ScriptableObject/KeywordData/Drain.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d6c3dde55262b341ac93153c63ea93b
+    m_Address: Assets/ScriptableObject/KeywordData/OverCharge.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4a4e925c48e16b54e85b780498baa801
+    m_Address: Assets/ScriptableObject/KeywordData/Ultimate.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5402056727c8b824f8dbc7a2022cf1b9
+    m_Address: Assets/ScriptableObject/KeywordData/Condense.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e64761205a192048acd2f314dad292d
+    m_Address: Assets/ScriptableObject/KeywordData/Wet.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88f22490774582f41acc98cb882df011
+    m_Address: Assets/ScriptableObject/KeywordData/Ignite.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b7d843157a67f749ad0554060ce51bb
+    m_Address: Assets/ScriptableObject/KeywordData/Smash.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b43f1425867031f41905ae1c6d0d995e
+    m_Address: Assets/ScriptableObject/KeywordData/Critical.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c776d0a1b75dc5446a20d8c91037716c
+    m_Address: Assets/ScriptableObject/KeywordData/Riverbind.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec46807cbe98aac4e9d615fa483dbb5d
+    m_Address: Assets/ScriptableObject/KeywordData/Prophecy.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f20ca3c89e01fd5409f8122d4c41469d
+    m_Address: Assets/ScriptableObject/KeywordData/Stun.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - KeywordData
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: a31b7ebbe5fbb3347804711c4be53676, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 24550e7357a4fbb44b775a7ed3015f93, type: 2}
+    - {fileID: 11400000, guid: 14ed477e79047c74089908a8a1d29db9, type: 2}

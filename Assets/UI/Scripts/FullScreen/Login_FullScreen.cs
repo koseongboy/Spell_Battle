@@ -29,11 +29,58 @@ namespace DefaultNamespace
 
         private void Awake() {
             registerOriginalPosition = registerRect.anchoredPosition;
+            
+            // 팩트: TMP_InputField의 onSubmit 이벤트는 유저가 해당 입력창에서 '엔터'를 눌렀을 때만 발동합니다.
+            idInputField.onSubmit.AddListener(OnSubmitPressed);
+            pwInputField.onSubmit.AddListener(OnSubmitPressed);
+        }
+        
+        private void Start()
+        {
+            // TODO : AutoLogin. 서버쪽 준비되면 주석 해제. 
+            // TryAutoLogin();
         }
 
         private void OnEnable() {
             isRegisterOn = false;
             registerPanel.SetActive(false);
+        }
+        
+        private void OnDestroy()
+        {
+            if (idInputField != null) idInputField.onSubmit.RemoveListener(OnSubmitPressed);
+            if (pwInputField != null) pwInputField.onSubmit.RemoveListener(OnSubmitPressed);
+        }
+
+        private async void TryAutoLogin() {
+            if (PlayerPrefs.HasKey("Saved_JWT_Token"))
+            {
+                string savedToken = PlayerPrefs.GetString("Saved_JWT_Token");
+                
+                CommonUIController.Instance.ShowLoading();
+
+                // 2. AuthManager에게 자동 로그인 통신 처리를 위임합니다.
+                bool isAutoSuccess = await AuthManager.Instance.RequestAutoLoginAsync(savedToken);
+
+                if (isAutoSuccess)
+                {
+                    await Controllers.LobbyController.LobbyController.Instance.InitializeNetworkAsync();
+
+                    UILoader.Instance.HideUI("Login_FullScreen");
+                    CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
+                    UILoader.Instance.ShowUI("LeftUpper_Common");
+                }
+            }
+        }
+        
+        /// <param name="text">입력창에 적혀있던 최종 텍스트</param>
+        private void OnSubmitPressed(string text)
+        {
+            // ID나 PW 입력창 중 하나라도 포커스가 가 있는 상태에서 엔터를 치면 즉시 로그인 프로세스 가동
+            if (idInputField.isFocused || pwInputField.isFocused)
+            {
+                OnLoginButtonClick();
+            }
         }
 
         public async void OnLoginButtonClick()
@@ -54,9 +101,10 @@ namespace DefaultNamespace
             if (isSuccess)
             {
                 await Controllers.LobbyController.LobbyController.Instance.InitializeNetworkAsync();
-
+                
+                UILoader.Instance.HideUI("Login_FullScreen");
                 CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
-                CommonUIController.Instance.DoneLoading();
+                UILoader.Instance.ShowUI("LeftUpper_Common");
             }
             else
             {

@@ -110,23 +110,23 @@ namespace DefaultNamespace {
         }
 
         // 호스트(방장) 정보 세팅
-        public void UpdateHostUI( /* 매개변수로 플레이어 데이터 객체 전달 */) {
+        public void UpdateHostUI(string name, int score, string rank) {
             hostSlotGroup.SetActive(true);
 
             // TODO
-            txt_HostName.text = "Host Player";
-            txt_HostRank.text = "5";
-            txt_HostScore.text = "12345";
+            txt_HostName.text = name;
+            txt_HostRank.text = rank;
+            txt_HostScore.text = score.ToString();
         }
 
         // 게스트(손님) 정보 세팅
-        public void UpdateGuestUI( /* 매개변수로 플레이어 데이터 객체 전달 */) {
+        public void UpdateGuestUI(string name, int score, string rank) {
             guestSlotGroup.SetActive(true);
 
             // TODO
-            txt_GuestName.text = "Guest Player";
-            txt_GuestRank.text = "3";
-            txt_GuestScore.text = "54321";
+            txt_GuestName.text = name;
+            txt_GuestRank.text = rank;
+            txt_GuestScore.text = score.ToString();
         }
 
         // 게스트가 나갔을 때 슬롯 비우기

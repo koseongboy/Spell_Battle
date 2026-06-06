@@ -26,7 +26,13 @@ namespace Controllers.LobbyController {
 
             matchmakingService = RelayMatchmakingService.Instance;
         }
-        
+
+        private void OnEnable() {
+            // 혹시 있을까 꺼주기
+            Debug.LogWarning("바로 다음에 NULL 뜰 수 있음!! 문제없으니 괜찮음!!");
+            CommonUIController.Instance.DoneLoading();
+        }
+
         /// <summary>
         /// 웹 서버 로그인이 완전히 끝난 후, 외부에서 명시적으로 호출할 UGS 및 릴레이 초기화 함수
         /// </summary>
@@ -82,10 +88,6 @@ namespace Controllers.LobbyController {
             CommonUIController.Instance.ShowBlackAlert("헤헷 미구현입니다. 그치만 저희 열심히 만들었어요.");
         }
 
-
-        public void GoBackToLobby() {
-            // TODO : '로비로 돌아가시겠습니까?' confirm
-        }
 
 
         // --- 탭 이동: 방 찾기 ---

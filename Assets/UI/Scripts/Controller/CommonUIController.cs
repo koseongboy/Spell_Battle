@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WebSocketSharp;
 
 namespace DefaultNamespace
 {
@@ -22,7 +23,7 @@ namespace DefaultNamespace
         #endregion
         
         [SerializeField] private Stack<string> fullScreenUiHistoryStack = new Stack<string>();
-        private string currentFullScreenUI = string.Empty;
+        public string currentFullScreenUI = string.Empty;
         
         public bool CanGoBack => fullScreenUiHistoryStack.Count > 0;
         
@@ -72,12 +73,19 @@ namespace DefaultNamespace
 
             // 실제 UI 활성화 처리
             SwitchUI(target);
+
+            if (currentFullScreenUI == "Lobby_FullScreen") {
+                fullScreenUiHistoryStack = new Stack<string>();
+                LeftUpperController.Instance.SetBackAction(null);
+            }
         }
         
         // 실제 게임오브젝트를 켜고 끄는 내부 로직
         private void SwitchUI(string targetUIName)
         {
-            UILoader.Instance.HideUI(currentFullScreenUI);
+            if (!currentFullScreenUI.IsNullOrEmpty()) {
+                UILoader.Instance.HideUI(currentFullScreenUI);
+            }
             UILoader.Instance.ShowUI(targetUIName);
             
             currentFullScreenUI = targetUIName;
@@ -90,6 +98,11 @@ namespace DefaultNamespace
             
             string previousUI = fullScreenUiHistoryStack.Peek(); 
             ChangeFullScreen(previousUI);
+        }
+
+        public void InitFullScreenStack() {
+            fullScreenUiHistoryStack.Clear();
+            currentFullScreenUI = string.Empty;
         }
     }
 }

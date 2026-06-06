@@ -72,7 +72,6 @@ namespace DefaultNamespace {
             txt_DetailName.text = data.CardData.Name;
             txt_DetailCost.text = data.CardData.Cost.ToString();
 
-            // TODO: 추후 구현하실 디테일 설명/용어 처리
             txt_DetailDesc.text = data.CardData.uiData.desc;
 
             // 열람 모드(CanAdd == false)일 경우 아래 '추가' 버튼을 아예 끕니다.
@@ -88,7 +87,7 @@ namespace DefaultNamespace {
             var keywordList = data.CardData.uiData.Keywords;
             if (keywordList != null) {
                 foreach (CardKeyword keyword in keywordList) {
-                    if (KeywordDatabase.TryGetKeywordData(keyword, out string title, out string desc)) {
+                    if (CardDatabase.Instance.TryGetKeywordData(keyword, out string title, out string desc)) {
                         UI_EffectDetail tooltipObj = tooltipPool.Get();
                         tooltipObj.Init(title, desc);
                         activeTooltips.Add(tooltipObj);

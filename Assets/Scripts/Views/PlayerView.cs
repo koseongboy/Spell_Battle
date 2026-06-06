@@ -9,6 +9,9 @@ using System.Collections.Generic;
 // using UnityEngine.Rendering.LookDev;
 using Models.CardDatabases;
 using Cards.CardUIDatas;
+using DefaultNamespace;
+using DefaultNamespace.Utilities;
+
 // using TMPro;
 
 namespace Views.PlayerView // 기존에 쓰시던 네임스페이스 그대로 사용!
@@ -131,7 +134,7 @@ namespace Views.PlayerView // 기존에 쓰시던 네임스페이스 그대로 �
                 case Property.None: prop_text = "없음"; break;
                 default: prop_text = "(알 수 없음)"; break;
             }
-            Text_LastProperty.text = $"마지막 속성: {prop_text}";
+            Text_LastProperty.text = prop_text;
         }
         public  void UpdateStatuses(NetworkList<StatusData> statuses)
         {
@@ -140,7 +143,7 @@ namespace Views.PlayerView // 기존에 쓰시던 네임스페이스 그대로 �
             foreach(StatusData status in statuses)
             {
                 string durationStr = status.Duration == -1 ? "영구" : $"{status.Duration}턴";
-                statusStrings.Add($"{status.GetTranslateStatus()} [{status.Stacks}스택 / {durationStr}], ");
+                statusStrings.Add($"{StatusUIDataManager.Instance.GetStatusData( status.Type ).name} [{status.Stacks}스택 / {durationStr}], ");
             }
             string finalMsg = string.Join(", ", statusStrings);
             Text_Status.text = "상태이상: " + finalMsg;
@@ -205,7 +208,7 @@ namespace Views.PlayerView // 기존에 쓰시던 네임스페이스 그대로 �
         private string ConvertIdToCardName(int id)
         {
             // 2. 이미 TurnController에서 검증용으로 사용 중인 데이터베이스 함수를 호출합니다.
-            var cardData = CardDatabase.GetCardById(id); 
+            var cardData = CardDatabase.Instance.GetCardById(id); 
 
             if (cardData != null)
             {

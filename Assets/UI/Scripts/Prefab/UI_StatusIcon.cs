@@ -24,5 +24,9 @@ namespace DefaultNamespace
                 StackText.text = totalStacks.ToString();
             }
         }
+
+        public void OnClick() {
+            UILoader.Instance.ShowUI("StatusDetail_Popup");
+        }
     }
 }

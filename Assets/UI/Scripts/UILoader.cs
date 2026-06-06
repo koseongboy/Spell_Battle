@@ -51,7 +51,6 @@ namespace DefaultNamespace
         /// </summary>
         public void ShowUI(string uiName)
         {
-            Debug.Log("Showing UI: " + uiName);
             if (loadedUIs.TryGetValue(uiName, out GameObject uiInstance) && uiInstance != null)
             {
                 uiInstance.SetActive(true);

@@ -1,96 +1,137 @@
-using UnityEngine;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using Cards.EffectInfos;
 using Cards.PlayableCards;
+using DefaultNamespace;
 
 namespace Models.CardDatabases
 {
-    public static class CardDatabase
+    public class CardDatabase : MonoBehaviour
     {
-        private static Dictionary<int, PlayableCard> cardDictionary;
-        private static void Initialize()
+        public static CardDatabase Instance { get; private set; }
+
+        [Header("어드레서블 로드 라벨 설정")]
+        [SerializeField] private AssetLabelReference cardLabel;
+        [SerializeField] private AssetLabelReference keywordLabel;
+
+        private Dictionary<int, PlayableCard> _cardDictionary;
+        private Dictionary<CardKeyword, KeywordData> _keywordDictionary;
+
+        public bool IsReady { get; private set; } = false;
+
+        private void Awake()
         {
-            // 이미 로드되었다면 중복 실행 방지
-            if (cardDictionary != null) return;
-
-            cardDictionary = new Dictionary<int, PlayableCard>();
-
-            // CardDataManager의 경로를 사용하여 데이터 로드
-            PlayableCard[] allCards = Resources.LoadAll<PlayableCard>("Cards/PlayableCard");
-
-            foreach (var card in allCards)
+            if (Instance == null)
             {
-                // 데이터 안정성 체크 (우리가 작성했던 로직 유지)
-                if (card != null && card.uiData != null)
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+                
+                // 카드와 키워드 데이터를 비동기로 한 번에 로드합니다.
+                _ = InitializeAsync();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private async Task InitializeAsync()
+        {
+            _cardDictionary = new Dictionary<int, PlayableCard>();
+            _keywordDictionary = new Dictionary<CardKeyword, KeywordData>();
+
+            // ==========================================
+            // 1. 플레이어블 카드 SO 로드
+            // ==========================================
+            var cardHandle = Addressables.LoadAssetsAsync<PlayableCard>(cardLabel.labelString, null);
+            await cardHandle.Task;
+
+            if (cardHandle.Status == AsyncOperationStatus.Succeeded)
+            {
+                foreach (var card in cardHandle.Result)
                 {
-                    if (!cardDictionary.ContainsKey(card.uiData.id))
+                    if (card != null && card.uiData != null)
                     {
-                        cardDictionary.Add(card.uiData.id, card);
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"[CardDatabase] 중복된 카드 ID가 존재합니다! 지워주세요. ID: {card.uiData.id}");
+                        if (!_cardDictionary.ContainsKey(card.uiData.id))
+                        {
+                            _cardDictionary.Add(card.uiData.id, card);
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"[CardDatabase] 중복된 카드 ID: {card.uiData.id}");
+                        }
                     }
                 }
             }
-        
-            Debug.Log($"[CardDatabase] 총 {cardDictionary.Count}장의 카드를 성공적으로 메모리에 로드했습니다.");
+            else
+            {
+                Debug.LogError("[CardDatabase] 카드 어드레서블 로드 실패!");
+            }
+
+            // ==========================================
+            // 2. 키워드 SO 로드
+            // ==========================================
+            var keywordHandle = Addressables.LoadAssetsAsync<KeywordData>(keywordLabel.labelString, null);
+            await keywordHandle.Task;
+
+            if (keywordHandle.Status == AsyncOperationStatus.Succeeded)
+            {
+                foreach (var kw in keywordHandle.Result)
+                {
+                    if (kw != null)
+                    {
+                        if (!_keywordDictionary.ContainsKey(kw.Keyword))
+                        {
+                            _keywordDictionary.Add(kw.Keyword, kw);
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"[CardDatabase] 중복된 키워드: {kw.Keyword}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("[CardDatabase] 키워드 어드레서블 로드 실패!");
+            }
+            
+            IsReady = true;
+            Debug.Log($"[CardDatabase] 카드 {_cardDictionary.Count}장, 키워드 {_keywordDictionary.Count}개 로드 완료.");
         }
-        
-        // ==========================================
-        // 🔍 외부에서 모든 Card의 SO를 가져가는 함수
-        // ==========================================
-        public static List<PlayableCard> GetAllCards()
-        {
-            // 데이터가 아직 로드되지 않았다면 초기화
-            if (cardDictionary == null) Initialize();
-        
-            return new List<PlayableCard>(cardDictionary.Values);
-        }
-        
 
         // ==========================================
-        // 🔍 외부에서 카드 ID로 SO를 가져갈 때 사용하는 함수
+        // 🔍 외부 데이터 조회 함수 (CRUD: Read)
         // ==========================================
-        public static PlayableCard GetCardById(int id)
+        public List<PlayableCard> GetAllCards()
         {
-            // 데이터가 아직 로드되지 않았다면 초기화
-            if (cardDictionary == null) Initialize();
+            if (!IsReady) return new List<PlayableCard>();
+            return new List<PlayableCard>(_cardDictionary.Values);
+        }
 
-            if (cardDictionary.TryGetValue(id, out PlayableCard card))
+        public PlayableCard GetCardById(int id)
+        {
+            if (_cardDictionary != null && _cardDictionary.TryGetValue(id, out PlayableCard card))
             {
                 return card;
             }
         
-            Debug.LogError($"[CardDatabase] ID가 {id}인 카드를 찾을 수 없습니다! 엑셀 또는 SO 데이터를 확인해주세요.");
+            Debug.LogError($"[CardDatabase] ID가 {id}인 카드를 찾을 수 없습니다!");
             return null;
         }
-    }
-    
-    public static class KeywordDatabase {
-        private static readonly Dictionary<CardKeyword, (string title, string desc)> keywordData = new() {
-            { CardKeyword.Ignite, ("발화", "턴이 끝날 때 발화 중첩 당 1의 피해를 입습니다.") },
-            { CardKeyword.Riverbend, ("강굽이", "이전 주문의 속성이 물일 경우, 추가 효과가 발동합니다.") },
-            { CardKeyword.Freeze, ("빙결", "빙결 중첩이 3이 되면, 중첩이 초기화되고 추가 데미지를 입힙니다.") },
-            { CardKeyword.Prophecy, ("예언", "예언 30 중첩을 쌓으면 플레이어가 막강해집니다.") },
-            { CardKeyword.Condense, ("응축", "응축 중첩을 소모하여 '방출' 주문의 위력을 강화합니다.") },
-            { CardKeyword.Expose, ("방출", "보유한 응축 중첩을 모두 소모합니다.") },
-            { CardKeyword.Reflect, ("반사", "받은 피해의 일부를 적에게 되돌려줍니다.") },
-            { CardKeyword.Wet, ("젖음", "젖음 효과가 있는 대상에게 ") },
-            { CardKeyword.Stun, ("기절", "다음 턴에 마나의 절반을 사용할 수 없습니다.") },
-            { CardKeyword.Smash, ("깨뜨림", "빙결 중첩이 3에 달할 경우, 피해를 4 입습니다.") },
-            { CardKeyword.Critical, ("치명타", "피해량이 2배 증가합니다.") },
-            { CardKeyword.OverCharge, ("과충전", "이번 턴 동안 주문의 공격력이 2배로 증가합니다.") },
-            { CardKeyword.Drain, ("생명력 흡수", "입힌 피해의 절반만큼 생명력을 회복합니다.") },
-            { CardKeyword.Ultimate, ("궁극기", "이 주문이 발동되면 턴이 끝납니다.") },
-        };
 
-        public static bool TryGetKeywordData(CardKeyword keyword, out string title, out string desc) {
-            if (keywordData.TryGetValue(keyword, out var data)) {
-                title = data.title;
-                desc = data.desc;
+        public bool TryGetKeywordData(CardKeyword keyword, out string title, out string desc)
+        {
+            if (_keywordDictionary != null && _keywordDictionary.TryGetValue(keyword, out KeywordData data))
+            {
+                title = data.Title;
+                desc = data.Description;
                 return true;
             }
+            
             title = string.Empty;
             desc = string.Empty;
             return false;

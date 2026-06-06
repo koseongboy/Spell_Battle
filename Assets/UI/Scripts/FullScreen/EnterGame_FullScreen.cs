@@ -94,9 +94,6 @@ namespace DefaultNamespace {
         private void BindEvents() {
             var cont = LobbyController.Instance;
 
-            // TODO : 랜덤입장
-            // btn_RandomEnter.onClick.AddListener( () => cont. );
-
             // 좌측 메뉴
             btn_RandomEnter.onClick.AddListener(() => _ = cont.OnClick_RandomJoin());
 

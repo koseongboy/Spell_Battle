@@ -37,13 +37,13 @@ namespace DefaultNamespace {
         private PlayableCard currentlyViewedCard = null;
 
         private void Start() {
-            // 1. 모든 카드 데이터 로드
-            allCards = CardDatabase.GetAllCards();
+            CommonUIController.Instance.DoneLoading();
         }
 
         // View가 OnEnable될 때 스스로 호출하는 함수
         public void RegisterView(DeckEdit_FullScreen newView) {
             ui_DeckEdit = newView;
+            allCards = CardDatabase.Instance.GetAllCards();
 
             // 새로운 View가 등록될 때 기존에 쌓여있던 리스너를 완전히 청소합니다.
             ui_DeckEdit.saveButton.onClick.RemoveAllListeners();
@@ -71,7 +71,7 @@ namespace DefaultNamespace {
             ui_DeckEdit.btn_ConfirmNewDeck.onClick.AddListener(ConfirmNewDeck);
             
             // 삭제 및 이름 변경 로직
-            ui_DeckEdit.btn_DeleteDeck.onClick.AddListener(DeleteDeck);
+            ui_DeckEdit.btn_DeleteDeck.onClick.AddListener(ConfirmDeleteDeck);
             ui_DeckEdit.btn_RenameDeck.onClick.AddListener(OpenRenameDeckPopup);
             ui_DeckEdit.btn_ConfirmRenameDeck.onClick.AddListener(ConfirmRenameDeck);
             ui_DeckEdit.btn_CloseRenameDeckPopup.onClick.AddListener(CloseRenameDeckPopup);
@@ -197,7 +197,7 @@ namespace DefaultNamespace {
             var groupedCards = currentDeckCardIds
                 .GroupBy(id => id)
                 .Select(group => new {
-                    Data = CardDatabase.GetCardById(group.Key),
+                    Data = CardDatabase.Instance.GetCardById(group.Key),
                     Count = group.Count()
                 })
                 .OrderBy(c => c.Data.uiData.cost)
@@ -395,6 +395,7 @@ namespace DefaultNamespace {
                 return;
             }
             
+            // TODO : Deck 정보 저장
             currentDeckId = await DeckManager.Instance.CreateOrUpdateDeckAsync(currentDeckId, currentDeckName, currentDeckCardIds);
     
             CommonUIController.Instance.ShowBlackAlert($"{currentDeckName} 덱 저장 완료!");
@@ -406,12 +407,24 @@ namespace DefaultNamespace {
         // ==========================================
         // 삭제 로직
         // ==========================================
-        private async void DeleteDeck() {
+        private async void ConfirmDeleteDeck() {
             if (string.IsNullOrEmpty(currentDeckId)) {
                 CommonUIController.Instance.ShowRedAlert("삭제할 덱이 선택되지 않았습니다.");
                 return;
             }
+            
+            ConfirmPopupData data = new ConfirmPopupData
+            {
+                message = "덱을 삭제하시겠습니까?",
+                onConfirm = DeleteDeck,
+                onCancel = () => { }
+            };
 
+            UILoader.Instance.ShowUI<ConfirmPopupData>("Confirm_Popup", data);
+        }
+
+        private async void DeleteDeck() {
+            
             // DeckManager를 통해 삭제 처리
             await DeckManager.Instance.DeleteDeckAsync(currentDeckId);
             CommonUIController.Instance.ShowBlackAlert($"'{currentDeckName}' 덱이 삭제되었습니다.");

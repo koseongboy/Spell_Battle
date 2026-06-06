@@ -4,6 +4,8 @@ using Unity.Netcode;
 using System.Collections.Generic;
 using TMPro;
 using Cards.CardUIDatas;
+using DefaultNamespace;
+using DefaultNamespace.Utilities;
 
 namespace Views.EnemyView 
 {
@@ -103,7 +105,7 @@ namespace Views.EnemyView
             foreach(StatusData status in statuses)
             {
                 string durationStr = status.Duration == -1 ? "영구" : $"{status.Duration}턴";
-                statusStrings.Add($"{status.GetTranslateStatus()} [{status.Stacks}스택 / {durationStr}], ");
+                statusStrings.Add($"{StatusUIDataManager.Instance.GetStatusData( status.Type ).name} [{status.Stacks}스택 / {durationStr}], ");
             }
             string finalMsg = string.Join(", ", statusStrings);
             Text_Status.text = "상태이상: " + finalMsg;
