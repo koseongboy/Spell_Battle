@@ -72,7 +72,7 @@ namespace DefaultNamespace
         }
 
         public void CloseUI() {
-            // TODO : DOTween
+            UILoader.Instance.HideUI("StatusDetail_Popup");
         }
     }
 }

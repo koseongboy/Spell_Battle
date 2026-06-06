@@ -11,10 +11,12 @@ using Cards.EffectInfos;
 using Cards.PlayableCards;
 using Controllers.PlayerController;
 using Controllers.TurnControllers;
+using DefaultNamespace.Utilities;
 using Models.CardDatabases;
 using UnityEngine.Pool;
 
 namespace DefaultNamespace {
+    
     public class PlayerUI : MonoBehaviour {
         public static PlayerUI Instance { get; private set; }
 
@@ -175,8 +177,9 @@ namespace DefaultNamespace {
 
                 if (totalStacks <= 0) continue;
 
-                Sprite iconSprite = IconDatabase != null ? IconDatabase.GetIcon(type) : null;
-
+                // TODO : Element Image
+                // Sprite iconSprite = StatusDataUtility.GetStatusIcon(type);
+                Sprite iconSprite = null;
                 GameObject iconObj = Instantiate(StatusIconPrefab, StatusGrid);
                 UI_StatusIcon statusIcon = iconObj.GetComponent<UI_StatusIcon>();
 

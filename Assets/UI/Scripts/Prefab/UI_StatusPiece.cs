@@ -1,3 +1,4 @@
+using DefaultNamespace.Utilities;
 using Models.PlayerModels;
 using TMPro;
 using UnityEngine;
@@ -17,11 +18,12 @@ namespace DefaultNamespace
         
         public void UpdateUI(StatusData data) {
             // TODO : Element Image
+            // img_Element.sprite = StatusDataUtility.GetStatusIcon(data.Type);
             
             txt_Name.text = data.Type.ToString();
-            txt_Turn.text = data.Duration.ToString();
-            txt_Stack.text = data.Stacks.ToString();
-            // txt_Desc.text = data.Description;
+            txt_Turn.text = data.Duration + "턴";
+            txt_Stack.text = data.Stacks + "스택";
+            txt_Desc.text = StatusDataUtility.GetStatusDesc(data.Type);
         }
     }
 }
