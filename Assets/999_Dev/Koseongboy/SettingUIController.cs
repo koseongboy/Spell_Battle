@@ -15,9 +15,15 @@ public class SettingUIController : MonoBehaviour
     public Button btn_save;                 // 저장 버튼
     public Button btn_cancel;               // 취소 버튼
 
+    [Header("평상시 목소리 등록 UI")]
+    public Button btn_recordDefaultVoice;
+    public Text btn_recordDefaultVoice_text;
+
     // 취소 버튼을 눌렀을 때 되돌릴 원본 데이터를 저장할 변수
     private float originalMicVol;
     private float originalOutputVol;
+
+    private bool isRecordingDefault = false;
 
     private void Awake()
     {
@@ -25,6 +31,7 @@ public class SettingUIController : MonoBehaviour
         btn_test.onClick.AddListener(OnTestButtonClicked);
         btn_save.onClick.AddListener(OnSaveButtonClicked);
         btn_cancel.onClick.AddListener(OnCancelButtonClicked);
+        btn_recordDefaultVoice.onClick.AddListener(OnRecordDefaultVoiceClicked);
         
         micVolumeSlider.onValueChanged.AddListener(OnMicVolumeChanged);
     }
@@ -130,6 +137,40 @@ public class SettingUIController : MonoBehaviour
         {
             VoiceManager.Instance.StopMicTest();
             btn_test_text.text = "마이크 테스트";
+        }
+    }
+
+    private async void OnRecordDefaultVoiceClicked()
+    {
+        if (!isRecordingDefault)
+        {
+            // 1. 녹음 시작
+            VoiceManager.Instance.StartRecording();
+            isRecordingDefault = true;
+            btn_recordDefaultVoice_text.text = "녹음 종료 및 등록";
+            Debug.Log("[SettingUI] 평상시 목소리 녹음을 시작합니다. 자연스럽게 말씀해 주세요.");
+        }
+        else
+        {
+            // 2. 녹음 종료
+            byte[] myDefaultWav = VoiceManager.Instance.StopRecording();
+            isRecordingDefault = false;
+            btn_recordDefaultVoice_text.text = "평상시 목소리 등록";
+
+            // 3. 피치 분석 (TODO: 유니티에서 FFT 분석을 하거나 서버에 맡겨야 함)
+            float extractedPitch = 150.0f; // 임시 피치값 (예: 150Hz)
+            
+            // 4. 로컬 캐싱 업데이트
+            Managers.LocalDataManagers.LocalDataManager.Instance.defaultPitch = extractedPitch;
+
+            // 5. 서버에 전송
+            string myUserId = Managers.LocalDataManagers.LocalDataManager.Instance.userId;
+            bool success = await Models.Networks.WebServerModel.Instance.SetDefaultPitchAsync(myUserId, extractedPitch);
+
+            if (success)
+            {
+                Debug.Log("[SettingUI] 평상시 목소리 세팅이 서버에 성공적으로 등록되었습니다!");
+            }
         }
     }
 }

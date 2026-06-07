@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -6,7 +7,18 @@ using UnityEngine.Networking;
 namespace Models.Networks
 {
     // ==========================================
-    // 📦 API 응답 데이터를 담을 구조체
+    // 📦 1. 웹 서버로 보낼 메타데이터 규격 (새로 추가)
+    // ==========================================
+    [Serializable]
+    public class VoiceMetadata
+    {
+        public string userId;
+        public string concept;
+        public string prefix;
+        public List<string> wordNames; // 카드의 wordName 리스트
+    }
+    // ==========================================
+    // 📦 2. 서버 응답 데이터 규격
     // ==========================================
     [Serializable]
     public class UploadVoiceResponse
@@ -21,6 +33,7 @@ namespace Models.Networks
         public string status;
         public string message;
         public int score;
+        public string recognizedSentence; // 🌟 서버가 STT로 인식한 플레이어의 실제 발음 문장!
     }
 
     // 🌟 MonoBehaviour 상속을 제거한 순수 C# 클래스
@@ -40,14 +53,21 @@ namespace Models.Networks
         }
 
         // ==========================================
-        // 🎙️ 1. 음성 바이너리 파일 & 메타데이터 업로드
+        // 🎙️ 1. 음성 바이너리 & 메타데이터(단어 리스트) 업로드
         // ==========================================
-        public async Task<UploadVoiceResponse> UploadVoiceAsync(byte[] wavBytes, string userId, string characterType, string script)
+        public async Task<UploadVoiceResponse> UploadVoiceAsync(byte[] wavBytes, string userId, string concept, string prefix, List<string> wordNames)
         {
-            // 1. metadata를 JSON 문자열로 직접 포맷팅
-            string metadataJson = $"{{\"userId\": \"{userId}\", \"characterType\": \"{characterType}\", \"script\": \"{script}\"}}";
+            // 1. 객체를 생성하고 JsonUtility를 통해 완벽한 JSON 문자열로 변환
+            VoiceMetadata metadata = new VoiceMetadata
+            {
+                userId = userId,
+                concept = concept,
+                prefix = prefix,
+                wordNames = wordNames
+            };
+            string metadataJson = JsonUtility.ToJson(metadata);
 
-            // 2. 파일과 텍스트를 함께 보내기 위한 폼(Form) 세팅
+            // 2. 폼 데이터 구성
             WWWForm form = new WWWForm();
             form.AddField("metadata", metadataJson);
             form.AddBinaryData("audio", wavBytes, "voice.wav", "audio/wav"); 
@@ -55,15 +75,11 @@ namespace Models.Networks
             using (UnityWebRequest www = UnityWebRequest.Post($"{baseUrl}/upload-voice-async", form))
             {
                 var operation = www.SendWebRequest();
-                
-                // MonoBehaviour의 코루틴(yield return) 대신 비동기 대기 사용
                 while (!operation.isDone) await Task.Yield();
 
                 if (www.result == UnityWebRequest.Result.Success)
                 {
-                    string responseText = www.downloadHandler.text;
-                    Debug.Log($"[WebServerModel] 업로드 성공! 응답: {responseText}");
-                    return JsonUtility.FromJson<UploadVoiceResponse>(responseText);
+                    return JsonUtility.FromJson<UploadVoiceResponse>(www.downloadHandler.text);
                 }
                 else
                 {
@@ -76,41 +92,67 @@ namespace Models.Networks
         // ==========================================
         // ⏳ 2. 비동기 채점 결과 확인 (Polling)
         // ==========================================
-        public async Task<int> WaitForScoreAsync(string taskId)
+        // 🌟 반환형을 int(점수)에서 TaskStatusResponse(전체 결과 객체)로 변경하여, 문장도 함께 넘겨줍니다.
+        public async Task<TaskStatusResponse> WaitForScoreAsync(string taskId)
         {
             string requestUrl = $"{baseUrl}/tasks/{taskId}";
 
-            while (true) // 점수가 나올 때까지 무한 반복
+            while (true)
             {
                 using (UnityWebRequest www = UnityWebRequest.Get(requestUrl))
                 {
                     var operation = www.SendWebRequest();
-                    
                     while (!operation.isDone) await Task.Yield();
 
                     if (www.result == UnityWebRequest.Result.Success)
                     {
-                        string responseText = www.downloadHandler.text;
-                        TaskStatusResponse res = JsonUtility.FromJson<TaskStatusResponse>(responseText);
+                        TaskStatusResponse res = JsonUtility.FromJson<TaskStatusResponse>(www.downloadHandler.text);
 
                         if (res.status == "completed")
                         {
-                            Debug.Log($"[WebServerModel] 채점 완료! 최종 점수: {res.score}점 ({res.message})");
-                            return res.score;
+                            Debug.Log($"[WebServerModel] 채점 완료! 점수: {res.score}, 인식된 문장: {res.recognizedSentence}");
+                            return res; // 점수와 문장이 모두 담긴 객체를 통째로 반환!
                         }
-                        else
-                        {
-                            Debug.Log("[WebServerModel] 아직 평가 중... 1초 뒤에 다시 물어봅니다.");
-                            // 아직 처리 중이면 1초 대기 후 루프 재진입
-                            await Task.Delay(1000); 
-                        }
+                        
+                        // processing 상태면 1초 대기
+                        await Task.Delay(1000); 
                     }
                     else
                     {
-                        Debug.LogError($"[WebServerModel] 채점 확인 통신 에러: {www.error}");
-                        // 통신 에러 시 -1을 반환
-                        return -1; 
+                        Debug.LogError($"[WebServerModel] 통신 에러: {www.error}");
+                        return null; 
                     }
+                }
+            }
+        }
+
+        // ==========================================
+        // 🎚️ 3. 초기 보이스 세팅 (디폴트 피치) 저장
+        // ==========================================
+        public async Task<bool> SetDefaultPitchAsync(string userId, float defaultPitch)
+        {
+            // JSON 바디 포맷팅
+            string jsonBody = $"{{\"userId\": \"{userId}\", \"defaultPitch\": {defaultPitch}}}";
+            
+            using (UnityWebRequest www = new UnityWebRequest($"{baseUrl}/set-default-pitch", "POST"))
+            {
+                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                www.downloadHandler = new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+
+                var operation = www.SendWebRequest();
+                while (!operation.isDone) await Task.Yield();
+
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    Debug.Log($"[WebServerModel] 디폴트 피치({defaultPitch}Hz) 저장 완료: {www.downloadHandler.text}");
+                    return true;
+                }
+                else
+                {
+                    Debug.LogError($"[WebServerModel] 디폴트 피치 저장 실패: {www.error}");
+                    return false;
                 }
             }
         }
