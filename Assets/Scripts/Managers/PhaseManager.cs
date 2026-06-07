@@ -173,7 +173,7 @@ namespace DefaultNamespace {
             PlayerModel endingPlayer =
                 MatchManager.Instance.GetPlayerById(TurnModel.Instance.CurrentTurnPlayerId.Value);
             if (endingPlayer != null) {
-                endingPlayer.IncreaseMaxMana(1);
+                endingPlayer.IncreaseMaxMana(3);
             }
 
             // 2. 상대방으로 턴 플레이어 ID 교체

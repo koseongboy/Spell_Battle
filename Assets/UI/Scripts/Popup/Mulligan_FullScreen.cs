@@ -131,6 +131,7 @@ namespace DefaultNamespace
             for (int i = 0; i < initialHand.Count; i++)
             {
                 int cardId = initialHand[i];
+                Debug.Log(cardId);
                 var rawCardData = CardDatabase.Instance.GetCardById(cardId);
                 PlayableCard card = rawCardData;
 

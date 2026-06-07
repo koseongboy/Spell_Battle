@@ -16,8 +16,10 @@ namespace DefaultNamespace
         public Action onCancel;      // 취소 버튼 클릭 시 실행할 함수 (필요 없으면 null 가능)
     }
     
-    public class Confirm_Popup : MonoBehaviour, UI_Popup, UI_IDataReceiver<ConfirmPopupData>
+    public class Confirm_Popup : MonoBehaviour, UI_ILayerInfo, UI_Popup, UI_IDataReceiver<ConfirmPopupData>
     {
+        public EUILayer TargetLayer => EUILayer.Top;
+        
         [Header("UI 요소 연결")]
         [SerializeField] private TextMeshProUGUI messageText;
         [SerializeField] private Button confirmButton;
