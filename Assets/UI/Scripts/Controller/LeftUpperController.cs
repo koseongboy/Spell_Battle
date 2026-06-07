@@ -98,5 +98,11 @@ namespace DefaultNamespace
             var currentScene = SceneManager.GetActiveScene();
             return currentScene.name == "02_Battle_Crocobob";
         }
+
+
+        public void GoBack() {
+            // 하 이래도 되나
+            HandleBackClicked();
+        }
     }
 }
