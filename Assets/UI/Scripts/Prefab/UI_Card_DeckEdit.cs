@@ -12,6 +12,7 @@ namespace DefaultNamespace {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI costText;
         [SerializeField] private TextMeshProUGUI descText;
+        [SerializeField] private Image iconImg;
         [SerializeField] private CardInDeckPiece dragPiece;
 
         private PlayableCard cardData;
@@ -30,6 +31,7 @@ namespace DefaultNamespace {
             nameText.text = cardData.uiData.wordName;
             costText.text = cardData.uiData.cost.ToString();
             descText.text = cardData.uiData.desc;
+            iconImg.sprite = cardData.uiData.icon;
         }
 
         // ==========================================

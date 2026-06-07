@@ -17,6 +17,7 @@ MonoBehaviour:
     wordName: "\uC5F0\uC131"
     cost: 2
     property: 12
+    icon: {fileID: 21300000, guid: c76fdb1e546236e42b04429c334081b2, type: 3}
     Effects:
     - effectType: 16
       targetType: 1

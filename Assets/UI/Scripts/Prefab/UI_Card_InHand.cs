@@ -5,6 +5,7 @@ using Cards.PlayableCards;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace DefaultNamespace
@@ -15,7 +16,7 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI costText;
         [SerializeField] private TextMeshProUGUI descText;
-        [SerializeField] private Image image;
+        [SerializeField] private Image iconImg;
         [SerializeField] private GameObject highlight;
         
         [Header("비주얼 오브젝트 (자식 객체 연결)")]
@@ -58,7 +59,7 @@ namespace DefaultNamespace
             nameText.text = cardData.uiData.wordName;
             costText.text = cardData.uiData.cost.ToString();
             descText.text = cardData.uiData.desc;
-            //TODO : Image
+            iconImg.sprite = cardData.uiData.icon;
         }
         
         public void SetLayout(Vector3 pos, Quaternion rot)

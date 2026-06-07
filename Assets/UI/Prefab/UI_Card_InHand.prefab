@@ -445,7 +445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: 41bc1ce8da9e87a4fa340d902394e0df, type: 2}
-  m_Color: {r: 0.18039216, g: 0.18039216, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -642,7 +642,7 @@ MonoBehaviour:
   nameText: {fileID: 2448762861522455168}
   costText: {fileID: 4809435431598263714}
   descText: {fileID: 3373025837663107384}
-  image: {fileID: 1955248336293473737}
+  iconImg: {fileID: 1955248336293473737}
   highlight: {fileID: 1123816704461601947}
   visualTransform: {fileID: 2926234934995630992}
   hoverOffsetY: 50

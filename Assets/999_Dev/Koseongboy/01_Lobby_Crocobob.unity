@@ -1566,6 +1566,8 @@ MonoBehaviour:
     m_LabelString: PlayableCard
   keywordLabel:
     m_LabelString: KeywordData
+  elementLabel:
+    m_LabelString: ElementUIData
 --- !u!4 &506466686
 Transform:
   m_ObjectHideFlags: 0
@@ -2177,6 +2179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673b8b6974c33b84c8f26903890b5481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.CommonUIController
+  currentFullScreenUI: 
 --- !u!114 &767537961
 MonoBehaviour:
   m_ObjectHideFlags: 0

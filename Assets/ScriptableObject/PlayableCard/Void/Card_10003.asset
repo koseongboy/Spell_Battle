@@ -17,6 +17,7 @@ MonoBehaviour:
     wordName: "\uC800\uC8FC"
     cost: 4
     property: 11
+    icon: {fileID: 21300000, guid: eb3dfc28aacaad34d8537a953199899d, type: 3}
     Effects:
     - effectType: 10
       targetType: 1

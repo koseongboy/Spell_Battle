@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Models.CardDatabases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -176,9 +177,8 @@ namespace DefaultNamespace {
             txt_SelectedDeckName.text = deckName;
 
             txt_SelectedDeckSummary.text = summary;
-
-            // TODO: 속성에 맞는 Sprite를 반환하는 함수나 배열과 연결해주세요.
-            // img_SelectedDeckElement.sprite = GetSpriteByProperty(repProp);
+            
+            img_SelectedDeckElement.sprite = CardDatabase.Instance.TryGetElementData(repProp).Icon;
         }
 
         // 덱 리스트 출력하는 함수

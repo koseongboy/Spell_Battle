@@ -17,6 +17,7 @@ MonoBehaviour:
     wordName: "\uCC3D\uAD81"
     cost: 8
     property: 9
+    icon: {fileID: 21300000, guid: 0061ebebb74cc1b4b8030d9c969975bc, type: 3}
     Effects:
     - effectType: 18
       targetType: 1

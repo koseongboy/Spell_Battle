@@ -1,4 +1,5 @@
 using System;
+using Models.CardDatabases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,9 +18,10 @@ namespace DefaultNamespace
         {
             txt_DeckName.text = deckData.Name;
             txt_CardCount.text = deckData.CardCount;
-            
-            // TODO : Element에 따라 다른 Icon 표시
-            // TODO : Element에 따라 Frame 색 바꿔주기
+
+            var elementData = CardDatabase.Instance.TryGetElementData(deckData.Element);
+            img_Element.sprite = elementData.Icon;
+            // TODO : element 따라 프레임 색 바꿔주기
 
             if (btn_Click != null) {
                 btn_Click.onClick.RemoveAllListeners();

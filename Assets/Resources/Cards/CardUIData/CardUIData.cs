@@ -31,6 +31,7 @@ namespace Cards.CardUIDatas
         public string wordName;    // 예: "발화" (카드에 적힐 이름)
         public int cost;           // 예: 1
         public Property property;  // 속성
+        public Sprite icon;
 
         [Header("효과 및 설명")]
         public List<EffectInfo> Effects; // 위에서 만든 'EffectInfo'를 끌어다 연결

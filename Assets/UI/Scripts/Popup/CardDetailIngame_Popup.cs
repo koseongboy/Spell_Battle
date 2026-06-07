@@ -20,6 +20,7 @@ namespace DefaultNamespace {
         public TextMeshProUGUI txt_DetailCost;
         public TextMeshProUGUI txt_DetailName;
         public TextMeshProUGUI txt_DetailDesc;
+        public Image img_DetailIcon;
 
         [Header("Animation Targets")]
         public CanvasGroup popupCanvasGroup;
@@ -48,6 +49,7 @@ namespace DefaultNamespace {
             txt_DetailCost.text = data.cost.ToString();
 
             txt_DetailDesc.text = data.desc;
+            img_DetailIcon.sprite = data.icon;
 
             // 1. 기존에 켜져 있던 툴팁 전부 회수
             foreach (var tooltip in activeTooltips) {
