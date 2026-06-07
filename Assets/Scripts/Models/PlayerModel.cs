@@ -58,19 +58,19 @@ namespace Models.PlayerModels {
 
     public class PlayerModel : NetworkBehaviour
     {
-        [ContextMenu("마나 즉시 10으로")]
-        public void makemanaTen()
+        [ContextMenu("마나 즉시 20으로")]
+        public void makemanaTwenty()
         {
-            CurrentMana.Value = 10;
+            CurrentMana.Value = 20;
         }
 
         [Header("Stats")]
         public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
         public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(30);
 
-        public NetworkVariable<int> MaxMana = new NetworkVariable<int>(1);
-        public NetworkVariable<int> FinalMana = new NetworkVariable<int>(10);
-        public NetworkVariable<int> CurrentMana = new NetworkVariable<int>(1);
+        public NetworkVariable<int> MaxMana = new NetworkVariable<int>(4);
+        public NetworkVariable<int> FinalMana = new NetworkVariable<int>(20);
+        public NetworkVariable<int> CurrentMana = new NetworkVariable<int>(4);
         public NetworkVariable<int> Shield = new NetworkVariable<int>(0);
         public NetworkVariable<Property> LastProperty = new NetworkVariable<Property>(Property.None);
 
@@ -251,7 +251,7 @@ namespace Models.PlayerModels {
 
             int finalAmount = amount;
 
-            // 보호막 획득량 증가 체크 (대지모신 대응)
+            // 보호막 획득량 증가 체크
             int shieldBoostPct = GetStatusStack(StatusType.ShieldGainBoost);
 
             // 지핵(체력 10 이하일 때 50% 증가) 조건부 하드코딩

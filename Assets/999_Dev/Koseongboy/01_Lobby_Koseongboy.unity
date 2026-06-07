@@ -1578,6 +1578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673b8b6974c33b84c8f26903890b5481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.CommonUIController
+  currentFullScreenUI: 
 --- !u!114 &767537961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2770,10 +2771,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.LocalDataManagers.LocalDataManager
   userToken: 
+  userId: 
   nickname: "\uAE30\uBAA8\uB9C1\uB9E8"
   level: 2224
   gold: 0
   selectedAvatarId: 0
+  score: 0
+  rank: 
+  defaultPitch: 150
   deviceIndex: 0
   micVol: 0
   outVol: 0
