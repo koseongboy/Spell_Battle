@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034dda852ce11c346a42d80aefd6174e, type: 3}
+  m_Name: PresetDeck_2
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.PresetDeckData
+  presetId: PRESET2
+  deckName: "(\uAE30\uBCF8) \uAC15\uAD7D\uC774 \uBE59\uACB0 \uB371"
+  description: 
+  representativeProperty: 6
+  cardIds: 8d1300008d1300008d1300002923000029230000292300008913000089130000891300008b1300008b1300008b1300008c1300008c1300008c1300008f1300008f1300008f1300002a2300002a2300002a2300002e2300002e2300002e2300002b2300002b2300002b2300002c2300002c2300002c2300008e1300008e1300008e1300002d2300002d2300002d2300002f2300002f2300002f230000901300009013000090130000322300003223000032230000
+  rawIdText: 

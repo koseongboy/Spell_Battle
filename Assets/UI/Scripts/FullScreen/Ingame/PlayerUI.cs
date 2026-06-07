@@ -190,7 +190,7 @@ namespace DefaultNamespace {
         }
         
         public void UpdateLastProperty(Property prop) {
-            var data = CardDatabase.Instance.TryGetElementData(prop);
+            var data = CardDatabase.Instance.GetElementData(prop);
             txt_LastElement.text = data.Name;
             img_LastElement.sprite = data.Icon;
         }

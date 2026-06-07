@@ -418,5 +418,25 @@ namespace Managers {
 
             return repProp;
         }
+        
+        /// <summary>
+        /// 프리셋 덱을 유저의 덱 리스트에 복사하여 서버에 새로 저장합니다.
+        /// </summary>
+        public async void ClaimPresetDeck(PresetDeckData preset)
+        {
+            CommonUIController.Instance.ShowLoading();
+
+            // 팩트: 기존 DeckManager의 CreateOrUpdateDeckAsync는 
+            // 첫 번째 파라미터(deckId)가 비어있으면 서버에서 새로운 고유 ID를 발급하여 새 덱으로 저장합니다.
+            string newDeckId = ""; 
+    
+            // 프리셋의 이름과 카드 리스트를 그대로 넘겨서 내 덱으로 생성
+            await DeckManager.Instance.CreateOrUpdateDeckAsync(newDeckId, preset.deckName, preset.cardIds);
+
+            CommonUIController.Instance.DoneLoading();
+            CommonUIController.Instance.ShowBlackAlert($"'{preset.deckName}'이(가) 내 덱에 추가되었습니다!");
+    
+            // TODO: DeckEditController의 좌측 덱 리스트 UI를 새로고침하는 함수 호출
+        }
     }
 }

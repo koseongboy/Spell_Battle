@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 995feb8e6e68e28449737d5144ce141e
   m_currentHash:
     serializedVersion: 2
-    Hash: 05fbae2d96c8d3b205e4d172a2cce85e
+    Hash: 1fabbb5c63dcd4f7ed8196444e6ba559
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -66,6 +66,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9432a955a67f98c48b91f188a671db5d, type: 2}
   - {fileID: 11400000, guid: e5fd339dd6a3ee9499e362cb001aa891, type: 2}
   - {fileID: 11400000, guid: 51cbdb5bc975a474cbb38d39cf2bf8e7, type: 2}
+  - {fileID: 11400000, guid: 55924f7438816af4693d5269169cc68d, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
@@ -109,6 +110,7 @@ MonoBehaviour:
     - PlayableCard
     - KeywordData
     - ElementUIData
+    - PresetDeckData
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: ecc06c906908cab41ad2cf7c628619dc, type: 2}
