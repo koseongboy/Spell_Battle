@@ -1,11 +1,10 @@
 const dns = require('node:dns');
 dns.setServers(['8.8.8.8', '1.1.1.1']);
-
 require('dotenv').config();
 
 const express = require('express');
 const http = require('http');
-const { Server } = require('socket.io'); 
+const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -18,15 +17,46 @@ const { GoogleGenAI, Type } = require('@google/genai');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_here';
 
-// 발급받은 Gemini API 키 기반 객체 초기화
+// 🤖 구글 제미나이 SDK 초기화
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// --- MongoDB 연결 및 스키마 설정 ---
+// 🔌 Socket.io 서버 감싸기
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
+
+app.use(express.json());
+
+// 🔊 오디오 파일 다운로드 및 재생을 위한 정적 폴더 개방
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// 📁 오디오 파일 저장을 위한 Multer 설정
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadPath = path.join(__dirname, 'uploads');
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
+// 🍃 MongoDB 연결
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('🍃 MongoDB 연결 성공'))
   .catch(err => console.error('❌ MongoDB 연결 실패:', err));
 
+// ---------------------------------------------------------------- //
+// 📑 데이터베이스 스키마 및 모델 정의
+// ---------------------------------------------------------------- //
+
+// 1. 유저 스키마
 const userSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -36,216 +66,195 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
+// 2. 공유 덱 스키ma
 const deckSchema = new mongoose.Schema({
-    userId: { type: String, required: true },
     deckName: { type: String, required: true },
-    cards: { type: [String], required: true },
+    userId: { type: String, required: true }, // 작성자 ID
+    cards: { type: [String], required: true }, // 카드 이름 리스트 배열
+    description: { type: String, default: "" },
     createdAt: { type: Date, default: Date.now }
 });
 const Deck = mongoose.model('Deck', deckSchema);
 
-// --- 캐릭터 음성 가이드 가이드라인 ---
-const CHARACTER_VOICE_GUIDES = {
-    "소년만화주인공": { desc: "힘차고 열정적인 주인공 톤", targetPitch: "pitch_ratio 1.1 ~ 1.3", expectedEmotions: "happy 또는 surprise" },
-    "매드사이언티스트": { desc: "날카롭고 미치광이 같은 하이톤 연기", targetPitch: "pitch_ratio 1.3 이상", expectedEmotions: "angry, fear, surprise" },
-    "미치광이광대": { desc: "높고 낮음이 기괴하게 변하는 조커 스타일 톤", targetPitch: "pitch_ratio 1.3 이상", expectedEmotions: "happy(광기) 또는 surprise" },
-    "우직한문지기": { desc: "듬직하고 톤이 일정하며 느릿한 목소리", targetPitch: "pitch_ratio 0.85 ~ 0.95", expectedEmotions: "neutral 지배적" },
-    "성을지키는용": { desc: "낮고 으르렁거리는 거대하고 무거운 괴수 톤", targetPitch: "pitch_ratio 0.8 이하 필수", expectedEmotions: "angry 압도적" },
-    "세상을지배하는로봇": { desc: "감정이 전혀 느껴지지 않는 완벽한 기계식 리딩", targetPitch: "pitch_ratio 0.95 ~ 1.05 유지", expectedEmotions: "neutral 90% 이상" },
-    "마법소녀": { desc: "사랑스럽고 활기찬 초고음 하이톤 연기", targetPitch: "pitch_ratio 1.35 이상", expectedEmotions: "happy 또는 surprise" },
-    "덩치큰근육맨": { desc: "굵고 힘이 꽉 들어간 마초 스타일 목소리", targetPitch: "pitch_ratio 0.8 ~ 0.9", expectedEmotions: "angry 또는 neutral" },
-    "정의의기사": { desc: "단호하고 당당하며 템포가 빠른 영웅의 목소리", targetPitch: "pitch_ratio 1.05 ~ 1.2", expectedEmotions: "happy 또는 neutral" },
-    "늑대인간": { desc: "야수성이 드러나는 거칠고 위협적인 목소리", targetPitch: "pitch_ratio 0.85 이하", expectedEmotions: "angry 또는 fear" },
-    "쪼그만외계인": { desc: "익살스럽고 아주 빠르며 가벼운 고음 목소리", targetPitch: "pitch_ratio 1.4 이상", expectedEmotions: "surprise 또는 happy" },
-    "인자한제갈량": { desc: "모든 것을 통달한 듯 여유롭고 부드러우며 느린 목소리", targetPitch: "pitch_ratio 0.9 ~ 1.0", expectedEmotions: "neutral 완벽 유지" },
-    "능글맞은두꺼비": { desc: "장난기 가득하고 속을 알 수 없는 변칙적인 톤", targetPitch: "pitch_ratio 0.85 ~ 1.0", expectedEmotions: "happy 또는 neutral" }
-};
+// ---------------------------------------------------------------- //
+// 🔐 1. 인증 및 유저 데이터 API
+// ---------------------------------------------------------------- //
 
-// --- 비동기 태스크 저장을 위한 인메모리 객체 ---
-const tasks = {};
-
-// --- HTTP 및 Socket.io 웹서버 설정 ---
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-
-app.use(express.json());
-if (!fs.existsSync('uploads')) { fs.mkdirSync('uploads'); }
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'uploads/'),
-    filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
-});
-const upload = multer({ storage });
-
-// --- [기존 라우트] 회원가입, 로그인, 디폴트 피치 설정, 덱 공유 기능 ---
+// [POST] 회원가입
 app.post('/register', async (req, res) => {
     try {
         const { userId, password } = req.body;
+        if (!userId || !password) return res.status(400).json({ error: "아이디와 비밀번호를 입력해주세요." });
+
+        const existingUser = await User.findOne({ userId });
+        if (existingUser) return res.status(400).json({ error: "이미 존재하는 아이디입니다." });
+
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ userId, password: hashedPassword });
         await newUser.save();
+
         res.status(201).json({ message: "회원가입 성공" });
-    } catch (err) { res.status(500).json({ error: err.message }); }
+    } catch (err) {
+        res.status(500).json({ error: "회원가입 중 에러 발생" });
+    }
 });
 
+// [POST] 로그인 및 데이터 불러오기
 app.post('/login', async (req, res) => {
     try {
         const { userId, password } = req.body;
         const user = await User.findOne({ userId });
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(401).json({ error: "아이디 또는 비밀번호가 틀렸습니다." });
-        }
-        const token = jwt.sign({ userId: user.userId }, 'SECRET_KEY');
-        res.json({ token, userId: user.userId, score: user.score, rank: user.rank, defaultPitch: user.defaultPitch });
-    } catch (err) { res.status(500).json({ error: err.message }); }
+        if (!user) return res.status(400).json({ error: "아이디 또는 비밀번호가 틀렸습니다." });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ error: "아이디 또는 비밀번호가 틀렸습니다." });
+
+        const token = jwt.sign({ id: user._id, userId: user.userId }, JWT_SECRET, { expiresIn: '24h' });
+
+        res.status(200).json({
+            message: "로그인 성공",
+            token,
+            userData: {
+                userId: user.userId,
+                score: user.score,
+                rank: user.rank,
+                defaultPitch: user.defaultPitch
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: "로그인 중 에러 발생" });
+    }
 });
 
-app.post('/set-default-pitch', async (req, res) => {
+// [GET] 유저 디폴트 피치 조회
+app.get('/default-pitch', async (req, res) => {
     try {
-        const { userId, defaultPitch } = req.body;
-        await User.findOneAndUpdate({ userId }, { defaultPitch });
-        res.json({ message: "디폴트 피치 세팅 저장 완료" });
-    } catch (err) { res.status(500).json({ error: err.message }); }
+        const { userId } = req.query;
+        if (!userId) return res.status(400).json({ error: "userId 쿼리 파라미터가 필요합니다." });
+
+        const user = await User.findOne({ userId });
+        if (!user) return res.status(404).json({ error: "유저를 찾을 수 없습니다." });
+
+        res.status(200).json({ userId: user.userId, defaultPitch: user.defaultPitch });
+    } catch (err) {
+        res.status(500).json({ error: "서버 에러" });
+    }
 });
 
+// ---------------------------------------------------------------- //
+// 🎴 2. 공유 덱 관련 API (저장, 조회, 삭제 추가✨)
+// ---------------------------------------------------------------- //
+
+// [POST] 공유 덱 저장하기
 app.post('/decks', async (req, res) => {
     try {
-        const { userId, deckName, cards } = req.body;
-        const newDeck = new Deck({ userId, deckName, cards });
+        const { deckName, userId, cards, description } = req.body;
+        if (!deckName || !userId || !cards || cards.length === 0) {
+            return res.status(400).json({ error: "덱 이름, 유저 ID, 카드가 누락되었습니다." });
+        }
+
+        const newDeck = new Deck({ deckName, userId, cards, description });
         await newDeck.save();
-        res.status(201).json({ message: "덱이 성공적으로 공유되었습니다!" });
-    } catch (err) { res.status(500).json({ error: err.message }); }
+
+        res.status(201).json({ message: "공유 덱이 등록되었습니다.", deckId: newDeck._id });
+    } catch (err) {
+        res.status(500).json({ error: "덱 저장 중 서버 에러 발생" });
+    }
 });
 
+// [GET] 전체 공유 덱 리스트 가져오기 (최신순)
 app.get('/decks', async (req, res) => {
     try {
         const decks = await Deck.find().sort({ createdAt: -1 });
-        res.json(decks);
-    } catch (err) { res.status(500).json({ error: err.message }); }
-});
-
-
-/**
- * 1. [POST] /upload-voice-async
- * 다이어그램의 "C1 ->> WS: [POST] 음성 파일 & JSON 제출" 단계 처리
- */
-app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
-    try {
-        if (!req.file) return res.status(400).json({ error: "음성 파일이 없습니다." });
-
-        // 메타데이터 파싱 예외 처리 통합
-        let metadata = req.body;
-        if (typeof req.body.metadata === 'string') {
-            metadata = JSON.parse(req.body.metadata);
-        } else if (req.body.metadata) {
-            metadata = req.body.metadata;
-        }
-        
-        const { userId, characterType, script } = metadata;
-
-        const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-        const audioUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-
-        // 태스크의 초기 상태 등록
-        tasks[taskId] = {
-            status: "processing",
-            score: null,
-            reason: null,
-            createdAt: Date.now()
-        };
-
-        // 클라이언트(C1)에게 즉시 대기표 및 URL 반환 (Non-blocking)
-        res.json({ taskId, audioUrl });
-
-        // 백그라운드에서 AI 분석 연동 수행
-        runBackgroundAnalysis(taskId, req.file.path, userId, characterType, script);
-
+        res.status(200).json(decks);
     } catch (err) {
-        console.error("파일 업로드 에러:", err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "덱 목록 로드 중 서버 에러 발생" });
     }
 });
 
-/**
- * 2. [GET] /tasks/:taskId
- * ★ 버그 수정: 매개변수 순서 정정 (res, req) -> (req, res) ★
- * 다이어그램의 "loop 점수 확인 (Polling)" 단계 처리
- */
-app.get('/tasks/:taskId', (req, res) => {
-    const { taskId } = req.params;
-    const task = tasks[taskId];
-
-    if (!task) {
-        return res.status(404).json({ error: "존재하지 않는 Task ID입니다." });
-    }
-
-    if (task.status === "processing") {
-        return res.json({ status: "processing", message: "아직 평가 중" });
-    }
-
-    if (task.status === "failed") {
-        return res.status(500).json({ status: "failed", error: task.error });
-    }
-
-    // 평가 완료 상태 응답 반환
-    res.json({
-        status: "completed",
-        message: `평가 완료: ${task.score}점`,
-        score: task.score,
-        reason: task.reason
-    });
-});
-
-/**
- * 백그라운드 분석 및 Gemini LLM 채점 처리 함수
- */
-async function runBackgroundAnalysis(taskId, filePath, userId, characterType, script) {
+// [DELETE] 🌟 공유 덱 삭제 로직 추가
+app.delete('/decks/:deckId', async (req, res) => {
     try {
-        // 1. 유저의 디폴트 피치 데이터 조회
-        const user = await User.findOne({ userId });
-        const defaultPitch = user ? user.defaultPitch : 150.0;
+        const { deckId } = req.params;
+        const { userId } = req.body; // 검증용 요청 유저 ID
 
-        // 2. FastAPI 음성 분석 서버 연동 준비
+        if (!userId) {
+            return res.status(400).json({ error: "유저 ID(userId) 검증 데이터가 필요합니다." });
+        }
+
+        const deck = await Deck.findById(deckId);
+        if (!deck) {
+            return res.status(404).json({ error: "삭제하려는 덱을 찾을 수 없습니다." });
+        }
+
+        // 보안 검증: 본인 확인
+        if (deck.userId !== userId) {
+            return res.status(403).json({ error: "본인이 작성한 덱만 삭제할 수 있습니다." });
+        }
+
+        await Deck.findByIdAndDelete(deckId);
+        console.log(`🗑️ [덱 삭제 완료] 덱 ID: ${deckId} | 소유자: ${userId}`);
+        res.status(200).json({ message: "공유 덱이 성공적으로 삭제되었습니다." });
+    } catch (err) {
+        console.error("❌ 덱 삭제 중 서버 에러:", err);
+        res.status(500).json({ error: "서버 내부 에러로 인해 덱을 삭제하지 못했습니다." });
+    }
+});
+
+// ---------------------------------------------------------------- //
+// 🔊 3. 비동기 음성 인식 및 채점 관련 로직 (버그 수정본)
+// ---------------------------------------------------------------- //
+
+const tasks = {}; // 메모리 기반 비동기 태스크 상태 관리 객체
+
+// 백그라운드 AI 채점 연동 함수
+async function runBackgroundAnalysis(taskId, filePath, characterType, script, defaultPitch) {
+    try {
         const formData = new FormData();
         formData.append('file', fs.createReadStream(filePath));
         formData.append('default_pitch', defaultPitch.toString());
-        formData.append('target_text', script || ""); // ★ 버그 수정: 누락되었던 target_text 매개변수 추가
+        formData.append('target_words', script); // 💡 target_text -> target_words 변수명 일치 및 반영
 
+        // 1. FastAPI (AI 분석 전용 서버 5000포트) 연동
         const pythonResponse = await axios.post('http://localhost:5000/analyze-audio', formData, {
             headers: formData.getHeaders()
         });
 
-        // ★ 버그 수정: FastAPI 반환 JSON 트리 계층 구조 정정 및 매칭 ★
+        // FastAPI 리턴 구조 분해 할당 파싱 구조 매칭
         const { text_validation, emotions, audio_features } = pythonResponse.data;
-        const { recognized_text, is_matched } = text_validation;
-        const { current_pitch, pitch_ratio, duration_seconds } = audio_features;
+        const pitch_ratio = audio_features?.pitch_ratio || 1.0;
+        const speed_ratio = audio_features?.speed_ratio || 1.0;
+        const stt_text = text_validation?.recognized_text || "";
+        const is_matched = text_validation?.is_matched || false;
 
-        // 템포 검증용 변수 (기본 1.0배율 설정)
-        const speed_ratio = audio_features.speed_ratio || 1.0; 
-
-        const guide = CHARACTER_VOICE_GUIDES[characterType] || { desc: "일반 리딩", targetPitch: "기본", expectedEmotions: "없음" };
-
-        // 3. Gemini LLM 채점 처리
+        // 2. Gemini LLM용 채점 프롬프트 작성 (유저 요구사항에 맞춰 피드백은 백엔드 로그용으로 처리)
         const prompt = `
-            [영창 평가 시스템]
-            - 유저가 외친 대사(STT): "${recognized_text}"
-            - 원래 외쳐야 했을 정답 지시문: "${script}"
-            - 지시문 매칭 성공 여부: ${is_matched ? "성공" : "실패"}
-            - 선택한 캐릭터 컨셉: "${characterType}" (${guide.desc})
-            - 요구되는 음성 피치 조건: ${guide.targetPitch}, 감정 조건: ${guide.expectedEmotions}
-            
-            [실제 분석된 유저의 물리 데이터]
-            - 피치 비율(기준점 대비): ${pitch_ratio}배 (현재 피치: ${current_pitch}Hz)
-            - 속도 비율(기준점 대비): ${speed_ratio}배 (발성 시간: ${duration_seconds}초)
-            - 감정 분석 결과: ${JSON.stringify(emotions)}
+        유저가 게임 속 캐릭터 '${characterType}'의 컨셉에 맞추어 마법 영창(대사)을 외쳤습니다. 
+        아래 음성 분석 데이터를 정밀 분석하여 최종 연기력 점수를 산출해 주세요.
 
-            위 데이터를 종합해서 발음의 정확도(지시문 매칭률), 캐릭터 연기력(피치 및 감정 조건 부합도)을 고려해 1~100점 사이로 채점해 주세요.
-            지시문 매칭이 '실패'했거나 발음이 너무 다르면 점수를 크게 감점해야 합니다.
-            반드시 아래 JSON 포맷으로만 답변하세요. 다른 설명은 절대 금지합니다.
-            { "score": 점수(숫자), "reason": "채점 이유 요약" }
+        [분석 데이터]
+        - 유저 캐릭터 타입: ${characterType}
+        - 목표 영창 키워드: ${script}
+        - 실제 인식된 영창 대본(STT): ${stt_text}
+        - 필수 단어 일치 여부: ${is_matched ? "일치함" : "누락되거나 다름"}
+        - 기준점 대비 음높이 배율(pitch_ratio): ${pitch_ratio} (1.0 기준, 높을수록 하이톤)
+        - 기준점 대비 발음 속도 배율(speed_ratio): ${speed_ratio} (1.0 기준, 높을수록 빠름)
+
+        [캐릭터별 채점 가이드라인]
+        - 매드 사이언티스트 / 미치광이 광대 / 마법소녀: pitch_ratio가 하이톤(1.15 이상)이거나 감정 중 'happy/angry' 가 두드러지면 고득점.
+        - 우직한 문지기 / 성을 지키는 용 / 덩치 큰 근육맨: pitch_ratio가 로우톤(0.85 이하)이거나 낮고 느리게 읊조리면 고득점.
+        - 세상을 지배하는 로봇: 속도 배율(speed_ratio)과 톤 변동이 일정할수록 고득점.
+
+        [⚠️주의사항] '필수 단어 일치 여부'가 거짓(False)이거나 대본 인식 상태가 너무 불량하면 과감하게 감점 처리하세요.
+
+        [출력 포맷] 반드시 JSON 객체 단 하나만 반환하세요. 공백 및 마크다운 텍스트(예: \`\`\`json)는 절대 포함하지 마십시오.
+        {
+          "score": (1부터 100 사이의 정수),
+          "reason": "점수를 책정한 근거 요약문"
+        }
         `;
 
+        // 3. Gemini Content API 구동
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
@@ -254,37 +263,97 @@ async function runBackgroundAnalysis(taskId, filePath, userId, characterType, sc
 
         const resultJson = JSON.parse(response.text.trim());
 
-        // 4. 전역 태스크 객체 결과 업데이트
+        // 4. 전역 태스크 상태 완료 업데이트
         tasks[taskId] = {
             status: "completed",
             score: resultJson.score,
-            reason: resultJson.reason,
+            reason: resultJson.reason, // 백엔드 로깅 및 디버깅용 보관
             updatedAt: Date.now()
         };
-
-        console.log(`[태스크 완료] ID: ${taskId} | 점수: ${resultJson.score}점`);
+        console.log(`🗑️ [태스크 완료] ID: ${taskId} | 점수: ${resultJson.score}점`);
 
     } catch (err) {
-        console.error(`[태스크 오류] ID: ${taskId} 처리 중 에러:`, err);
-        tasks[taskId] = {
-            status: "failed",
-            error: err.message,
-            updatedAt: Date.now()
-        };
+        console.error(`❌ [태스크 오류] ID: ${taskId} 처리 중 예외 발생:`, err.message);
+        tasks[taskId] = { status: "failed", error: "음성 채점 과정 중 연동 장애 발생", updatedAt: Date.now() };
+    } finally {
+        // 백그라운드 연동 완료 후 임시 보관 업로드 파일 삭제 처리로 용량 확보
+        if (fs.existsSync(filePath)) {
+            fs.unlink(filePath, (err) => { if (err) console.error("임시 파일 삭제 실패:", err); });
+        }
     }
 }
 
-// --- 소켓을 이용한 기본 방 정보 연동 ---
-const rooms = {};
-io.on('connection', (socket) => {
-    socket.on('joinRoom', ({ roomId, userId }) => {
-        socket.join(roomId);
-        if (!rooms[roomId]) rooms[roomId] = { id: roomId, players: [] };
-        if (!rooms[roomId].players.includes(userId)) rooms[roomId].players.push(userId);
-        io.to(roomId).emit('roomUpdate', rooms[roomId]);
+// [POST] 비동기 음성 파일 업로드 및 대기표 발급 API
+app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: "음성 파일(audio)이 전송되지 않았습니다." });
+        if (!req.body.metadata) return res.status(400).json({ error: "메타데이터(metadata)가 누락되었습니다." });
+
+        const metadata = JSON.parse(req.body.metadata);
+        const { userId, characterType, script } = metadata;
+
+        if (!userId || !characterType || !script) {
+            return res.status(400).json({ error: "메타데이터 세부 정보(userId, characterType, script)가 부족합니다." });
+        }
+
+        const user = await User.findOne({ userId });
+        const defaultPitch = user ? user.defaultPitch : 150.0;
+
+        const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+        const audioUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+
+        // 메모리 객체 할당 (대기 상태 시작)
+        tasks[taskId] = { status: "processing", audioUrl, updatedAt: Date.now() };
+
+        // 비동기로 백그라운드 태스크 백그라운드 루프 구동 (응답 락 방지)
+        runBackgroundAnalysis(taskId, req.file.path, characterType, script, defaultPitch);
+
+        // 유니티 클라이언트로 '즉시' 대기 번호 및 오디오 링크 리턴
+        res.status(200).json({ taskId, audioUrl });
+
+    } catch (err) {
+        console.error("음성 업로드 실패:", err);
+        res.status(500).json({ error: "음성 비동기 처리 도중 에러가 발생했습니다." });
+    }
+});
+
+// [GET] 유니티 및 턴 매니저의 대기표 결과 확인용 Polling API (res, req 인자 순서 완벽 교정 완료)
+app.get('/tasks/:taskId', (req, res) => {
+    const { taskId } = req.params;
+    const task = tasks[taskId];
+
+    if (!task) {
+        return res.status(404).json({ error: "요청하신 유효한 태스크 카드를 찾을 수 없습니다." });
+    }
+
+    if (task.status === "processing") {
+        return res.status(200).json({ status: "processing", message: "아직 평가 중입니다." });
+    }
+
+    if (task.status === "failed") {
+        return res.status(500).json({ status: "failed", error: task.error });
+    }
+
+    // 🌟 유저 요구사항 반영: 클라이언트(유니티) 쪽에 전달될 때는 점수(score)만 전달하고 피드백(reason)은 가림
+    res.status(200).json({
+        status: "completed",
+        message: `평가 완료: ${task.score}점`,
+        score: task.score
     });
 });
 
+// ---------------------------------------------------------------- //
+// 🔌 4. 웹소켓 (Socket.io) P2P 방 관리 및 매칭 통신
+// ---------------------------------------------------------------- //
+io.on('connection', (socket) => {
+    console.log(`🔌 유저 커넥션 연동 완료: ${socket.id}`);
+
+    socket.on('disconnect', () => {
+        console.log(`❌ 유저 커넥션 해제: ${socket.id}`);
+    });
+});
+
+// 서버 바인딩 및 활성화 구동
 server.listen(PORT, () => {
-    console.log(`🚀 시퀀스 대응 통합 서버가 포트 ${PORT}에서 작동 중입니다.`);
+    console.log(`🚀 [서버 개방 완료] 메인 게임 백엔드가 포트 ${PORT}에서 작동 중입니다.`);
 });
