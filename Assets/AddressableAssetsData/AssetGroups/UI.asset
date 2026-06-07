@@ -85,6 +85,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 761a2d502ae332c46a0b7a0a8c510909
+    m_Address: GameEnd_Top
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7675899f335b78445b72482db7413431
     m_Address: Friend_RequestWindow
     m_ReadOnly: 0
