@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 034dda852ce11c346a42d80aefd6174e, type: 3}
   m_Name: PresetDeck_1
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.PresetDeckData
-  presetId: 
+  presetId: PRESET1
   deckName: "(\uAE30\uBCF8) \uBC1C\uD654 \uBC88\uAC1C \uB371"
   description: 
   representativeProperty: 5

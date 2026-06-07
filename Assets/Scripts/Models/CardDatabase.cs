@@ -7,6 +7,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using Cards.EffectInfos;
 using Cards.PlayableCards;
 using DefaultNamespace;
+using Managers;
 
 namespace Models.CardDatabases
 {
@@ -192,6 +193,22 @@ namespace Models.CardDatabases
                 return data;
             }
             return null;
+        }
+        
+        public List<DeckData> GetAllPresetDecks() {
+            List<DeckData> decks = new List<DeckData>();
+            
+            foreach (var preset in _presetDecks) {
+                decks.Add( new DeckData(
+                    preset.presetId,
+                    preset.deckName,
+                    preset.cardIds,
+                    string.Empty,
+                    preset.representativeProperty
+                    ) );
+            }
+            
+            return decks;
         }
     }
 }

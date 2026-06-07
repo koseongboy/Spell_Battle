@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using Cards.CardUIDatas;
+using Models.CardDatabases;
 
 namespace DefaultNamespace
 {
@@ -20,11 +21,15 @@ namespace DefaultNamespace
             deckSummaryText.text = deckSummary;
             highlightImage.enabled = isSelected;
             if (img_ElementIcon != null) {
-                // img_ElementIcon.sprite = GetSpriteByProperty(repProp); // TODO : 속성에 맞는 스프라이트 반환 함수 연결
+                img_ElementIcon.sprite = CardDatabase.Instance.GetElementData(repProp).Icon;
             }
 
             clickButton.onClick.RemoveAllListeners();
             clickButton.onClick.AddListener(() => onClick?.Invoke(deckName));
+        }
+
+        public void SetSelected(bool isSelected) {
+            highlightImage.enabled = isSelected;
         }
     }
 }

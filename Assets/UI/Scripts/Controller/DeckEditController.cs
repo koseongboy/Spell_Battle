@@ -22,6 +22,7 @@ namespace DefaultNamespace {
         private string currentDeckId = ""; 
         private string currentDeckName = "";
         private List<int> currentDeckCardIds = new List<int>();
+        private Dictionary<string, DeckListPiece> _activeDeckPieces = new Dictionary<string, DeckListPiece>();
 
         // 필터 상태 (-1이나 None이면 필터 꺼짐)
         private Property currentPropertyFilter = Property.None;
@@ -218,39 +219,62 @@ namespace DefaultNamespace {
 
         private void RefreshLeftDeckList() {
             ui_DeckEdit.ReturnAllDeckListsToPool();
+            _activeDeckPieces.Clear(); // 새로운 리스트를 그릴 때 딕셔너리도 비워줍니다.
+    
+            // 1. 내가 만든 덱 띄우기
             var allSavedDecks = DeckManager.Instance.GetAllDecks();
-            
-            // 저장된 덱이 없을 때 임시 덱 띄우기
-            if (allSavedDecks == null || allSavedDecks.Count == 0) {
-                return;
-            }
-
             foreach (var deck in allSavedDecks) {
                 DeckListPiece piece = ui_DeckEdit.GetDeckListFromPool();
-        
                 bool isSelected = (deck.id == currentDeckId);
-                
                 piece.Init(deck.deckName, deck.cardCountSummary, deck.representativeProperty, isSelected, (clickedName) => OnDeckSelected(deck.id));
+        
+                // 딕셔너리에 UI 조각 보관
+                _activeDeckPieces[deck.id] = piece; 
+            }
+    
+            // 2. 프리셋 덱 그리기
+            var presetDecks = CardDatabase.Instance.GetAllPresetDecks();
+            if (presetDecks != null) {
+                foreach (var preset in presetDecks) {
+                    DeckListPiece piece = ui_DeckEdit.GetDeckListFromPool();
+                    bool isSelected = (preset.id == currentDeckId); 
+                    piece.Init(preset.deckName, preset.cardCountSummary, preset.representativeProperty, isSelected, (clickedName) => OnDeckSelected(preset.id));
+            
+                    // 딕셔너리에 UI 조각 보관
+                    _activeDeckPieces[preset.id] = piece; 
+                }
             }
         }
         
         // 덱 리스트에서 특정 덱을 클릭했을 때 실행될 콜백 함수
         private void OnDeckSelected(string deckId) {
-            // 팩트: ID가 빈 문자열("")이 아닌 상태에서 같은 ID를 누르면 무시
             if (currentDeckId == deckId && !string.IsNullOrEmpty(deckId)) {
                 return; 
             }
 
+            if (!string.IsNullOrEmpty(currentDeckId) && _activeDeckPieces.TryGetValue(currentDeckId, out DeckListPiece oldPiece)) {
+                oldPiece.SetSelected(false);
+            }
+
             currentDeckId = deckId;
-    
+
+            if (_activeDeckPieces.TryGetValue(currentDeckId, out DeckListPiece newPiece)) {
+                newPiece.SetSelected(true);
+            }
+
             var selectedDeck = DeckManager.Instance.GetDeck(deckId);
             if (selectedDeck != null) {
                 currentDeckCardIds = new List<int>(selectedDeck.cardIds);
-            } else {
-                currentDeckCardIds.Clear();
+            } 
+            else {
+                var presetDeck = CardDatabase.Instance.GetAllPresetDecks().Find(p => p.id == deckId);
+                if (presetDeck != null) {
+                    currentDeckCardIds = new List<int>(presetDeck.cardIds);
+                } else {
+                    currentDeckCardIds.Clear();
+                }
             }
 
-            RefreshLeftDeckList();
             RefreshRightDeckCards();
         }
         
