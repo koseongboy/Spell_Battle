@@ -65,11 +65,21 @@ namespace DefaultNamespace
             pitchAnalyzer.ToggleRecording();
         }
 
-        public void OnClick_Apply() {
+        public async void OnClick_Apply() {
             if (!Mathf.Approximately(resultPitch, -1f)) {
-                // TODO : 보이스 피치값 서버에 보내기
+                CommonUIController.Instance.ShowLoading();
+                var serverSuccess = await pitchAnalyzer.SendServerPitch( resultPitch );
+
+                if (serverSuccess) {
+                    CommonUIController.Instance.DoneLoading();
+                    CommonUIController.Instance.GoBackToPreviousFullScreen();
+                    CommonUIController.Instance.ShowBlackAlert("보이스 세팅이 저장되었습니다.");
+                }
+                else {
+                    CommonUIController.Instance.DoneLoading();
+                    CommonUIController.Instance.ShowRedAlert("서버 통신에 실패했습니다. 보이스 세팅을 다시 진행해주세요.");
+                }
             }
-            
             CommonUIController.Instance.GoBackToPreviousFullScreen();
         }
     }

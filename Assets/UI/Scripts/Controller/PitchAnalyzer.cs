@@ -1,6 +1,10 @@
 using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using Managers.LocalDataManagers;
 using Managers.VoiceManagers;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace DefaultNamespace
 {
@@ -132,6 +136,61 @@ namespace DefaultNamespace
             return averagePitch;
         }
 
+        public async Task<bool> SendServerPitch(float pitch) {
+            // TODO : 이거 서버랑 통신하는 거 어디 한데 모으는게 좋지 않으려나?
+            string url = "http://3.107.201.71:3000/set-default-pitch";
+
+            // 2. 전송할 JSON 데이터 조립
+            string myUserId = LocalDataManager.Instance.userId;
+    
+            PitchRequestData requestData = new PitchRequestData 
+            {
+                userId = myUserId,
+                defaultPitch = pitch
+            };
+    
+            // C# 객체를 JSON 문자열로 변환
+            string jsonData = JsonUtility.ToJson(requestData);
+
+            // 3. UnityWebRequest 객체를 POST 모드로 수동 세팅 (매우 중요)
+            using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+            {
+                // JSON 문자열을 UTF-8 바이트 배열로 인코딩하여 Body에 탑재
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = new DownloadHandlerBuffer();
+        
+                // 백엔드 서버가 이 데이터가 JSON임을 알 수 있도록 명시
+                request.SetRequestHeader("Content-Type", "application/json");
+
+                // 4. 요청 보내기 및 응답 대기 (메인 스레드 멈춤 방지)
+                var operation = request.SendWebRequest();
+
+                while (!operation.isDone)
+                {
+                    await Task.Yield();
+                }
+
+                // 5. 서버 응답 결과 판별
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    // 성공: 서버가 보내준 JSON 응답 파싱
+                    PitchResponseData response = JsonUtility.FromJson<PitchResponseData>(request.downloadHandler.text);
+                    Debug.Log($"[서버 응답] {response.message}");
+
+                    return true;
+                }
+                else
+                {
+                    // 실패: 네트워크 단절 또는 400/500 에러 발생
+                    Debug.LogError($"[통신 실패] 코드: {request.responseCode}, 메시지: {request.error}");
+                    Debug.LogError($"[상세 로그] {request.downloadHandler.text}");
+                    
+                    return false;
+                }
+            }
+        }
+
         // 진폭 제곱평균제곱근(RMS) 계산 함수 (소리 크기 측정)
         private float CalculateRMS(float[] samples, int startIndex, int length)
         {
@@ -194,5 +253,18 @@ namespace DefaultNamespace
 
             return samples;
         }
+    }
+    
+    [System.Serializable]
+    public class PitchRequestData
+    {
+        public string userId;
+        public float defaultPitch;
+    }
+
+    [System.Serializable]
+    public class PitchResponseData
+    {
+        public string message;
     }
 }
