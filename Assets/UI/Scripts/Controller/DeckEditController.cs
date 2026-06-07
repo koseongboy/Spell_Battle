@@ -88,7 +88,7 @@ namespace DefaultNamespace {
             // 속성 필터 연동 (View에 세팅된 리스트를 그대로 순회)
             foreach (var filterUI in ui_DeckEdit.propertyFilters) {
                 Property p = filterUI.property;
-                var elementData = CardDatabase.Instance.TryGetElementData(p);
+                var elementData = CardDatabase.Instance.GetElementData(p);
                 filterUI.Icon.sprite = elementData.Icon;
                 filterUI.Name.text = elementData.Name;
                 

@@ -178,7 +178,7 @@ namespace DefaultNamespace {
 
             txt_SelectedDeckSummary.text = summary;
             
-            img_SelectedDeckElement.sprite = CardDatabase.Instance.TryGetElementData(repProp).Icon;
+            img_SelectedDeckElement.sprite = CardDatabase.Instance.GetElementData(repProp).Icon;
         }
 
         // 덱 리스트 출력하는 함수

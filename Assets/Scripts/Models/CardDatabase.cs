@@ -18,10 +18,12 @@ namespace Models.CardDatabases
         [SerializeField] private AssetLabelReference cardLabel;
         [SerializeField] private AssetLabelReference keywordLabel;
         [SerializeField] private AssetLabelReference elementLabel;
+        [SerializeField] private AssetLabelReference presetDeckLabel;
         
         private Dictionary<int, PlayableCard> _cardDictionary;
         private Dictionary<CardKeyword, KeywordData> _keywordDictionary;
         private Dictionary<Property, ElementUIData> _elementDictionary;
+        private List<PresetDeckData> _presetDecks;
 
         public bool IsReady { get; private set; } = false;
 
@@ -46,6 +48,7 @@ namespace Models.CardDatabases
             _cardDictionary = new Dictionary<int, PlayableCard>();
             _keywordDictionary = new Dictionary<CardKeyword, KeywordData>();
             _elementDictionary = new Dictionary<Property, ElementUIData>();
+            _presetDecks = new List<PresetDeckData>();
 
             // ==========================================
             // 1. 플레이어블 카드 SO 로드
@@ -131,6 +134,19 @@ namespace Models.CardDatabases
                 Debug.LogError("[CardDatabase] 속성 어드레서블 로드 실패!");
             }
             
+            // ==========================================
+            // 4. 프리셋 덱 SO 로드
+            // ==========================================
+            var presetHandle = Addressables.LoadAssetsAsync<PresetDeckData>(presetDeckLabel.labelString, null);
+            await presetHandle.Task;
+            
+            if (presetHandle.Status == AsyncOperationStatus.Succeeded) {
+                _presetDecks = new List<PresetDeckData>(presetHandle.Result);
+                Debug.Log($"[CardDatabase] 프리셋 덱 {_presetDecks.Count}개 로드 완료.");
+            } else {
+                Debug.LogError("[CardDatabase] 프리셋 덱 로드 실패!");
+            }
+            
             IsReady = true;
             Debug.Log($"[CardDatabase] 카드 {_cardDictionary.Count}장, 키워드 {_keywordDictionary.Count}개 로드 완료.");
         }
@@ -169,7 +185,7 @@ namespace Models.CardDatabases
             return false;
         }
         
-        public ElementUIData TryGetElementData(Property property)
+        public ElementUIData GetElementData(Property property)
         {
             if (_elementDictionary != null && _elementDictionary.TryGetValue(property, out ElementUIData data))
             {

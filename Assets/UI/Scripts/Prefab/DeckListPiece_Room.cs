@@ -19,7 +19,7 @@ namespace DefaultNamespace
             txt_DeckName.text = deckData.Name;
             txt_CardCount.text = deckData.CardCount;
 
-            var elementData = CardDatabase.Instance.TryGetElementData(deckData.Element);
+            var elementData = CardDatabase.Instance.GetElementData(deckData.Element);
             img_Element.sprite = elementData.Icon;
             // TODO : element 따라 프레임 색 바꿔주기
 
