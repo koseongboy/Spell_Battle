@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.StatusUiData
   Name: "\uC608\uC5B8"
   Type: 3
-  Icon: {fileID: 0}
-  Desc: 
+  Icon: {fileID: 21300000, guid: f0ed6fe28816da4408396269d50dbcbc, type: 3}
+  Desc: "\uC608\uC5B8\uC744 30\uC911\uCCA9 \uC313\uC73C\uBA74 \uAD81\uADF9\uAE30\uB97C
+    \uC0AC\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4"

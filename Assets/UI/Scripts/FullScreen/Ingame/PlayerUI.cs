@@ -189,27 +189,10 @@ namespace DefaultNamespace {
             }
         }
         
-        public void UpdateLastProperty(Property prop)
-        {
-            string prop_text = "";
-            switch(prop)
-            {
-                case Property.Attack: prop_text = "공격"; break;
-                case Property.Deffense: prop_text = "방어"; break;
-                case Property.Fire: prop_text = "불"; break;
-                case Property.Water: prop_text = "물"; break;
-                case Property.Ground: prop_text = "흙"; break;
-                case Property.Wind: prop_text = "바람"; break;
-                case Property.Thunder: prop_text = "번개"; break;
-                case Property.Ice: prop_text = "얼음"; break;
-                case Property.Void: prop_text = "공허"; break;
-                case Property.Vision: prop_text = "비전"; break;
-                case Property.Life: prop_text = "생명"; break;
-                case Property.None: prop_text = "없음"; break;
-                default: prop_text = "(알 수 없음)"; break;
-            }
-            txt_LastElement.text = prop_text;
-            // TODO : Element Image
+        public void UpdateLastProperty(Property prop) {
+            var data = CardDatabase.Instance.TryGetElementData(prop);
+            txt_LastElement.text = data.Name;
+            img_LastElement.sprite = data.Icon;
         }
 
         private void UpdateHandInfo(ObservableCollection<int> localHand) {

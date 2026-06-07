@@ -230,6 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 887538071f84c214b8bc0aee48ad8349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.UI_StatusPiece
+  img_Element: {fileID: 422035997825845741}
   txt_Name: {fileID: 6642767133840115009}
   txt_Turn: {fileID: 9055024788298153179}
   txt_Stack: {fileID: 3927118642194951078}

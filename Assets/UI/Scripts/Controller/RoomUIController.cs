@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cards.CardUIDatas;
 using Managers;
 using Managers.LocalDataManagers;
 using Models.RelayMatchmakingService;
@@ -311,7 +312,7 @@ namespace DefaultNamespace {
                         Id = deck.id,
                         Name = deck.deckName,
                         CardCount = deck.cardCountSummary,
-                        Element = (DeckElement)deck.representativeProperty
+                        Element = deck.representativeProperty
                     });
                 }
             }

@@ -1283,6 +1283,7 @@ GameObject:
   - component: {fileID: 513301978}
   - component: {fileID: 513301977}
   - component: {fileID: 513301979}
+  - component: {fileID: 513301980}
   m_Layer: 0
   m_Name: UILoader
   m_TagString: Untagged
@@ -1335,6 +1336,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb95ea6c92002941b3a9aa6aa99ca5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.LeftUpperController
+--- !u!114 &513301980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513301976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673b8b6974c33b84c8f26903890b5481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.CommonUIController
+  currentFullScreenUI: 
 --- !u!1 &571595075
 GameObject:
   m_ObjectHideFlags: 0
@@ -2076,6 +2090,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1113526397}
   - component: {fileID: 1113526396}
+  - component: {fileID: 1113526398}
   m_Layer: 0
   m_Name: DataManager
   m_TagString: Untagged
@@ -2112,6 +2127,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1113526398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1113526395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74d6343a824acf647afd50c9d5bc22aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Models.CardDatabases.CardDatabase
+  cardLabel:
+    m_LabelString: PlayableCard
+  keywordLabel:
+    m_LabelString: KeywordData
+  elementLabel:
+    m_LabelString: ElementUIData
 --- !u!1 &1135782623
 GameObject:
   m_ObjectHideFlags: 0

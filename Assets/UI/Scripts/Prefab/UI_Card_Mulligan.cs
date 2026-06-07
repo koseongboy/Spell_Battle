@@ -13,7 +13,7 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI costText;
         [SerializeField] private TextMeshProUGUI descText;
-        [SerializeField] private Image image;
+        [SerializeField] private Image iconImg;
         // 필요한 경우 cost, desc 텍스트 등 추가
 
         [Header("선택 시각화")]
@@ -30,7 +30,7 @@ namespace DefaultNamespace
             nameText.text = data.uiData.wordName;
             costText.text = data.uiData.cost.ToString();
             descText.text = data.uiData.desc;
-            // TODO : image
+            iconImg.sprite = data.uiData.icon;
 
             // 초기화 시 선택 해제 상태로 세팅
             isSelected = false;

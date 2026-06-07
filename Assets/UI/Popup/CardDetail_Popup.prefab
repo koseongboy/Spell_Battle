@@ -351,6 +351,7 @@ MonoBehaviour:
   txt_DetailCost: {fileID: 900467116944650845}
   txt_DetailName: {fileID: 544167866188548934}
   txt_DetailDesc: {fileID: 5010973674387414268}
+  img_DetailIcon: {fileID: 2921538432087991647}
   btn_DetailAdd: {fileID: 329384083204490893}
   btn_Close: {fileID: 7758478435646202801}
   bgCanvasGroup: {fileID: 5777704023840482194}
@@ -1146,7 +1147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: 41bc1ce8da9e87a4fa340d902394e0df, type: 2}
-  m_Color: {r: 0.18039216, g: 0.18039216, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1219,6 +1220,7 @@ MonoBehaviour:
   nameText: {fileID: 544167866188548934}
   costText: {fileID: 900467116944650845}
   descText: {fileID: 5010973674387414268}
+  iconImg: {fileID: 0}
   dragPiece: {fileID: 0}
 --- !u!114 &126541246831067376
 MonoBehaviour:

@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 995feb8e6e68e28449737d5144ce141e
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 05fbae2d96c8d3b205e4d172a2cce85e
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -62,6 +62,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 7421538b1ccd3af44a38660d5b406d11, type: 2}
   - {fileID: 11400000, guid: a0659f1c5304d424b84263c728102532, type: 2}
+  - {fileID: 11400000, guid: dbc54312ac2ca8b45a6f03e6a72211fc, type: 2}
   - {fileID: 11400000, guid: 9432a955a67f98c48b91f188a671db5d, type: 2}
   - {fileID: 11400000, guid: e5fd339dd6a3ee9499e362cb001aa891, type: 2}
   - {fileID: 11400000, guid: 51cbdb5bc975a474cbb38d39cf2bf8e7, type: 2}
@@ -107,6 +108,7 @@ MonoBehaviour:
     - StatusUIData
     - PlayableCard
     - KeywordData
+    - ElementUIData
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: ecc06c906908cab41ad2cf7c628619dc, type: 2}

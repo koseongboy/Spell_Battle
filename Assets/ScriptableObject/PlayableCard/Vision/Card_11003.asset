@@ -17,6 +17,7 @@ MonoBehaviour:
     wordName: "\uADA4\uC801"
     cost: 4
     property: 12
+    icon: {fileID: 21300000, guid: 28b815630f263714399d1046122e9a94, type: 3}
     Effects:
     - effectType: 10
       targetType: 1

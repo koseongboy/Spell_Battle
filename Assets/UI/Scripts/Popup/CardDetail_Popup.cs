@@ -24,6 +24,7 @@ namespace DefaultNamespace {
         public TextMeshProUGUI txt_DetailCost;
         public TextMeshProUGUI txt_DetailName;
         public TextMeshProUGUI txt_DetailDesc;
+        public Image img_DetailIcon;
 
         public Button btn_DetailAdd;
         public Button btn_Close;
@@ -73,6 +74,7 @@ namespace DefaultNamespace {
             txt_DetailCost.text = data.CardData.Cost.ToString();
 
             txt_DetailDesc.text = data.CardData.uiData.desc;
+            img_DetailIcon.sprite = data.CardData.uiData.icon;
 
             // 열람 모드(CanAdd == false)일 경우 아래 '추가' 버튼을 아예 끕니다.
             btn_DetailAdd.gameObject.SetActive(data.CanAdd);

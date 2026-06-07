@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cards.CardUIDatas;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -96,27 +97,14 @@ namespace DefaultNamespace
             // UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(contentParent.GetComponent<RectTransform>());
         }
     }
-
-
-    public enum DeckElement {
-        Fire,
-        Water,
-        Earth,
-        Thunder,
-        Wind,
-        Ice,
-        Vision,
-        Life,
-        Void,
-        Normal
-    }
+    
     
     // Deck 데이터 클래스
     public class DeckMetaData {
         public string Id;
         public string Name;
         public string CardCount;
-        public DeckElement Element;
+        public Property Element;
         public string DeckCode;
     }
 }

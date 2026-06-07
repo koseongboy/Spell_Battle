@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cards.CardUIDatas;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -16,9 +17,11 @@ namespace Models.CardDatabases
         [Header("어드레서블 로드 라벨 설정")]
         [SerializeField] private AssetLabelReference cardLabel;
         [SerializeField] private AssetLabelReference keywordLabel;
-
+        [SerializeField] private AssetLabelReference elementLabel;
+        
         private Dictionary<int, PlayableCard> _cardDictionary;
         private Dictionary<CardKeyword, KeywordData> _keywordDictionary;
+        private Dictionary<Property, ElementUIData> _elementDictionary;
 
         public bool IsReady { get; private set; } = false;
 
@@ -42,6 +45,7 @@ namespace Models.CardDatabases
         {
             _cardDictionary = new Dictionary<int, PlayableCard>();
             _keywordDictionary = new Dictionary<CardKeyword, KeywordData>();
+            _elementDictionary = new Dictionary<Property, ElementUIData>();
 
             // ==========================================
             // 1. 플레이어블 카드 SO 로드
@@ -97,6 +101,34 @@ namespace Models.CardDatabases
             else
             {
                 Debug.LogError("[CardDatabase] 키워드 어드레서블 로드 실패!");
+            }            
+            
+            // ==========================================
+            // 3. 속성 SO 로드
+            // ==========================================
+            var elementHandle = Addressables.LoadAssetsAsync<ElementUIData>(elementLabel.labelString, null);
+            await elementHandle.Task;
+
+            if (elementHandle.Status == AsyncOperationStatus.Succeeded)
+            {
+                foreach (var el in elementHandle.Result)
+                {
+                    if (el != null)
+                    {
+                        if (!_elementDictionary.ContainsKey(el.Property))
+                        {
+                            _elementDictionary.Add(el.Property, el);
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"[CardDatabase] 중복된 키워드: {el.Property}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("[CardDatabase] 속성 어드레서블 로드 실패!");
             }
             
             IsReady = true;
@@ -135,6 +167,15 @@ namespace Models.CardDatabases
             title = string.Empty;
             desc = string.Empty;
             return false;
+        }
+        
+        public ElementUIData TryGetElementData(Property property)
+        {
+            if (_elementDictionary != null && _elementDictionary.TryGetValue(property, out ElementUIData data))
+            {
+                return data;
+            }
+            return null;
         }
     }
 }
