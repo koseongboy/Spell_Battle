@@ -122,7 +122,9 @@ namespace Managers.VFX
 
             if (prefabToPlay == null) yield break;
 
-            // 기준점 세팅 및 이펙트 소환
+            // 카메라 줌인
+            Cameras.BattleCameraController.Instance.FocusOnTarget(target.transform);
+
             Transform mountPoint = target.transform;
 
             GameObject vfxInstance = Instantiate(prefabToPlay, mountPoint.position, mountPoint.rotation);
@@ -131,6 +133,9 @@ namespace Managers.VFX
             // 1.5초 대기 후 파괴
             yield return new WaitForSeconds(1.5f);
             if (vfxInstance != null) Destroy(vfxInstance);
+
+            // 카메라 원위치
+            Cameras.BattleCameraController.Instance.ResetCamera();
         }
     }
 }

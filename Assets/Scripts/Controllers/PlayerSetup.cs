@@ -38,7 +38,7 @@ namespace Controllers.PlayerSetup
             mainCam.SetParent(this.transform, false);
             mainCam.localPosition = new Vector3(2f, 1.6f, -2f); 
             mainCam.localRotation = Quaternion.Euler(7.5f, -21f, 0);
-
+            Managers.Cameras.BattleCameraController.Instance.InitCamera(cam);
             
             
             Debug.Log($"[PlayerSetup] 🎯 턴 컨트롤러 지정 카메라 세팅 완벽 성공!: {cam.gameObject.name}");

@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/999_Dev/Koseongboy/02_Battle_Crocobob.unity
     guid: 91b468636e84b074f843fe0775c2ab76
+  - enabled: 1
+    path: Assets/999_Dev/Crocobob/CardTestScene_Crocobob.unity
+    guid: 8b41d874bd64a774383288cf75d80864
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 1069dfbb6e28e6c4abbc727abc65b312, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
