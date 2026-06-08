@@ -66,7 +66,7 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
-// 2. 공유 덱 스키ma
+// 2. 공유 덱 스키마
 const deckSchema = new mongoose.Schema({
     deckName: { type: String, required: true },
     userId: { type: String, required: true }, // 작성자 ID
@@ -126,6 +126,31 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// ✨ [GET] 특정 유저 전체 데이터 조회 API (404 Error 해결용 신규 추가)
+app.get('/load/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findOne({ userId });
+        
+        if (!user) {
+            return res.status(404).json({ error: "존재하지 않는 유저아이디입니다." });
+        }
+
+        res.status(200).json({
+            message: "유저 데이터 로드 성공",
+            userData: {
+                userId: user.userId,
+                score: user.score,
+                rank: user.rank,
+                defaultPitch: user.defaultPitch
+            }
+        });
+    } catch (err) {
+        console.error("❌ 유저 데이터 로드 중 에러:", err);
+        res.status(500).json({ error: "유저 데이터를 불러오는 중 서버 에러가 발생했습니다." });
+    }
+});
+
 // [GET] 유저 디폴트 피치 조회
 app.get('/default-pitch', async (req, res) => {
     try {
@@ -140,6 +165,38 @@ app.get('/default-pitch', async (req, res) => {
         res.status(500).json({ error: "서버 에러" });
     }
 });
+
+// ✨ [PUT] 유저 디폴트 피치 설정/수정 API (404 Error 해결용 신규 추가)
+app.put('/default-pitch', async (req, res) => {
+    try {
+        const { userId, defaultPitch } = req.body;
+        if (!userId || defaultPitch === undefined) {
+            return res.status(400).json({ error: "userId와 defaultPitch 값이 필요합니다." });
+        }
+
+        // 유저 찾기 및 피치값 업데이트
+        const user = await User.findOneAndUpdate(
+            { userId },
+            { defaultPitch: Number(defaultPitch) },
+            { new: true } // 업데이트된 도큐먼트를 반환하도록 설정
+        );
+
+        if (!user) {
+            return res.status(404).json({ error: "유저를 찾을 수 없습니다." });
+        }
+
+        console.log(`🎵 [피치 업데이트 완료] 유저: ${userId} | 변경된 Pitch: ${user.defaultPitch}`);
+        res.status(200).json({
+            message: "디폴트 피치가 성공적으로 수정되었습니다.",
+            userId: user.userId,
+            defaultPitch: user.defaultPitch
+        });
+    } catch (err) {
+        console.error("❌ 디폴트 피치 수정 중 에러:", err);
+        res.status(500).json({ error: "디폴트 피치를 수정하는 중 서버 에러가 발생했습니다." });
+    }
+});
+
 
 // ---------------------------------------------------------------- //
 // 🎴 2. 공유 덱 관련 API (저장, 조회, 삭제 추가✨)
@@ -172,7 +229,7 @@ app.get('/decks', async (req, res) => {
     }
 });
 
-// [DELETE] 🌟 공유 덱 삭제 로직 추가
+// [DELETE] 공유 덱 삭제 로직
 app.delete('/decks/:deckId', async (req, res) => {
     try {
         const { deckId } = req.params;
@@ -213,7 +270,7 @@ async function runBackgroundAnalysis(taskId, filePath, characterType, script, de
         const formData = new FormData();
         formData.append('file', fs.createReadStream(filePath));
         formData.append('default_pitch', defaultPitch.toString());
-        formData.append('target_words', script); // 💡 target_text -> target_words 변수명 일치 및 반영
+        formData.append('target_words', script); 
 
         // 1. FastAPI (AI 분석 전용 서버 5000포트) 연동
         const pythonResponse = await axios.post('http://localhost:5000/analyze-audio', formData, {
@@ -227,7 +284,7 @@ async function runBackgroundAnalysis(taskId, filePath, characterType, script, de
         const stt_text = text_validation?.recognized_text || "";
         const is_matched = text_validation?.is_matched || false;
 
-        // 2. Gemini LLM용 채점 프롬프트 작성 (유저 요구사항에 맞춰 피드백은 백엔드 로그용으로 처리)
+        // 2. Gemini LLM용 채점 프롬프트 작성
         const prompt = `
         유저가 게임 속 캐릭터 '${characterType}'의 컨셉에 맞추어 마법 영창(대사)을 외쳤습니다. 
         아래 음성 분석 데이터를 정밀 분석하여 최종 연기력 점수를 산출해 주세요.
@@ -267,7 +324,7 @@ async function runBackgroundAnalysis(taskId, filePath, characterType, script, de
         tasks[taskId] = {
             status: "completed",
             score: resultJson.score,
-            reason: resultJson.reason, // 백엔드 로깅 및 디버깅용 보관
+            reason: resultJson.reason, 
             updatedAt: Date.now()
         };
         console.log(`🗑️ [태스크 완료] ID: ${taskId} | 점수: ${resultJson.score}점`);
@@ -276,7 +333,6 @@ async function runBackgroundAnalysis(taskId, filePath, characterType, script, de
         console.error(`❌ [태스크 오류] ID: ${taskId} 처리 중 예외 발생:`, err.message);
         tasks[taskId] = { status: "failed", error: "음성 채점 과정 중 연동 장애 발생", updatedAt: Date.now() };
     } finally {
-        // 백그라운드 연동 완료 후 임시 보관 업로드 파일 삭제 처리로 용량 확보
         if (fs.existsSync(filePath)) {
             fs.unlink(filePath, (err) => { if (err) console.error("임시 파일 삭제 실패:", err); });
         }
@@ -302,13 +358,10 @@ app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
         const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
         const audioUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
 
-        // 메모리 객체 할당 (대기 상태 시작)
         tasks[taskId] = { status: "processing", audioUrl, updatedAt: Date.now() };
 
-        // 비동기로 백그라운드 태스크 백그라운드 루프 구동 (응답 락 방지)
         runBackgroundAnalysis(taskId, req.file.path, characterType, script, defaultPitch);
 
-        // 유니티 클라이언트로 '즉시' 대기 번호 및 오디오 링크 리턴
         res.status(200).json({ taskId, audioUrl });
 
     } catch (err) {
@@ -317,7 +370,7 @@ app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
     }
 });
 
-// [GET] 유니티 및 턴 매니저의 대기표 결과 확인용 Polling API (res, req 인자 순서 완벽 교정 완료)
+// [GET] 유니티 및 턴 매니저의 대기표 결과 확인용 Polling API
 app.get('/tasks/:taskId', (req, res) => {
     const { taskId } = req.params;
     const task = tasks[taskId];
@@ -334,7 +387,6 @@ app.get('/tasks/:taskId', (req, res) => {
         return res.status(500).json({ status: "failed", error: task.error });
     }
 
-    // 🌟 유저 요구사항 반영: 클라이언트(유니티) 쪽에 전달될 때는 점수(score)만 전달하고 피드백(reason)은 가림
     res.status(200).json({
         status: "completed",
         message: `평가 완료: ${task.score}점`,
