@@ -35,6 +35,13 @@ namespace Models.Networks
         public int score;
         public string recognizedSentence; // 🌟 서버가 STT로 인식한 플레이어의 실제 발음 문장!
     }
+    
+    [System.Serializable]
+    public class DefaultPitchResponse
+    {
+        public string userId;
+        public float defaultPitch;
+    }
 
     // 🌟 MonoBehaviour 상속을 제거한 순수 C# 클래스
     public class WebServerModel
@@ -153,6 +160,40 @@ namespace Models.Networks
                 {
                     Debug.LogError($"[WebServerModel] 디폴트 피치 저장 실패: {www.error}");
                     return false;
+                }
+            }
+        }
+        
+        // ==========================================
+        // 🎚️ 4. 초기 보이스 세팅 (디폴트 피치) 조회
+        // ==========================================
+        public async Task<float> GetDefaultPitchAsync(string userId)
+        {
+            // GET 요청이므로 쿼리 파라미터 방식으로 URL에 변수를 붙여줍니다.
+            string url = $"{baseUrl}/default-pitch?userId={userId}";
+
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
+            {
+                // (선택) 만약 인증 토큰이 필요한 API라면 아래 주석을 해제하고 토큰을 넣어주세요.
+                // www.SetRequestHeader("Authorization", "Bearer " + LocalDataManager.Instance.userToken);
+
+                var operation = www.SendWebRequest();
+                while (!operation.isDone) await Task.Yield();
+
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    string responseText = www.downloadHandler.text;
+                    Debug.Log($"[WebServerModel] 디폴트 피치 조회 성공: {responseText}");
+
+                    // JSON 텍스트를 객체로 변환하여 피치 값만 쏙 빼서 반환
+                    DefaultPitchResponse response = JsonUtility.FromJson<DefaultPitchResponse>(responseText);
+                    return response.defaultPitch;
+                }
+                else
+                {
+                    Debug.LogError($"[WebServerModel] 디폴트 피치 조회 실패: {www.error} | {www.downloadHandler.text}");
+                    // 실패했을 때의 예외 처리용 기본값 반환 (필요에 따라 0f나 -1f 등으로 세팅)
+                    return -1f; 
                 }
             }
         }

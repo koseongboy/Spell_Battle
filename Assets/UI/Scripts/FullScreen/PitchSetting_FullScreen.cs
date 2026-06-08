@@ -1,5 +1,6 @@
 using System.Collections;
 using Managers.VoiceManagers;
+using Models.Networks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,18 +17,28 @@ namespace DefaultNamespace
         
         private Coroutine micCoroutine;
 
-        private void OnEnable() {
-            resultPitch = -1f;
-            
-            // TODO : 서버에서 내 값 가져와서 UpdateResultUI
+        private async void OnEnable() {
+            // 1. 로컬 데이터 매니저에서 유저 ID 추출
+            string myUserId = Managers.LocalDataManagers.LocalDataManager.Instance.userId;
+
+            if (string.IsNullOrEmpty(myUserId)) {
+                Debug.LogError("[PitchResultUI] 유저 ID가 비어있어 피치 데이터를 요청할 수 없습니다.");
+                return;
+            }
+
+            // 2. 서버에서 디폴트 피치 비동기 조회 
+            float serverPitch = await WebServerModel.Instance.GetDefaultPitchAsync(myUserId);
+
+            // 3. 서버 응답 결과에 따른 UI 업데이트 처리
+            if (serverPitch > 0f) {
+                UpdateResultUI(serverPitch);
+            }
         }
         
         
         
-
         public void UpdateResultUI(float pitch) {
             resultPitch = pitch;
-            
             txt_result.text = $"{resultPitch:F2} Hz";
         }
 
