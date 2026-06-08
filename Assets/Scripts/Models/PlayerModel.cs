@@ -74,6 +74,7 @@ namespace Models.PlayerModels {
         public NetworkVariable<int> Shield = new NetworkVariable<int>(0);
         public NetworkVariable<Property> LastProperty = new NetworkVariable<Property>(Property.None);
 
+
         // 네트워크로 자동 동기화되는 상태이상 리스트
         // (일반 List나 Dictionary는 동기화가 안 되기 때문에 반드시 NetworkList를 써야 합니다!)
         public NetworkList<StatusData> ActiveStatuses;
