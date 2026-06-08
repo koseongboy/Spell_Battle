@@ -1905,6 +1905,7 @@ GameObject:
   - component: {fileID: 1015416321}
   - component: {fileID: 1015416323}
   - component: {fileID: 1015416324}
+  - component: {fileID: 1015416325}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2035,6 +2036,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.PhaseManager
   ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &1015416325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015416317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a6ed55c17607d4b941fb54651aa310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.VFX.BattleVFXManager
+  defaultDamageVFX: {fileID: 2105696241950182100, guid: b2a841381eb88fa49b52a2b26c74a3bf, type: 3}
+  healVFX: {fileID: 6330068521588448457, guid: 824afafb4562b3e4890d507b46e88e6a, type: 3}
+  shieldVFX: {fileID: 9015459453430987562, guid: 93aa569e955ff324ab55c8a6a65b81b1, type: 3}
+  specificStatusVFXs:
+  - statusType: 1
+    vfxPrefab: {fileID: 9105018963249482725, guid: 27554ca06e15c944d8bdbb55a8e1ad18, type: 3}
+  - statusType: 2
+    vfxPrefab: {fileID: 8811292488682576055, guid: f0966787e64901d4f82144cd53c1583f, type: 3}
+  - statusType: 3
+    vfxPrefab: {fileID: 4470822917507353519, guid: 2492f61c87d0da149a987f2efb25635b, type: 3}
+  - statusType: 4
+    vfxPrefab: {fileID: 693536385949184492, guid: 991c878f782452c4aab64de81833ba30, type: 3}
+  - statusType: 6
+    vfxPrefab: {fileID: 3277791385526084976, guid: 17fd9491ef3e1fb4ab3d3a765e703d22, type: 3}
+  - statusType: 8
+    vfxPrefab: {fileID: 7892853051406798322, guid: 17aa02cee3794a3459eb85da8738ae0e, type: 3}
+  - statusType: 9
+    vfxPrefab: {fileID: 7892853051406798322, guid: 17aa02cee3794a3459eb85da8738ae0e, type: 3}
+  - statusType: 10
+    vfxPrefab: {fileID: 872404406379509664, guid: 8906808a2a49d1c4fa8b4276933a5d10, type: 3}
+  - statusType: 11
+    vfxPrefab: {fileID: 5021392062862533419, guid: 38ca32698e58a404fb1bc29189d420f8, type: 3}
+  - statusType: 12
+    vfxPrefab: {fileID: 9015459453430987562, guid: 93aa569e955ff324ab55c8a6a65b81b1, type: 3}
+  cardMovementTrailVFX: {fileID: 0}
+  costUpVFX: {fileID: 0}
+  costDownVFX: {fileID: 0}
+  manaGainVFX: {fileID: 838618763473175610, guid: d20618a66f45cec42b9da485c8d26dea, type: 3}
+  manaLossVFX: {fileID: 7531799683265110699, guid: 931b3749772b64846bfd99ba3b9e8f36, type: 3}
+  systemControlVFX: {fileID: 0}
+  heavyImpactScreenVFX: {fileID: 0}
 --- !u!1 &1103786266
 GameObject:
   m_ObjectHideFlags: 0
