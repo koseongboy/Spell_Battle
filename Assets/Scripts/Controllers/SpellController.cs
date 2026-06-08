@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 
 namespace Controllers.TurnControllers 
 {
-    public class TurnController : NetworkBehaviour 
+    public class SpellController : NetworkBehaviour 
     {
-        public static TurnController Instance { get; private set; }
+        public static SpellController Instance { get; private set; }
         
         [Header("배틀 씬 진짜 메인 카메라")]
         public Camera BattleMainCamera;

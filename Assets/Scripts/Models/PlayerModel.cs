@@ -102,13 +102,13 @@ namespace Models.PlayerModels {
         }
 
         public override void OnNetworkSpawn() {
-            if (TurnController.Instance != null) {
+            if (SpellController.Instance != null) {
                 if (IsOwner) {
-                    TurnController.Instance.MyPlayer = this;
+                    SpellController.Instance.MyPlayer = this;
                     Debug.Log("방장 캐릭 턴 매니져에 등록 완료");
                 }
                 else {
-                    TurnController.Instance.EnemyPlayer = this;
+                    SpellController.Instance.EnemyPlayer = this;
                     Debug.Log("상대 캐릭 턴 매니져에 등록 완료");
                 }
             }

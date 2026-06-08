@@ -7,6 +7,10 @@ using Models.PlayerModels;
 
 namespace DefaultNamespace {
     public class MatchManager : NetworkBehaviour {
+        public void testGame()
+        {
+            InitializeRoomAndSpawnPlayers();
+        }
         public static MatchManager Instance { get; private set; }
 
         [Header("Spawning")] [SerializeField] private GameObject playerPrefab;

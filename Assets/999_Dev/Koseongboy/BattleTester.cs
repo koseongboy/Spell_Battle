@@ -3,6 +3,8 @@ using Unity.Netcode;
 using System.Collections.Generic;
 using Managers.LocalDataManagers;
 using Controllers.TurnControllers;
+using DefaultNamespace;
+
 
 
 #if UNITY_EDITOR
@@ -88,6 +90,6 @@ public class BattleTester : MonoBehaviour
     [ContextMenu("전투 강제 시작 (테스트용)")]
     public void battleStarte()
     {
-        // TurnController.Instance.ManualStartBattleTest();
+        MatchManager.Instance.testGame();
     }
 }

@@ -15,9 +15,12 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI txt_result;
         [SerializeField] private Image gaugeBar;
         
-        private Coroutine micCoroutine;
 
         private async void OnEnable() {
+            if (VoiceManager.Instance != null) {
+                VoiceManager.Instance.OnMicVolumeChanged += UpdateGauge;
+                gaugeBar.fillAmount = 0f; 
+            }
             // 1. 로컬 데이터 매니저에서 유저 ID 추출
             string myUserId = Managers.LocalDataManagers.LocalDataManager.Instance.userId;
 
@@ -35,7 +38,15 @@ namespace DefaultNamespace
             }
         }
         
-        
+        private void OnDisable() {
+            if (VoiceManager.Instance != null) {
+                VoiceManager.Instance.OnMicVolumeChanged -= UpdateGauge;
+            }
+        }
+
+        private void UpdateGauge(float volumeValue) {
+            gaugeBar.fillAmount = volumeValue;
+        }
         
         public void UpdateResultUI(float pitch) {
             resultPitch = pitch;
@@ -43,39 +54,24 @@ namespace DefaultNamespace
         }
 
 
-        public void StartGaugeCoroutine() {
-            // TODO
-            return;
-            micCoroutine = StartCoroutine(MicTestRoutine());
-        }
-
-        public void StopGaugeCoroutine() {
-            // TODO
-            return;
-            
-            if (micCoroutine == null) return;
-            
-            StopCoroutine(micCoroutine);
-            micCoroutine = null;
-        }
-        
-                
-        public IEnumerator MicTestRoutine()
-        {
-            
-            // isRecording이 true인 동안에만 매 프레임 게이지를 갱신합니다.
-            while (VoiceManager.Instance != null && VoiceManager.Instance.isTesting)
-            {
-                gaugeBar.fillAmount = VoiceManager.Instance.GetMicVolumeGauge();
-                Debug.Log(VoiceManager.Instance.GetMicVolumeGauge());
-                yield return null; // 1프레임 대기
-            }
-
-            yield return null;
-        }
 
         public void OnClick_Record() {
             pitchAnalyzer.ToggleRecording();
+            if (VoiceManager.Instance != null)
+            {
+                if (VoiceManager.Instance.isRecording)
+                {
+                    // 녹음이 켜졌으면 게이지를 0으로 초기화하고 텍스트도 변경
+                    gaugeBar.fillAmount = 0f;
+                    //btnText.text = "녹음 중지";
+                }
+                else
+                {
+                    // 녹음이 꺼졌으면 확실하게 게이지를 0으로 닫아줍니다.
+                    gaugeBar.fillAmount = 0f;
+                    //btnText.text = "녹음 시작";
+                }
+            }
         }
 
         public async void OnClick_Apply() {

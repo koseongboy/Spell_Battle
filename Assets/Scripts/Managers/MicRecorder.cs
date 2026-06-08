@@ -8,7 +8,7 @@ namespace Managers.VoiceManagers
 
     public class MicRecorder : MonoBehaviour
     {
-        private AudioClip recordingClip;
+        public AudioClip recordingClip;
         public string currentDeviceName { get; private set; }
 
         // 🎙️ 1. 녹음 시작
