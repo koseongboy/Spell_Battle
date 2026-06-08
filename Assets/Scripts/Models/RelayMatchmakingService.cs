@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
@@ -25,6 +26,8 @@ namespace Models.RelayMatchmakingService {
         private Lobby currentLobby;
         private LobbyEventCallbacks lobbyEvents;
         private CancellationTokenSource heartbeatTokenSource;
+        
+        public event Action OnRoomDataChanged;
 
         // 비동기 중복 요청 방지용 락(Lock) 플래그
         private bool isProcessing = false;
@@ -41,15 +44,7 @@ namespace Models.RelayMatchmakingService {
         public string GetHostId() {
             return currentLobby?.HostId;
         }
-        public string GetHostWebUserId() {
-            if (currentLobby == null || currentLobby.Players == null) return string.Empty;
-            var host = currentLobby.Players.Find(p => p.Id == currentLobby.HostId);
-            if (host != null && host.Data != null && host.Data.ContainsKey("WebUserId")) {
-                return host.Data["WebUserId"].Value;
-            }
-            return string.Empty;
-        }
-
+        
         public string GetGuestId() {
             if (currentLobby == null || currentLobby.Players == null) {
                 return string.Empty;
@@ -59,9 +54,26 @@ namespace Models.RelayMatchmakingService {
             return guest != null ? guest.Id : string.Empty;
         }
         
+        
+        public string GetHostWebUserId() {
+            if (currentLobby == null || currentLobby.Players == null) return string.Empty;
+            
+            // 1. 방장 객체 찾기
+            var host = currentLobby.Players.Find(p => p.Id == currentLobby.HostId);
+            
+            // 2. 팩트: Data가 null이 아닌지, 그리고 "WebUserId" 키가 존재하는지 확인
+            if (host != null && host.Data != null && host.Data.ContainsKey("WebUserId")) {
+                return host.Data["WebUserId"].Value;
+            }
+            return string.Empty;
+        }
+
+        
         public string GetGuestWebUserId() {
             if (currentLobby == null || currentLobby.Players == null) return string.Empty;
+            
             var guest = currentLobby.Players.Find(p => p.Id != currentLobby.HostId);
+            
             if (guest != null && guest.Data != null && guest.Data.ContainsKey("WebUserId")) {
                 return guest.Data["WebUserId"].Value;
             }
@@ -113,11 +125,11 @@ namespace Models.RelayMatchmakingService {
                 isProcessing = true; // 락 설정
                 
                 QuickJoinLobbyOptions quickJoinOptions = new QuickJoinLobbyOptions {
-                    Player = GetPlayerWithWebId()
+                    Player = GetPlayerWithWebId() // 🌟 입장할 때 한 방에 제출
                 };
                 currentLobby = await LobbyService.Instance.QuickJoinLobbyAsync(quickJoinOptions);
-                string joinCode = currentLobby.Data["JoinCode"].Value;
 
+                string joinCode = currentLobby.Data["JoinCode"].Value;
                 await JoinRelayRoomAsync(joinCode);
                 return (false, joinCode);
             }
@@ -187,7 +199,7 @@ namespace Models.RelayMatchmakingService {
         }
 
         // ==========================================
-        // ✨ [새로 추가된 기능] 2. 방 제목 지정 & 공개/비공개 방 생성
+        // 2. 방 제목 지정 & 공개/비공개 방 생성
         // ==========================================
         public async Task<string> CreateCustomLobbyAsync(string roomName, bool isPrivate, string hostName = "",
             int hostLevel = 0) {
@@ -243,17 +255,17 @@ namespace Models.RelayMatchmakingService {
         }
 
         // ==========================================
-        // ✨ [새로 추가된 기능] 3. 비공개 방 코드로 참여
+        // 3. 비공개 방 코드로 참여
         // ==========================================
         public async Task<string> JoinCustomLobbyByCodeAsync(string lobbyCode) {
             try {
-                // 1. 유저가 입력한 코드로 로비 입장
+                // 1. 코드로 로비 입장
                 JoinLobbyByCodeOptions options = new JoinLobbyByCodeOptions {
                     Player = GetPlayerWithWebId()
                 };
                 currentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, options);
 
-                // 2. 방 데이터에서 숨겨진 릴레이 코드를 추출하여 릴레이 접속
+                // 2. 릴레이 접속
                 string relayJoinCode = currentLobby.Data["JoinCode"].Value;
                 bool isSuccess = await JoinRelayRoomAsync(relayJoinCode);
                 return isSuccess ? currentLobby.Name : null;
@@ -265,7 +277,7 @@ namespace Models.RelayMatchmakingService {
         }
 
         // ==========================================
-        // ✨ [새로 추가된 기능] 4. 공개 방 리스트에서 클릭하여 참여
+        // 4. 공개 방 리스트에서 클릭하여 참여
         // ==========================================
         public async Task<string> JoinCustomLobbyByIdAsync(string lobbyId) {
             try {
@@ -274,7 +286,7 @@ namespace Models.RelayMatchmakingService {
                 };
                 currentLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, options);
 
-                // 2. 방 데이터에서 숨겨진 릴레이 코드를 추출하여 릴레이 접속
+                // 2. 릴레이 접속
                 string relayJoinCode = currentLobby.Data["JoinCode"].Value;
                 bool isSuccess = await JoinRelayRoomAsync(relayJoinCode);
                 return isSuccess ? currentLobby.Name : null;
@@ -388,11 +400,17 @@ namespace Models.RelayMatchmakingService {
             }
         }
 
-        private void OnLobbyChanged(ILobbyChanges changes) {
-            // 상대방이 들어와서 로비의 Player 목록에 변화가 생겼는지 체크
-            if (changes.PlayerJoined.Changed && changes.PlayerJoined.Value.Count > 0) {
-                Debug.Log("웹 서버: 새로운 플레이어가 로비 슬롯에 들어왔습니다!");
-                // TODO: 컨트롤러에 이벤트를 쏴서 lobbyView.SetLoadingPanel(true) 실행
+        private async void OnLobbyChanged(ILobbyChanges changes) {
+            if (changes.PlayerJoined.Changed || changes.PlayerLeft.Changed || changes.PlayerData.Changed) {
+                try {
+                    currentLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
+                    Debug.Log($"[Matchmaking] 🚨 서버에서 깨끗한 로비 정보 동기화 완료! UI 갱신 요청 쏨");
+                    
+                    OnRoomDataChanged?.Invoke();
+                }
+                catch (LobbyServiceException e) {
+                    Debug.LogWarning($"로비 동기화 실패: {e.Message}");
+                }
             }
         }
 
@@ -444,8 +462,6 @@ namespace Models.RelayMatchmakingService {
             return new Player(
                 id: AuthenticationService.Instance.PlayerId, // UGS 내부용 고유 ID (필수)
                 data: new Dictionary<string, PlayerDataObject> {
-                    // 💡 "WebUserId"라는 키값으로 내 웹 서버 ID를 명찰에 적어 넣습니다.
-                    // VisibilityOptions.Member: 같은 방에 들어온 사람들끼리만 이 명찰을 볼 수 있습니다.
                     { "WebUserId", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, myWebUserId) }
                 }
             );

@@ -23,7 +23,13 @@ namespace DefaultNamespace {
     // 3. 로그인 응답(Response) 데이터 포맷
     [System.Serializable]
     public class LoginResponse {
+        public string message;
         public string token;
+        public UserDataDto userData;
+    }
+    
+    [System.Serializable]
+    public class UserDataDto {
         public string userId;
         public int score;
         public string rank;
@@ -65,15 +71,24 @@ namespace DefaultNamespace {
                 
                     var localData = LocalDataManager.Instance;
                     localData.userToken = response.token;
-                    localData.userId = response.userId;
-                    localData.nickname = response.userId; 
-                    localData.score = response.score;
-                    localData.rank = response.rank;
-                    localData.defaultPitch = response.defaultPitch;
-                    
-                    // TODO : 이거 ES3 쓴다고?
+    
+                    if (response.userData != null) 
+                    {
+                        localData.userId = response.userData.userId;
+                        localData.nickname = response.userData.userId; 
+                        localData.score = response.userData.score;
+                        localData.rank = response.userData.rank;
+                        localData.defaultPitch = response.userData.defaultPitch;
+                    }
+                    else 
+                    {
+                        Debug.LogError("[AuthManager] JSON 파싱 에러: userData 객체가 null입니다.");
+                    }
+
+                    Debug.Log($"[Matchmaking] 🚨 파싱된 userId: {localData.userId}");
+    
                     PlayerPrefs.SetString("Saved_JWT_Token", response.token);
-                    PlayerPrefs.Save(); // 디스크에 즉시 기록
+                    PlayerPrefs.Save(); 
 
                     return true;
                 }
@@ -104,18 +119,30 @@ namespace DefaultNamespace {
                 if (request.result == UnityWebRequest.Result.Success)
                 {
                     string responseText = request.downloadHandler.text;
-                    Debug.Log($"<color=#00FF00>[AuthManager] 자동 로그인 성공!</color>\nRaw JSON: {responseText}");
+                    Debug.Log($"<color=#00FF00>[AuthManager] 로그인 서버 응답 수신 성공!</color>\nRaw JSON: {responseText}");
 
-                    // 로그인과 동일하게 응답 데이터를 파싱하여 로컬 데이터 매니저에 캐싱
                     LoginResponse response = JsonUtility.FromJson<LoginResponse>(responseText);
-            
-                    var localData = Managers.LocalDataManagers.LocalDataManager.Instance;
-                    localData.userToken = token; // 매개변수로 받은 토큰 유지
-                    localData.userId = response.userId;
-                    localData.nickname = response.userId; 
-                    localData.score = response.score;
-                    localData.rank = response.rank;
-                    localData.defaultPitch = response.defaultPitch;
+                
+                    var localData = LocalDataManager.Instance;
+                    localData.userToken = response.token;
+    
+                    if (response.userData != null) 
+                    {
+                        localData.userId = response.userData.userId;
+                        localData.nickname = response.userData.userId; 
+                        localData.score = response.userData.score;
+                        localData.rank = response.userData.rank;
+                        localData.defaultPitch = response.userData.defaultPitch;
+                    }
+                    else 
+                    {
+                        Debug.LogError("[AuthManager] JSON 파싱 에러: userData 객체가 null입니다.");
+                    }
+
+                    Debug.Log($"[Matchmaking] 🚨 파싱된 userId: {localData.userId}");
+    
+                    PlayerPrefs.SetString("Saved_JWT_Token", response.token);
+                    PlayerPrefs.Save(); 
 
                     return true;
                 }
@@ -163,13 +190,26 @@ namespace DefaultNamespace {
         
         public async Task<UserProfileResponse> RequestUserProfileAsync(string targetUserId)
         {
-            string token = LocalDataManager.Instance.userToken;
-    
-            if (string.IsNullOrEmpty(token)) return null;
-
-            using (UnityWebRequest request = UnityWebRequest.Get(serverURL + "/users/" + targetUserId))
+            // 1. 방어 로직: 조회할 타겟 ID가 비정상적이면 서버에 불필요한 요청을 보내지 않음
+            if (string.IsNullOrEmpty(targetUserId))
             {
-                request.SetRequestHeader("Authorization", "Bearer " + token);
+                Debug.LogError("[AuthManager] 조회할 타겟 유저 ID가 비어있습니다.");
+                return null;
+            }
+
+            string token = LocalDataManager.Instance.userToken;
+
+            if (string.IsNullOrEmpty(token)) 
+            {
+                Debug.LogError("[AuthManager] 인증 토큰이 없습니다. 로그인이 풀렸는지 확인하세요.");
+                return null;
+            }
+
+            string requestUrl = $"{serverURL}/load/{targetUserId}";
+
+            using (UnityWebRequest request = UnityWebRequest.Get(requestUrl))
+            {
+                request.SetRequestHeader("Authorization", $"Bearer {token}");
 
                 var operation = request.SendWebRequest();
                 while (!operation.isDone) await Task.Yield();
@@ -181,7 +221,9 @@ namespace DefaultNamespace {
                 }
                 else
                 {
-                    Debug.LogError($"[AuthManager] 유저 프로필 조회 실패 ({targetUserId}): {request.error}");
+                    // 3. 에러 발생 시 responseCode와 서버가 보낸 에러 메시지(Body)를 함께 찍어 디버깅을 용이하게 함
+                    Debug.LogError($"[AuthManager] 유저 프로필 조회 실패 ({targetUserId}) - 상태 코드: {request.responseCode}");
+                    Debug.LogError($"[AuthManager] 에러 내용: {request.error} | 서버 응답: {request.downloadHandler.text}");
                     return null;
                 }
             }
