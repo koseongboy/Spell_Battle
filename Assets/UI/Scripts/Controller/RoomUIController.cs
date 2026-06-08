@@ -38,6 +38,7 @@ namespace DefaultNamespace {
             else Destroy(gameObject);
 
             matchmakingService = RelayMatchmakingService.Instance;
+            matchmakingService.OnRoomDataChanged += HandleRoomDataChanged;
 
             SetupNetworkCallbacks();
         }
@@ -130,6 +131,11 @@ namespace DefaultNamespace {
             CommonUIController.Instance.DoneLoading();
         }
         
+        private void HandleRoomDataChanged() {
+            // 상대가 나갔는지, 들어왔는지, 갱신되었는지 판단하여 비동기로 화면 다시 그리기
+            _ = RefreshRoomPlayersInfoAsync();
+        }
+        
         /// <summary>
         /// 🛠️ [새로 추가] 로비 네트워크 상황과 웹 백엔드를 매핑하여 플레이어 프로필 UI를 새로고침합니다.
         /// </summary>
@@ -137,45 +143,25 @@ namespace DefaultNamespace {
         {
             if (ui_Room == null) return;
 
-            var myLocalData = LocalDataManager.Instance;
-            bool isHost = NetworkManager.Singleton.IsHost;
-
-            // 1. 호스트(방장) 정보 처리
-            if (isHost)
-            {
-                // 내가 방장이라면: 서버 통신을 생략하고 내 기기의 데이터를 즉시 주입
-                ui_Room.UpdateHostUI(myLocalData.nickname, myLocalData.score, myLocalData.rank);
-            }
-            else
-            {
-                // 내가 게스트라면: 로비 명찰에서 방장의 웹서버 userId를 추출합니다.
-                string hostWebId = matchmakingService.GetHostWebUserId(); 
-                
-                if (!string.IsNullOrEmpty(hostWebId)) {
-                    var hostProfile = await AuthManager.Instance.RequestUserProfileAsync(hostWebId);
-                    if (hostProfile != null)
-                        ui_Room.UpdateHostUI(hostProfile.nickname, hostProfile.score, hostProfile.rank);
-                }
+            string hostWebId = matchmakingService.GetHostWebUserId(); 
+            Debug.Log(hostWebId);
+            
+            if (!string.IsNullOrEmpty(hostWebId)) {
+                var hostProfile = await AuthManager.Instance.RequestUserProfileAsync(hostWebId);
+                if (hostProfile != null)
+                    ui_Room.UpdateHostUI(hostProfile.nickname, hostProfile.score, hostProfile.rank);
             }
 
             // 2. 게스트(손님) 정보 처리
             if (matchmakingService.HasGuest) 
             {
-                if (isHost)
-                {
-                    // 내가 방장이라면: 들어온 게스트의 로비 명찰에서 웹서버 userId를 추출하여 프로필을 조회합니다.
-                    string guestWebId = matchmakingService.GetGuestWebUserId();
-                    
-                    if (!string.IsNullOrEmpty(guestWebId)) {
-                        var guestProfile = await AuthManager.Instance.RequestUserProfileAsync(guestWebId);
-                        if (guestProfile != null)
-                            ui_Room.UpdateGuestUI(guestProfile.nickname, guestProfile.score, guestProfile.rank);
-                    }
-                }
-                else
-                {
-                    // 내가 게스트라면: 내 정보이므로 로컬 캐시에서 즉시 주입
-                    ui_Room.UpdateGuestUI(myLocalData.nickname, myLocalData.score, myLocalData.rank);
+                string guestWebId = matchmakingService.GetGuestWebUserId();
+                Debug.Log(guestWebId);
+                
+                if (!string.IsNullOrEmpty(guestWebId)) {
+                    var guestProfile = await AuthManager.Instance.RequestUserProfileAsync(guestWebId);
+                    if (guestProfile != null)
+                        ui_Room.UpdateGuestUI(guestProfile.nickname, guestProfile.score, guestProfile.rank);
                 }
             }
             else 
@@ -449,8 +435,6 @@ namespace DefaultNamespace {
 
         // 누군가 방에서 나갔을 때
         private async void OnClientDisconnected(ulong clientId) {
-            Debug.Log("OnClientDisconnected 진입");
-
             if (NetworkManager.Singleton.IsHost) {
                 // [방장 시점] 손님이 나간 경우: 다시 [+] 버튼 띄우기
                 if (NetworkManager.Singleton.ConnectedClientsList.Count <= 1) {
@@ -489,8 +473,7 @@ namespace DefaultNamespace {
             }
 
             if (matchmakingService != null) {
-                Debug.Log("RoomUIController 파괴 감지: 로비에서 안전하게 퇴장 처리를 시도합니다.");
-
+                matchmakingService.OnRoomDataChanged -= HandleRoomDataChanged;
                 // OnDestroy 내부에서는 async/await의 완벽한 대기를 보장할 수 없으므로,
                 // Fire-and-Forget 형태로 무조건 서버에 '나 나간다'는 패킷을 던지고 프로세스를 종료합니다.
                 _ = matchmakingService.LeaveLobbyAsync();
