@@ -848,6 +848,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5342015896993463068, guid: d5af702a0598d6a469fc7d4bf6b51549, type: 3}
+      propertyPath: NetworkConfig.PlayerPrefab
+      value: 
+      objectReference: {fileID: 5534150444609738042, guid: 095936175cf45954184d659c27824bc0, type: 3}
     - target: {fileID: 6478515607009075630, guid: d5af702a0598d6a469fc7d4bf6b51549, type: 3}
       propertyPath: m_Name
       value: NGOManager
@@ -1926,7 +1930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3043524516
+  GlobalObjectIdHash: 2592218787
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -2121,6 +2125,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleTester
   ldm: {fileID: 1275501761}
+  isLocalVFXTestMode: 1
+  playerPrefab: {fileID: 5534150444609738042, guid: 095936175cf45954184d659c27824bc0, type: 3}
+  testCardId: 1001
 --- !u!4 &1103786268
 Transform:
   m_ObjectHideFlags: 0
@@ -4806,6 +4813,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1972607075}
+  - component: {fileID: 1972607076}
   m_Layer: 0
   m_Name: Testing
   m_TagString: Untagged
@@ -4830,6 +4838,21 @@ Transform:
   - {fileID: 1275501760}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1972607076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972607074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a24e9bde78d8654e8bcb6b05bce9e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardLogicTester
+  casterPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  testCardIds: a10f0000a30f0000
 --- !u!1001 &2077153178
 PrefabInstance:
   m_ObjectHideFlags: 0

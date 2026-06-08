@@ -124,16 +124,17 @@ namespace Managers.VFX
 
             // 카메라 줌인
             Cameras.BattleCameraController.Instance.FocusOnTarget(target.transform);
+            yield return new WaitForSeconds(0.5f);
 
             Transform mountPoint = target.transform;
 
             GameObject vfxInstance = Instantiate(prefabToPlay, mountPoint.position, mountPoint.rotation);
             vfxInstance.transform.SetParent(mountPoint, false);
-
+            vfxInstance.transform.localPosition = new Vector3(0f, 0f, 0f);
+            vfxInstance.transform.localRotation = Quaternion.identity;
             // 1.5초 대기 후 파괴
             yield return new WaitForSeconds(1.5f);
             if (vfxInstance != null) Destroy(vfxInstance);
-
             // 카메라 원위치
             Cameras.BattleCameraController.Instance.ResetCamera();
         }

@@ -29,17 +29,22 @@ namespace Managers.Cameras
         public void FocusOnTarget(Transform target)
         {
             if (mainCam == null || target == null) return;
-
-            // 🌟 이전에 실행 중이던 카메라 애니메이션이 있다면 강제 종료 (충돌 방지)
             mainCam.transform.DOKill();
 
-            // 1. 타겟의 가슴/명치 높이(Vector3.up * 1.5f)를 바라보도록 회전 (0.3초)
-            Vector3 lookPosition = target.position + Vector3.up * 1.5f;
-            mainCam.transform.DOLookAt(lookPosition, 0.3f).SetEase(Ease.OutCubic);
+            // 1. 카메라 위치 계산 (기존과 동일)
+            Vector3 targetCamPos = target.position + target.forward * 2.5f + target.right * 0.8f + Vector3.up * 1.5f;
+            
+            // 2. 고정 지점 (타겟의 가슴)
+            Vector3 lookPosition = target.position + Vector3.up * 1.2f;
 
-            // 2. 살짝 앞으로 줌인 (기존 위치에서 카메라가 바라보는 앞 방향으로 2.5만큼 전진)
-            Vector3 zoomPos = originalLocalPos + mainCam.transform.forward * 2.5f;
-            mainCam.transform.DOLocalMove(zoomPos, 0.3f).SetEase(Ease.OutCubic);
+            // 3. 이동
+            mainCam.transform.DOMove(targetCamPos, 0.3f).SetEase(Ease.OutCubic);
+
+            // 🌟 핵심: DOLookAt 대신 Quaternion.LookRotation으로 계산한 방향을 향해 회전
+            Vector3 direction = (lookPosition - targetCamPos).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            
+            mainCam.transform.DORotateQuaternion(targetRotation, 0.3f).SetEase(Ease.OutCubic);
         }
 
         // 연출이 끝나면 원래 자리로 복귀합니다.
