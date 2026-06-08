@@ -224,7 +224,7 @@ namespace Controllers.PlayerController
             Debug.Log("카드 선택 및 UI 하이라이트가 모두 초기화되었습니다.");
         }
 
-        private void SubmitSpellSelection()
+        public void SubmitSpellSelection()
         {
             List<PlayableCard> selectedCards = new List<PlayableCard>();
             foreach (int index in _selectedSpellIndices)
@@ -236,9 +236,9 @@ namespace Controllers.PlayerController
             }
 
             // 선택 완료! 서버에 '이 카드들로 마법을 준비하겠다'고 선언하고 Incantation 페이즈로 넘어갑니다.
-            
-            SpellController.Instance.InitSpell(selectedCards);
-            // TODO : 이걸 PhaseManager에게 연락해야함.
+
+
+            PhaseManager.Instance.StartSpell(selectedCards);
             
             ClearSpellSelections();
         }

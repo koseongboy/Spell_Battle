@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using Cards.PlayableCards;
 using Controllers.PlayerController;
+using Controllers.SpellControllers;
+using Models.Networks;
 using UnityEngine;
 using Unity.Netcode;
 using Models.TurnModel;
@@ -114,11 +117,8 @@ namespace DefaultNamespace {
                     break;
 
                 case GamePhase.Incantation: {
-                    Debug.Log("진입");
                     if (isMyTurn) {
-                        Debug.Log("[Client] 내 턴! 영창 UI를 띄우고 녹음을 시작합니다.");
-                        UILoader.Instance.HideUI("Ingame_FullScreen");
-                        UILoader.Instance.ShowUI("Spell_FullScreen");
+
                     }
                     else {
                         CommonUIController.Instance.ShowBlackAlert("상대방이 영창 중입니다...");
@@ -242,6 +242,24 @@ namespace DefaultNamespace {
                     TurnModel.Instance.CurrentPhase.Value = GamePhase.Select;
                 }
             }
+        }
+
+        // TODO : 리팩토링 필요
+        public void StartSpell(List<PlayableCard> selectedCards) {
+            var payload = SpellController.Instance.InitSpell(selectedCards);
+            
+            TurnModel.Instance.CurrentPhase.Value = GamePhase.Incantation;
+            UILoader.Instance.HideUI("Ingame_FullScreen");
+            UILoader.Instance.ShowUI("Spell_FullScreen", payload);
+        }
+
+        public void DoneEval(TaskStatusResponse evalResult) {
+            CommonUIController.Instance.DoneLoading();
+            
+            Debug.Log(evalResult.ToString());
+            
+            // UILoader.Instance.ShowUI("");
+            // TODO 
         }
     }
 }
