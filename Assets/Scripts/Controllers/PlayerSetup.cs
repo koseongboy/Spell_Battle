@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
-using Controllers.TurnControllers;
+using Controllers.SpellControllers;
 using Unity.Mathematics; // 🌟 턴 컨트롤러에 접근하기 위해 추가
 
 namespace Controllers.PlayerSetup

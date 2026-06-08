@@ -10,7 +10,7 @@ using Cards.CardUIDatas;
 using Cards.EffectInfos;
 using Cards.PlayableCards;
 using Controllers.PlayerController;
-using Controllers.TurnControllers;
+using Controllers.SpellControllers;
 using DefaultNamespace.Utilities;
 using Models.CardDatabases;
 using Models.TurnModel;

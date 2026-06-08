@@ -14,7 +14,7 @@ using Managers.VoiceManagers;
 using Cards.CardUIDatas;
 using Models.Networks;
 
-namespace Controllers.TurnControllers 
+namespace Controllers.SpellControllers 
 {
     public class SpellController : NetworkBehaviour 
     {
@@ -221,7 +221,7 @@ namespace Controllers.TurnControllers
 
             Debug.Log("[SpellController] 5. 상대방에게 음성 재생 시작.");
             
-            // 기존에 만들어둔 VoiceManager의 스피커를 활용하여 재생합니다.
+            // 기존에 만들어둔 VoiceManager의 스피커를 활용하여 재생합니다. todo: 음성 연결해야 함
             if (VoiceManager.Instance.testAudioSource != null)
             {
                 VoiceManager.Instance.testAudioSource.clip = downloadedClip;
@@ -241,12 +241,12 @@ namespace Controllers.TurnControllers
         }
 
         [Rpc(SendTo.SpecifiedInParams)]
-        private async void DownloadAudioClientRpc(string audioUrl, RpcParams rpcParams = default)
+        private void DownloadAudioClientRpc(string audioUrl, RpcParams rpcParams = default)
         {
             Debug.Log($"[Client] 📥 상대방의 (재)녹음 오디오 URL 수신! 백그라운드 다운로드 시작...");
             
             // 수신받은 URL로 오디오를 몰래 다운로드해둡니다. (재생은 아직 안 함!)
-            await DownloadAudio(audioUrl);
+            _ = DownloadAudio(audioUrl);
         }
         #endregion
 
