@@ -53,9 +53,11 @@ namespace DefaultNamespace
         }
 
         private async void TryAutoLogin() {
-            if (PlayerPrefs.HasKey("Saved_JWT_Token"))
+            var ldm = LocalDataManager.Instance;
+            ldm.LoadData();
+            if (ldm.userToken != string.Empty)
             {
-                string savedToken = PlayerPrefs.GetString("Saved_JWT_Token");
+                string savedToken = ldm.userToken;
                 
                 CommonUIController.Instance.ShowLoading();
 

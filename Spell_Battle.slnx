@@ -1,11 +1,11 @@
 ﻿<Solution>
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="DA_Assets.Shared.Editor.csproj" />
   <Project Path="DA_Assets.Shared.csproj" />
   <Project Path="DA_Assets.FCU.csproj" />
   <Project Path="DA_Assets.DM.Tests.csproj" />
   <Project Path="DA_Assets.FCU.Editor.csproj" />
   <Project Path="DA_Assets.Figmage.Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="DA_Assets.DAO.csproj" />
   <Project Path="DA_Assets.Figmage.Editor.Tests.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
