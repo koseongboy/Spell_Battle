@@ -2127,7 +2127,7 @@ MonoBehaviour:
   ldm: {fileID: 1275501761}
   isLocalVFXTestMode: 1
   playerPrefab: {fileID: 5534150444609738042, guid: 095936175cf45954184d659c27824bc0, type: 3}
-  testCardId: 1001
+  testCardIds: 
 --- !u!4 &1103786268
 Transform:
   m_ObjectHideFlags: 0
@@ -2137,7 +2137,7 @@ Transform:
   m_GameObject: {fileID: 1103786266}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.4391499, y: -0.78828, z: -3.13799}
+  m_LocalPosition: {x: -1.42, y: -0.78828, z: -3.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
