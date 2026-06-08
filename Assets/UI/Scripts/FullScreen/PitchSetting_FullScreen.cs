@@ -21,6 +21,9 @@ namespace DefaultNamespace
             
             // TODO : 서버에서 내 값 가져와서 UpdateResultUI
         }
+        
+        
+        
 
         public void UpdateResultUI(float pitch) {
             resultPitch = pitch;
@@ -48,15 +51,14 @@ namespace DefaultNamespace
                 
         public IEnumerator MicTestRoutine()
         {
-            // TODO : 마이크 게인 따라서 image 바꿔주기
             
-            // // isRecording이 true인 동안에만 매 프레임 게이지를 갱신합니다.
-            // while (VoiceManager.Instance != null && VoiceManager.Instance.isRecording)
-            // {
-            //     gaugeBar.fillAmount = VoiceManager.Instance.GetMicVolumeGauge();
-            //     Debug.Log(VoiceManager.Instance.GetMicVolumeGauge());
-            //     yield return null; // 1프레임 대기
-            // }
+            // isRecording이 true인 동안에만 매 프레임 게이지를 갱신합니다.
+            while (VoiceManager.Instance != null && VoiceManager.Instance.isTesting)
+            {
+                gaugeBar.fillAmount = VoiceManager.Instance.GetMicVolumeGauge();
+                Debug.Log(VoiceManager.Instance.GetMicVolumeGauge());
+                yield return null; // 1프레임 대기
+            }
 
             yield return null;
         }
