@@ -64,17 +64,14 @@ namespace DefaultNamespace {
                     LoginResponse response = JsonUtility.FromJson<LoginResponse>(responseText);
                 
                     var localData = LocalDataManager.Instance;
+                    localData.LoadData();
                     localData.userToken = response.token;
                     localData.userId = response.userId;
                     localData.nickname = response.userId; 
                     localData.score = response.score;
                     localData.rank = response.rank;
                     localData.defaultPitch = response.defaultPitch;
-                    
-                    // TODO : 이거 ES3 쓴다고?
-                    PlayerPrefs.SetString("Saved_JWT_Token", response.token);
-                    PlayerPrefs.Save(); // 디스크에 즉시 기록
-
+                    localData.SaveData();
                     return true;
                 }
                 else
@@ -109,7 +106,8 @@ namespace DefaultNamespace {
                     // 로그인과 동일하게 응답 데이터를 파싱하여 로컬 데이터 매니저에 캐싱
                     LoginResponse response = JsonUtility.FromJson<LoginResponse>(responseText);
             
-                    var localData = Managers.LocalDataManagers.LocalDataManager.Instance;
+                    var localData = LocalDataManager.Instance;
+                    localData.LoadData();
                     localData.userToken = token; // 매개변수로 받은 토큰 유지
                     localData.userId = response.userId;
                     localData.nickname = response.userId; 
@@ -122,7 +120,8 @@ namespace DefaultNamespace {
                 else
                 {
                     Debug.LogWarning($"[AuthManager] 자동 로그인 실패 (토큰 만료 또는 서버 에러): {request.error}");
-                    PlayerPrefs.DeleteKey("Saved_JWT_Token");
+                    LocalDataManager.Instance.ClearData();
+                    LocalDataManager.Instance.SaveData();
                     return false;
                 }
             }
@@ -188,10 +187,8 @@ namespace DefaultNamespace {
         }
 
         public void Logout() {
-            PlayerPrefs.DeleteKey("Saved_JWT_Token");
-            PlayerPrefs.Save();
-
             LocalDataManager.Instance.ClearData();
+            LocalDataManager.Instance.SaveData();
 
             // TODO : 서버 소켓이 연결되어 있다면 여기서 끊어주는 로직 추가 (필요 시)
             // NetworkManager.Instance.Disconnect(); 

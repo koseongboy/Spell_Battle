@@ -2383,6 +2383,8 @@ MonoBehaviour:
   btn_test_text: {fileID: 382923349}
   btn_save: {fileID: 446517695}
   btn_cancel: {fileID: 256058936}
+  btn_recordDefaultVoice: {fileID: 0}
+  btn_recordDefaultVoice_text: {fileID: 0}
 --- !u!1 &1263644946
 GameObject:
   m_ObjectHideFlags: 0
@@ -2770,19 +2772,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c50e3dbc06c8964794badf6739c338b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.LocalDataManagers.LocalDataManager
-  userToken: 
-  userId: 
-  nickname: "\uAE30\uBAA8\uB9C1\uB9E8"
-  level: 2224
-  gold: 0
-  selectedAvatarId: 0
-  score: 0
-  rank: 
-  defaultPitch: 150
-  deviceIndex: 0
-  micVol: 0
-  outVol: 0
-  _equippedDeck: 
+  currentData:
+    userToken: 
+    userId: 
+    nickname: 
+    level: 1
+    gold: 0
+    selectedAvatarId: 0
+    score: 0
+    rank: 
+    defaultPitch: 150
+    deviceIndex: 0
+    micVol: 0.5
+    outVol: 0.5
+    equippedDeck: 
 --- !u!114 &1640395183
 MonoBehaviour:
   m_ObjectHideFlags: 0
