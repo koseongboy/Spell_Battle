@@ -16,7 +16,8 @@ namespace DefaultNamespace {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
         }
-
+        
+        
         public override void OnNetworkSpawn() {
             // 모델의 페이즈 값이 변할 때마다 클라이언트단 로직(UI 띄우기 등)을 실행하도록 구독
             TurnModel.Instance.CurrentPhase.OnValueChanged += HandlePhaseChanged;
@@ -129,7 +130,8 @@ namespace DefaultNamespace {
 
 
                 case GamePhase.Battle:
-                    // 서버는 전투 연산 진행
+                    // TODO : 여기서 주문 효과 재생
+                    // TODO : 여기서 전투 연산
                     break;
             }
         }
