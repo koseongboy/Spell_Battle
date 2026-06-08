@@ -1,5 +1,8 @@
 using UnityEngine;
-using Models.PlayerModels; // StatusType 등 사용을 위해 포함
+using Models.PlayerModels;
+using System.Collections;
+using System.Runtime.CompilerServices;
+using Cards.EffectInfos; // StatusType 등 사용을 위해 포함
 
 namespace Managers.VFX
 {
@@ -45,10 +48,7 @@ namespace Managers.VFX
         // ==========================================
         // 🃏 3. 유틸리티 및 카드 이동 (Utility & Movement)
         // ==========================================
-        [Header("Utility & Card Movement")]
-        [Tooltip("카드 이동 (CardMovementCommand) - 드로우, 버리기 등 카드가 날아가는 궤적")]
-        [SerializeField] private GameObject cardMovementTrailVFX;
-        
+        [Header("Utility & Card Movement")]        
         [Tooltip("핸드 속 카드의 코스트 업")]
         [SerializeField] private GameObject costUpVFX;
         [Tooltip("핸드 속 카드의 코스트 다운")]
@@ -75,5 +75,62 @@ namespace Managers.VFX
         [Header("Camera & Global Feedback")]
         [Tooltip("강한 타격 시 화면 흔들림 효과를 줄 파티클이나 후처리 객체")]
         [SerializeField] private GameObject heavyImpactScreenVFX;
+
+        private GameObject GetSpecificStatusVFX(StatusType targetStatus)
+        {
+            if (specificStatusVFXs == null) return defaultDamageVFX; // 방어 코드
+
+            foreach (var mapping in specificStatusVFXs)
+            {
+                if (mapping.statusType == targetStatus && mapping.vfxPrefab != null)
+                {
+                    return mapping.vfxPrefab; // 매핑된 전용 이펙트 반환!
+                }
+            }
+            // 매핑을 못 찾았다면(아직 프리팹 안 넣은 경우 등) 기본 상태이상 이펙트를 띄웁니다.
+            return defaultDamageVFX; 
+        }
+        //todo 카드 무브먼트 따라 ui상 움직임 보여줘야 할 듯
+        private GameObject GetSpecificCardMovementVFX(EffectType movement)
+        {
+            return null;
+        }
+
+        public IEnumerator PlayVFXRoutine(Models.EffectCommands.VFXType vfxType, StatusType statusType, PlayerModel target, EffectType cardMovement = EffectType.None)
+        {
+            // 명찰이 None이거나 타겟이 없으면 그냥 넘어갑니다.
+            if (vfxType == Models.EffectCommands.VFXType.None || target == null) yield break;
+
+            GameObject prefabToPlay = null;
+
+            // 🌟 넘어온 명찰(enum)에 맞는 프리팹을 인스펙터 필드에서 꺼냅니다.
+            switch (vfxType)
+            {
+                case Models.EffectCommands.VFXType.Damage: prefabToPlay = defaultDamageVFX; break;
+                case Models.EffectCommands.VFXType.Heal: prefabToPlay = healVFX; break;
+                case Models.EffectCommands.VFXType.Shield: prefabToPlay = shieldVFX; break;
+                case Models.EffectCommands.VFXType.AddStatus: 
+                    prefabToPlay = GetSpecificStatusVFX(statusType);
+                    break;
+                case Models.EffectCommands.VFXType.ManaGain: prefabToPlay = manaGainVFX; break;
+                case Models.EffectCommands.VFXType.ManaLoss: prefabToPlay = manaLossVFX; break;
+                case Models.EffectCommands.VFXType.SystemControl: prefabToPlay = systemControlVFX; break;
+                case Models.EffectCommands.VFXType.CostUp: prefabToPlay = costUpVFX; break;
+                case Models.EffectCommands.VFXType.CostDown: prefabToPlay = costDownVFX; break;
+                default: prefabToPlay = defaultDamageVFX; break;
+            }
+
+            if (prefabToPlay == null) yield break;
+
+            // 기준점 세팅 및 이펙트 소환
+            Transform mountPoint = target.transform;
+
+            GameObject vfxInstance = Instantiate(prefabToPlay, mountPoint.position, mountPoint.rotation);
+            vfxInstance.transform.SetParent(mountPoint, false);
+
+            // 1.5초 대기 후 파괴
+            yield return new WaitForSeconds(1.5f);
+            if (vfxInstance != null) Destroy(vfxInstance);
+        }
     }
 }

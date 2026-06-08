@@ -297,7 +297,11 @@ namespace Controllers.SpellControllers
             TurnModel.Instance.CurrentPhase.Value = GamePhase.Battle;
 
             float serverMultiplier = CalculateMultiplierFromScore(finalScore); 
-            ApplyPayloadToModels(serverPayload, serverMultiplier, caster);
+            foreach (var command in serverPayload.Commands) 
+            {
+                yield return StartCoroutine(command.ExecuteRoutine(serverMultiplier));
+            }
+            AfterExecutingAllCards(serverPayload, caster);
 
             yield return new WaitForSeconds(2f);
 
@@ -310,12 +314,10 @@ namespace Controllers.SpellControllers
         {
             return Mathf.Clamp(score / 100f, 0.5f, 1.5f);
         }
-
-        private void ApplyPayloadToModels(SpellPayload payload, float multiplier, PlayerModel caster) 
+        //카드들 실행하고 핸드에서 무덤으로 보내는 등의 후처리
+        private void AfterExecutingAllCards(SpellPayload payload, PlayerModel caster) 
         {
             if (!IsServer) return;
-
-            foreach (var command in payload.Commands) command.Execute(multiplier);
 
             payload.CalculateMainProperty();
 
