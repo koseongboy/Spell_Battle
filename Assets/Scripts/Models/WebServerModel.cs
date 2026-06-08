@@ -35,6 +35,7 @@ namespace Models.Networks
         public int score;
         public string recognizedSentence; // 🌟 서버가 STT로 인식한 플레이어의 실제 발음 문장!
     }
+
     
     [System.Serializable]
     public class DefaultPitchResponse
@@ -133,6 +134,34 @@ namespace Models.Networks
             }
         }
 
+        public async Task<TaskStatusResponse> GetEvaluationResultAsync(string taskId)
+        {
+            using (UnityWebRequest www = UnityWebRequest.Get($"{baseUrl}/evaluation-result?taskId={taskId}"))
+            {
+                var operation = www.SendWebRequest();
+                while (!operation.isDone) await Task.Yield();
+
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    string jsonResult = www.downloadHandler.text;
+                    var responseData = JsonUtility.FromJson<TaskStatusResponse>(jsonResult);
+                    
+                    // 아직 서버에서 분석이 끝나지 않은 경우
+                    if (responseData.status == "PENDING")
+                    {
+                        return null; 
+                    }
+
+                    return responseData;
+                }
+                else
+                {
+                    Debug.LogError($"[WebServerModel] 평가 결과 조회 실패 (TaskID: {taskId}): {www.error}");
+                    return null;
+                }
+            }
+        }
+
         // ==========================================
         // 🎚️ 3. 초기 보이스 세팅 (디폴트 피치) 저장
         // ==========================================
@@ -163,6 +192,9 @@ namespace Models.Networks
                 }
             }
         }
+
+        
+
         
         // ==========================================
         // 🎚️ 4. 초기 보이스 세팅 (디폴트 피치) 조회
@@ -197,5 +229,6 @@ namespace Models.Networks
                 }
             }
         }
+
     }
 }
