@@ -113,12 +113,14 @@ namespace DefaultNamespace {
                     break;
 
                 case GamePhase.Incantation: {
+                    Debug.Log("진입");
                     if (isMyTurn) {
                         Debug.Log("[Client] 내 턴! 영창 UI를 띄우고 녹음을 시작합니다.");
                         UILoader.Instance.HideUI("Ingame_FullScreen");
                         UILoader.Instance.ShowUI("Spell_FullScreen");
                     }
                     else {
+                        CommonUIController.Instance.ShowBlackAlert("상대방이 영창 중입니다...");
                         Debug.Log("[Client] 상대 턴! 상대방의 영창을 기다립니다.");
                     }
 

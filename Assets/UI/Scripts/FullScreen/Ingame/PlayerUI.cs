@@ -13,6 +13,7 @@ using Controllers.PlayerController;
 using Controllers.TurnControllers;
 using DefaultNamespace.Utilities;
 using Models.CardDatabases;
+using Models.TurnModel;
 using UnityEngine.Pool;
 
 namespace DefaultNamespace {
@@ -109,6 +110,7 @@ namespace DefaultNamespace {
             }
             
             btn_endTurn.onClick.AddListener( ()=>PhaseManager.Instance.RequestEndTurn() );
+            btn_spell.onClick.AddListener(()=>TurnModel.Instance.CurrentPhase.Value = GamePhase.Incantation );
             this.OnCardClickedAction += controller.ToggleSpellIndex;
         
             Debug.Log("✅ PlayerUI가 스스로 컨트롤러 데이터를 받아 바인딩을 완료했습니다!");
