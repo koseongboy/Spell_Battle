@@ -256,10 +256,7 @@ namespace DefaultNamespace {
         public void DoneEval(TaskStatusResponse evalResult) {
             CommonUIController.Instance.DoneLoading();
             
-            Debug.Log(evalResult.ToString());
-            
-            // UILoader.Instance.ShowUI("");
-            // TODO 
+            UILoader.Instance.ShowUI("SpellResult_FullScreen");
         }
     }
 }
