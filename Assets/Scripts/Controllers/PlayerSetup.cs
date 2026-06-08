@@ -1,7 +1,8 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
-using Controllers.TurnControllers; // 🌟 턴 컨트롤러에 접근하기 위해 추가
+using Controllers.TurnControllers;
+using Unity.Mathematics; // 🌟 턴 컨트롤러에 접근하기 위해 추가
 
 namespace Controllers.PlayerSetup
 {
@@ -14,8 +15,8 @@ namespace Controllers.PlayerSetup
             if (IsOwner)
             {
                 // 회전 세팅
-                if (IsServer) transform.rotation = Quaternion.Euler(0, 0, 0); 
-                else transform.rotation = Quaternion.Euler(0, 180f, 0); 
+                if (IsServer) transform.rotation = Quaternion.Euler(0, 180, 0); 
+                else transform.rotation = Quaternion.Euler(0, 0, 0); 
 
                 // 카메라 세팅 코루틴 시작
                 StartCoroutine(SetupCameraRoutine());
@@ -32,11 +33,13 @@ namespace Controllers.PlayerSetup
 
             // 2. 씬을 뒤지지 않고, TurnController가 쥐고 있는 '진짜' 카메라를 바로 가져옴!
             Camera cam = SpellController.Instance.BattleMainCamera;
-            
+        
             mainCam = cam.transform;
-            mainCam.SetParent(this.transform);
+            mainCam.SetParent(this.transform, false);
             mainCam.localPosition = new Vector3(2f, 1.6f, -2f); 
-            mainCam.localRotation = Quaternion.Euler(7.5f, -21f, 0f);
+            mainCam.localRotation = Quaternion.Euler(7.5f, -21f, 0);
+
+            
             
             Debug.Log($"[PlayerSetup] 🎯 턴 컨트롤러 지정 카메라 세팅 완벽 성공!: {cam.gameObject.name}");
         }

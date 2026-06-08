@@ -61,7 +61,7 @@ public class SettingUIController : MonoBehaviour
     {
         // 마이크 테스트 중에 슬라이더를 움직이면, 
         // 저장하지 않고도 내 스피커에 들리는 목소리 크기가 바로바로 바뀌도록 적용!
-        if (VoiceManager.Instance != null && VoiceManager.Instance.isTesting)
+        if (VoiceManager.Instance != null && VoiceManager.Instance.isRecording)
         {
             if (VoiceManager.Instance.testAudioSource != null)
             {
@@ -75,7 +75,7 @@ public class SettingUIController : MonoBehaviour
     // ==========================================
     private void OnTestButtonClicked()
     {
-        if (VoiceManager.Instance.isTesting)
+        if (VoiceManager.Instance.isRecording)
         {
             VoiceManager.Instance.StopMicTest();
             btn_test_text.text = "마이크 테스트";
@@ -93,7 +93,7 @@ public class SettingUIController : MonoBehaviour
     private void Update()
     {
         // 🌟 마이크 테스트 중일 때만 매 프레임 게이지 바 갱신!
-        if (VoiceManager.Instance != null && VoiceManager.Instance.isTesting)
+        if (VoiceManager.Instance != null && VoiceManager.Instance.isRecording)
         {
             gaugeBar.fillAmount = VoiceManager.Instance.GetMicVolumeGauge();
         }
@@ -105,7 +105,7 @@ public class SettingUIController : MonoBehaviour
     private void OnSaveButtonClicked()
     {
         // 1. 혹시 테스트 중이었다면 끕니다.
-        if (VoiceManager.Instance.isTesting) OnTestButtonClicked();
+        if (VoiceManager.Instance.isRecording) OnTestButtonClicked();
 
         // 2. 🌟 여기서 최종적으로 매니저들에게 영구 저장을 때립니다!
         VoiceManager.Instance.UpdateSettings(
@@ -121,7 +121,7 @@ public class SettingUIController : MonoBehaviour
     private void OnCancelButtonClicked()
     {
         // 1. 테스트 중이었다면 끕니다.
-        if (VoiceManager.Instance.isTesting) OnTestButtonClicked();
+        if (VoiceManager.Instance.isRecording) OnTestButtonClicked();
 
         // 2. VoiceManager 내부의 임시 값을 원래 값(열 때 저장했던 값)으로 원상 복구합니다.
         VoiceManager.Instance.micVolumeMultiplier = originalMicVol;
@@ -133,7 +133,7 @@ public class SettingUIController : MonoBehaviour
     // 혹시 창이 비정상적으로 꺼졌을 때를 대비한 안전 장치
     private void OnDisable()
     {
-        if (VoiceManager.Instance != null && VoiceManager.Instance.isTesting)
+        if (VoiceManager.Instance != null && VoiceManager.Instance.isRecording)
         {
             VoiceManager.Instance.StopMicTest();
             btn_test_text.text = "마이크 테스트";
