@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Models.TurnModel;
-using Controllers.TurnControllers;
+using Controllers.SpellControllers;
 using Cards.CardUIDatas;
 using Cards.EffectInfos;
 using Models.CardModels;

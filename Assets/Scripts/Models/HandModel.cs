@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using Controllers.TurnControllers;
+using Controllers.SpellControllers;
 using Unity.Netcode;
 using UnityEngine;
 

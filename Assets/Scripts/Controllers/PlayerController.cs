@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using Managers.LocalDataManagers;
 using System.Collections.Generic;
-using Controllers.TurnControllers;
+using Controllers.SpellControllers;
 using DefaultNamespace;
 using Models.TurnModel;
 using Cards.PlayableCards;
@@ -237,7 +237,7 @@ namespace Controllers.PlayerController
 
             // 선택 완료! 서버에 '이 카드들로 마법을 준비하겠다'고 선언하고 Incantation 페이즈로 넘어갑니다.
             
-            SpellController.Instance.ProcessSpellCast(selectedCards);
+            SpellController.Instance.InitSpell(selectedCards);
             // TODO : 이걸 PhaseManager에게 연락해야함.
             
             ClearSpellSelections();

@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
 using Managers.LocalDataManagers;
-using Controllers.TurnControllers;
+using Controllers.SpellControllers;
 using DefaultNamespace;
 
 
