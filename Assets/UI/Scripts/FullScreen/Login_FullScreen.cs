@@ -41,9 +41,30 @@ namespace DefaultNamespace
             // TryAutoLogin();
         }
 
+        private void Update()
+        {
+            // Tab 키를 눌렀을 때
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                // 1. 회원가입 창이 켜져있을 때의 탭 이동
+                if (isRegisterOn)
+                {
+                    if (regIdInput.isFocused) regPwInput.ActivateInputField();
+                    else regIdInput.ActivateInputField(); // Shift+Tab 대신 편의상 루프
+                }
+                // 2. 기본 로그인 창일 때의 탭 이동
+                else
+                {
+                    if (idInputField.isFocused) pwInputField.ActivateInputField();
+                    else idInputField.ActivateInputField(); // 다시 아이디로 루프
+                }
+            }
+        }
+
         private void OnEnable() {
             isRegisterOn = false;
             registerPanel.SetActive(false);
+            idInputField.ActivateInputField();
         }
         
         private void OnDestroy()
@@ -131,6 +152,7 @@ namespace DefaultNamespace
                 registerRect.DOAnchorPos(registerOriginalPosition, animDuration).SetEase(Ease.OutQuint);
                 registerRect.DOScale(Vector3.one, animDuration).SetEase(Ease.OutQuint);
                 registerCanvasGroup.DOFade(1f, animDuration).SetEase(Ease.OutQuint);
+                regIdInput.ActivateInputField();
             }
             else
             {
@@ -141,6 +163,7 @@ namespace DefaultNamespace
                     {
                         registerPanel.SetActive(false);
                     });
+                idInputField.ActivateInputField();
             }
         }
         
