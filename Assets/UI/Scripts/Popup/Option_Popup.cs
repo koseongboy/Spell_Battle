@@ -18,7 +18,6 @@ namespace DefaultNamespace {
 
         private float originalMicVol;
         private float originalOutputVol;
-        private Coroutine micTestCoroutine;
 
         private CanvasGroup canvasGroup;
         private RectTransform popupRect;
@@ -80,6 +79,10 @@ namespace DefaultNamespace {
 
             gaugeBar.fillAmount = 0f;
             txt_test.text = "마이크 테스트";
+            if (VoiceManager.Instance != null)
+            {
+                VoiceManager.Instance.OnMicVolumeChanged += UpdateGauge;
+            }
 
             OpenAction();
         }
@@ -115,7 +118,7 @@ namespace DefaultNamespace {
             popupRect.DOKill();
             canvasGroup.DOKill();
 
-            if (VoiceManager.Instance.isTesting) OnTestButtonClicked();
+            if (VoiceManager.Instance.isRecording) OnTestButtonClicked();
             SaveVolumeSetting();
 
             // 목표 상태로 애니메이션 (다시 작아지게, 투명하게)
@@ -133,7 +136,7 @@ namespace DefaultNamespace {
         public void OnMicVolumeChanged(float val) {
             // 마이크 테스트 중에 슬라이더를 움직이면, 
             // 저장하지 않고도 내 스피커에 들리는 목소리 크기가 바로바로 바뀌도록 적용!
-            if (VoiceManager.Instance != null && VoiceManager.Instance.isTesting) {
+            if (VoiceManager.Instance != null && VoiceManager.Instance.isRecording) {
                 if (VoiceManager.Instance.testAudioSource != null) {
                     VoiceManager.Instance.testAudioSource.volume = val;
                 }
@@ -144,34 +147,22 @@ namespace DefaultNamespace {
         // 🎙️ 마이크 테스트 버튼 로직
         // ==========================================
         public void OnTestButtonClicked() {
-            if (VoiceManager.Instance.isTesting) {
+            if (VoiceManager.Instance.isRecording) {
                 VoiceManager.Instance.StopMicTest();
                 txt_test.text = "마이크 테스트";
                 gaugeBar.fillAmount = 0f;
 
-                // 🛠️ [추가] 테스트 중지 시 코루틴도 함께 정지
-                if (micTestCoroutine != null) {
-                    StopCoroutine(micTestCoroutine);
-                    micTestCoroutine = null;
-                }
             }
             else {
                 VoiceManager.Instance.micVolumeMultiplier = micVolumeSlider.value;
                 VoiceManager.Instance.StartMicTest();
                 txt_test.text = "테스트 중지";
-
-                // 🛠️ [추가] 테스트 시작 시 코루틴 가동
-                if (micTestCoroutine != null) StopCoroutine(micTestCoroutine);
-                micTestCoroutine = StartCoroutine(MicTestRoutine());
             }
         }
 
-        private System.Collections.IEnumerator MicTestRoutine() {
-            // isTesting이 true인 동안에만 매 프레임 게이지를 갱신합니다.
-            while (VoiceManager.Instance != null && VoiceManager.Instance.isTesting) {
-                gaugeBar.fillAmount = VoiceManager.Instance.GetMicVolumeGauge();
-                yield return null; // 1프레임 대기
-            }
+        private void UpdateGauge(float volumeValue)
+        {
+            gaugeBar.fillAmount = volumeValue;
         }
 
         // ==========================================
@@ -188,14 +179,14 @@ namespace DefaultNamespace {
 
         // 혹시 창이 비정상적으로 꺼졌을 때를 대비한 안전 장치
         public void OnDisable() {
-            if (VoiceManager.Instance != null && VoiceManager.Instance.isTesting) {
-                VoiceManager.Instance.StopMicTest();
-                txt_test.text = "마이크 테스트";
-            }
-
-            if (micTestCoroutine != null) {
-                StopCoroutine(micTestCoroutine);
-                micTestCoroutine = null;
+            if (VoiceManager.Instance != null)
+            {
+                VoiceManager.Instance.OnMicVolumeChanged -= UpdateGauge;
+                if(VoiceManager.Instance.isRecording)
+                {
+                    VoiceManager.Instance.StopMicTest();
+                    txt_test.text = "마이크 테스트";
+                }
             }
         }
     }

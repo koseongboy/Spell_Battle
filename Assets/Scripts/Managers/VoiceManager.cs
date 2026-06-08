@@ -1,5 +1,6 @@
 using UnityEngine;
 using Managers.LocalDataManagers;
+using System;
 
 namespace Managers.VoiceManagers
 {
@@ -18,8 +19,12 @@ namespace Managers.VoiceManagers
 
         [Header("마이크 테스트 (Loopback)")]
         public AudioSource testAudioSource; // 🌟 내 목소리를 들려줄 테스트용 스피커
-        public bool isTesting { get; private set; } = false;
+        public bool isRecording { get; private set; } = false;
+        [Obsolete("이 변수는 isRecording으로 통합되었습니다. 앞으로는 isRecording을 사용해 주세요.")]
+        public bool isTesting { get => isRecording; private set => isRecording = value; }
         private string testDeviceName;
+
+        public Action<float> OnMicVolumeChanged;
 
         private void Awake()
         {
@@ -48,6 +53,18 @@ namespace Managers.VoiceManagers
         }
 
         // ==========================================
+        // 📊 매 프레임 UI로 게이지 값을 쏴주는 로직
+        // ==========================================
+        private void Update()
+        {
+            // 녹음 중이고, 누군가(UI) 이 방송을 구독하고 있다면 쏴줍니다.
+            if (isRecording && OnMicVolumeChanged != null)
+            {
+                OnMicVolumeChanged.Invoke(GetMicVolumeGauge());
+            }
+        }
+
+        // ==========================================
         // 🎙️ 마이크 테스트 로직 (Loopback)
         // ==========================================
         public void StartMicTest()
@@ -66,17 +83,17 @@ namespace Managers.VoiceManagers
 
             // 3. 내 스피커로 마이크 소리를 바로 송출!
             testAudioSource.Play();
-            isTesting = true;
+            isRecording = true;
             Debug.Log($"[VoiceManager] 마이크 테스트 시작: {testDeviceName}");
         }
 
         public void StopMicTest()
         {
-            if (!isTesting) return;
+            if (!isRecording) return;
 
             testAudioSource.Stop();
             Microphone.End(testDeviceName);
-            isTesting = false;
+            isRecording = false;
             Debug.Log("[VoiceManager] 마이크 테스트 종료");
         }
 
@@ -85,7 +102,7 @@ namespace Managers.VoiceManagers
         // ==========================================
         public float GetMicVolumeGauge()
         {
-            if (!isTesting || testAudioSource == null || testAudioSource.clip == null) return 0f;
+            if (!isRecording || testAudioSource == null || testAudioSource.clip == null) return 0f;
 
             // 1. 마이크가 현재 녹음 중인 위치(인덱스)를 가져옵니다.
             int micPosition = Microphone.GetPosition(testDeviceName);
@@ -138,8 +155,19 @@ namespace Managers.VoiceManagers
         }
 
         // TurnController 등에서 호출할 인터페이스
-        public void StartRecording() => recorder.StartRecord(micDeviceIndex);
-        public byte[] StopRecording() => recorder.StopAndGetWav();
+        public void StartRecording()
+        {
+            recorder.StartRecord(micDeviceIndex);
+            isRecording = true; // 플래그 On!
+            Debug.Log("[VoiceManager] 녹음이 시작되어 게이지 바 연동이 활성화됩니다.");
+        }
+        public byte[] StopRecording()
+        {
+            isRecording = false; // 플래그 Off!
+            OnMicVolumeChanged?.Invoke(0f); 
+
+            return recorder.StopAndGetWav();
+        }
         
         public void PlayOpponentVoice(string url) => player.PlayFromUrl(url, outputVolume);
     }
