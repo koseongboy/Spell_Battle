@@ -9,22 +9,19 @@ namespace Managers.VoiceManagers
     public class MicRecorder : MonoBehaviour
     {
         private AudioClip recordingClip;
+        public string currentDeviceName { get; private set; }
 
         // 🎙️ 1. 녹음 시작
         public void StartRecord(int deviceIndex)
         {
-            if (Microphone.devices.Length == 0)
-            {
-                Debug.LogError("[MicRecorder] 연결된 마이크가 없습니다!");
-                return;
-            }
+            if (Microphone.devices.Length == 0) return;
 
-            string deviceName = Microphone.devices[deviceIndex];
-            // 44100Hz 샘플 레이트로 최대 10초까지 녹음 세팅
-            recordingClip = Microphone.Start(deviceName, false, 10, 44100);
-            Debug.Log($"[MicRecorder] 녹음 시작: {deviceName}");
+            // 🌟 현재 기기 이름을 변수에 저장해 둡니다.
+            currentDeviceName = Microphone.devices[deviceIndex];
+            
+            recordingClip = Microphone.Start(currentDeviceName, false, 10, 44100);
+            Debug.Log($"[MicRecorder] 녹음 시작: {currentDeviceName}");
         }
-
         // 🛑 2. 녹음 종료 및 WAV 바이트 배열 반환
         public byte[] StopAndGetWav()
         {
