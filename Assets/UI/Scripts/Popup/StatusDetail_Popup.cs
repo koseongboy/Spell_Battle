@@ -42,8 +42,8 @@ namespace DefaultNamespace
         public void OnEnable() {
             OpenAction();
             
-            NetworkList<StatusData> playerStatusList = TurnController.Instance.MyPlayer.ActiveStatuses;
-            NetworkList<StatusData> enemyStatusList = TurnController.Instance.EnemyPlayer.ActiveStatuses;    
+            NetworkList<StatusData> playerStatusList = SpellController.Instance.MyPlayer.ActiveStatuses;
+            NetworkList<StatusData> enemyStatusList = SpellController.Instance.EnemyPlayer.ActiveStatuses;    
             
             ReleaseAllPiece();
             
