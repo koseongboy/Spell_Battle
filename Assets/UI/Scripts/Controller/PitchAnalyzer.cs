@@ -49,12 +49,9 @@ namespace DefaultNamespace
             if (!_isRecording) {
                 Debug.Log("녹음 시작 진입");
                 StartRecording();
-                ui.StartGaugeCoroutine();
             }
             else {
                 Debug.Log("녹음 종료 진입");
-
-                ui.StopGaugeCoroutine();
                 var resultPitch = StopRecordingAndAnalyze();
                 if (Mathf.Approximately(resultPitch, -1f)) {
                     CommonUIController.Instance.ShowRedAlert("유효한 목소리 주파수를 감지하지 못했습니다.");
@@ -80,7 +77,7 @@ namespace DefaultNamespace
             if (_isRecording) return;
 
             _isRecording = true;
-            VoiceManager.Instance.StartRecording();
+            VoiceManager.Instance.StartRecording(true);
         }
 
         /// <summary>

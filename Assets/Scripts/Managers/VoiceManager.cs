@@ -102,36 +102,45 @@ namespace Managers.VoiceManagers
         // ==========================================
         public float GetMicVolumeGauge()
         {
-            if (!isRecording || testAudioSource == null || testAudioSource.clip == null) return 0f;
+            // 1차 방어: 녹음 중이 아니거나 클립이 없으면 0 반환
+            if (!isRecording || recorder.recordingClip == null) return 0f;
 
-            // 1. 마이크가 현재 녹음 중인 위치(인덱스)를 가져옵니다.
-            int micPosition = Microphone.GetPosition(testDeviceName);
-            if (micPosition < 0) return 0f;
+            string deviceName = recorder.currentDeviceName;
+            int micPosition = Microphone.GetPosition(deviceName);
+            
+            // 2차 방어: 마이크가 아직 켜지는 중이라 데이터가 없으면 0 반환
+            if (micPosition <= 0) return 0f;
 
-            // 2. 파형을 분석할 샘플 개수 (너무 크면 느려지고, 너무 작으면 부정확합니다)
             int sampleCount = 256;
             float[] samples = new float[sampleCount];
 
-            // 녹음된 위치가 샘플 개수보다 적으면 패스 (에러 방지)
             int startPosition = micPosition - sampleCount;
+            
+            // 3차 방어: 아직 256개의 샘플이 모이지 않았을 극초반 프레임 무시
             if (startPosition < 0) return 0f;
 
-            // 🌟 핵심: 스피커 출력이 아닌, 마이크 원본 클립에서 직접 데이터를 뽑아옵니다!
-            testAudioSource.clip.GetData(samples, startPosition);
+            // 🌟 4차 방어 (핵심 원인 해결): 읽으려는 범위가 클립의 총 길이를 벗어나면 무시
+            if (startPosition + sampleCount > recorder.recordingClip.samples) return 0f;
 
-            // 3. 소리의 실제 크기를 측정하는 정석적인 연산법 (RMS: Root Mean Square)
-            float sum = 0f;
-            for (int i = 0; i < samples.Length; i++)
+            // 여기까지 통과했으면 100% 안전한 상태!
+            try 
             {
-                sum += samples[i] * samples[i]; // 파형을 제곱해서 더함 (음수 방지 및 큰 소리 강조)
+                recorder.recordingClip.GetData(samples, startPosition);
             }
-            float rmsValue = Mathf.Sqrt(sum / samples.Length); // 평균의 제곱근
+            catch (System.Exception)
+            {
+                // 혹시라도 알 수 없는 FMOD 내부 충돌이 발생하면 게임이 터지지 않게 무시
+                return 0f; 
+            }
 
-            // rmsValue는 보통 0.01 ~ 0.1 사이의 매우 작은 값입니다.
-            // 🌟 게이지 민감도 (안 오르면 이 숫자를 20f -> 50f -> 100f 로 팍팍 올려보세요!)
-            float sensitivity = 30f; 
+            float sum = 0f;
+            for (int i = 0; i < samples.Length; i++) sum += samples[i] * samples[i];
+            float rmsValue = Mathf.Sqrt(sum / samples.Length);
 
-            return Mathf.Clamp01(rmsValue * sensitivity); // 0.0 ~ 1.0 사이로 강제 고정하여 반환
+            // 게이지 민감도 (필요에 따라 30~100 사이로 조절)
+            float sensitivity = 40f; 
+
+            return Mathf.Clamp01(rmsValue * sensitivity * micVolumeMultiplier);
         }
         
         // 설정이 변경되었을 때 LocalDataManager로 쏴주는 로직
@@ -155,14 +164,27 @@ namespace Managers.VoiceManagers
         }
 
         // TurnController 등에서 호출할 인터페이스
-        public void StartRecording()
+        public void StartRecording(bool needPlayBack = false)
         {
             recorder.StartRecord(micDeviceIndex);
             isRecording = true; // 플래그 On!
+            if(needPlayBack)
+            {
+                testAudioSource.clip = recorder.recordingClip;
+                testAudioSource.loop = false;
+                testAudioSource.volume = micVolumeMultiplier; // 현재 볼륨 적용
+
+                // 2. 딜레이와 지직거림을 막기 위해 마이크 버퍼가 조금 찰 때까지 대기
+                while (!(Microphone.GetPosition(testDeviceName) > 0)) { }
+
+                // 3. 내 스피커로 마이크 소리를 바로 송출!
+                testAudioSource.Play();
+            }
             Debug.Log("[VoiceManager] 녹음이 시작되어 게이지 바 연동이 활성화됩니다.");
         }
         public byte[] StopRecording()
         {
+            if (testAudioSource != null && testAudioSource.isPlaying) testAudioSource.Stop();
             isRecording = false; // 플래그 Off!
             OnMicVolumeChanged?.Invoke(0f); 
 
