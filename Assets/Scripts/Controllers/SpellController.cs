@@ -13,6 +13,7 @@ using DefaultNamespace;
 using Managers.VoiceManagers;
 using Cards.CardUIDatas;
 using Models.Networks;
+using System;
 
 namespace Controllers.SpellControllers 
 {
@@ -39,10 +40,43 @@ namespace Controllers.SpellControllers
         private string currentTaskId;
         private AudioClip downloadedClip;
 
+        [Header("자동 캐싱 설정")]
+        private Coroutine cacheCoroutine;
+        private readonly float cacheInterval = 3.0f;
+
         public void Awake() 
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
+        }
+
+        private void Start() 
+        {
+            // 이미 돌고 있는 코루틴이 있다면 끄고 다시 시작 (중복 실행 방지)
+            if (cacheCoroutine != null) StopCoroutine(cacheCoroutine);
+            cacheCoroutine = StartCoroutine(PeriodicCacheRoutine());
+        }
+
+        public override void OnDestroy() 
+        {
+            if (cacheCoroutine != null) StopCoroutine(cacheCoroutine);
+        }
+
+        private System.Collections.IEnumerator PeriodicCacheRoutine()
+        {
+            while (true) // 씬이 끝날 때까지 무한 반복
+            {
+                // 지정된 시간(3초)만큼 대기
+                yield return new WaitForSeconds(cacheInterval);
+
+                // 🌟 최적화 포인트: 둘 중 하나라도 비어있을 때만 씬을 뒤집니다.
+                // 매번 FindObjectsByType을 호출하면 프레임 드랍이 생길 수 있기 때문입니다.
+                if (MyPlayer == null || EnemyPlayer == null)
+                {
+                    Debug.Log("[SpellController] 🕵️ 주기적 검사 중 빈 슬롯 발견! 플레이어 재탐색 시도...");
+                    FindAndCachePlayers();
+                }
+            }
         }
 
         #region 1~5단계 영창 및 통신 라이프사이클
@@ -52,7 +86,18 @@ namespace Controllers.SpellControllers
         // ==========================================
         public SpellPayload InitSpell(List<PlayableCard> selectedCards) 
         {
-            if (MyPlayer == null || EnemyPlayer == null) return null;
+            if (MyPlayer == null || EnemyPlayer == null)
+            {
+                Debug.LogWarning("[SpellController] 플레이어 데이터가 캐싱되지 않았습니다. 씬에서 강제 탐색을 시도합니다.");
+                FindAndCachePlayers();
+                
+                // 찾았는데도 null이면 진짜로 씬에 오브젝트가 없는 심각한 에러
+                if (MyPlayer == null || EnemyPlayer == null)
+                {
+                    Debug.LogError("[SpellController] 🚨 플레이어를 씬에서 찾을 수 없어 영창을 취소합니다!");
+                    return null;
+                }
+            }
 
             currentSelectedCards = selectedCards;
             currentSelectedCardIds = new List<int>();
@@ -78,6 +123,26 @@ namespace Controllers.SpellControllers
             
             Debug.Log("[SpellController] 1. 스펠 초기화 및 페이로드 조립 완료.");
             return currentPayload;
+        }
+
+        private void FindAndCachePlayers()
+        {
+            // 씬에 존재하는 모든 PlayerModel을 긁어옵니다.
+           PlayerModel[] allPlayers = FindObjectsByType<PlayerModel>(FindObjectsSortMode.None);
+
+            foreach (var player in allPlayers)
+            {
+                if (player.IsOwner) 
+                {
+                    MyPlayer = player;
+                }
+                else 
+                {
+                    EnemyPlayer = player;
+                }
+            }
+
+            Debug.Log($"[SpellController] 🔄 플레이어 동적 캐싱 완료 - MyPlayer: {MyPlayer?.gameObject.name}, EnemyPlayer: {EnemyPlayer?.gameObject.name}");
         }
 
         // ==========================================
@@ -191,20 +256,31 @@ namespace Controllers.SpellControllers
                 downloadedClip = null;
             }
 
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(audioUrl, AudioType.WAV))
+            try
             {
-                var operation = www.SendWebRequest();
-                while (!operation.isDone) await Task.Yield();
+                using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(audioUrl, AudioType.WAV))
+                {
+                    var operation = www.SendWebRequest();
+                    while (!operation.isDone) await Task.Yield();
 
-                if (www.result == UnityWebRequest.Result.Success)
-                {
-                    downloadedClip = DownloadHandlerAudioClip.GetContent(www);
-                    Debug.Log("[SpellController] 오디오 백그라운드 다운로드(덮어쓰기) 완료 준비 대기!");
+                    if (www.result == UnityWebRequest.Result.Success)
+                    {
+                        downloadedClip = DownloadHandlerAudioClip.GetContent(www);
+                        Debug.Log("[SpellController] 오디오 백그라운드 다운로드(덮어쓰기) 완료 준비 대기!");
+                    }
+                    else
+                    {
+                        // 🌟 Error 대신 Warning으로 변경하여 흐름이 끊기지 않게 유도
+                        Debug.LogWarning($"[SpellController] 오디오 다운로드 통신 실패 (무시됨): {www.error}");
+                        downloadedClip = null; // 실패 시 확실하게 null 처리
+                    }
                 }
-                else
-                {
-                    Debug.LogError($"[SpellController] 오디오 다운로드 실패: {www.error}");
-                }
+            }
+            catch (Exception e)
+            {
+                // 🌟 예상치 못한 크래시나 타임아웃 예외를 안전하게 삼킴
+                Debug.LogWarning($"[SpellController] 오디오 다운로드 중 예외 발생 (무시됨): {e.Message}");
+                downloadedClip = null; 
             }
         }
 

@@ -11,9 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/999_Dev/Koseongboy/Test.unity
     guid: 9f645e5da7756ad48990c53e95aab71d
-  - enabled: 0
-    path: Assets/999_Dev/Koseongboy/01_Lobby.unity
-    guid: e2e444f388d42784c8dbba41e52e9943
   - enabled: 1
     path: Assets/999_Dev/Koseongboy/01_Lobby_Crocobob.unity
     guid: 8a68874da22bc2241bad3315b61e640b
@@ -23,12 +20,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/999_Dev/Koseongboy/02_Battle_Crocobob.unity
     guid: 91b468636e84b074f843fe0775c2ab76
-  - enabled: 1
-    path: Assets/999_Dev/Crocobob/CardTestScene_Crocobob.unity
-    guid: 8b41d874bd64a774383288cf75d80864
-  - enabled: 1
-    path: Assets/999_Dev/Koseongboy/02_Battle_Koseongboy.unity
-    guid: bd173e865d2a6e04d95afcaf31997d6b
   - enabled: 1
     path: Assets/999_Dev/Koseongboy/02_Battle_Koseongboy.unity
     guid: 41d2a189331261143b6004d7216ab6a8

@@ -49,12 +49,7 @@ namespace DefaultNamespace {
         }
 
         public void RequestIncantationPhase(ulong clientId) {
-            if (!IsServer) return;
-            // 본인 턴인지, Select 페이즈가 맞는지 검증 후 전환
-            if (TurnModel.Instance.CurrentTurnPlayerId.Value == clientId &&
-                TurnModel.Instance.CurrentPhase.Value == GamePhase.Select) {
-                TurnModel.Instance.CurrentPhase.Value = GamePhase.Incantation;
-            }
+            RequestSpecificPhaseServerRpc(GamePhase.Incantation);
         }
 
         // ========================================================
@@ -133,6 +128,10 @@ namespace DefaultNamespace {
                     // TODO : 여기서 주문 효과 재생
                     // TODO : 여기서 전투 연산
                     break;
+
+                case GamePhase.End:
+                    if(IsServer) ExecuteEndPhaseLogic();
+                    break;
             }
         }
 
@@ -147,25 +146,7 @@ namespace DefaultNamespace {
 
         // [클라이언트 UI 호출용] 턴 종료 버튼을 누르면 실행됨
         public void RequestEndTurn() {
-            EndTurnServerRpc();
-        }
-
-        // [서버 실행] 클라이언트의 요청을 받아 검증하고 상태를 변경함
-        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void EndTurnServerRpc(RpcParams rpcParams = default) {
-            ulong senderId = rpcParams.Receive.SenderClientId;
-
-            // 1. 방어선: 내 턴이 아니거나, 행동 가능한 페이즈(Select)가 아니면 요청 무시
-            if (senderId != TurnModel.Instance.CurrentTurnPlayerId.Value) return;
-            if (TurnModel.Instance.CurrentPhase.Value != GamePhase.Select) return;
-
-            Debug.Log($"[Server] 🛑 플레이어 {senderId}가 턴을 종료했습니다.");
-
-            // 2. End 페이즈로 상태 전환 (턴 종료 이펙트나 처리가 필요하다면 여기서 감지 가능)
-            TurnModel.Instance.CurrentPhase.Value = GamePhase.End;
-
-            // 3. 턴 종료 실질적 로직 집행
-            ExecuteEndPhaseLogic();
+            RequestSpecificPhaseServerRpc(GamePhase.End);
         }
 
         // [서버 전용] 마나 증가, 턴 권한 교체, 다음 턴 시작 처리
@@ -187,7 +168,7 @@ namespace DefaultNamespace {
                     : TurnModel.Instance.HostId.Value;
 
             // 3. 새로운 플레이어의 턴 시작 (Draw 페이즈)
-            TurnModel.Instance.CurrentPhase.Value = GamePhase.Draw;
+            ServerSetPhase(GamePhase.Draw);
         }
 
         private System.Collections.IEnumerator WaitAndInjectUIData() {
@@ -247,8 +228,7 @@ namespace DefaultNamespace {
         // TODO : 리팩토링 필요
         public void StartSpell(List<PlayableCard> selectedCards) {
             var payload = SpellController.Instance.InitSpell(selectedCards);
-            
-            TurnModel.Instance.CurrentPhase.Value = GamePhase.Incantation;
+            RequestSpecificPhaseServerRpc(GamePhase.Incantation);
             UILoader.Instance.HideUI("Ingame_FullScreen");
             UILoader.Instance.ShowUI("Spell_FullScreen", payload);
         }
@@ -258,5 +238,95 @@ namespace DefaultNamespace {
             
             UILoader.Instance.ShowUI("SpellResult_FullScreen");
         }
+
+        // ========================================================
+        // 🛡️ NGO 철칙 적용: 페이즈 전환 중앙 통제 시스템
+        // ========================================================
+
+        #region 1. Client -> Server Requests (클라이언트의 페이즈 전환 요청)
+
+        // [클라이언트 -> 서버] "다음 페이즈로 넘겨주세요" 요청
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        public void RequestAdvancePhaseServerRpc(RpcParams rpcParams = default) {
+            ulong senderId = rpcParams.Receive.SenderClientId;
+            if (TurnModel.Instance.CurrentTurnPlayerId.Value != senderId) {
+                Debug.LogWarning($"[Server] 턴 플레이어가 아닌 클라이언트({senderId})의 페이즈 진행 요청 거부.");
+                return;
+            }
+            ServerAdvancePhase();
+        }
+
+        // [클라이언트 -> 서버] "특정 페이즈로 가주세요" 요청
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        public void RequestSpecificPhaseServerRpc(GamePhase targetPhase, RpcParams rpcParams = default) {
+            ulong senderId = rpcParams.Receive.SenderClientId;
+            
+            if (TurnModel.Instance.CurrentTurnPlayerId.Value != senderId) {
+                Debug.LogWarning($"[Server] 권한 없는 클라이언트({senderId})의 강제 전환 요청 거부.");
+                return;
+            }
+            ServerSetPhase(targetPhase);
+        }
+
+        #endregion
+
+
+        #region 2. Server-Only Phase Controls (서버 단독 페이즈 제어)
+
+        // [서버 전용] "다음 페이즈로 넘기기" 트리거
+        public void ServerAdvancePhase() {
+            if (!IsServer) return;
+            AdvancePhaseLogic();
+        }
+
+        // [서버 전용] "특정 페이즈로 가기" 강제 실행 (모든 .Value 수정은 여기서만 일어납니다)
+        public void ServerSetPhase(GamePhase newPhase) {
+            if (!IsServer) return;
+            
+            GamePhase oldPhase = TurnModel.Instance.CurrentPhase.Value;
+            if (oldPhase == newPhase) return; // 중복 호출 방지
+
+            Debug.Log($"[Server] 🔄 페이즈 전환: {oldPhase} -> {newPhase}");
+            TurnModel.Instance.CurrentPhase.Value = newPhase;
+        }
+
+        // [서버 전용] 페이즈 순서 연산 및 전환 내부 로직
+        private void AdvancePhaseLogic() {
+            if (!IsServer) return;
+
+            GamePhase currentPhase = TurnModel.Instance.CurrentPhase.Value;
+            GamePhase nextPhase;
+
+            // 🌟 게임의 페이즈 흐름 정의 
+            switch (currentPhase) {
+                case GamePhase.Mulligan:
+                    nextPhase = GamePhase.Draw;
+                    break;
+                case GamePhase.Draw:
+                    nextPhase = GamePhase.Select;
+                    break;
+                case GamePhase.Select:
+                    nextPhase = GamePhase.Incantation;
+                    break;
+                case GamePhase.Incantation:
+                    nextPhase = GamePhase.Battle;
+                    break;
+                case GamePhase.Battle:
+                    nextPhase = GamePhase.Select;
+                    break;
+                case GamePhase.End:
+                    // End 페이즈가 끝나면 ExecuteEndPhaseLogic()을 태우고 다음 턴 Draw로 넘어갑니다.
+                    ExecuteEndPhaseLogic(); 
+                    return; 
+                default:
+                    nextPhase = GamePhase.Select;
+                    break;
+            }
+
+            ServerSetPhase(nextPhase);
+        }
+
+        #endregion
     }
+
 }
