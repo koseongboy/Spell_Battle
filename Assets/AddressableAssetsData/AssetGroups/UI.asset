@@ -45,6 +45,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3581df38fa5e8fa4180d750f2325c65e
+    m_Address: SpellActive_FullScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 35e3fd64d07f2e0438090f37dc76b18d
     m_Address: VoiceSetting_FullScreen
     m_ReadOnly: 0
