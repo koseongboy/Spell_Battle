@@ -552,6 +552,36 @@ namespace Controllers.SpellControllers
             }
         }
 
+        [Rpc(SendTo.NotServer)]
+        public void PlayVisualEffectClientRpc(Models.EffectCommands.VFXType vfxType, Models.PlayerModels.StatusType relatedStatus, ulong targetNetworkObjectId)
+        {
+            Debug.Log($"[Client] 📡 서버로부터 RPC 통신 도착! VFX: {vfxType}");
+
+            // 🚨 실패 원인 1: 게스트 씬에 VFX 매니저가 없을 경우
+            if (Managers.VFX.BattleVFXManager.Instance == null) {
+                Debug.LogError("[Client] 🚨 BattleVFXManager.Instance가 null입니다! 게스트 씬에 매니저가 있는지 확인하세요.");
+                return;
+            }
+
+            // 🚨 실패 원인 2: 타겟 플레이어 모델을 못 찾는 경우
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out NetworkObject netObj))
+            {
+                PlayerModel targetPlayer = netObj.GetComponent<PlayerModel>();
+                if (targetPlayer != null)
+                {
+                    Debug.Log($"[Client] 🎬 넷코드 수신 성공! {targetPlayer.gameObject.name}에게 {vfxType} 연출을 재생합니다!");
+                    StartCoroutine(Managers.VFX.BattleVFXManager.Instance.PlayVFXRoutine(vfxType, relatedStatus, targetPlayer));
+                }
+                else
+                {
+                    Debug.LogError("[Client] 🚨 NetworkObject를 찾았으나 PlayerModel 컴포넌트가 없습니다!");
+                }
+            }
+            else
+            {
+                Debug.LogError($"[Client] 🚨 ID가 {targetNetworkObjectId}인 대상을 씬에서 찾을 수 없습니다!");
+            }
+        }
 
 
 
