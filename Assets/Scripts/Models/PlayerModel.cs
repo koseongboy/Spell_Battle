@@ -58,11 +58,7 @@ namespace Models.PlayerModels {
 
     public class PlayerModel : NetworkBehaviour
     {
-        [ContextMenu("마나 즉시 20으로")]
-        public void makemanaTwenty()
-        {
-            CurrentMana.Value = 20;
-        }
+        public static event Action<PlayerModel> OnPlayerSpawned;
 
         [Header("Stats")]
         public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
@@ -101,8 +97,14 @@ namespace Models.PlayerModels {
             // NetworkList는 반드시 Awake에서 공간을 할당해 주어야 합니다.
             ActiveStatuses = new NetworkList<StatusData>();
         }
+        public static event Action<PlayerModel> OnPlayerDespawned;
+        
+
 
         public override void OnNetworkSpawn() {
+            OnPlayerSpawned?.Invoke(this); 
+            
+            Debug.Log($"[PlayerModel] {gameObject.name} 스폰 완료, 이벤트 방송 송출!");
             if (SpellController.Instance != null) {
                 if (IsOwner) {
                     SpellController.Instance.MyPlayer = this;
@@ -124,6 +126,8 @@ namespace Models.PlayerModels {
             if (TurnModel.TurnModel.Instance != null) {
                 TurnModel.TurnModel.Instance.OnPhaseChangedEvent -= HandlePhaseEffects;
             }
+            OnPlayerDespawned?.Invoke(this);
+            base.OnNetworkDespawn();
         }
 
         // ==========================================

@@ -125,8 +125,8 @@ namespace DefaultNamespace {
 
 
                 case GamePhase.Battle:
-                    // TODO : 여기서 주문 효과 재생
-                    // TODO : 여기서 전투 연산
+                    UILoader.Instance.HideUI("Spell_FullScreen");
+                    UILoader.Instance.HideUI("SpellResult_FullScreen");
                     break;
 
                 case GamePhase.End:
@@ -236,7 +236,7 @@ namespace DefaultNamespace {
         public void DoneEval(TaskStatusResponse evalResult) {
             CommonUIController.Instance.DoneLoading();
             
-            UILoader.Instance.ShowUI("SpellResult_FullScreen");
+            UILoader.Instance.ShowUI("SpellResult_FullScreen", evalResult);
         }
 
         // ========================================================

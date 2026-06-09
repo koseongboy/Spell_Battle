@@ -40,6 +40,11 @@ namespace Controllers.SpellControllers
         private string currentTaskId;
         private AudioClip downloadedClip;
 
+        [Header("녹음 데이터 보관")]
+        public AudioClip LastRecordedClip { get; private set; } // 방금 녹음한 원본/크롭된 오디오 클립
+        private AudioSource audioSource; // 재생을 담당할 컴포넌트
+        private float currentAudioLength = 3.5f;
+
         [Header("자동 캐싱 설정")]
         private Coroutine cacheCoroutine;
         private readonly float cacheInterval = 3.0f;
@@ -48,34 +53,48 @@ namespace Controllers.SpellControllers
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
+
+            PlayerModel.OnPlayerSpawned += HandlePlayerSpawned;
+            PlayerModel.OnPlayerDespawned += HandlePlayerDespawned;
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null) 
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+            }
         }
+      
 
         private void Start() 
         {
-            // 이미 돌고 있는 코루틴이 있다면 끄고 다시 시작 (중복 실행 방지)
-            if (cacheCoroutine != null) StopCoroutine(cacheCoroutine);
-            cacheCoroutine = StartCoroutine(PeriodicCacheRoutine());
+
         }
 
         public override void OnDestroy() 
         {
+            PlayerModel.OnPlayerSpawned -= HandlePlayerSpawned;
+            PlayerModel.OnPlayerDespawned -= HandlePlayerDespawned;
             if (cacheCoroutine != null) StopCoroutine(cacheCoroutine);
         }
 
-        private System.Collections.IEnumerator PeriodicCacheRoutine()
-        {
-            while (true) // 씬이 끝날 때까지 무한 반복
-            {
-                // 지정된 시간(3초)만큼 대기
-                yield return new WaitForSeconds(cacheInterval);
-
-                // 🌟 최적화 포인트: 둘 중 하나라도 비어있을 때만 씬을 뒤집니다.
-                // 매번 FindObjectsByType을 호출하면 프레임 드랍이 생길 수 있기 때문입니다.
-                if (MyPlayer == null || EnemyPlayer == null)
-                {
-                    Debug.Log("[SpellController] 🕵️ 주기적 검사 중 빈 슬롯 발견! 플레이어 재탐색 시도...");
-                    FindAndCachePlayers();
-                }
+        private void HandlePlayerSpawned(PlayerModel spawnedPlayer) {
+            
+            if (spawnedPlayer.IsOwner) {
+                MyPlayer = spawnedPlayer;
+                Debug.Log("[SpellController] 내 캐릭터 스폰 감지 완료! 자동 연결됨.");
+            } 
+            else {
+                EnemyPlayer = spawnedPlayer;
+                Debug.Log("[SpellController] 적 캐릭터 스폰 감지 완료! 자동 연결됨.");
+            }
+        }
+        private void HandlePlayerDespawned(PlayerModel despawnedPlayer) {
+            if (despawnedPlayer.IsOwner) {
+                MyPlayer = null;
+                Debug.LogWarning("[SpellController] 내 캐릭터 연결 끊김(Despawn) 감지. 참조를 비웁니다.");
+            } 
+            else {
+                EnemyPlayer = null;
+                Debug.LogWarning("[SpellController] 적 캐릭터 연결 끊김(Despawn) 감지. 참조를 비웁니다.");
             }
         }
 
@@ -88,15 +107,8 @@ namespace Controllers.SpellControllers
         {
             if (MyPlayer == null || EnemyPlayer == null)
             {
-                Debug.LogWarning("[SpellController] 플레이어 데이터가 캐싱되지 않았습니다. 씬에서 강제 탐색을 시도합니다.");
-                FindAndCachePlayers();
-                
-                // 찾았는데도 null이면 진짜로 씬에 오브젝트가 없는 심각한 에러
-                if (MyPlayer == null || EnemyPlayer == null)
-                {
-                    Debug.LogError("[SpellController] 🚨 플레이어를 씬에서 찾을 수 없어 영창을 취소합니다!");
-                    return null;
-                }
+                Debug.LogError("[SpellController] 🚨 플레이어를 씬에서 찾을 수 없어 영창을 취소합니다!");
+                return null;
             }
 
             currentSelectedCards = selectedCards;
@@ -125,25 +137,6 @@ namespace Controllers.SpellControllers
             return currentPayload;
         }
 
-        private void FindAndCachePlayers()
-        {
-            // 씬에 존재하는 모든 PlayerModel을 긁어옵니다.
-           PlayerModel[] allPlayers = FindObjectsByType<PlayerModel>(FindObjectsSortMode.None);
-
-            foreach (var player in allPlayers)
-            {
-                if (player.IsOwner) 
-                {
-                    MyPlayer = player;
-                }
-                else 
-                {
-                    EnemyPlayer = player;
-                }
-            }
-
-            Debug.Log($"[SpellController] 🔄 플레이어 동적 캐싱 완료 - MyPlayer: {MyPlayer?.gameObject.name}, EnemyPlayer: {EnemyPlayer?.gameObject.name}");
-        }
 
         // ==========================================
         // 🎙️ 2. StartRecording() : 마이크 녹음 시작 (재시도 시 반복 호출됨)
@@ -164,6 +157,12 @@ namespace Controllers.SpellControllers
 
             // 1. 녹음 데이터 추출
             byte[] myWavData = VoiceManager.Instance.StopRecording();
+
+            LastRecordedClip = CreateClipFromWavBytes(myWavData);
+            if (LastRecordedClip != null)
+            {
+                Debug.Log("[SpellController] 방금 녹음한 WAV 데이터를 AudioClip으로 변환 보관 완료.");
+            }
 
             // 2. 단어 리스트 추출
             List<string> selectedWordNames = new List<string>();
@@ -209,6 +208,42 @@ namespace Controllers.SpellControllers
                 Debug.LogError("[SpellController] 서버 업로드 실패.");
             }
         }
+        private AudioClip CreateClipFromWavBytes(byte[] wavData)
+        {
+            try
+            {
+                if (wavData == null || wavData.Length <= 44) return null;
+
+                // WAV 헤더 정보 추출 (22: 채널 수, 24: 주파수, 40: 데이터 크기)
+                int channels = wavData[22];
+                int frequency = BitConverter.ToInt32(wavData, 24);
+                int dataSize = BitConverter.ToInt32(wavData, 40);
+                int samples = dataSize / (channels * 2); // 16bit(2byte) 기준 샘플 수 계산
+
+                // 빈 오디오 클립 생성
+                AudioClip clip = AudioClip.Create("MyRecordedVoice", samples, channels, frequency, false);
+                float[] floatData = new float[samples * channels];
+
+                // 16비트 PCM 데이터를 float(-1.0f ~ 1.0f)로 변환
+                for (int i = 0; i < floatData.Length; i++)
+                {
+                    int byteIndex = 44 + i * 2; // 44바이트 헤더 스킵
+                    if (byteIndex + 1 < wavData.Length)
+                    {
+                        short s = BitConverter.ToInt16(wavData, byteIndex);
+                        floatData[i] = s / 32768f; // 정규화 (Normalization)
+                    }
+                }
+                
+                clip.SetData(floatData, 0);
+                return clip;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SpellController] WAV 파싱 중 에러 발생: {e.Message}");
+                return null;
+            }
+        }
 
 
         public void ClearSpellMemory()
@@ -227,6 +262,12 @@ namespace Controllers.SpellControllers
                 Destroy(downloadedClip);
                 downloadedClip = null;
             }
+            if (LastRecordedClip != null)
+            {
+                Destroy(LastRecordedClip);
+                LastRecordedClip = null;
+            }
+            currentAudioLength = 3.5f;
 
             Debug.Log("[SpellController] 🧹 영창 및 마법 데이터 초기화 완료. 다음 턴 준비!");
         }
@@ -272,7 +313,7 @@ namespace Controllers.SpellControllers
                     {
                         // 🌟 Error 대신 Warning으로 변경하여 흐름이 끊기지 않게 유도
                         Debug.LogWarning($"[SpellController] 오디오 다운로드 통신 실패 (무시됨): {www.error}");
-                        downloadedClip = null; // 실패 시 확실하게 null 처리
+                        downloadedClip = AudioClip.Create("DummySilentClip", 44100, 1, 44100, false);
                     }
                 }
             }
@@ -280,7 +321,7 @@ namespace Controllers.SpellControllers
             {
                 // 🌟 예상치 못한 크래시나 타임아웃 예외를 안전하게 삼킴
                 Debug.LogWarning($"[SpellController] 오디오 다운로드 중 예외 발생 (무시됨): {e.Message}");
-                downloadedClip = null; 
+                downloadedClip = AudioClip.Create("DummySilentClip", 44100, 1, 44100, false);
             }
         }
 
@@ -303,6 +344,24 @@ namespace Controllers.SpellControllers
             {
                 VoiceManager.Instance.testAudioSource.clip = downloadedClip;
                 VoiceManager.Instance.testAudioSource.Play();
+            }
+        }
+
+        public void PlayRecordedAudio()
+        {
+            if (LastRecordedClip != null)
+            {
+                audioSource.clip = LastRecordedClip;
+                
+                // 🌟 재생 직전에 VoiceManager의 현재 볼륨 세팅값을 긁어와서 적용합니다.
+                // (VoiceManager의 실제 변수명이나 함수명으로 바꿔주세요)
+                if (VoiceManager.Instance != null)
+                {
+                    audioSource.volume = VoiceManager.Instance.outputVolume;
+                }
+
+                audioSource.Play();
+                Debug.Log("[SpellController] 보관된 녹음 파일을 설정된 볼륨으로 재생합니다.");
             }
         }
 
@@ -335,69 +394,125 @@ namespace Controllers.SpellControllers
         // 확정(최종 제출) 시 UI에서 호출할 임시 래퍼 함수
         public void SubmitConfirmedSpell()
         {
-            SubmitSpellServerRpc(currentSelectedCardIds.ToArray(), currentTotalCost, currentTaskId);
+            if (LastRecordedClip != null) 
+            {
+                currentAudioLength = LastRecordedClip.length;
+                Debug.Log($"[SpellController] 내 오디오 클립 길이 측정 완료: {currentAudioLength}초");
+            }
+            SubmitSpellServerRpc(currentSelectedCardIds.ToArray(), currentTotalCost, currentTaskId, currentAudioLength);
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void SubmitSpellServerRpc(int[] cardIds, int declaredCost, string taskId, RpcParams rpcParams = default)
+        private void SubmitSpellServerRpc(int[] cardIds, int declaredCost, string taskId, float audioLength, RpcParams rpcParams = default)
         {
             ulong senderId = rpcParams.Receive.SenderClientId;
+            
+            // 🛡️ 해킹 방지 및 비동기 검증 프로세스 가동
+            _ = ExecuteSpellVerificationAndBattleAsync(cardIds, declaredCost, taskId, senderId, audioLength);
+        }
+
+        private async Task ExecuteSpellVerificationAndBattleAsync(int[] cardIds, int declaredCost, string taskId, ulong senderId, float audioLength)
+        {
             PlayerModel caster = MatchManager.Instance.GetPlayerById(senderId);
             ulong targetClientId = (senderId == TurnModel.Instance.HostId.Value) ? TurnModel.Instance.GuestId.Value : TurnModel.Instance.HostId.Value;
             PlayerModel target = MatchManager.Instance.GetPlayerById(targetClientId);
             
-            if (!caster.TryUseMana(declaredCost)) return;
+            // [검증 A] 마나가 진짜 있는지 서버에서 최종 확인
+            if (caster == null || !caster.TryUseMana(declaredCost)) return;
 
+            // 서버 전용 페이로드 미리 조립
             SpellPayload serverPayload = new SpellPayload();
             foreach (int id in cardIds) {
                 var card = CardDatabase.Instance.GetCardById(id);
                 if (card != null) serverPayload.EnqueuePendingCard(card);
             }
-
             serverPayload.CompileSpell(caster, target);
-            StartCoroutine(FetchScoreAndExecuteBattle(serverPayload, caster, targetClientId, taskId));
+
+            // 🌟 [핵심] UI 팝업을 켜기 전, 서버가 직접 웹 서버에서 "해킹이 방지된 진짜 결과"를 가져옵니다.
+            TaskStatusResponse evalResult = await WebServerModel.Instance.GetEvaluationResultAsync(taskId);
+            
+            // 통신 실패를 대비한 방어 코드 (앞서 만든 WebServerModel 덕분에 안전합니다)
+            string verifiedSentence = evalResult != null ? evalResult.recognizedSentence : "알 수 없는 주문의 힘이 발동합니다!";
+            float verifiedScore = evalResult != null ? evalResult.score : 0f;
+
+            Debug.Log($"[Server] 🛡️ 검증 완료! 진짜 문장: {verifiedSentence}, 진짜 점수: {verifiedScore}");
+
+            // 4. 진짜 데이터를 완벽히 쥐었으므로 배틀 페이즈로 전환 (PhaseManager가 기존 UI들을 청소함)
+            PhaseManager.Instance.ServerSetPhase(GamePhase.Battle);
+
+            // 🌟 5. 양쪽 화면에 "서버가 검증한 진짜 점수와 문장"을 매개변수로 실어서 팝업 UI를 켜라고 명령!
+            audioLength = Mathf.Clamp(audioLength, 2.0f, 10.0f);
+            ShowIncantationPopupClientRpc(verifiedSentence, serverPayload.MainProperty, senderId, audioLength);
+
+            // 6. 팝업 연출 시간 동안 기다렸다가 데미지를 주는 코루틴 작동
+            StartCoroutine(ExecuteBattleRoutine(serverPayload, caster, verifiedScore, audioLength));
         }
 
-
-        private IEnumerator FetchScoreAndExecuteBattle(SpellPayload serverPayload, PlayerModel caster, ulong targetId, string taskId)
+        [Rpc(SendTo.Everyone)]
+        private void ShowIncantationPopupClientRpc(string recognizedSentence, Property property, ulong casterId, float audioLength)
         {
-            float finalScore = 0f;
-            bool isEvaluationDone = false;
+            // 🌟 여기에 사진으로 보여주신 보라색 이펙트 팝업 UI를 띄우는 코드를 넣습니다!
+            // 서버가 직접 내려준 안전한 recognizedSentence와 verifiedScore를 UI 텍스트에 매핑하시면 됩니다.
+            // 예: UILoader.Instance.ShowUI("IncantationPopup_UI", recognizedSentence, verifiedScore);
+            
+            Debug.Log($"[Client] 🎬 검증된 연출 팝업 가동 - 문장: {recognizedSentence}, 속성: {property}");
+            //todo 이름 바꿀 것
+            UILoader.Instance.ShowUI("SpellActive_FullScreen", (recognizedSentence, property));
 
-            while (!isEvaluationDone)
+            // 오디오 재생 처리
+            if (NetworkManager.Singleton.LocalClientId == casterId)
             {
-                yield return new WaitForSeconds(2f);
-                finalScore = 95.5f; 
-                isEvaluationDone = true;
+                PlayRecordedAudio(); // 내가 영창자면 로컬 원본 재생
             }
-
-            TurnModel.Instance.CurrentPhase.Value = GamePhase.Battle;
-
-            float serverMultiplier = CalculateMultiplierFromScore(finalScore); 
-            foreach (var command in serverPayload.Commands) 
+            else
             {
-                yield return StartCoroutine(command.ExecuteRoutine(serverMultiplier));
+                PlayVoice(); // 내가 상대방이면 다운로드된 파일 재생
             }
-            AfterExecutingAllCards(serverPayload, caster);
+            StartCoroutine(HidePopupRoutine(audioLength));
+        }
+        private IEnumerator HidePopupRoutine(float delayTime)
+        {
+            // 정확히 오디오가 끝날 때쯤 팝업이 닫힙니다.
+            yield return new WaitForSeconds(delayTime);
+            Debug.Log("[Client] 음성 재생 완료. 팝업 연출 종료!");
+            
+            UILoader.Instance.HideUI("SpellActive_FullScreen");
+        }
 
-            yield return new WaitForSeconds(2f);
+        private IEnumerator ExecuteBattleRoutine(SpellPayload payload, PlayerModel caster, float finalScore, float audioLength)
+        {
+            // ⏳ 연출 대기: 보라색 팝업 창이 떠서 글자가 보여지고 음성이 재생되는 시간만큼 대기 (3.5초)
+            yield return new WaitForSeconds(audioLength);
 
+            // 💥 검증된 진짜 점수를 배율로 변환하여 데미지 최종 판정 및 실행!
+            float scoreMultiplier = CalculateMultiplierFromScore(finalScore); 
+            foreach (var command in payload.Commands) 
+            {
+                yield return StartCoroutine(command.ExecuteRoutine(scoreMultiplier));
+            }
+            
+            // 카드 핸드에서 제거 및 무덤 이동 후처리
+            AfterExecutingAllCards(payload, caster);
+
+            yield return new WaitForSeconds(1.5f);
+
+            // 양쪽 클라이언트 오디오 메모리 등 청소
             ClearSpellMemoryClientRpc();
 
-            TurnModel.Instance.CurrentPhase.Value = GamePhase.Select;
+            // 턴 종료 페이즈로 이동
+            PhaseManager.Instance.ServerSetPhase(GamePhase.End);
         }
 
         private float CalculateMultiplierFromScore(float score)
         {
-            return Mathf.Clamp(score / 100f, 0.5f, 1.5f);
+            return Mathf.Clamp(score / 100f, 0.1f, 1.5f);
         }
-        //카드들 실행하고 핸드에서 무덤으로 보내는 등의 후처리
+
         private void AfterExecutingAllCards(SpellPayload payload, PlayerModel caster) 
         {
             if (!IsServer) return;
 
             payload.CalculateMainProperty();
-
             if (payload.MainProperty != Property.None) 
             {
                 caster.LastProperty.Value = payload.MainProperty;
@@ -409,6 +524,9 @@ namespace Controllers.SpellControllers
                 caster.Graveyard.AddCardToGraveyard(cardId);
             }
         }
+
+
+
 
         #endregion
     }
