@@ -78,6 +78,7 @@ const Deck = mongoose.model('Deck', deckSchema);
 // 🔐 1. 인증 및 유저 데이터 API
 // ---------------------------------------------------------------- //
 
+// [POST] 회원가입
 app.post('/register', async (req, res) => {
     try {
         const { userId, password } = req.body;
@@ -96,6 +97,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
+// [POST] 일반 로그인 (ID/PW 기반 및 토큰 발급)
 app.post('/login', async (req, res) => {
     try {
         const { userId, password } = req.body;
@@ -109,7 +111,7 @@ app.post('/login', async (req, res) => {
 
         res.status(200).json({
             message: "로그인 성공",
-            token,
+            token, // 👈 클라이언트는 이 토큰을 저장해 뒀다가 자동 로그인 시 활용합니다.
             userData: {
                 userId: user.userId,
                 score: user.score,
@@ -122,6 +124,36 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// ✨ [POST] 자동 로그인 (토큰 검증 기반)
+app.post('/auto-login', async (req, res) => {
+    try {
+        const { token } = req.body;
+        if (!token) return res.status(400).json({ error: "검증할 토큰이 누락되었습니다." });
+
+        // 토큰 복호화 및 유효성 확인
+        const decoded = jwt.verify(token, JWT_SECRET);
+        
+        // 토큰 속 유저 ID로 데이터 조회
+        const user = await User.findOne({ userId: decoded.userId });
+        if (!user) return res.status(404).json({ error: "존재하지 않거나 삭제된 유저입니다." });
+
+        console.log(`🔐 [자동 로그인 성공] 유저 아이디: ${user.userId}`);
+        res.status(200).json({
+            message: "자동 로그인 성공",
+            userData: {
+                userId: user.userId,
+                score: user.score,
+                rank: user.rank,
+                defaultPitch: user.defaultPitch
+            }
+        });
+    } catch (err) {
+        console.error("❌ 자동 로그인 인증 실패:", err.message);
+        res.status(401).json({ error: "토큰이 만료되었거나 유효하지 않습니다. 다시 로그인해 주세요." });
+    }
+});
+
+// [GET] 유저 데이터 개별 로드
 app.get('/load/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
@@ -146,6 +178,7 @@ app.get('/load/:userId', async (req, res) => {
     }
 });
 
+// [GET] 기본 피치 가져오기 (Query Parameter 사용: /default-pitch?userId=xxx)
 app.get('/default-pitch', async (req, res) => {
     try {
         const { userId } = req.query;
@@ -160,6 +193,7 @@ app.get('/default-pitch', async (req, res) => {
     }
 });
 
+// [PUT] 기본 피치 설정/수정
 app.put('/default-pitch', async (req, res) => {
     try {
         const { userId, defaultPitch } = req.body;
@@ -193,6 +227,7 @@ app.put('/default-pitch', async (req, res) => {
 // 🎴 2. 공유 덱 관련 API
 // ---------------------------------------------------------------- //
 
+// [POST] 공유 덱 생성
 app.post('/decks', async (req, res) => {
     try {
         const { deckName, userId, cards, description } = req.body;
@@ -209,6 +244,7 @@ app.post('/decks', async (req, res) => {
     }
 });
 
+// [GET] 전체 공유 덱 리스트 조회
 app.get('/decks', async (req, res) => {
     try {
         const decks = await Deck.find().sort({ createdAt: -1 });
@@ -218,6 +254,7 @@ app.get('/decks', async (req, res) => {
     }
 });
 
+// [DELETE] 공유 덱 삭제
 app.delete('/decks/:deckId', async (req, res) => {
     try {
         const { deckId } = req.params;
@@ -254,7 +291,7 @@ const tasks = {}; // 메모리 기반 비동기 태스크 상태 관리 객체
 // 백그라운드 AI 채점 연동 함수
 async function runBackgroundAnalysis(taskId, filePath, concept, prefix, wordNames, defaultPitch) {
     try {
-        // 💡 수정: FastAPI 규격에 맞게 공백이 아닌 '쉼표(,)'로 단어 배열을 결합합니다.
+        // FastAPI 단어 다중 검증 규격에 맞춰 쉼표(,) 처리
         const targetWordsString = Array.isArray(wordNames) ? wordNames.join(',') : wordNames;
 
         const formData = new FormData();
@@ -329,7 +366,7 @@ async function runBackgroundAnalysis(taskId, filePath, concept, prefix, wordName
     }
 }
 
-// [POST] /upload-voice-async
+// [POST] 음성 데이터 업로드 (비동기 처리 등록 창구)
 app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: "음성 파일(audio)이 전송되지 않았습니다." });
@@ -360,10 +397,9 @@ app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
     }
 });
 
-// 💡 수정: 라우터 주소 스펙을 이미지 양식에 맞춰 Query Parameter 방식으로 전면 수정
-// [GET] /evaluation-result?taskId={taskId}
+// [GET] /evaluation-result?taskId={taskId} (Unity 명세 일치화)
 app.get('/evaluation-result', (req, res) => {
-    const { taskId } = req.query; // 👈 params가 아닌 query에서 추출
+    const { taskId } = req.query; 
 
     if (!taskId) {
         return res.status(400).json({ error: "taskId 쿼리 파라미터가 누락되었습니다." });
