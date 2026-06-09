@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.PitchSetting_FullScreen
   pitchAnalyzer: {fileID: 4956170314996091302}
+  txt_recordBtn: {fileID: 5421657536213564850}
   txt_result: {fileID: 5937651681863103031}
   gaugeBar: {fileID: 6272875894074787555}
 --- !u!114 &4956170314996091302

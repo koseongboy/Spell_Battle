@@ -170,7 +170,7 @@ namespace Models.Networks
             // JSON 바디 포맷팅
             string jsonBody = $"{{\"userId\": \"{userId}\", \"defaultPitch\": {defaultPitch}}}";
             
-            using (UnityWebRequest www = new UnityWebRequest($"{baseUrl}/set-default-pitch", "POST"))
+            using (UnityWebRequest www = new UnityWebRequest($"{baseUrl}/default-pitch", "PUT"))
             {
                 byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
                 www.uploadHandler = new UploadHandlerRaw(bodyRaw);
