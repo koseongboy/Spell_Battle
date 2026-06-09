@@ -107,11 +107,11 @@ app.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ error: "아이디 또는 비밀번호가 틀렸습니다." });
 
-        const token = jwt.sign({ id: user._id, userId: user.userId }, JWT_SECRET, { expiresIn: '10s' }); // 👈 '10s'로 명시적 수정
+        const token = jwt.sign({ id: user._id, userId: user.userId }, JWT_SECRET, { expiresIn: '10s' });
 
         res.status(200).json({
             message: "로그인 성공",
-            token,
+            token, 
             userData: {
                 userId: user.userId,
                 score: user.score,
@@ -357,8 +357,17 @@ async function runBackgroundAnalysis(taskId, filePath, concept, prefix, wordName
         console.error(`❌ [태스크 오류] ID: ${taskId} 처리 중 예외 발생:`, err.message);
         tasks[taskId] = { status: "failed", error: err.message, updatedAt: Date.now() };
     } finally {
-        // ⭐ [해결책 B 변경 사항]: Unity 재생 연동을 위해 AI 분석 직후 여기서 파일을 즉시 삭제하지 않고 유지합니다.
-        // 파일 삭제 제어권은 아래 Socket.io의 disconnect 이벤트로 완전히 양도됩니다.
+        // ⭐ [3분 지연 삭제 타이머 적용]: 상대방 플레이어가 음성을 다운로드할 수 있도록 3분간 파일을 유지한 뒤 자동 삭제합니다.
+        const THREE_MINUTES = 3 * 60 * 1000; 
+
+        setTimeout(() => {
+            if (fs.existsSync(filePath)) {
+                fs.unlink(filePath, (err) => {
+                    if (err) console.error("⏳ [타이머] 임시 오디오 파일 자동 삭제 실패:", err);
+                    else console.log(`🗑️ [타이머 자동 청소] 3분이 경과하여 파일을 삭제했습니다: ${path.basename(filePath)}`);
+                });
+            }
+        }, THREE_MINUTES);
     }
 }
 
@@ -369,7 +378,7 @@ app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
         if (!req.body.metadata) return res.status(400).json({ error: "메타데이터(metadata)가 누락되었습니다." });
 
         const metadata = JSON.parse(req.body.metadata);
-        const { userId, concept, prefix, wordNames, roomId } = metadata; // 👈 소켓 관리를 위해 클라에서 보낸 roomId도 가져옵니다.
+        const { userId, concept, prefix, wordNames } = metadata; 
 
         if (!userId || !concept || !wordNames) {
             return res.status(400).json({ error: "메타데이터 세부 정보(userId, concept, wordNames)가 부족합니다." });
@@ -379,15 +388,12 @@ app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
         const defaultPitch = user ? user.defaultPitch : 150.0;
 
         const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+        
+        // AWS 퍼블릭 IP 고정 바인딩 규칙 반영 완료
         const PUBLIC_IP = "3.107.201.71";
         const audioUrl = `http://${PUBLIC_IP}:${PORT}/uploads/${req.file.filename}`;
 
         tasks[taskId] = { status: "processing", audioUrl, updatedAt: Date.now() };
-
-        // ⭐ [해결책 B 변경 사항]: 웹소켓 방 정보가 유효하다면 생성된 오디오 파일명을 기록해 둡니다.
-        if (roomId && rooms[roomId]) {
-            rooms[roomId].audioFiles.push(req.file.filename);
-        }
 
         runBackgroundAnalysis(taskId, req.file.path, concept, prefix, wordNames, defaultPitch);
 
@@ -450,8 +456,7 @@ io.on('connection', (socket) => {
         socket.roomId = roomId;
 
         if (!rooms[roomId]) {
-            // ⭐ [해결책 B 변경 사항]: 방 객체 생성 시 audioFiles 파일 추적 배열을 초기화합니다.
-            rooms[roomId] = { roomId, players: [], status: "waiting", currentTurn: "", audioFiles: [] };
+            rooms[roomId] = { roomId, players: [], status: "waiting", currentTurn: "" };
         }
 
         if (!rooms[roomId].players.find(p => p.userId === userId)) {
@@ -475,31 +480,13 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log(`❌ 유저 커넥션 해제: ${socket.id}`);
         const roomId = socket.roomId;
-        
         if (roomId && rooms[roomId]) {
-            // 유저 리스트에서 퇴장자 제외
             rooms[roomId].players = rooms[roomId].players.filter(p => p.socketId !== socket.id);
             
-            // ⭐ [해결책 B 변경 사항]: 방에 남은 플레이어가 0명이면 방이 폭파되므로, 관련 음성 파일을 전부 자동 삭제합니다.
             if (rooms[roomId].players.length === 0) {
-                console.log(`🧹 [자동 용량 청소] 방 ${roomId}이 비었습니다. 오디오 임시 파일들을 정리합니다.`);
-                
-                rooms[roomId].audioFiles.forEach((filename) => {
-                    const fullPath = path.join(__dirname, 'uploads', filename);
-                    if (fs.existsSync(fullPath)) {
-                        try {
-                            fs.unlinkSync(fullPath);
-                            console.log(`🗑️ 파일 삭제 완료: ${filename}`);
-                        } catch (err) {
-                            console.error(`❌ 파일 자동 삭제 중 실패: ${filename}`, err.message);
-                        }
-                    }
-                });
-                
-                // 메모리에서 방 데이터 삭제
+                console.log(`🏠 방 ${roomId}이 비었습니다. 방 객체를 메모리에서 제거합니다.`);
                 delete rooms[roomId];
             } else {
-                // 아직 방에 인원이 남아있다면 방 업데이트 내용만 전달
                 io.to(roomId).emit('roomUpdate', rooms[roomId]);
             }
         }
