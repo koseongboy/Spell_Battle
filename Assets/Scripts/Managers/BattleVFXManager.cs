@@ -137,6 +137,7 @@ namespace Managers.VFX
             if (vfxInstance != null) Destroy(vfxInstance);
             // 카메라 원위치
             Cameras.BattleCameraController.Instance.ResetCamera();
+            yield return new WaitForSeconds(0.2f);
         }
     }
 }
