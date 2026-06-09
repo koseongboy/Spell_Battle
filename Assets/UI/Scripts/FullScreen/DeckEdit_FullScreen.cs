@@ -15,7 +15,7 @@ namespace DefaultNamespace
         public Transform rightCardInDeckContent;
 
         [Header("Prefabs")] public UI_Card_DeckEdit uiCardDeckEditPrefab;
-        public DeckListPiece deckListPiecePrefab;
+        [FormerlySerializedAs("deckListPiecePrefab")] public DeckPiece_DeckEdit deckPieceDeckEditPrefab;
         public CardInDeckPiece cardInDeckPiecePrefab;
 
         [Header("Pagination Arrows")]
@@ -55,12 +55,12 @@ namespace DefaultNamespace
 
         // --- 3개의 Object Pool ---
         private IObjectPool<UI_Card_DeckEdit> cardPool;
-        private IObjectPool<DeckListPiece> deckListPool;
+        private IObjectPool<DeckPiece_DeckEdit> deckListPool;
         private IObjectPool<CardInDeckPiece> cardInDeckPool;
 
         // 활성화된 객체 추적 리스트
         private List<UI_Card_DeckEdit> activeCards = new List<UI_Card_DeckEdit>();
-        private List<DeckListPiece> activeDeckLists = new List<DeckListPiece>();
+        private List<DeckPiece_DeckEdit> activeDeckLists = new List<DeckPiece_DeckEdit>();
         private List<CardInDeckPiece> activeCardsInDeck = new List<CardInDeckPiece>();
 
         private void Awake() {
@@ -77,8 +77,8 @@ namespace DefaultNamespace
             );
 
             // 2. 좌측 덱 리스트 풀
-            deckListPool = new ObjectPool<DeckListPiece>(
-                () => Instantiate(deckListPiecePrefab, leftDeckListContent),
+            deckListPool = new ObjectPool<DeckPiece_DeckEdit>(
+                () => Instantiate(deckPieceDeckEditPrefab, leftDeckListContent),
                 (obj) => obj.gameObject.SetActive(true),
                 (obj) => obj.gameObject.SetActive(false),
                 (obj) => Destroy(obj.gameObject),
@@ -123,7 +123,7 @@ namespace DefaultNamespace
             return obj;
         }
 
-        public DeckListPiece GetDeckListFromPool() {
+        public DeckPiece_DeckEdit GetDeckListFromPool() {
             var obj = deckListPool.Get();
             activeDeckLists.Add(obj);
             return obj;

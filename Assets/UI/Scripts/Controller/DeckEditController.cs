@@ -22,7 +22,7 @@ namespace DefaultNamespace {
         private string currentDeckId = ""; 
         private string currentDeckName = "";
         private List<int> currentDeckCardIds = new List<int>();
-        private Dictionary<string, DeckListPiece> _activeDeckPieces = new Dictionary<string, DeckListPiece>();
+        private Dictionary<string, DeckPiece_DeckEdit> _activeDeckPieces = new Dictionary<string, DeckPiece_DeckEdit>();
 
         // 필터 상태 (-1이나 None이면 필터 꺼짐)
         private Property currentPropertyFilter = Property.None;
@@ -46,6 +46,7 @@ namespace DefaultNamespace {
         public void RegisterView(DeckEdit_FullScreen newView) {
             ui_DeckEdit = newView;
             allCards = CardDatabase.Instance.GetAllCards();
+            Debug.Log($"[DeckEdit] 중앙 창에 뿌릴 전체 카드 개수: {allCards.Count}");
 
             // 새로운 View가 등록될 때 기존에 쌓여있던 리스너를 완전히 청소합니다.
             ui_DeckEdit.saveButton.onClick.RemoveAllListeners();
@@ -224,24 +225,24 @@ namespace DefaultNamespace {
             // 1. 내가 만든 덱 띄우기
             var allSavedDecks = DeckManager.Instance.GetAllDecks();
             foreach (var deck in allSavedDecks) {
-                DeckListPiece piece = ui_DeckEdit.GetDeckListFromPool();
+                DeckPiece_DeckEdit pieceDeckEdit = ui_DeckEdit.GetDeckListFromPool();
                 bool isSelected = (deck.id == currentDeckId);
-                piece.Init(deck.deckName, deck.cardCountSummary, deck.representativeProperty, isSelected, (clickedName) => OnDeckSelected(deck.id));
+                pieceDeckEdit.Init(deck.deckName, deck.cardCountSummary, deck.representativeProperty, isSelected, (clickedName) => OnDeckSelected(deck.id));
         
                 // 딕셔너리에 UI 조각 보관
-                _activeDeckPieces[deck.id] = piece; 
+                _activeDeckPieces[deck.id] = pieceDeckEdit; 
             }
     
             // 2. 프리셋 덱 그리기
-            var presetDecks = CardDatabase.Instance.GetAllPresetDecks();
+            var presetDecks = DeckManager.Instance.GetAllPresetDecks();
             if (presetDecks != null) {
                 foreach (var preset in presetDecks) {
-                    DeckListPiece piece = ui_DeckEdit.GetDeckListFromPool();
+                    DeckPiece_DeckEdit pieceDeckEdit = ui_DeckEdit.GetDeckListFromPool();
                     bool isSelected = (preset.id == currentDeckId); 
-                    piece.Init(preset.deckName, preset.cardCountSummary, preset.representativeProperty, isSelected, (clickedName) => OnDeckSelected(preset.id));
+                    pieceDeckEdit.Init(preset.deckName, preset.cardCountSummary, preset.representativeProperty, isSelected, (clickedName) => OnDeckSelected(preset.id));
             
                     // 딕셔너리에 UI 조각 보관
-                    _activeDeckPieces[preset.id] = piece; 
+                    _activeDeckPieces[preset.id] = pieceDeckEdit; 
                 }
             }
         }
@@ -252,13 +253,13 @@ namespace DefaultNamespace {
                 return; 
             }
 
-            if (!string.IsNullOrEmpty(currentDeckId) && _activeDeckPieces.TryGetValue(currentDeckId, out DeckListPiece oldPiece)) {
+            if (!string.IsNullOrEmpty(currentDeckId) && _activeDeckPieces.TryGetValue(currentDeckId, out DeckPiece_DeckEdit oldPiece)) {
                 oldPiece.SetSelected(false);
             }
 
             currentDeckId = deckId;
 
-            if (_activeDeckPieces.TryGetValue(currentDeckId, out DeckListPiece newPiece)) {
+            if (_activeDeckPieces.TryGetValue(currentDeckId, out DeckPiece_DeckEdit newPiece)) {
                 newPiece.SetSelected(true);
             }
 
@@ -267,7 +268,7 @@ namespace DefaultNamespace {
                 currentDeckCardIds = new List<int>(selectedDeck.cardIds);
             } 
             else {
-                var presetDeck = CardDatabase.Instance.GetAllPresetDecks().Find(p => p.id == deckId);
+                var presetDeck = DeckManager.Instance.GetAllPresetDecks().Find(p => p.id == deckId);
                 if (presetDeck != null) {
                     currentDeckCardIds = new List<int>(presetDeck.cardIds);
                 } else {
@@ -418,18 +419,26 @@ namespace DefaultNamespace {
         }
 
         private async void SaveDeck() {
+            // 1. 빈 덱 방어 로직
             if (currentDeckCardIds.Count == 0) {
                 CommonUIController.Instance.ShowRedAlert("빈 덱은 저장할 수 없습니다.");
                 return;
             }
             
-            // TODO : Deck 정보 저장
+            // 2. 현재 UI에 올라와 있는 최신 상태를 로컬(메모리)에 먼저 반영하여 ID를 확보합니다.
             currentDeckId = await DeckManager.Instance.CreateOrUpdateDeckAsync(currentDeckId, currentDeckName, currentDeckCardIds);
-    
-            CommonUIController.Instance.ShowBlackAlert($"{currentDeckName} 덱 저장 완료!");
-    
-            // 새 ID가 발급되었거나 이름이 바뀌었을 수 있으므로 좌측 리스트 갱신
-            RefreshLeftDeckList(); 
+            
+            // 3. 서버에 저장
+            bool isServerSaved = await DeckManager.Instance.OnSaveDeckButtonClicked(currentDeckId);
+            
+            if (isServerSaved) {
+                // 통신 성공 시에만 UI를 갱신하고 알림을 띄웁니다.
+                CommonUIController.Instance.ShowBlackAlert($"{currentDeckName} 덱 저장 완료!");
+                RefreshLeftDeckList(); 
+            } else {
+                // 통신 실패 시 (ex. 인터넷 끊김, 서버 에러 등)
+                CommonUIController.Instance.ShowRedAlert("서버 통신 실패: 덱을 저장하지 못했습니다.");
+            }
         }
         
         // ==========================================

@@ -12,6 +12,7 @@ namespace DefaultNamespace
         private float resultPitch = -1f;
 
         [SerializeField] private PitchAnalyzer pitchAnalyzer;
+        [SerializeField] private TextMeshProUGUI txt_recordBtn;
         [SerializeField] private TextMeshProUGUI txt_result;
         [SerializeField] private Image gaugeBar;
         
@@ -63,32 +64,18 @@ namespace DefaultNamespace
                 {
                     // 녹음이 켜졌으면 게이지를 0으로 초기화하고 텍스트도 변경
                     gaugeBar.fillAmount = 0f;
-                    //btnText.text = "녹음 중지";
+                    txt_recordBtn.text = "녹음중...";
                 }
                 else
                 {
                     // 녹음이 꺼졌으면 확실하게 게이지를 0으로 닫아줍니다.
                     gaugeBar.fillAmount = 0f;
-                    //btnText.text = "녹음 시작";
+                    txt_recordBtn.text = "녹음";
                 }
             }
         }
 
         public async void OnClick_Apply() {
-            if (!Mathf.Approximately(resultPitch, -1f)) {
-                CommonUIController.Instance.ShowLoading();
-                var serverSuccess = await pitchAnalyzer.SendServerPitch( resultPitch );
-
-                if (serverSuccess) {
-                    CommonUIController.Instance.DoneLoading();
-                    CommonUIController.Instance.GoBackToPreviousFullScreen();
-                    CommonUIController.Instance.ShowBlackAlert("보이스 세팅이 저장되었습니다.");
-                }
-                else {
-                    CommonUIController.Instance.DoneLoading();
-                    CommonUIController.Instance.ShowRedAlert("서버 통신에 실패했습니다. 보이스 세팅을 다시 진행해주세요.");
-                }
-            }
             CommonUIController.Instance.GoBackToPreviousFullScreen();
         }
     }

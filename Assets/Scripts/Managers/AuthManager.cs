@@ -1,9 +1,12 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Managers;
 using UnityEngine;
 using UnityEngine.Networking;
 using Managers.LocalDataManagers;
+using Models.CardDatabases;
+using Models.Networks;
 using Unity.Netcode;
 
 namespace DefaultNamespace {
@@ -79,7 +82,8 @@ namespace DefaultNamespace {
                     localData.rank = response.userData.rank;
                     localData.defaultPitch = response.userData.defaultPitch;
                     localData.SaveData();
-                    
+
+                    _ = DeckManager.Instance.LoadDecksFromServerAsync();
                     return true;
                 }
                 else
