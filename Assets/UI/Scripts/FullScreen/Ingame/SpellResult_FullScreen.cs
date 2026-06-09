@@ -1,3 +1,4 @@
+using Controllers.SpellControllers;
 using Models.Networks;
 using TMPro;
 using UnityEngine;
@@ -17,7 +18,14 @@ namespace DefaultNamespace
         }
 
         public void PlayRecord() {
-            // TODO : 녹음된 파일 들어보기
+            if (SpellController.Instance != null) 
+            {
+                SpellController.Instance.PlayRecordedAudio();
+            }
+            else 
+            {
+                Debug.LogError("[SpellResult_FullScreen] SpellController를 찾을 수 없습니다.");
+            }
         }
 
         public void ApplySpell() {
@@ -28,7 +36,7 @@ namespace DefaultNamespace
 
         public void Rollback() {
             // 그냥 현재 UI를 닫기. 그럼 뒤에 있는 Spell UI가 나옴.
-            UILoader.Instance.ShowUI("SpellResult_FullScreen");
+            UILoader.Instance.HideUI("SpellResult_FullScreen");
         }
     }
 }

@@ -40,6 +40,10 @@ namespace Controllers.SpellControllers
         private string currentTaskId;
         private AudioClip downloadedClip;
 
+        [Header("녹음 데이터 보관")]
+        public AudioClip LastRecordedClip { get; private set; } // 방금 녹음한 원본/크롭된 오디오 클립
+        private AudioSource audioSource; // 재생을 담당할 컴포넌트
+
         [Header("자동 캐싱 설정")]
         private Coroutine cacheCoroutine;
         private readonly float cacheInterval = 3.0f;
@@ -48,34 +52,48 @@ namespace Controllers.SpellControllers
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
+
+            PlayerModel.OnPlayerSpawned += HandlePlayerSpawned;
+            PlayerModel.OnPlayerDespawned += HandlePlayerDespawned;
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null) 
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+            }
         }
+      
 
         private void Start() 
         {
-            // 이미 돌고 있는 코루틴이 있다면 끄고 다시 시작 (중복 실행 방지)
-            if (cacheCoroutine != null) StopCoroutine(cacheCoroutine);
-            cacheCoroutine = StartCoroutine(PeriodicCacheRoutine());
+
         }
 
         public override void OnDestroy() 
         {
+            PlayerModel.OnPlayerSpawned -= HandlePlayerSpawned;
+            PlayerModel.OnPlayerDespawned -= HandlePlayerDespawned;
             if (cacheCoroutine != null) StopCoroutine(cacheCoroutine);
         }
 
-        private System.Collections.IEnumerator PeriodicCacheRoutine()
-        {
-            while (true) // 씬이 끝날 때까지 무한 반복
-            {
-                // 지정된 시간(3초)만큼 대기
-                yield return new WaitForSeconds(cacheInterval);
-
-                // 🌟 최적화 포인트: 둘 중 하나라도 비어있을 때만 씬을 뒤집니다.
-                // 매번 FindObjectsByType을 호출하면 프레임 드랍이 생길 수 있기 때문입니다.
-                if (MyPlayer == null || EnemyPlayer == null)
-                {
-                    Debug.Log("[SpellController] 🕵️ 주기적 검사 중 빈 슬롯 발견! 플레이어 재탐색 시도...");
-                    FindAndCachePlayers();
-                }
+        private void HandlePlayerSpawned(PlayerModel spawnedPlayer) {
+            
+            if (spawnedPlayer.IsOwner) {
+                MyPlayer = spawnedPlayer;
+                Debug.Log("[SpellController] 내 캐릭터 스폰 감지 완료! 자동 연결됨.");
+            } 
+            else {
+                EnemyPlayer = spawnedPlayer;
+                Debug.Log("[SpellController] 적 캐릭터 스폰 감지 완료! 자동 연결됨.");
+            }
+        }
+        private void HandlePlayerDespawned(PlayerModel despawnedPlayer) {
+            if (despawnedPlayer.IsOwner) {
+                MyPlayer = null;
+                Debug.LogWarning("[SpellController] 내 캐릭터 연결 끊김(Despawn) 감지. 참조를 비웁니다.");
+            } 
+            else {
+                EnemyPlayer = null;
+                Debug.LogWarning("[SpellController] 적 캐릭터 연결 끊김(Despawn) 감지. 참조를 비웁니다.");
             }
         }
 
@@ -88,15 +106,8 @@ namespace Controllers.SpellControllers
         {
             if (MyPlayer == null || EnemyPlayer == null)
             {
-                Debug.LogWarning("[SpellController] 플레이어 데이터가 캐싱되지 않았습니다. 씬에서 강제 탐색을 시도합니다.");
-                FindAndCachePlayers();
-                
-                // 찾았는데도 null이면 진짜로 씬에 오브젝트가 없는 심각한 에러
-                if (MyPlayer == null || EnemyPlayer == null)
-                {
-                    Debug.LogError("[SpellController] 🚨 플레이어를 씬에서 찾을 수 없어 영창을 취소합니다!");
-                    return null;
-                }
+                Debug.LogError("[SpellController] 🚨 플레이어를 씬에서 찾을 수 없어 영창을 취소합니다!");
+                return null;
             }
 
             currentSelectedCards = selectedCards;
@@ -125,25 +136,6 @@ namespace Controllers.SpellControllers
             return currentPayload;
         }
 
-        private void FindAndCachePlayers()
-        {
-            // 씬에 존재하는 모든 PlayerModel을 긁어옵니다.
-           PlayerModel[] allPlayers = FindObjectsByType<PlayerModel>(FindObjectsSortMode.None);
-
-            foreach (var player in allPlayers)
-            {
-                if (player.IsOwner) 
-                {
-                    MyPlayer = player;
-                }
-                else 
-                {
-                    EnemyPlayer = player;
-                }
-            }
-
-            Debug.Log($"[SpellController] 🔄 플레이어 동적 캐싱 완료 - MyPlayer: {MyPlayer?.gameObject.name}, EnemyPlayer: {EnemyPlayer?.gameObject.name}");
-        }
 
         // ==========================================
         // 🎙️ 2. StartRecording() : 마이크 녹음 시작 (재시도 시 반복 호출됨)
@@ -164,6 +156,12 @@ namespace Controllers.SpellControllers
 
             // 1. 녹음 데이터 추출
             byte[] myWavData = VoiceManager.Instance.StopRecording();
+
+            LastRecordedClip = CreateClipFromWavBytes(myWavData);
+            if (LastRecordedClip != null)
+            {
+                Debug.Log("[SpellController] 방금 녹음한 WAV 데이터를 AudioClip으로 변환 보관 완료.");
+            }
 
             // 2. 단어 리스트 추출
             List<string> selectedWordNames = new List<string>();
@@ -209,6 +207,42 @@ namespace Controllers.SpellControllers
                 Debug.LogError("[SpellController] 서버 업로드 실패.");
             }
         }
+        private AudioClip CreateClipFromWavBytes(byte[] wavData)
+        {
+            try
+            {
+                if (wavData == null || wavData.Length <= 44) return null;
+
+                // WAV 헤더 정보 추출 (22: 채널 수, 24: 주파수, 40: 데이터 크기)
+                int channels = wavData[22];
+                int frequency = BitConverter.ToInt32(wavData, 24);
+                int dataSize = BitConverter.ToInt32(wavData, 40);
+                int samples = dataSize / (channels * 2); // 16bit(2byte) 기준 샘플 수 계산
+
+                // 빈 오디오 클립 생성
+                AudioClip clip = AudioClip.Create("MyRecordedVoice", samples, channels, frequency, false);
+                float[] floatData = new float[samples * channels];
+
+                // 16비트 PCM 데이터를 float(-1.0f ~ 1.0f)로 변환
+                for (int i = 0; i < floatData.Length; i++)
+                {
+                    int byteIndex = 44 + i * 2; // 44바이트 헤더 스킵
+                    if (byteIndex + 1 < wavData.Length)
+                    {
+                        short s = BitConverter.ToInt16(wavData, byteIndex);
+                        floatData[i] = s / 32768f; // 정규화 (Normalization)
+                    }
+                }
+                
+                clip.SetData(floatData, 0);
+                return clip;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SpellController] WAV 파싱 중 에러 발생: {e.Message}");
+                return null;
+            }
+        }
 
 
         public void ClearSpellMemory()
@@ -226,6 +260,11 @@ namespace Controllers.SpellControllers
             {
                 Destroy(downloadedClip);
                 downloadedClip = null;
+            }
+            if (LastRecordedClip != null)
+            {
+                Destroy(LastRecordedClip);
+                LastRecordedClip = null;
             }
 
             Debug.Log("[SpellController] 🧹 영창 및 마법 데이터 초기화 완료. 다음 턴 준비!");
@@ -272,7 +311,7 @@ namespace Controllers.SpellControllers
                     {
                         // 🌟 Error 대신 Warning으로 변경하여 흐름이 끊기지 않게 유도
                         Debug.LogWarning($"[SpellController] 오디오 다운로드 통신 실패 (무시됨): {www.error}");
-                        downloadedClip = null; // 실패 시 확실하게 null 처리
+                        downloadedClip = AudioClip.Create("DummySilentClip", 44100, 1, 44100, false);
                     }
                 }
             }
@@ -280,7 +319,7 @@ namespace Controllers.SpellControllers
             {
                 // 🌟 예상치 못한 크래시나 타임아웃 예외를 안전하게 삼킴
                 Debug.LogWarning($"[SpellController] 오디오 다운로드 중 예외 발생 (무시됨): {e.Message}");
-                downloadedClip = null; 
+                downloadedClip = AudioClip.Create("DummySilentClip", 44100, 1, 44100, false);
             }
         }
 
@@ -303,6 +342,23 @@ namespace Controllers.SpellControllers
             {
                 VoiceManager.Instance.testAudioSource.clip = downloadedClip;
                 VoiceManager.Instance.testAudioSource.Play();
+            }
+        }
+        public void PlayRecordedAudio()
+        {
+            if (LastRecordedClip != null)
+            {
+                audioSource.clip = LastRecordedClip;
+                
+                // 🌟 재생 직전에 VoiceManager의 현재 볼륨 세팅값을 긁어와서 적용합니다.
+                // (VoiceManager의 실제 변수명이나 함수명으로 바꿔주세요)
+                if (VoiceManager.Instance != null)
+                {
+                    audioSource.volume = VoiceManager.Instance.outputVolume;
+                }
+
+                audioSource.Play();
+                Debug.Log("[SpellController] 보관된 녹음 파일을 설정된 볼륨으로 재생합니다.");
             }
         }
 

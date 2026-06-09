@@ -236,7 +236,7 @@ namespace DefaultNamespace {
         public void DoneEval(TaskStatusResponse evalResult) {
             CommonUIController.Instance.DoneLoading();
             
-            UILoader.Instance.ShowUI("SpellResult_FullScreen");
+            UILoader.Instance.ShowUI("SpellResult_FullScreen", evalResult);
         }
 
         // ========================================================

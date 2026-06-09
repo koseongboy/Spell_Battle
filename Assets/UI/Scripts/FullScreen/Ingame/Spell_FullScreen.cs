@@ -80,8 +80,8 @@ namespace DefaultNamespace
             SpellController.Instance.StartRecording();
         }
 
-        public void StopRecording() {
-            SpellController.Instance.EndRecording();
+        public async void StopRecording() {
+            await SpellController.Instance.EndRecording();
         }
         
         // 풀 piece 모두 반납하는 함수. 초기화용.
