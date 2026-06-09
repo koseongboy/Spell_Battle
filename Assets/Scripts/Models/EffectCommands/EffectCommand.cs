@@ -4,9 +4,13 @@ using UnityEngine;
 using Models.PlayerModels;
 using Cards.PlayableCards;
 using StatusType = Models.PlayerModels.StatusType;
+using System.Collections;
 
 namespace Models.EffectCommands
 {
+    public enum VFXType {
+        None, Damage, DynamicDamage, Heal, Shield, AddStatus, DetonateStatus, CardMovement, ManaGain, ManaLoss, SystemControl, CostUp, CostDown
+    }
     // 실행 우선순위 정의 (낮은 숫자가 먼저 실행됨)
     public enum CommandPriority
     {
@@ -21,14 +25,29 @@ namespace Models.EffectCommands
     
     public abstract class EffectCommand : IComparable<EffectCommand>
     {
+
         protected PlayerModel target;
         public virtual CommandPriority Priority => CommandPriority.DamageAndHeal;
-
+        public virtual VFXType MyVFXType => VFXType.None;
+        public virtual StatusType RelatedStatus => StatusType.None;
         public EffectCommand(PlayerModel target)
         {
             this.target = target;
         }
-        public abstract void Execute(float multiplier = 1.0f); //multiplier는 llm 평가 받고 곱해지는 계수 자료형은 미정
+
+        public virtual IEnumerator ExecuteRoutine(float multiplier = 1.0f)
+        {
+            // 1. 내가 가진 명찰과 타겟 정보를 바탕으로 매니저에게 VFX 재생을 '요청'합니다.
+            if (MyVFXType != VFXType.None)
+            {
+                yield return Managers.VFX.BattleVFXManager.Instance.PlayVFXRoutine(MyVFXType, RelatedStatus, target);
+            }
+
+            // 2. 이펙트 재생(1.5초 대기)이 끝나면, 나만의 실제 데미지/힐 로직을 조용히 실행합니다.
+            Execute(multiplier);
+        }
+        
+        protected abstract void Execute(float multiplier = 1.0f); //multiplier는 llm 평가 받고 곱해지는 계수 자료형은 미정
         
         // C# 내장 Sort()를 위한 비교 로직
         public int CompareTo(EffectCommand other)
@@ -43,6 +62,7 @@ namespace Models.EffectCommands
     {
         public override CommandPriority Priority => CommandPriority.CombatAction;
         private int amount;
+        public override VFXType MyVFXType => VFXType.Damage;
 
         public DamageCommand(PlayerModel target, int amount) : base(target)
         {
@@ -50,7 +70,7 @@ namespace Models.EffectCommands
             this.amount = amount;
         }
 
-        public override void Execute(float multiplier = 1.0f) 
+        protected override void Execute(float multiplier = 1.0f) 
         { 
             target.TakeDamage(Mathf.RoundToInt(amount * multiplier)); 
         }
@@ -61,6 +81,7 @@ namespace Models.EffectCommands
     {
         public override CommandPriority Priority => CommandPriority.CombatAction;
         private int amount;
+        public override VFXType MyVFXType => VFXType.Heal;
 
         public HealCommand(PlayerModel target, int amount) : base(target)
         {
@@ -68,7 +89,7 @@ namespace Models.EffectCommands
             this.amount = amount;
         }
 
-        public override void Execute(float multiplier = 1.0f) 
+        protected override void Execute(float multiplier = 1.0f) 
         { 
             target.Heal(Mathf.RoundToInt(amount * multiplier)); 
         }
@@ -80,6 +101,7 @@ namespace Models.EffectCommands
         public override CommandPriority Priority => CommandPriority.StatusApply;
         private PlayerModel target;
         private int amount;
+        public override VFXType MyVFXType => VFXType.Shield;
 
         public ShieldCommand(PlayerModel target, int amount) : base(target)
         {
@@ -87,7 +109,7 @@ namespace Models.EffectCommands
             this.amount = amount;
         }
 
-        public override void Execute(float multiplier = 1.0f) 
+        protected override void Execute(float multiplier = 1.0f) 
         { 
             target.AddShield(Mathf.RoundToInt(amount * multiplier)); 
         }
@@ -98,6 +120,8 @@ namespace Models.EffectCommands
     {
         public override CommandPriority Priority => CommandPriority.StatusApply;
         private StatusType status;
+        public override VFXType MyVFXType => VFXType.AddStatus;
+        public override StatusType RelatedStatus => status;
         private int stack;
         private int duration;
 
@@ -109,7 +133,7 @@ namespace Models.EffectCommands
             this.duration = duration;
         }
 
-        public override void Execute(float multiplier = 1.0f) 
+        protected override void Execute(float multiplier = 1.0f) 
         { 
             // 스택(중첩수)에 multiplier를 적용합니다. 지속 턴 수(duration)는 곱하지 않는 것이 기획상 안전합니다.
             target.AddStatus(status, Mathf.RoundToInt(stack * multiplier), duration); 
@@ -121,6 +145,7 @@ namespace Models.EffectCommands
     {
         public override CommandPriority Priority => CommandPriority.StatusDetonate;
         private StatusType status;
+        public override VFXType MyVFXType => VFXType.DetonateStatus;
 
         public DetonateStatusCommand(PlayerModel target, StatusType status) : base(target)
         {
@@ -128,7 +153,7 @@ namespace Models.EffectCommands
             this.status = status;
         }
 
-        public override void Execute(float multiplier = 1.0f) 
+        protected override void Execute(float multiplier = 1.0f) 
         { 
             // 기폭/소모 트리거이므로 multiplier의 영향을 받지 않습니다.
             target.ConsumeAllStatus(status); 
@@ -139,6 +164,7 @@ namespace Models.EffectCommands
     public class CardMovementCommand : EffectCommand
     {
         public override CommandPriority Priority => CommandPriority.CardMovement;
+        public override VFXType MyVFXType => VFXType.CardMovement;
         private EffectType moveType; 
         private int count;
         private string specificCardId;
@@ -150,8 +176,17 @@ namespace Models.EffectCommands
             this.count = count;
             this.specificCardId = specificCardId;
         }
+        public override IEnumerator ExecuteRoutine(float multiplier = 1.0f)
+        {
+            //todo DoTween을 통한 카드 이동 애니매이션 구현 요함
+            yield return new WaitForSeconds(0.1f);
 
-        public override void Execute(float multiplier = 1.0f) 
+            // 2. 이펙트 재생(1.5초 대기)이 끝나면, 나만의 실제 데미지/힐 로직을 조용히 실행합니다.
+            Execute(multiplier);
+        }
+
+
+        protected override void Execute(float multiplier = 1.0f) 
         { 
             // TODO: PlayerModel 내에 ProcessCardMovement 함수가 아직 없습니다.
             // target.Deck, target.Hand, target.Graveyard 컴포넌트를 조작하는 함수를 PlayerModel에 추가해야 합니다.
@@ -165,14 +200,14 @@ namespace Models.EffectCommands
     {
         public override CommandPriority Priority => CommandPriority.ManaAndSystem;
         private int amount; 
-
+        public override VFXType MyVFXType => amount > 0 ? VFXType.ManaGain : VFXType.ManaLoss;
         public ManaCommand(PlayerModel target, int amount) : base(target)
         {
             this.target = target;
             this.amount = amount;
         }
 
-        public override void Execute(float multiplier = 1.0f) 
+        protected override void Execute(float multiplier = 1.0f) 
         { 
             // 마나 조작은 보통 고정값이므로 multiplier를 적용하지 않는 편이 기획 의도에 맞습니다.
             if (amount > 0)
@@ -191,13 +226,14 @@ namespace Models.EffectCommands
     {
         public override CommandPriority Priority => CommandPriority.ManaAndSystem; 
         private EffectType systemAction;
+        public override VFXType MyVFXType => VFXType.SystemControl;
 
         public SystemControlCommand(PlayerModel target, EffectType systemAction) : base(target)
         {
             this.systemAction = systemAction;
         }
 
-        public override void Execute(float multiplier = 1.0f) 
+        protected override void Execute(float multiplier = 1.0f) 
         { 
             if(systemAction == EffectType.EndTurnInstantly)
             {
@@ -217,6 +253,7 @@ namespace Models.EffectCommands
 
     public class DynamicDamageCommand : EffectCommand {
         public override CommandPriority Priority => CommandPriority.DamageAndHeal;
+        public override VFXType MyVFXType => VFXType.Damage;
         private DynamicValueType valueType;
         private float ratio; // 예: 30%면 0.3f
 
@@ -225,7 +262,7 @@ namespace Models.EffectCommands
             this.ratio = ratio;
         }
 
-        public override void Execute(float multiplier = 1.0f) {
+        protected override void Execute(float multiplier = 1.0f) {
             int calculatedAmount = 0;
             
             // 실행되는 순간의 타겟 상태를 읽어와서 계산
@@ -245,6 +282,7 @@ namespace Models.EffectCommands
     
     public class ModifyCostCommand : EffectCommand {
         public override CommandPriority Priority => CommandPriority.ManaAndSystem;
+        public override VFXType MyVFXType => amount > 0 ? VFXType.CostUp : VFXType.CostDown;
         private TargetType cardTargetLocation; // 핸드, 덱, 다음 드로우 등
         private int amount;
         private bool isSetToZero; // 코스트를 아예 0으로 만드는 경우
@@ -255,7 +293,7 @@ namespace Models.EffectCommands
             this.isSetToZero = isSetToZero;
         }
 
-        public override void Execute(float multiplier = 1.0f) {
+        protected override void Execute(float multiplier = 1.0f) {
             // TODO: PlayerModel.Deck이나 Hand에 접근하여 조건에 맞는 카드의 Cost를 직접 수정하는 로직 구현
         }
     }
@@ -268,6 +306,8 @@ namespace Models.EffectCommands
 
     public class ManipulateStatusCommand : EffectCommand {
         public override CommandPriority Priority => CommandPriority.StatusDetonate;
+        public override VFXType MyVFXType => VFXType.AddStatus;
+        public override StatusType RelatedStatus => status;
         private StatusType status;
         private StatusActionType actionType;
         private int value;
@@ -278,7 +318,7 @@ namespace Models.EffectCommands
             this.value = value;
         }
 
-        public override void Execute(float multiplier = 1.0f) {
+        protected override void Execute(float multiplier = 1.0f) {
             switch(actionType) {
                 case StatusActionType.ExtendDuration:
                     target.ExtendStatusDuration(status, value);

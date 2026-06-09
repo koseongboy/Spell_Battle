@@ -3,6 +3,9 @@ using Models.SpellPayloads;
 using Models.PlayerModels;
 using Models.CardDatabases;
 using Unity.Netcode;
+using System.Threading.Tasks;
+using DA_Assets.Tools;
+using System.Collections;
 
 public class CardLogicTester : MonoBehaviour
 {
@@ -25,7 +28,7 @@ public class CardLogicTester : MonoBehaviour
         }
     }
 
-    private void RunTest()
+    private IEnumerator RunTest()
     {
         // 1. 네트워크 호스트 시작 (이미 실행 중이면 패스)
         if (!NetworkManager.Singleton.IsServer)
@@ -69,7 +72,7 @@ public class CardLogicTester : MonoBehaviour
         foreach (var command in payload.Commands)
         {
             Debug.Log($"[Test] 커맨드 실행 중: {command.GetType().Name} (우선순위: {command.Priority})");
-            command.Execute();
+            yield return StartCoroutine(command.ExecuteRoutine(1));
         }
 
         // 6. 결과 검증 로그
