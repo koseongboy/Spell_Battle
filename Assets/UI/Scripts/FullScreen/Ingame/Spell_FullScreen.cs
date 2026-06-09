@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cards.EffectInfos;
+using Controllers.SpellControllers;
 using Models.SpellPayloads;
 using TMPro;
 using UnityEngine;
@@ -19,7 +20,9 @@ namespace DefaultNamespace
 
         private IObjectPool<SpellWordPiece> wordPiecePool;
         private List<SpellWordPiece> activeWords = new List<SpellWordPiece>();
-
+        private bool isRecording = false;
+        
+        
         private void Awake() {
             // 오브젝트 풀 초기화
             wordPiecePool = new ObjectPool<SpellWordPiece>(
@@ -48,6 +51,8 @@ namespace DefaultNamespace
         
         // 데이터 받아서 화면 구성하는 함수.
         public void ReceiveData(SpellPayload payload) {
+            isRecording = false;
+            
             txt_concept.text = payload.GetConcept();
             txt_prefix.text = payload.GetPrefix();
             
@@ -61,8 +66,22 @@ namespace DefaultNamespace
             }
         }
 
-        public void OnClicked_Record() {
-            //TODO : 여기서 녹음
+        public void Toggle_Record() {
+            if (!isRecording) {
+                StartRecording();
+            }
+            else {
+                StopRecording();
+            }
+            isRecording = !isRecording;
+        }
+
+        public void StartRecording() {
+            SpellController.Instance.StartRecording();
+        }
+
+        public void StopRecording() {
+            SpellController.Instance.EndRecording();
         }
         
         // 풀 piece 모두 반납하는 함수. 초기화용.

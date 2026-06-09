@@ -95,6 +95,7 @@ namespace Controllers.SpellControllers
         public async Task EndRecording() 
         {
             Debug.Log("[SpellController] 3. 영창 녹음 종료. 서버 전송 시작...");
+            CommonUIController.Instance.ShowLoading();
 
             // 1. 녹음 데이터 추출
             byte[] myWavData = VoiceManager.Instance.StopRecording();
@@ -135,7 +136,7 @@ namespace Controllers.SpellControllers
                 }
                 
                 // 5. 평가가 완료되면 PhaseManager 호출 (아직 구현 안됨)
-                // PhaseManager.Instance.DoneEval(evalResult);
+                PhaseManager.Instance.DoneEval(evalResult);
                 Debug.Log($"[SpellController] 평가 완료 통보 (PhaseManager 연동 예정). 점수: {evalResult}");
             }
             else

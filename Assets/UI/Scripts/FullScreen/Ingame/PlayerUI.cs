@@ -110,7 +110,7 @@ namespace DefaultNamespace {
             }
             
             btn_endTurn.onClick.AddListener( ()=>PhaseManager.Instance.RequestEndTurn() );
-            btn_spell.onClick.AddListener(()=>TurnModel.Instance.CurrentPhase.Value = GamePhase.Incantation );
+            btn_spell.onClick.AddListener( controller.SubmitSpellSelection );
             this.OnCardClickedAction += controller.ToggleSpellIndex;
         
             Debug.Log("✅ PlayerUI가 스스로 컨트롤러 데이터를 받아 바인딩을 완료했습니다!");

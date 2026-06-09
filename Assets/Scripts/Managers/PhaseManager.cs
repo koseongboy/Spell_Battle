@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using Cards.PlayableCards;
 using Controllers.PlayerController;
+using Controllers.SpellControllers;
+using Models.Networks;
 using UnityEngine;
 using Unity.Netcode;
 using Models.TurnModel;
@@ -16,7 +19,8 @@ namespace DefaultNamespace {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
         }
-
+        
+        
         public override void OnNetworkSpawn() {
             // 모델의 페이즈 값이 변할 때마다 클라이언트단 로직(UI 띄우기 등)을 실행하도록 구독
             TurnModel.Instance.CurrentPhase.OnValueChanged += HandlePhaseChanged;
@@ -113,11 +117,8 @@ namespace DefaultNamespace {
                     break;
 
                 case GamePhase.Incantation: {
-                    Debug.Log("진입");
                     if (isMyTurn) {
-                        Debug.Log("[Client] 내 턴! 영창 UI를 띄우고 녹음을 시작합니다.");
-                        UILoader.Instance.HideUI("Ingame_FullScreen");
-                        UILoader.Instance.ShowUI("Spell_FullScreen");
+
                     }
                     else {
                         CommonUIController.Instance.ShowBlackAlert("상대방이 영창 중입니다...");
@@ -129,7 +130,8 @@ namespace DefaultNamespace {
 
 
                 case GamePhase.Battle:
-                    // 서버는 전투 연산 진행
+                    // TODO : 여기서 주문 효과 재생
+                    // TODO : 여기서 전투 연산
                     break;
             }
         }
@@ -240,6 +242,21 @@ namespace DefaultNamespace {
                     TurnModel.Instance.CurrentPhase.Value = GamePhase.Select;
                 }
             }
+        }
+
+        // TODO : 리팩토링 필요
+        public void StartSpell(List<PlayableCard> selectedCards) {
+            var payload = SpellController.Instance.InitSpell(selectedCards);
+            
+            TurnModel.Instance.CurrentPhase.Value = GamePhase.Incantation;
+            UILoader.Instance.HideUI("Ingame_FullScreen");
+            UILoader.Instance.ShowUI("Spell_FullScreen", payload);
+        }
+
+        public void DoneEval(TaskStatusResponse evalResult) {
+            CommonUIController.Instance.DoneLoading();
+            
+            UILoader.Instance.ShowUI("SpellResult_FullScreen");
         }
     }
 }
