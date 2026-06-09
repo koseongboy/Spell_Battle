@@ -4,6 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using Managers.LocalDataManagers;
+using Models.Networks;
 
 namespace DefaultNamespace
 {
@@ -128,6 +129,10 @@ namespace DefaultNamespace
                 UILoader.Instance.HideUI("Login_FullScreen");
                 CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
                 UILoader.Instance.ShowUI("LeftUpper_Common");
+                if (Mathf.Approximately(await WebServerModel.Instance.GetDefaultPitchAsync(LocalDataManager.Instance.userId), 150f)) {
+                    CommonUIController.Instance.ChangeFullScreen("VoiceSetting_FullScreen");
+                }
+
             }
             else
             {

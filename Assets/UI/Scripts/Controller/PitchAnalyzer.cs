@@ -45,7 +45,7 @@ namespace DefaultNamespace
             }
         }
 
-        public void ToggleRecording() {
+        public async void ToggleRecording() {
             if (!_isRecording) {
                 Debug.Log("녹음 시작 진입");
                 StartRecording();
@@ -57,7 +57,13 @@ namespace DefaultNamespace
                     CommonUIController.Instance.ShowRedAlert("유효한 목소리 주파수를 감지하지 못했습니다.");
                 }
                 else {
-                    ui.UpdateResultUI(resultPitch);
+                    bool isServerSuccess = await SendServerPitch(resultPitch);
+                    if (isServerSuccess) {
+                        ui.UpdateResultUI(resultPitch);
+                    }
+                    else {
+                        CommonUIController.Instance.ShowRedAlert("서버 통신에 실패했습니다. 다시 진행해주세요.");
+                    }
                 }
             }
         }
@@ -135,10 +141,9 @@ namespace DefaultNamespace
         }
 
         public async Task<bool> SendServerPitch(float pitch) {
-            // 1. 저장된 내 유저 ID 가져오기
-            string myUserId = Managers.LocalDataManagers.LocalDataManager.Instance.userId;
+            CommonUIController.Instance.ShowLoading();
+            string myUserId = LocalDataManager.Instance.userId;
 
-            // 2. 방어 로직: ID가 없는 상태에서 서버에 쓰레기 값을 보내는 것을 원천 차단
             if (string.IsNullOrEmpty(myUserId)) 
             {
                 Debug.LogError("[SendServerPitch] 유저 ID가 비어있어 서버에 피치를 전송할 수 없습니다.");
@@ -147,6 +152,7 @@ namespace DefaultNamespace
 
             bool isSuccess = await WebServerModel.Instance.SetDefaultPitchAsync(myUserId, pitch);
 
+            CommonUIController.Instance.DoneLoading();
             return isSuccess;
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cards.CardUIDatas;
 using Managers;
@@ -137,7 +138,7 @@ namespace DefaultNamespace {
         }
         
         /// <summary>
-        /// 🛠️ [새로 추가] 로비 네트워크 상황과 웹 백엔드를 매핑하여 플레이어 프로필 UI를 새로고침합니다.
+        /// 로비 네트워크 상황과 웹 백엔드를 매핑하여 플레이어 프로필 UI를 새로고침합니다.
         /// </summary>
         private async Task RefreshRoomPlayersInfoAsync()
         {
@@ -290,23 +291,15 @@ namespace DefaultNamespace {
         private List<DeckMetaData> GetStoredDeckData() {
             // DeckManager에서 유저가 가진 모든 덱 리스트를 가져옵니다.
             var savedDecks = DeckManager.Instance.GetAllDecks();
-            List<DeckMetaData> result = new List<DeckMetaData>();
+            var presetDecks = DeckManager.Instance.GetAllPresetDecks();
+            
+            List<DeckMetaData> deckDatas = presetDecks.Select(deck => new DeckMetaData { Id = deck.id, Name = deck.deckName, CardCount = deck.cardCountSummary, Element = deck.representativeProperty }).ToList();
 
             if (savedDecks != null && savedDecks.Count > 0) {
-                foreach (var deck in savedDecks) {
-                    result.Add(new DeckMetaData {
-                        Id = deck.id,
-                        Name = deck.deckName,
-                        CardCount = deck.cardCountSummary,
-                        Element = deck.representativeProperty
-                    });
-                }
-            }
-            else {
-                Debug.Log("[RoomUIController] 저장된 덱이 없습니다.");
+                deckDatas.AddRange(savedDecks.Select(deck => new DeckMetaData { Id = deck.id, Name = deck.deckName, CardCount = deck.cardCountSummary, Element = deck.representativeProperty }));
             }
 
-            return result;
+            return deckDatas;
         }
 
         // 좌상단 뒤로 가기 버튼이 눌렸을 때 실행될 래퍼(Wrapper) 함수

@@ -9,7 +9,9 @@ using Managers.LocalDataManagers;
 using Models.CardDatabases;
 using UnityEngine;
 using Models.PlayerModels;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Managers {
     [Serializable]
@@ -47,8 +49,11 @@ namespace Managers {
     
     public class DeckManager : MonoBehaviour {
         public static DeckManager Instance { get; private set; }
-
+        
+        [SerializeField] private AssetLabelReference presetDeckLabel;
         public List<DeckData> savedDecks = new List<DeckData>(); 
+        
+        private List<PresetDeckData> _presetDecks;
 
         private void Awake() {
             if (Instance == null) {
@@ -56,29 +61,53 @@ namespace Managers {
                 DontDestroyOnLoad(gameObject);
                 
                 // 비동기 로드 실행 (Fire-and-Forget)
-                _ = LoadDecksAsync(); 
+
+                _ = LoadPresetDecks();
             } else {
                 Destroy(gameObject);
             }
         }
+        
 
         // ==========================================
         // 🔍 CRUD: Read (불러오기 / 조회)
         // ==========================================
-        public async Task LoadDecksAsync() {
-            string serverURL = AuthManager.Instance.serverURL;
-            string token = LocalDataManager.Instance.userToken;
+        
+        // ==========================================
+        // 프리셋 덱 SO 로드
+        // ==========================================
+        private async Task LoadPresetDecks() {
 
-            if (string.IsNullOrEmpty(token))
-            {
-                Debug.LogWarning("[DeckManager] 유저 토큰이 없습니다. 로컬 덱만 로드합니다.");
-                LoadLocalDecks();
-                return;
+            Debug.Log("진입");
+            _presetDecks = new List<PresetDeckData>();
+            
+            var presetHandle = Addressables.LoadAssetsAsync<PresetDeckData>(presetDeckLabel.labelString, null);
+            await presetHandle.Task;
+            
+            if (presetHandle.Status == AsyncOperationStatus.Succeeded) {
+                _presetDecks = new List<PresetDeckData>(presetHandle.Result);
+                Debug.Log($"[DeckManager] 프리셋 덱 {_presetDecks.Count}개 로드 완료.");
+            } else {
+                Debug.LogError("[DeckManager] 프리셋 덱 로드 실패!");
             }
+        } 
+        
+                
+        // ==========================================
+        // 서버에서 Deck 로드
+        // ==========================================
+        public async Task LoadDecksFromServerAsync() {
+            string userId = LocalDataManager.Instance.userId;
+            string serverURL = AuthManager.Instance.serverURL;
 
-            using (UnityWebRequest request = UnityWebRequest.Get(serverURL + "/decks"))
+            // ==========================================
+            // 서버에서 덱 로딩
+            // ==========================================
+            WWWForm form = new WWWForm();
+            form.AddField("userId", userId);
+            using (UnityWebRequest request = UnityWebRequest.Post(serverURL+"/decks", form))
             {
-                request.SetRequestHeader("Authorization", "Bearer " + token);
+                request.method = "GET";
 
                 var operation = request.SendWebRequest();
                 while (!operation.isDone) await Task.Yield();
@@ -90,34 +119,31 @@ namespace Managers {
 
                     // 1. JSON 배열 파싱
                     ServerDeckDto[] serverDecks = JsonHelper.FromJson<ServerDeckDto>(jsonResponse);
-            
+
                     savedDecks.Clear();
 
                     // 2. 서버 데이터를 로컬 DeckData 구조에 맞게 변환
                     foreach (var sDeck in serverDecks)
                     {
-                        // string ID를 int ID로 변환 (파싱 에러 방지 처리)
                         List<int> parsedCardIds = new List<int>();
                         foreach (string cId in sDeck.cards)
                         {
                             if (int.TryParse(cId, out int intId)) parsedCardIds.Add(intId);
                         }
 
-                        // 요약 정보와 대표 속성 재계산
                         string summary = GenerateDeckSummary(parsedCardIds);
                         Property repProp = CalculateRepresentativeProperty(parsedCardIds);
 
-                        // 고유 ID는 로컬용으로 임의 발급 (서버에 개별 식별자가 없기 때문)
                         DeckData newDeck = new DeckData(Guid.NewGuid().ToString(), sDeck.deckName, parsedCardIds, summary, repProp);
                         savedDecks.Add(newDeck);
                     }
 
                     // 로컬 동기화 캐싱
-                    await SaveDecksLocalAsync();
+                    _ = SaveDecksLocalAsync();
                 }
                 else
                 {
-                    Debug.LogError($"[DeckManager] 서버 덱 로드 실패. 로컬 데이터만 불러옵니다. Error: {request.error}");
+                    Debug.LogError($"[DeckManager] 서버 덱 로드 실패. Error: {request.error}");
                     LoadLocalDecks();
                 }
             }
@@ -236,10 +262,18 @@ namespace Managers {
         }
 
         // ==========================================
-        // 🔍 CRUD: Read (불러오기 / 조회)
+        // Read (불러오기 / 조회)
         // ==========================================
         public DeckData GetDeck(string deckId) {
-            return savedDecks.FirstOrDefault(d => d.id == deckId);
+            // 1. 유저의 저장된 덱에서 먼저 검색
+            DeckData foundDeck = savedDecks.FirstOrDefault(d => d.id == deckId);
+            
+            // 2. 없다면 프리셋 덱 리스트에서 검색하여 반환
+            if (foundDeck == null) {
+                foundDeck = GetAllPresetDecks().FirstOrDefault(d => d.id == deckId);
+            }
+            
+            return foundDeck;
         }
 
         public List<DeckData> GetAllDecks() {
@@ -247,35 +281,89 @@ namespace Managers {
         }
 
         // ==========================================
-        // ✏️ CRUD: Create & Update (생성 및 수정)
+        // Create & Update (생성 및 수정)
         // ==========================================
         public async Task<string> CreateOrUpdateDeckAsync(string deckId, string deckName, List<int> cardIds) {
             string summary = GenerateDeckSummary(cardIds);
             Property repProp = CalculateRepresentativeProperty(cardIds); 
 
             DeckData existingDeck = GetDeck(deckId);
+            DeckData targetDeck;
 
-            if (existingDeck != null) {
+            bool isMySavedDeck = savedDecks.Contains(existingDeck);
+
+            if (existingDeck != null && isMySavedDeck) {
+                // 내 덱일 경우에만 덮어쓰기
                 existingDeck.deckName = deckName;
                 existingDeck.cardIds = new List<int>(cardIds);
                 existingDeck.cardCountSummary = summary; 
-                existingDeck.representativeProperty = repProp; // 업데이트
-                Debug.Log($"[DeckManager] '{deckName}' 덱 업데이트 완료. (대표 속성: {repProp})");
-        
-                await SaveDecksLocalAsync();
-                return existingDeck.id;
+                existingDeck.representativeProperty = repProp; 
+                targetDeck = existingDeck;
             } else {
-                DeckData newDeck = new DeckData(null, deckName, cardIds, summary, repProp); // 신규 생성
-                savedDecks.Add(newDeck);
-                Debug.Log($"[DeckManager] '{deckName}' 덱 생성 완료. (대표 속성: {repProp})");
-        
-                await SaveDecksLocalAsync();
-                return newDeck.id;
+                // 프리셋 덱이거나 아예 없는 덱이면 무조건 내 덱 리스트에 새로 추가 (복사 효과)
+                targetDeck = new DeckData(null, deckName, cardIds, summary, repProp); 
+                savedDecks.Add(targetDeck);
             }
+
+            await SaveDecksLocalAsync();
+            return targetDeck.id;
         }
         
         // ==========================================
-        // 🌟 덱 요약 문자열 생성 헬퍼 함수
+        // 덱 저장(생성/수정) 통합 API
+        // ==========================================
+        private async Task<bool> SaveDeckToServerAPI(DeckData deckToSave)
+        {
+            string serverURL = AuthManager.Instance.serverURL;
+            string token = LocalDataManager.Instance.userToken;
+            string userId = LocalDataManager.Instance.userId;
+
+            if (string.IsNullOrEmpty(token)) {
+                Debug.LogError("[DeckManager] 토큰이 없어 서버에 덱을 저장할 수 없습니다.");
+                return false;
+            }
+
+            List<string> stringCardIds = deckToSave.cardIds.Select(id => id.ToString()).ToList();
+
+            // 서버 API 규격(POST /decks)에 맞춘 DTO 생성
+            ServerDeckDto requestDto = new ServerDeckDto
+            {
+                userId = userId,
+                deckName = deckToSave.deckName, 
+                cards = stringCardIds
+            };
+
+            string jsonData = JsonUtility.ToJson(requestDto);
+
+            using (UnityWebRequest request = new UnityWebRequest(serverURL + "/decks", "POST"))
+            {
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = new DownloadHandlerBuffer();
+        
+                request.SetRequestHeader("Content-Type", "application/json");
+                // 인증 토큰
+                request.SetRequestHeader("Authorization", "Bearer " + token);
+
+                var operation = request.SendWebRequest();
+                while (!operation.isDone) await Task.Yield();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    Debug.Log($"<color=#00FF00>[DeckManager] 서버에 '{deckToSave.deckName}' 덱을 성공적으로 저장(동기화)했습니다.</color>");
+                    return true;
+                }
+                else
+                {
+                    Debug.LogError($"[DeckManager] 덱 서버 저장 실패 (400/500 에러): {request.error} | {request.downloadHandler.text}");
+                    return false;
+                }
+            }
+        }
+        
+        
+        // ==========================================
+        // 덱 요약 문자열 생성 헬퍼 함수
         // ==========================================
         private string GenerateDeckSummary(List<int> cardIds) {
             if (cardIds == null || cardIds.Count == 0) {
@@ -308,7 +396,7 @@ namespace Managers {
             return string.Join(" ", summaryParts);
         }
         
-        // 🌟 Property Enum을 한글 문자열로 변환해주는 함수
+        // Property Enum을 한글 문자열로 변환해주는 함수
         private string GetPropertyKoreanName(Property prop) {
             switch (prop) {
                 case Property.Fire: return "불";
@@ -325,7 +413,7 @@ namespace Managers {
         }
 
         // ==========================================
-        // 🗑️ CRUD: Delete (삭제)
+        // Delete
         // ==========================================
         public async Task DeleteDeckAsync(string deckId) {
             DeckData targetDeck = GetDeck(deckId);
@@ -340,8 +428,43 @@ namespace Managers {
         }   
 
         // ==========================================
-        // 💾 서버/로컬 통합 저장
+        // 서버/로컬 통합 저장
         // ==========================================
+        
+        public async Task<bool> OnSaveDeckButtonClicked(string deckId)
+        {
+            DeckData targetDeck = GetDeck(deckId);
+
+            if (targetDeck == null) {
+                Debug.LogError("[DeckManager] 저장하려는 덱을 찾을 수 없습니다.");
+                return false;
+            }
+
+            // 1. 방어 로직: 빈 덱 차단
+            if (targetDeck.cardIds == null || targetDeck.cardIds.Count == 0) {
+                CommonUIController.Instance.ShowBlackAlert("덱이 저장되었습니다.");
+
+                Debug.LogWarning("[DeckManager] 카드가 없는 빈 덱은 서버에 저장할 수 없습니다.");
+                return false;
+            }
+
+            // 2. 서버에 먼저 전송 시도
+            bool isServerSuccess = await SaveDeckToServerAPI(targetDeck);
+    
+            if (isServerSuccess) {
+                // 3. 서버 저장이 완벽하게 성공했을 때만! 내 휴대폰(로컬)에도 확정 도장을 찍어줍니다.
+                // 이렇게 하면 서버 데이터와 로컬 데이터가 100% 일치하게 됩니다.
+                await SaveDecksLocalAsync();
+                CommonUIController.Instance.ShowBlackAlert("덱이 저장되었습니다.");
+                Debug.Log("[DeckManager] 서버 및 로컬에 덱 동기화 저장이 완료되었습니다.");
+                return true;
+            } else {
+                // 서버 저장이 실패하면 로컬 데이터도 덮어쓰지 않고 에러 처리
+                CommonUIController.Instance.ShowRedAlert("서버 오류입니다. 다시 저장해주세요.");
+                return false;
+            }
+        }
+        
         private async Task SaveDecksLocalAsync() {
             DeckStorageWrapper wrapper = new DeckStorageWrapper { decks = this.savedDecks };
             string json = JsonUtility.ToJson(wrapper);
@@ -351,7 +474,7 @@ namespace Managers {
         }
 
         // ==========================================
-        // ⚔️ 덱 장착
+        // 덱 장착
         // ==========================================
         public void EquipDeckById(string targetDeckId) {
             DeckData targetDeck = GetDeck(targetDeckId);
@@ -366,7 +489,7 @@ namespace Managers {
         
                 
         // ==========================================
-        // 🌟 대표 속성 계산 로직
+        // 대표 속성 계산 로직
         // ==========================================
         private Property CalculateRepresentativeProperty(List<int> cardIds) {
             if (cardIds == null || cardIds.Count == 0) {
@@ -426,8 +549,6 @@ namespace Managers {
         {
             CommonUIController.Instance.ShowLoading();
 
-            // 팩트: 기존 DeckManager의 CreateOrUpdateDeckAsync는 
-            // 첫 번째 파라미터(deckId)가 비어있으면 서버에서 새로운 고유 ID를 발급하여 새 덱으로 저장합니다.
             string newDeckId = ""; 
     
             // 프리셋의 이름과 카드 리스트를 그대로 넘겨서 내 덱으로 생성
@@ -437,6 +558,23 @@ namespace Managers {
             CommonUIController.Instance.ShowBlackAlert($"'{preset.deckName}'이(가) 내 덱에 추가되었습니다!");
     
             // TODO: DeckEditController의 좌측 덱 리스트 UI를 새로고침하는 함수 호출
+        }
+        
+        
+        public List<DeckData> GetAllPresetDecks() {
+            List<DeckData> decks = new List<DeckData>();
+            
+            foreach (var preset in _presetDecks) {
+                decks.Add( new DeckData(
+                    preset.presetId,
+                    preset.deckName,
+                    preset.cardIds,
+                    string.Empty,
+                    preset.representativeProperty
+                ) );
+            }
+            
+            return decks;
         }
     }
 }
