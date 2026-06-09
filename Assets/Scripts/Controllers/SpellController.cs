@@ -43,6 +43,7 @@ namespace Controllers.SpellControllers
         [Header("녹음 데이터 보관")]
         public AudioClip LastRecordedClip { get; private set; } // 방금 녹음한 원본/크롭된 오디오 클립
         private AudioSource audioSource; // 재생을 담당할 컴포넌트
+        private float currentAudioLength = 3.5f;
 
         [Header("자동 캐싱 설정")]
         private Coroutine cacheCoroutine;
@@ -266,6 +267,7 @@ namespace Controllers.SpellControllers
                 Destroy(LastRecordedClip);
                 LastRecordedClip = null;
             }
+            currentAudioLength = 3.5f;
 
             Debug.Log("[SpellController] 🧹 영창 및 마법 데이터 초기화 완료. 다음 턴 준비!");
         }
@@ -344,6 +346,7 @@ namespace Controllers.SpellControllers
                 VoiceManager.Instance.testAudioSource.Play();
             }
         }
+
         public void PlayRecordedAudio()
         {
             if (LastRecordedClip != null)
@@ -391,69 +394,125 @@ namespace Controllers.SpellControllers
         // 확정(최종 제출) 시 UI에서 호출할 임시 래퍼 함수
         public void SubmitConfirmedSpell()
         {
-            SubmitSpellServerRpc(currentSelectedCardIds.ToArray(), currentTotalCost, currentTaskId);
+            if (LastRecordedClip != null) 
+            {
+                currentAudioLength = LastRecordedClip.length;
+                Debug.Log($"[SpellController] 내 오디오 클립 길이 측정 완료: {currentAudioLength}초");
+            }
+            SubmitSpellServerRpc(currentSelectedCardIds.ToArray(), currentTotalCost, currentTaskId, currentAudioLength);
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void SubmitSpellServerRpc(int[] cardIds, int declaredCost, string taskId, RpcParams rpcParams = default)
+        private void SubmitSpellServerRpc(int[] cardIds, int declaredCost, string taskId, float audioLength, RpcParams rpcParams = default)
         {
             ulong senderId = rpcParams.Receive.SenderClientId;
+            
+            // 🛡️ 해킹 방지 및 비동기 검증 프로세스 가동
+            _ = ExecuteSpellVerificationAndBattleAsync(cardIds, declaredCost, taskId, senderId, audioLength);
+        }
+
+        private async Task ExecuteSpellVerificationAndBattleAsync(int[] cardIds, int declaredCost, string taskId, ulong senderId, float audioLength)
+        {
             PlayerModel caster = MatchManager.Instance.GetPlayerById(senderId);
             ulong targetClientId = (senderId == TurnModel.Instance.HostId.Value) ? TurnModel.Instance.GuestId.Value : TurnModel.Instance.HostId.Value;
             PlayerModel target = MatchManager.Instance.GetPlayerById(targetClientId);
             
-            if (!caster.TryUseMana(declaredCost)) return;
+            // [검증 A] 마나가 진짜 있는지 서버에서 최종 확인
+            if (caster == null || !caster.TryUseMana(declaredCost)) return;
 
+            // 서버 전용 페이로드 미리 조립
             SpellPayload serverPayload = new SpellPayload();
             foreach (int id in cardIds) {
                 var card = CardDatabase.Instance.GetCardById(id);
                 if (card != null) serverPayload.EnqueuePendingCard(card);
             }
-
             serverPayload.CompileSpell(caster, target);
-            StartCoroutine(FetchScoreAndExecuteBattle(serverPayload, caster, targetClientId, taskId));
+
+            // 🌟 [핵심] UI 팝업을 켜기 전, 서버가 직접 웹 서버에서 "해킹이 방지된 진짜 결과"를 가져옵니다.
+            TaskStatusResponse evalResult = await WebServerModel.Instance.GetEvaluationResultAsync(taskId);
+            
+            // 통신 실패를 대비한 방어 코드 (앞서 만든 WebServerModel 덕분에 안전합니다)
+            string verifiedSentence = evalResult != null ? evalResult.recognizedSentence : "알 수 없는 주문의 힘이 발동합니다!";
+            float verifiedScore = evalResult != null ? evalResult.score : 0f;
+
+            Debug.Log($"[Server] 🛡️ 검증 완료! 진짜 문장: {verifiedSentence}, 진짜 점수: {verifiedScore}");
+
+            // 4. 진짜 데이터를 완벽히 쥐었으므로 배틀 페이즈로 전환 (PhaseManager가 기존 UI들을 청소함)
+            PhaseManager.Instance.ServerSetPhase(GamePhase.Battle);
+
+            // 🌟 5. 양쪽 화면에 "서버가 검증한 진짜 점수와 문장"을 매개변수로 실어서 팝업 UI를 켜라고 명령!
+            audioLength = Mathf.Clamp(audioLength, 2.0f, 10.0f);
+            ShowIncantationPopupClientRpc(verifiedSentence, serverPayload.MainProperty, senderId, audioLength);
+
+            // 6. 팝업 연출 시간 동안 기다렸다가 데미지를 주는 코루틴 작동
+            StartCoroutine(ExecuteBattleRoutine(serverPayload, caster, verifiedScore, audioLength));
         }
 
-
-        private IEnumerator FetchScoreAndExecuteBattle(SpellPayload serverPayload, PlayerModel caster, ulong targetId, string taskId)
+        [Rpc(SendTo.Everyone)]
+        private void ShowIncantationPopupClientRpc(string recognizedSentence, Property property, ulong casterId, float audioLength)
         {
-            float finalScore = 0f;
-            bool isEvaluationDone = false;
+            // 🌟 여기에 사진으로 보여주신 보라색 이펙트 팝업 UI를 띄우는 코드를 넣습니다!
+            // 서버가 직접 내려준 안전한 recognizedSentence와 verifiedScore를 UI 텍스트에 매핑하시면 됩니다.
+            // 예: UILoader.Instance.ShowUI("IncantationPopup_UI", recognizedSentence, verifiedScore);
+            
+            Debug.Log($"[Client] 🎬 검증된 연출 팝업 가동 - 문장: {recognizedSentence}, 속성: {property}");
+            //todo 이름 바꿀 것
+            UILoader.Instance.ShowUI("SpellActive_FullScreen", (recognizedSentence, property));
 
-            while (!isEvaluationDone)
+            // 오디오 재생 처리
+            if (NetworkManager.Singleton.LocalClientId == casterId)
             {
-                yield return new WaitForSeconds(2f);
-                finalScore = 95.5f; 
-                isEvaluationDone = true;
+                PlayRecordedAudio(); // 내가 영창자면 로컬 원본 재생
             }
-
-            TurnModel.Instance.CurrentPhase.Value = GamePhase.Battle;
-
-            float serverMultiplier = CalculateMultiplierFromScore(finalScore); 
-            foreach (var command in serverPayload.Commands) 
+            else
             {
-                yield return StartCoroutine(command.ExecuteRoutine(serverMultiplier));
+                PlayVoice(); // 내가 상대방이면 다운로드된 파일 재생
             }
-            AfterExecutingAllCards(serverPayload, caster);
+            StartCoroutine(HidePopupRoutine(audioLength));
+        }
+        private IEnumerator HidePopupRoutine(float delayTime)
+        {
+            // 정확히 오디오가 끝날 때쯤 팝업이 닫힙니다.
+            yield return new WaitForSeconds(delayTime);
+            Debug.Log("[Client] 음성 재생 완료. 팝업 연출 종료!");
+            
+            UILoader.Instance.HideUI("SpellActive_FullScreen");
+        }
 
-            yield return new WaitForSeconds(2f);
+        private IEnumerator ExecuteBattleRoutine(SpellPayload payload, PlayerModel caster, float finalScore, float audioLength)
+        {
+            // ⏳ 연출 대기: 보라색 팝업 창이 떠서 글자가 보여지고 음성이 재생되는 시간만큼 대기 (3.5초)
+            yield return new WaitForSeconds(audioLength);
 
+            // 💥 검증된 진짜 점수를 배율로 변환하여 데미지 최종 판정 및 실행!
+            float scoreMultiplier = CalculateMultiplierFromScore(finalScore); 
+            foreach (var command in payload.Commands) 
+            {
+                yield return StartCoroutine(command.ExecuteRoutine(scoreMultiplier));
+            }
+            
+            // 카드 핸드에서 제거 및 무덤 이동 후처리
+            AfterExecutingAllCards(payload, caster);
+
+            yield return new WaitForSeconds(1.5f);
+
+            // 양쪽 클라이언트 오디오 메모리 등 청소
             ClearSpellMemoryClientRpc();
 
-            TurnModel.Instance.CurrentPhase.Value = GamePhase.Select;
+            // 턴 종료 페이즈로 이동
+            PhaseManager.Instance.ServerSetPhase(GamePhase.End);
         }
 
         private float CalculateMultiplierFromScore(float score)
         {
-            return Mathf.Clamp(score / 100f, 0.5f, 1.5f);
+            return Mathf.Clamp(score / 100f, 0.1f, 1.5f);
         }
-        //카드들 실행하고 핸드에서 무덤으로 보내는 등의 후처리
+
         private void AfterExecutingAllCards(SpellPayload payload, PlayerModel caster) 
         {
             if (!IsServer) return;
 
             payload.CalculateMainProperty();
-
             if (payload.MainProperty != Property.None) 
             {
                 caster.LastProperty.Value = payload.MainProperty;
@@ -465,6 +524,9 @@ namespace Controllers.SpellControllers
                 caster.Graveyard.AddCardToGraveyard(cardId);
             }
         }
+
+
+
 
         #endregion
     }

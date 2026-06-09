@@ -29,9 +29,7 @@ namespace DefaultNamespace
         }
 
         public void ApplySpell() {
-            // TODO : 영창 확정
-            // TODO : 양쪽 플레이어에게 파일 틀어주고
-            // TODO : 마법 효과 적용하기
+            SpellController.Instance.SubmitConfirmedSpell();
         }
 
         public void Rollback() {
