@@ -60,6 +60,10 @@ namespace Models.PlayerModels {
     {
         public static event Action<PlayerModel> OnPlayerSpawned;
 
+        [Header("Default Settings (Inspector)")]
+        [SerializeField] private int defaultMaxHealth = 30;
+        [SerializeField] private int defaultMaxMana = 4;
+
         [Header("Stats")]
         public NetworkVariable<int> MaxHealth = new NetworkVariable<int>(30);
         public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(30);
@@ -102,6 +106,13 @@ namespace Models.PlayerModels {
 
 
         public override void OnNetworkSpawn() {
+            if (IsServer) {
+                MaxHealth.Value = defaultMaxHealth;
+                CurrentHealth.Value = defaultMaxHealth;
+                
+                MaxMana.Value = defaultMaxMana;
+                CurrentMana.Value = defaultMaxMana;
+            }
             OnPlayerSpawned?.Invoke(this); 
             
             Debug.Log($"[PlayerModel] {gameObject.name} 스폰 완료, 이벤트 방송 송출!");

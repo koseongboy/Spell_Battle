@@ -312,18 +312,38 @@ namespace DefaultNamespace {
                     nextPhase = GamePhase.Battle;
                     break;
                 case GamePhase.Battle:
-                    nextPhase = GamePhase.Select;
+                    // 🌟 배틀 페이즈 직후: 타격 데미지로 누군가 죽었는지 체크!
+                    if (CheckGameEndCondition()) {
+                        nextPhase = GamePhase.EndGame;
+                    } else {
+                        nextPhase = GamePhase.Select; // (또는 기획에 따라 End)
+                    }
                     break;
+
                 case GamePhase.End:
-                    // End 페이즈가 끝나면 ExecuteEndPhaseLogic()을 태우고 다음 턴 Draw로 넘어갑니다.
-                    ExecuteEndPhaseLogic(); 
+                    // 🌟 엔드 페이즈 직후: 발화(Ignite) 도트 데미지로 누군가 죽었는지 체크!
+                    if (CheckGameEndCondition()) {
+                        ServerSetPhase(GamePhase.EndGame);
+                    } else {
+                        ExecuteEndPhaseLogic(); // 아무도 안 죽었으면 정상적으로 다음 턴으로
+                    }
                     return; 
+                    
                 default:
                     nextPhase = GamePhase.Select;
                     break;
             }
 
             ServerSetPhase(nextPhase);
+        }
+        private bool CheckGameEndCondition() {
+
+            PlayerModel host = MatchManager.Instance.GetPlayerById(TurnModel.Instance.HostId.Value);
+            PlayerModel guest = MatchManager.Instance.GetPlayerById(TurnModel.Instance.GuestId.Value);
+
+            if (host == null || guest == null) return false;
+
+            return (host.CurrentHealth.Value <= 0 || guest.CurrentHealth.Value <= 0);
         }
 
         #endregion

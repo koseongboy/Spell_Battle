@@ -12,7 +12,8 @@ namespace Models.TurnModel
         Select,        // 3. 사용할 카드를 고르는 단계
         Incantation,   // 4. 스페이스바를 눌러 마법을 영창(마이크/타이핑)하는 단계
         Battle,        // 5. 서버가 영창을 평가하고 효과 및 데미지를 집행하는 단계
-        End            // 6. 턴 종료 처리 및 상대방에게 턴 넘기기
+        End,            // 6. 턴 종료 처리 및 상대방에게 턴 넘기기
+        EndGame         // 7. 게임 종료
     }
     
     public class TurnModel : NetworkBehaviour

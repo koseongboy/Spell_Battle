@@ -498,9 +498,8 @@ namespace Controllers.SpellControllers
 
             // 양쪽 클라이언트 오디오 메모리 등 청소
             ClearSpellMemoryClientRpc();
-
-            // 턴 종료 페이즈로 이동
-            PhaseManager.Instance.ServerSetPhase(GamePhase.End);
+            //페이즈 증가 로직
+            PhaseManager.Instance.ServerAdvancePhase();
         }
 
         private float CalculateMultiplierFromScore(float score)
