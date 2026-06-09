@@ -56,7 +56,6 @@ mongoose.connect(process.env.MONGODB_URI)
 // 📑 데이터베이스 스키마 및 모델 정의
 // ---------------------------------------------------------------- //
 
-// 1. 유저 스키마
 const userSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -66,7 +65,6 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
-// 2. 공유 덱 스키마
 const deckSchema = new mongoose.Schema({
     deckName: { type: String, required: true },
     userId: { type: String, required: true }, 
@@ -80,7 +78,6 @@ const Deck = mongoose.model('Deck', deckSchema);
 // 🔐 1. 인증 및 유저 데이터 API
 // ---------------------------------------------------------------- //
 
-// [POST] 회원가입
 app.post('/register', async (req, res) => {
     try {
         const { userId, password } = req.body;
@@ -99,7 +96,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// [POST] 로그인 및 데이터 불러오기
 app.post('/login', async (req, res) => {
     try {
         const { userId, password } = req.body;
@@ -126,7 +122,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// [GET] 특정 유저 전체 데이터 조회 API
 app.get('/load/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
@@ -151,7 +146,6 @@ app.get('/load/:userId', async (req, res) => {
     }
 });
 
-// [GET] 유저 디폴트 피치 조회
 app.get('/default-pitch', async (req, res) => {
     try {
         const { userId } = req.query;
@@ -166,7 +160,6 @@ app.get('/default-pitch', async (req, res) => {
     }
 });
 
-// [PUT] 유저 디폴트 피치 설정/수정 API
 app.put('/default-pitch', async (req, res) => {
     try {
         const { userId, defaultPitch } = req.body;
@@ -196,12 +189,10 @@ app.put('/default-pitch', async (req, res) => {
     }
 });
 
-
 // ---------------------------------------------------------------- //
 // 🎴 2. 공유 덱 관련 API
 // ---------------------------------------------------------------- //
 
-// [POST] 공유 덱 저장하기
 app.post('/decks', async (req, res) => {
     try {
         const { deckName, userId, cards, description } = req.body;
@@ -218,7 +209,6 @@ app.post('/decks', async (req, res) => {
     }
 });
 
-// [GET] 전체 공유 덱 리스트 가져오기 (최신순)
 app.get('/decks', async (req, res) => {
     try {
         const decks = await Deck.find().sort({ createdAt: -1 });
@@ -228,7 +218,6 @@ app.get('/decks', async (req, res) => {
     }
 });
 
-// [DELETE] 공유 덱 삭제 로직
 app.delete('/decks/:deckId', async (req, res) => {
     try {
         const { deckId } = req.params;
@@ -257,7 +246,7 @@ app.delete('/decks/:deckId', async (req, res) => {
 });
 
 // ---------------------------------------------------------------- //
-// 🔊 3. 비동기 음성 인식 및 채점 관련 로직 (새로운 사진 스펙 반영)
+// 🔊 3. 비동기 음성 인식 및 채점 관련 로직
 // ---------------------------------------------------------------- //
 
 const tasks = {}; // 메모리 기반 비동기 태스크 상태 관리 객체
@@ -265,13 +254,13 @@ const tasks = {}; // 메모리 기반 비동기 태스크 상태 관리 객체
 // 백그라운드 AI 채점 연동 함수
 async function runBackgroundAnalysis(taskId, filePath, concept, prefix, wordNames, defaultPitch) {
     try {
-        // 단어 리스트(wordNames) 배열을 공백 단위 스트링으로 가공
-        const targetWordsString = Array.isArray(wordNames) ? wordNames.join(' ') : wordNames;
+        // 💡 수정: FastAPI 규격에 맞게 공백이 아닌 '쉼표(,)'로 단어 배열을 결합합니다.
+        const targetWordsString = Array.isArray(wordNames) ? wordNames.join(',') : wordNames;
 
         const formData = new FormData();
         formData.append('file', fs.createReadStream(filePath));
         formData.append('default_pitch', defaultPitch.toString());
-        formData.append('target_words', targetWordsString); // AI 서버의 STT 비교용 키워드로 전송
+        formData.append('target_words', targetWordsString); 
 
         // 1. FastAPI (AI 분석 전용 서버 5000포트) 연동
         const pythonResponse = await axios.post('http://localhost:5000/analyze-audio', formData, {
@@ -332,7 +321,7 @@ async function runBackgroundAnalysis(taskId, filePath, concept, prefix, wordName
 
     } catch (err) {
         console.error(`❌ [태스크 오류] ID: ${taskId} 처리 중 예외 발생:`, err.message);
-        tasks[taskId] = { status: "failed", error: "음성 채점 과정 중 연동 장애 발생", updatedAt: Date.now() };
+        tasks[taskId] = { status: "failed", error: err.message, updatedAt: Date.now() };
     } finally {
         if (fs.existsSync(filePath)) {
             fs.unlink(filePath, (err) => { if (err) console.error("임시 파일 삭제 실패:", err); });
@@ -340,17 +329,12 @@ async function runBackgroundAnalysis(taskId, filePath, concept, prefix, wordName
     }
 }
 
-/**
- * [POST] /upload-voice-async
- * 입력 객체 명세: VoiceMetadata -> { userId, concept, prefix, wordNames } 형태로 body.metadata 에 담겨옴
- * 출력 객체 명세: UploadVoiceResponse -> { taskId, audioUrl }
- */
+// [POST] /upload-voice-async
 app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: "음성 파일(audio)이 전송되지 않았습니다." });
         if (!req.body.metadata) return res.status(400).json({ error: "메타데이터(metadata)가 누락되었습니다." });
 
-        // 사진 명세 속 VoiceMetadata 객체 구조 파싱
         const metadata = JSON.parse(req.body.metadata);
         const { userId, concept, prefix, wordNames } = metadata; 
 
@@ -364,13 +348,10 @@ app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
         const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
         const audioUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
 
-        // 백그라운드 태스크 대기 상태 등록
         tasks[taskId] = { status: "processing", audioUrl, updatedAt: Date.now() };
 
-        // 백그라운드 분석 실행 (수정된 명세 변수 전달)
         runBackgroundAnalysis(taskId, req.file.path, concept, prefix, wordNames, defaultPitch);
 
-        // UploadVoiceResponse 사진 명세 구조 리턴 { taskId, audioUrl }
         res.status(200).json({ taskId, audioUrl });
 
     } catch (err) {
@@ -379,12 +360,15 @@ app.post('/upload-voice-async', upload.single('audio'), async (req, res) => {
     }
 });
 
-/**
- * [GET] /tasks/:taskId
- * 출력 객체 명세: TaskStatusResponse -> { status, message, score?, reason? }
- */
-app.get('/tasks/:taskId', (req, res) => {
-    const { taskId } = req.params;
+// 💡 수정: 라우터 주소 스펙을 이미지 양식에 맞춰 Query Parameter 방식으로 전면 수정
+// [GET] /evaluation-result?taskId={taskId}
+app.get('/evaluation-result', (req, res) => {
+    const { taskId } = req.query; // 👈 params가 아닌 query에서 추출
+
+    if (!taskId) {
+        return res.status(400).json({ error: "taskId 쿼리 파라미터가 누락되었습니다." });
+    }
+
     const task = tasks[taskId];
 
     if (!task) {
@@ -406,7 +390,6 @@ app.get('/tasks/:taskId', (req, res) => {
         });
     }
 
-    // TaskStatusResponse 스펙에 맞춰 결과 제공 (reason 포함)
     res.status(200).json({
         status: "completed",
         message: `평가 완료: ${task.score}점`,
@@ -418,12 +401,11 @@ app.get('/tasks/:taskId', (req, res) => {
 // ---------------------------------------------------------------- //
 // 🔌 4. 웹소켓 (Socket.io) P2P 방 관리 및 매칭 통신
 // ---------------------------------------------------------------- //
-const rooms = {}; // 방 상태 관리 객체
+const rooms = {}; 
 
 io.on('connection', (socket) => {
     console.log(`🔌 유저 커넥션 연동 완료: ${socket.id}`);
 
-    // 1. 방 입장 이벤트
     socket.on('joinRoom', ({ roomId, userId }) => {
         socket.join(roomId);
         socket.userId = userId;
@@ -433,21 +415,16 @@ io.on('connection', (socket) => {
             rooms[roomId] = { roomId, players: [], status: "waiting", currentTurn: "" };
         }
 
-        // 방에 플레이어 추가 (중복 방지)
         if (!rooms[roomId].players.find(p => p.userId === userId)) {
             rooms[roomId].players.push({ userId, socketId: socket.id, isReady: false });
         }
 
         console.log(`🏠 [방입장] 유저 ${userId} -> 방 ${roomId}`);
-        
-        // 방 안에 있는 모든 클라이언트에게 갱신된 방 상태 전송 (roomUpdate)
         io.to(roomId).emit('roomUpdate', rooms[roomId]);
     });
 
-    // 2. 인게임 액션: 영창 완료 및 카드 제출 동기화
     socket.on('castSpell', ({ cardName, audioUrl, score }) => {
         const roomId = socket.roomId;
-        // 내가 카드를 냈다는 것을 상대방에게 브로드캐스팅
         socket.to(roomId).emit('opponentCast', {
             userId: socket.userId,
             cardName,
@@ -456,7 +433,6 @@ io.on('connection', (socket) => {
         });
     });
 
-    // 퇴장 및 커넥션 해제 처리
     socket.on('disconnect', () => {
         console.log(`❌ 유저 커넥션 해제: ${socket.id}`);
         const roomId = socket.roomId;
@@ -467,7 +443,6 @@ io.on('connection', (socket) => {
     });
 });
 
-// 서버 바인딩 및 활성화 구동
 server.listen(PORT, () => {
     console.log(`🚀 [서버 개방 완료] 메인 게임 백엔드가 포트 ${PORT}에서 작동 중입니다.`);
 });
