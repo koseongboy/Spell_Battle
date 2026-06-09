@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cards.CardUIDatas;
 using UnityEngine;
 using WebSocketSharp;
 
@@ -27,22 +28,18 @@ namespace DefaultNamespace
         
         public bool CanGoBack => fullScreenUiHistoryStack.Count > 0;
         
-        [ContextMenu("Show Red Alert")]
         public void ShowRedAlert( string text ) {
             UILoader.Instance.ShowUI<string>("RedAlert_Common", text);
         }
         
-        [ContextMenu("Show Black Alert")]
         public void ShowBlackAlert( string text ) {
             UILoader.Instance.ShowUI<string>("BlackAlert_Common", text);
         }
-
-        [ContextMenu("Show Loading")]
+        
         public void ShowLoading() {
             UILoader.Instance.ShowUI("Loading_Common");
         }
-
-        [ContextMenu("Done Loading")]
+        
         public void DoneLoading() {
             UILoader.Instance.HideUI("Loading_Common");
         }
@@ -103,6 +100,18 @@ namespace DefaultNamespace
         public void InitFullScreenStack() {
             fullScreenUiHistoryStack.Clear();
             currentFullScreenUI = string.Empty;
+        }
+
+
+
+        [ContextMenu("SpellActive Test Start")]
+        public void SpellActiveTest() {
+            UILoader.Instance.ShowUI("SpellActive_FullScreen", ("이 멋진 세계에 축복을!", Property.Fire));
+        }
+
+        [ContextMenu("SpellActive Test Stop")]
+        public void SpellActiveStop() {
+            UILoader.Instance.HideUI("SpellActive_FullScreen");
         }
     }
 }
