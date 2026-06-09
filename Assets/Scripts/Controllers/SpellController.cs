@@ -107,8 +107,14 @@ namespace Controllers.SpellControllers
         {
             if (MyPlayer == null || EnemyPlayer == null)
             {
-                Debug.LogError("[SpellController] 🚨 플레이어를 씬에서 찾을 수 없어 영창을 취소합니다!");
-                return null;
+                ForceReconnectPlayers();
+                
+                // 강제 연결을 시도했는데도 null이라면 진짜로 씬에 캐릭터가 없는 심각한 버그 상황
+                if (MyPlayer == null || EnemyPlayer == null)
+                {
+                    Debug.LogError("[SpellController] 🚨 씬에서 플레이어를 찾을 수 없어 영창을 취소합니다! (스폰 지연 또는 파괴됨)");
+                    return null;
+                }
             }
 
             currentSelectedCards = selectedCards;
@@ -135,6 +141,28 @@ namespace Controllers.SpellControllers
             
             Debug.Log("[SpellController] 1. 스펠 초기화 및 페이로드 조립 완료.");
             return currentPayload;
+        }
+
+        public void ForceReconnectPlayers()
+        {
+            Debug.LogWarning("[SpellController] 🚨 플레이어 연결 끊김 감지! 씬에서 강제 탐색 및 재연결을 시도합니다.");
+            
+            // 씬에 존재하는 모든 PlayerModel을 싹 다 긁어옵니다.
+            PlayerModel[] allPlayers = FindObjectsByType<PlayerModel>(FindObjectsSortMode.None);
+
+            foreach (var player in allPlayers)
+            {
+                if (player.IsOwner) 
+                {
+                    MyPlayer = player;
+                    Debug.Log($"[SpellController] 🔗 MyPlayer 강제 연결 복구 완료: {player.gameObject.name}");
+                }
+                else 
+                {
+                    EnemyPlayer = player;
+                    Debug.Log($"[SpellController] 🔗 EnemyPlayer 강제 연결 복구 완료: {player.gameObject.name}");
+                }
+            }
         }
 
 
@@ -185,7 +213,7 @@ namespace Controllers.SpellControllers
                 currentAudioUrl = uploadResult.audioUrl;
                 currentTaskId = uploadResult.taskId;
 
-                Debug.Log($"[SpellController] 서버 업로드 성공. TaskID: {currentTaskId}");
+                Debug.Log($"[SpellController] 서버 업로드 성공. TaskID: {currentTaskId}, 음성 url {currentAudioUrl}");
                 ShareAudioUrlServerRpc(currentAudioUrl);
 
                 TaskStatusResponse evalResult = null;

@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using Managers.LocalDataManagers;
 using Models.Networks;
+using Unity.Burst.Intrinsics;
 
 namespace DefaultNamespace
 {
@@ -38,8 +39,7 @@ namespace DefaultNamespace
         
         private void Start()
         {
-            // TODO : AutoLogin. 서버쪽 준비되면 주석 해제. 
-            // TryAutoLogin();
+            TryAutoLogin();
         }
 
         private void Update()
@@ -66,6 +66,7 @@ namespace DefaultNamespace
             isRegisterOn = false;
             registerPanel.SetActive(false);
             idInputField.ActivateInputField();
+
         }
         
         private void OnDestroy()
@@ -77,23 +78,42 @@ namespace DefaultNamespace
         private async void TryAutoLogin() {
             var ldm = LocalDataManager.Instance;
             ldm.LoadData();
-            if (ldm.userToken != string.Empty)
-            {
-                string savedToken = ldm.userToken;
-                
-                CommonUIController.Instance.ShowLoading();
+            
+            // 토큰이 없으면 바로 종료
+            if (string.IsNullOrEmpty(ldm.userToken)) return;
 
-                // 2. AuthManager에게 자동 로그인 통신 처리를 위임합니다.
-                bool isAutoSuccess = await AuthManager.Instance.RequestAutoLoginAsync(savedToken);
+            string savedToken = ldm.userToken;
 
-                if (isAutoSuccess)
-                {
+            // 1. 로딩 표시 시작
+            CommonUIController.Instance.ShowLoading();
+
+            try {
+                // 2. 통신 시도
+                var loginTask = AuthManager.Instance.RequestAutoLoginAsync(savedToken);
+                var minDelayTask = Task.Delay(5000);
+
+                await Task.WhenAll(loginTask, minDelayTask);
+
+                bool isAutoSuccess = loginTask.Result;
+
+                if (isAutoSuccess) {
+                    // 성공 로직
                     await Controllers.LobbyController.LobbyController.Instance.InitializeNetworkAsync();
-
                     UILoader.Instance.HideUI("Login_FullScreen");
                     CommonUIController.Instance.ChangeFullScreen("Lobby_FullScreen");
                     UILoader.Instance.ShowUI("LeftUpper_Common");
+                } else {
+                    // 실패 로직 (예: 토큰 만료시 로그인 화면 유지)
+                    Debug.Log("[TryAutoLogin] 자동 로그인 실패. 다시 로그인하세요.");
                 }
+            }
+            catch (System.Exception e) {
+                // 통신 중 예상치 못한 에러가 발생해도 로딩은 닫혀야 함
+                Debug.LogError($"[TryAutoLogin] 예기치 못한 에러: {e.Message}");
+            }
+            finally {
+                // 3. 무조건 호출됨 (성공/실패/에러 상관없음)
+                CommonUIController.Instance.DoneLoading();
             }
         }
         

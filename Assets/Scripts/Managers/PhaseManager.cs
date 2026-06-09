@@ -343,7 +343,7 @@ namespace DefaultNamespace {
 
             if (host == null || guest == null) return false;
 
-            return (host.CurrentHealth.Value <= 0 || guest.CurrentHealth.Value <= 0);
+            return host.CurrentHealth.Value <= 0 || guest.CurrentHealth.Value <= 0;
         }
 
         #endregion
