@@ -359,6 +359,7 @@ namespace Controllers.SpellControllers
         // ==========================================
         public void PlayVoice()
         {
+            UILoader.Instance.HideUI("Ingame_FullScreen");
             if (downloadedClip == null)
             {
                 Debug.LogWarning("[SpellController] 재생할 오디오 클립이 없습니다.");
@@ -412,6 +413,31 @@ namespace Controllers.SpellControllers
             // 수신받은 URL로 오디오를 몰래 다운로드해둡니다. (재생은 아직 안 함!)
             _ = DownloadAudio(audioUrl);
         }
+
+        private float GetActualSpeechLength(AudioClip clip)
+        {
+            if (clip == null) return 2.0f;
+            
+            float[] samples = new float[clip.samples * clip.channels];
+            clip.GetData(samples, 0); // 오디오의 전체 파형 데이터를 가져옵니다.
+            
+            float threshold = 0.02f;  // 무음(화이트 노이즈) 판정 임계값
+            int lastSpokenSample = 0;
+            
+            // 파형의 맨 뒤(끝)에서부터 역순으로 검사하여 유효한 소리가 있는 마지막 지점을 찾습니다.
+            for (int i = samples.Length - 1; i >= 0; i--)
+            {
+                if (Mathf.Abs(samples[i]) > threshold)
+                {
+                    lastSpokenSample = i;
+                    break;
+                }
+            }
+            
+            // 찾은 샘플 인덱스를 초(Seconds) 단위 시간으로 변환
+            float actualLength = (float)lastSpokenSample / (clip.frequency * clip.channels);
+            return actualLength;
+        }
         #endregion
 
         // =========================================================================
@@ -424,7 +450,8 @@ namespace Controllers.SpellControllers
         {
             if (LastRecordedClip != null) 
             {
-                currentAudioLength = LastRecordedClip.length;
+                float trueLength = GetActualSpeechLength(LastRecordedClip);
+                currentAudioLength = Mathf.Clamp(trueLength + 0.5f, 2.0f, 10.0f);
                 Debug.Log($"[SpellController] 내 오디오 클립 길이 측정 완료: {currentAudioLength}초");
             }
             SubmitSpellServerRpc(currentSelectedCardIds.ToArray(), currentTotalCost, currentTaskId, currentAudioLength);
@@ -468,8 +495,6 @@ namespace Controllers.SpellControllers
             // 4. 진짜 데이터를 완벽히 쥐었으므로 배틀 페이즈로 전환 (PhaseManager가 기존 UI들을 청소함)
             PhaseManager.Instance.ServerSetPhase(GamePhase.Battle);
 
-            // 🌟 5. 양쪽 화면에 "서버가 검증한 진짜 점수와 문장"을 매개변수로 실어서 팝업 UI를 켜라고 명령!
-            audioLength = Mathf.Clamp(audioLength, 2.0f, 10.0f);
             ShowIncantationPopupClientRpc(verifiedSentence, serverPayload.MainProperty, senderId, audioLength);
 
             // 6. 팝업 연출 시간 동안 기다렸다가 데미지를 주는 코루틴 작동
@@ -555,7 +580,6 @@ namespace Controllers.SpellControllers
         [Rpc(SendTo.NotServer)]
         public void PlayVisualEffectClientRpc(Models.EffectCommands.VFXType vfxType, Models.PlayerModels.StatusType relatedStatus, ulong targetNetworkObjectId)
         {
-            Debug.Log($"[Client] 📡 서버로부터 RPC 통신 도착! VFX: {vfxType}");
 
             // 🚨 실패 원인 1: 게스트 씬에 VFX 매니저가 없을 경우
             if (Managers.VFX.BattleVFXManager.Instance == null) {
@@ -583,6 +607,7 @@ namespace Controllers.SpellControllers
             }
         }
 
+        
 
 
         #endregion
