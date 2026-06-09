@@ -1613,8 +1613,6 @@ MonoBehaviour:
     m_LabelString: KeywordData
   elementLabel:
     m_LabelString: ElementUIData
-  presetDeckLabel:
-    m_LabelString: PresetDeckData
 --- !u!4 &506466686
 Transform:
   m_ObjectHideFlags: 0
@@ -4428,6 +4426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2528fd863994b9e4780f4b28adf4f059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.VoiceManagers.MicRecorder
+  recordingClip: {fileID: 0}
 --- !u!4 &1470527234
 Transform:
   m_ObjectHideFlags: 0
@@ -5020,19 +5019,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c50e3dbc06c8964794badf6739c338b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.LocalDataManagers.LocalDataManager
-  userToken: 
-  userId: 
-  nickname: Guest
-  level: 1
-  gold: 0
-  selectedAvatarId: 0
-  score: 0
-  rank: Bronze
-  defaultPitch: 150
-  deviceIndex: 0
-  micVol: 0.5
-  outVol: 0.5
-  _equippedDeck: 
+  currentData:
+    userToken: 
+    userId: 
+    nickname: 
+    level: 1
+    gold: 0
+    selectedAvatarId: 0
+    score: 0
+    rank: 
+    defaultPitch: 150
+    deviceIndex: 0
+    micVol: 0.5
+    outVol: 0.5
+    equippedDeck: 
 --- !u!114 &1640395183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5045,6 +5045,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4da26659ee788a3499adacefea35128a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.DeckManager
+  presetDeckLabel:
+    m_LabelString: PresetDeckData
   savedDecks: []
 --- !u!114 &1640395184
 MonoBehaviour:

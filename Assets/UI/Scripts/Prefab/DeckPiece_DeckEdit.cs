@@ -7,7 +7,7 @@ using Models.CardDatabases;
 
 namespace DefaultNamespace
 {
-    public class DeckListPiece : MonoBehaviour
+    public class DeckPiece_DeckEdit : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI deckNameText;
         [SerializeField] private TextMeshProUGUI deckSummaryText;
@@ -20,8 +20,9 @@ namespace DefaultNamespace
             deckNameText.text = deckName;
             deckSummaryText.text = deckSummary;
             highlightImage.enabled = isSelected;
-            if (img_ElementIcon != null) {
-                img_ElementIcon.sprite = CardDatabase.Instance.GetElementData(repProp).Icon;
+            var elementData = CardDatabase.Instance.GetElementData(repProp);
+            if (elementData != null) {
+                img_ElementIcon.sprite = elementData.Icon;
             }
 
             clickButton.onClick.RemoveAllListeners();
