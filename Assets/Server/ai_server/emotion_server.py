@@ -6,13 +6,21 @@ import soundfile as sf
 import io
 import os
 
+# 🌟 [치트키] 백그라운드(PM2) 구동 시 우분투 시스템의 ffmpeg를 못 찾는 문제를 완벽 차단
+os.environ["PATH"] += os.pathsep + "/usr/bin"
+os.environ["PATH"] += os.pathsep + "/usr/local/bin"
+
 app = FastAPI()
 
 # 1. Wav2Vec2 감정 분석 파이프라인 로드
 emotion_classifier = pipeline("audio-classification", model="Dpngtm/wav2vec2-emotion-recognition")
 
-# 2. Whisper STT(음성 인식) 파이프라인 추가
-stt_pipeline = pipeline("automatic-speech-recognition", model="openai/whisper-tiny")
+# 2. Whisper STT(음성 인식) 파이프라인 추가 (⭐ 한국어 인식을 위한 명시적 옵션 주입)
+stt_pipeline = pipeline(
+    "automatic-speech-recognition", 
+    model="openai/whisper-tiny",
+    generate_kwargs={"language": "ko", "task": "transcribe"}
+)
 
 @app.post("/analyze-audio")
 async def analyze_audio(
@@ -37,6 +45,12 @@ async def analyze_audio(
         # --- 1. 음성 인식 (STT) 수행 및 영창 대본 추출 ---
         stt_result = stt_pipeline(temp_filename)
         recognized_text = stt_result.get("text", "").strip() 
+        
+        # ⭐ [디버깅 추가] PM2 logs 혹은 터미널 창에서 들어온 소리와 텍스트를 라이브로 대조 확인
+        print("\n" + "="*50)
+        print(f"🎙️ [AI 서버 디버깅] 실제 인식된 대사(STT): '{recognized_text}'")
+        print(f"🎯 [AI 서버 디버깅] 유니티가 요구한 정답 단어 목록: '{target_words}'")
+        print("="*50 + "\n")
         
         # --- 2. 다중 필수 단어 검증 로직 ---
         is_all_matched = False
@@ -85,7 +99,7 @@ async def analyze_audio(
             "emotions": {res['label']: round(res['score'] * 100, 1) for res in emotion_results},
             "audio_features": {
                 "current_pitch": round(current_pitch, 1),
-                "pitch_ratio": round(pitch_ratio, 2),  # 💡 'ㅁ' 오타 수정 완료
+                "pitch_ratio": round(pitch_ratio, 2),
                 "duration_seconds": round(duration, 2)
             }
         }
