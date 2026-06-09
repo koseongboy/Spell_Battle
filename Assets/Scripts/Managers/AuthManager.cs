@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Managers.LocalDataManagers;
 using Models.CardDatabases;
+using Models.Networks;
 using Unity.Netcode;
 
 namespace DefaultNamespace {
@@ -83,7 +84,6 @@ namespace DefaultNamespace {
                     localData.SaveData();
 
                     _ = DeckManager.Instance.LoadDecksFromServerAsync();
-                    
                     return true;
                 }
                 else
