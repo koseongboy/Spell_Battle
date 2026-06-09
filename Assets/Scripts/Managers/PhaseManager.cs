@@ -56,6 +56,27 @@ namespace DefaultNamespace {
         // 2. [클라이언트/서버 공통] 상태 변화 감지 후 액션 집행
         // ========================================================
         private void HandlePhaseChanged(GamePhase oldPhase, GamePhase newPhase) {
+
+            ulong currentTurnPlayerId = TurnModel.Instance.CurrentTurnPlayerId.Value; //
+            
+            // 🌟 [서버 전용 권한] 페이즈가 바뀔 때마다 모든 플레이어에게 페이즈 효과를 링크해 줍니다.
+            if (IsServer) 
+            {
+                PlayerModel hostPlayer = MatchManager.Instance.GetPlayerById(TurnModel.Instance.HostId.Value); 
+                PlayerModel guestPlayer = MatchManager.Instance.GetPlayerById(TurnModel.Instance.GuestId.Value); 
+
+                if (hostPlayer != null)
+                {
+                    bool isHostTurn = currentTurnPlayerId == TurnModel.Instance.HostId.Value; 
+                    hostPlayer.HandlePhaseEffects(newPhase, isHostTurn);
+                }
+
+                if (guestPlayer != null)
+                {
+                    bool isGuestTurn = currentTurnPlayerId == TurnModel.Instance.GuestId.Value; 
+                    guestPlayer.HandlePhaseEffects(newPhase, isGuestTurn);
+                }
+            }
             bool isMyTurn = NetworkManager.Singleton.LocalClientId == TurnModel.Instance.CurrentTurnPlayerId.Value;
 
             switch (newPhase) {
@@ -86,7 +107,6 @@ namespace DefaultNamespace {
                         UILoader.Instance.HideUI("EnemyTurn_Top"); 
                         UILoader.Instance.ShowUI("MyTurn_Top");
                         if (UpperTurnUI.Instance != null) {
-                            Debug.Log("진입");
                             UpperTurnUI.Instance.SetTurnState(true);
                         }
                     }
@@ -95,7 +115,6 @@ namespace DefaultNamespace {
                         UILoader.Instance.HideUI("MyTurn_Top"); 
                         UILoader.Instance.ShowUI("EnemyTurn_Top");
                         if (UpperTurnUI.Instance != null) {
-                            Debug.Log("진입");
                             UpperTurnUI.Instance.SetTurnState(false);
                         }
                     }
@@ -109,6 +128,7 @@ namespace DefaultNamespace {
                 }
 
                 case GamePhase.Select:
+                    UILoader.Instance.ShowUI("Ingame_FullScreen");
                     break;
 
                 case GamePhase.Incantation: {
@@ -132,6 +152,10 @@ namespace DefaultNamespace {
                 case GamePhase.End:
                     if(IsServer) ExecuteEndPhaseLogic();
                     break;
+
+                case GamePhase.EndGame:
+                    Debug.Log("야호 게임 끝났어요");
+                    break;
             }
         }
 
@@ -152,6 +176,12 @@ namespace DefaultNamespace {
         // [서버 전용] 마나 증가, 턴 권한 교체, 다음 턴 시작 처리
         private void ExecuteEndPhaseLogic() {
             if (!IsServer) return;
+
+            if (CheckGameEndCondition()) {
+                Debug.Log("[PhaseManager] 🚨 발화 데미지로 사망자 발생! EndGame 페이즈로 진입합니다.");
+                ServerSetPhase(GamePhase.EndGame);
+                return;
+            }
 
             // 1. 기존 TurnController에 있던 턴 종료 시 마나 최대치 1 증가 로직 유지
             // (MatchManager의 O(1) 캐싱 딕셔너리 활용)
@@ -321,12 +351,7 @@ namespace DefaultNamespace {
                     break;
 
                 case GamePhase.End:
-                    // 🌟 엔드 페이즈 직후: 발화(Ignite) 도트 데미지로 누군가 죽었는지 체크!
-                    if (CheckGameEndCondition()) {
-                        ServerSetPhase(GamePhase.EndGame);
-                    } else {
-                        ExecuteEndPhaseLogic(); // 아무도 안 죽었으면 정상적으로 다음 턴으로
-                    }
+                    ExecuteEndPhaseLogic(); // 아무도 안 죽었으면 정상적으로 다음 턴으로
                     return; 
                     
                 default:

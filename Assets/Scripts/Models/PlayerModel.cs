@@ -126,17 +126,9 @@ namespace Models.PlayerModels {
                     Debug.Log("상대 캐릭 턴 매니져에 등록 완료");
                 }
             }
-
-            // 턴 매니저 구독: 턴이 바뀔 때 발화 데미지를 입거나 마나를 채우기 위함
-            if (TurnModel.TurnModel.Instance != null) {
-                TurnModel.TurnModel.Instance.OnPhaseChangedEvent += HandlePhaseEffects;
-            }
         }
 
         public override void OnNetworkDespawn() {
-            if (TurnModel.TurnModel.Instance != null) {
-                TurnModel.TurnModel.Instance.OnPhaseChangedEvent -= HandlePhaseEffects;
-            }
             OnPlayerDespawned?.Invoke(this);
             base.OnNetworkDespawn();
         }
@@ -442,7 +434,7 @@ namespace Models.PlayerModels {
         // ==========================================
         // 턴 자동 동기화 (기획서 반영)
         // ==========================================
-        private void HandlePhaseEffects(GamePhase phase, bool isMyTurn) {
+        public void HandlePhaseEffects(GamePhase phase, bool isMyTurn) {
             if (!IsServer) return;
 
             // 내 턴이 끝날 때(End) 처리

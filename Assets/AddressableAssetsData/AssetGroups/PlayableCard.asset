@@ -783,6 +783,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PlayableCard
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7273b933f587fc46b75862ca9ba00ed
+    m_Address: Assets/ScriptableObject/PlayableCard/Test/Card_4999.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayableCard
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f7467f6d9514325418515e76ac7862d5
     m_Address: Assets/ScriptableObject/PlayableCard/Ice/Card_9001.asset
     m_ReadOnly: 0
