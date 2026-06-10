@@ -805,5 +805,6 @@ MonoBehaviour:
   MulliganPanel: {fileID: 5718187122898603320}
   CardContainer: {fileID: 3644530887519095899}
   MulliganCardPrefab: {fileID: 5434026315024681407, guid: 67fe97fa52d027f4b8931a29b4a51aa1, type: 3}
+  isFirst: {fileID: 7517543478047528061}
   ExchangeButton: {fileID: 7861730451885159731}
   WaitingText: {fileID: 5624171406547514927}

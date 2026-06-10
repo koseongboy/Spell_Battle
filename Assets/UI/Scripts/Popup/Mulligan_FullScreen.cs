@@ -9,6 +9,7 @@ using Cards.PlayableCards;
 using Controllers.PlayerController;
 using TMPro;
 using UnityEngine.Pool;
+using Models.TurnModel;
 
 namespace DefaultNamespace
 {
@@ -22,6 +23,7 @@ namespace DefaultNamespace
         public GameObject MulliganCardPrefab;  // 방금 만든 UI_MulliganCard가 붙은 프리팹
        
         [Header("버튼 및 대기 상태 제어")]
+        public TextMeshProUGUI isFirst; 
         public Button ExchangeButton;          // 하단 "교환" 버튼
         public TextMeshProUGUI WaitingText;     // "상대방을 기다리고 있습니다..."
         
@@ -34,7 +36,7 @@ namespace DefaultNamespace
 
         private void Awake()
         {
-            // 오브젝트 풀 초기화
+            // 오브젝트 풀 초기화1
             _cardPool = new ObjectPool<UI_Card_Mulligan>(
                 createFunc: () => 
                 {
@@ -52,6 +54,11 @@ namespace DefaultNamespace
                 defaultCapacity: 5,
                 maxSize: 10
             );
+            //선공 판단
+            ulong myClientId = Unity.Netcode.NetworkManager.Singleton.LocalClientId;
+            bool isMyTurnFirst = myClientId == TurnModel.Instance.FirstPlayerId.Value;
+            if(isMyTurnFirst) isFirst.text = "선공!";
+            else isFirst.text = "후공!";
             
             if (ExchangeButton != null)
             {
