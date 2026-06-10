@@ -1,7 +1,9 @@
 using UnityEngine;
 using Managers.LocalDataManagers;
 using System;
-using System.Collections; // 코루틴을 위해 추가
+using System.Collections;
+using Models.PlayerModels;
+using Cards.EffectInfos; // 코루틴을 위해 추가
 
 namespace Managers.VoiceManagers
 {
@@ -28,6 +30,33 @@ namespace Managers.VoiceManagers
         [Header("마이크 테스트 (Loopback)")]
         public AudioSource testAudioSource;
         public bool isRecording { get; private set; } = false;
+
+        [Header("Combat Actions (Damage & Heal)")]
+        [Tooltip("기본 데미지 (DamageCommand)")]
+        [SerializeField] private AudioClip defaultDamageSFX;
+        
+        [Tooltip("체력 회복 (HealCommand)")]
+        [SerializeField] private AudioClip healSFX;
+        
+        [Tooltip("보호막 생성 (ShieldCommand)")]
+        [SerializeField] private AudioClip shieldSFX;
+        [System.Serializable]
+        public struct StatusSFXMapping {
+            public StatusType statusType;
+            public AudioClip sfxClip;
+        }
+         [Tooltip("상태이상 부여")]
+        [SerializeField] private StatusSFXMapping[] specificStatusSFXs;
+
+        [Header("Mana & System")]
+        [Tooltip("마나 회복 (ManaCommand - 양수)")]
+        [SerializeField] private AudioClip manaGainSFX;
+        
+        [Tooltip("마나 감소/소모 (ManaCommand - 음수)")]
+        [SerializeField] private AudioClip manaLossSFX;
+
+
+
         
         [Obsolete("이 변수는 isRecording으로 통합되었습니다. 앞으로는 isRecording을 사용해 주세요.")]
         public bool isTesting { get => isRecording; private set => isRecording = value; }
@@ -115,6 +144,42 @@ namespace Managers.VoiceManagers
         public void PlayDefaultButtonSFX()
         {
             PlaySFX(defaultButtonSFX);
+        }
+        public void PlaySkillSFX(Models.EffectCommands.VFXType vfxType, StatusType statusType, EffectType cardMovement = EffectType.None)
+        {
+            // 명찰이 None이거나 타겟이 없으면 그냥 넘어갑니다.
+            if (vfxType == Models.EffectCommands.VFXType.None) return;
+
+            AudioClip sfx = null;
+
+            // 🌟 넘어온 명찰(enum)에 맞는 프리팹을 인스펙터 필드에서 꺼냅니다.
+            switch (vfxType)
+            {
+                case Models.EffectCommands.VFXType.Damage: sfx = defaultDamageSFX; break;
+                case Models.EffectCommands.VFXType.Heal: sfx = healSFX; break;
+                case Models.EffectCommands.VFXType.Shield: sfx = shieldSFX; break;
+                case Models.EffectCommands.VFXType.AddStatus: 
+                    sfx = GetSpecificStatusSFX(statusType);
+                    break;
+                case Models.EffectCommands.VFXType.ManaGain: sfx = manaGainSFX; break;
+                case Models.EffectCommands.VFXType.ManaLoss: sfx = manaLossSFX; break;
+                default: sfx = defaultDamageSFX; break;
+            }
+            if(sfx != null) PlaySFX(sfx);
+        }
+        private AudioClip GetSpecificStatusSFX(StatusType targetStatus)
+        {
+            if (specificStatusSFXs == null) return defaultDamageSFX; // 방어 코드
+
+            foreach (var mapping in specificStatusSFXs)
+            {
+                if (mapping.statusType == targetStatus && mapping.sfxClip != null)
+                {
+                    return mapping.sfxClip; // 매핑된 전용 이펙트 반환!
+                }
+            }
+            // 매핑을 못 찾았다면(아직 프리팹 안 넣은 경우 등) 기본 상태이상 이펙트를 띄웁니다.
+            return defaultDamageSFX; 
         }
 
         // ==========================================
