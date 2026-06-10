@@ -107,7 +107,7 @@ app.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ error: "아이디 또는 비밀번호가 틀렸습니다." });
 
-        const token = jwt.sign({ id: user._id, userId: user.userId }, JWT_SECRET, { expiresIn: '10s' });
+        const token = jwt.sign({ id: user._id, userId: user.userId }, JWT_SECRET, { expiresIn: '7d' });
 
         res.status(200).json({
             message: "로그인 성공",
