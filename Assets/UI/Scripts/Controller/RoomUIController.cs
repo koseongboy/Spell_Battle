@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cards.CardUIDatas;
 using Managers;
 using Managers.LocalDataManagers;
+using Managers.VoiceManagers;
 using Models.RelayMatchmakingService;
 using Unity.Netcode;
 using UnityEngine;
@@ -183,6 +184,7 @@ namespace DefaultNamespace {
         [Rpc(SendTo.Everyone)]
         private void ShowLoadingScreenClientRpc() {
             Debug.Log("[Client] 글로벌 로딩 화면 출력 명령 수신!");
+            SoundManager.Instance.StopBGM();
             CommonUIController.Instance.ShowLoading();
         }
 
@@ -439,11 +441,14 @@ namespace DefaultNamespace {
 
         // 누군가 방에서 나갔을 때
         private async void OnClientDisconnected(ulong clientId) {
+            if (this == null || gameObject == null) return;
             if (NetworkManager.Singleton.IsHost) {
                 // [방장 시점] 손님이 나간 경우: 다시 [+] 버튼 띄우기
                 if (NetworkManager.Singleton.ConnectedClientsList.Count <= 1) {
-                    ui_Room?.ClearGuestUI(); // 손님 UI 지우기
-                    ui_Room?.UpdateStartButton(false); // 손님이 나갔으므로 시작 버튼도 다시 잠금
+                    if (ui_Room != null) {
+                        ui_Room.ClearGuestUI(); 
+                        ui_Room.UpdateStartButton(false); 
+                    }
                 }
             }
             else {

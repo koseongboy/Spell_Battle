@@ -84,10 +84,30 @@ namespace Managers.VoiceManagers
             bgmFadeCoroutine = StartCoroutine(FadeToNextBGMRoutine(clip, fadeDuration));
         }
 
-        public void StopBGM(float fadeDuration = 1.0f)
+        public AudioClip StopBGM(float fadeDuration = 1.0f)
         {
             if (bgmFadeCoroutine != null) StopCoroutine(bgmFadeCoroutine);
             bgmFadeCoroutine = StartCoroutine(FadeOutBGMRoutine(fadeDuration));
+            return bgmSource.clip;
+        }
+
+        public void ToggleBGM()
+        {
+            // 오디오 소스가 없거나 할당된 음악이 없다면 무시합니다.
+            if (bgmSource == null || bgmSource.clip == null) return;
+
+            if (bgmSource.isPlaying)
+            {
+                // 재생 중이면 일시정지합니다.
+                bgmSource.Pause();
+                Debug.Log("[VoiceManager] BGM 일시정지됨");
+            }
+            else
+            {
+                // 멈춰있으면 멈춘 구간부터 다시 재생합니다.
+                bgmSource.UnPause();
+                Debug.Log("[VoiceManager] BGM 재생 재개됨");
+            }
         }
 
         private IEnumerator FadeToNextBGMRoutine(AudioClip nextClip, float duration)
@@ -131,30 +151,38 @@ namespace Managers.VoiceManagers
         // ==========================================
         // ⚙️ 설정 업데이트 동기화 (볼륨 실시간 적용)
         // ==========================================
-        public void UpdateSettings(int deviceIndex, float micVol, float outVol)
+        public void UpdateSettings()
         {
-            this.micDeviceIndex = deviceIndex;
-            this.micVolumeMultiplier = micVol;
-            this.outputVolume = outVol;
-
-            // 🌟 설정창에서 볼륨 슬라이더를 움직이면, 재생 중인 브금 볼륨도 즉시 바뀝니다!
-            if (bgmSource != null && bgmSource.isPlaying)
-            {
-                bgmSource.volume = outVol;
-            }
 
             if (LocalDataManager.Instance != null)
             {
-                LocalDataManager.Instance.UpdateMicSetting(deviceIndex, micVol, outVol);
-                Debug.Log($"[VoiceManager] 마이크/사운드 설정 저장! (기기: {deviceIndex}, 마이크: {micVol}, 마스터 볼륨: {outVol})");
+                LocalDataManager.Instance.UpdateMicSetting(micDeviceIndex, micVolumeMultiplier, outputVolume);
+                Debug.Log($"[VoiceManager] 마이크/사운드 설정 저장!)");
             }
         }
+
+        // ==========================================
+        // 🎚️ UI 슬라이더 실시간 연동용 함수
+        // ==========================================
+        public void SetOutputVolume(float volume)
+        {
+            // 1. 매니저의 기준 볼륨 값을 업데이트
+            outputVolume = volume;
+
+            // 2. 현재 재생 중인 브금 오디오 소스에 즉시 적용
+            if (bgmSource != null)
+            {
+                bgmSource.volume = outputVolume;
+            }
+        }
+
 
         // ==========================================
         // 🎙️ 마이크 녹음 & 재생 모듈 (기존 동일)
         // ==========================================
         public void StartMicTest()
         {
+            ToggleBGM();
             if (Microphone.devices.Length == 0) return;
             testDeviceName = Microphone.devices[micDeviceIndex];
             testAudioSource.clip = Microphone.Start(testDeviceName, true, 1, 44100);
@@ -168,6 +196,7 @@ namespace Managers.VoiceManagers
 
         public void StopMicTest()
         {
+            ToggleBGM();
             if (!isRecording) return;
             testAudioSource.Stop();
             Microphone.End(testDeviceName);
@@ -200,6 +229,7 @@ namespace Managers.VoiceManagers
 
         public void StartRecording(bool needPlayBack = false)
         {
+            ToggleBGM();
             recorder.StartRecord(micDeviceIndex);
             isRecording = true; 
             if(needPlayBack)
@@ -214,6 +244,7 @@ namespace Managers.VoiceManagers
 
         public byte[] StopRecording()
         {
+            ToggleBGM();
             if (testAudioSource != null && testAudioSource.isPlaying) testAudioSource.Stop();
             isRecording = false; 
             OnMicVolumeChanged?.Invoke(0f); 

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Managers.LocalDataManagers;
 using Managers.VoiceManagers;
 using TMPro;
 using UnityEngine;
@@ -36,7 +37,10 @@ namespace DefaultNamespace {
         }
 
 
+        
+
         public void CloseUI() {
+            SoundManager.Instance.UpdateSettings();
             CloseAction();
         }
 
@@ -55,7 +59,7 @@ namespace DefaultNamespace {
 
         public void LogoutPressed() {
             ConfirmPopupData data = new ConfirmPopupData {
-                message = "덱을 삭제하시겠습니까?",
+                message = "로그아웃하시겠습니까?",
                 onConfirm = AuthManager.Instance.Logout,
                 onCancel = () => { }
             };
@@ -82,10 +86,13 @@ namespace DefaultNamespace {
             if (SoundManager.Instance != null)
             {
                 SoundManager.Instance.OnMicVolumeChanged += UpdateGauge;
+                outputVolumeSlider.onValueChanged.AddListener(OnVolumeSliderMoved);
             }
 
             OpenAction();
         }
+
+        
 
         public void ReceiveData(bool isLobby) {
             this.isLobby = isLobby;
@@ -119,7 +126,6 @@ namespace DefaultNamespace {
             canvasGroup.DOKill();
 
             if (SoundManager.Instance.isRecording) OnTestButtonClicked();
-            SaveVolumeSetting();
 
             // 목표 상태로 애니메이션 (다시 작아지게, 투명하게)
             popupRect.DOScale(startScale, animDuration).SetEase(Ease.InQuint);
@@ -140,6 +146,13 @@ namespace DefaultNamespace {
                 if (SoundManager.Instance.testAudioSource != null) {
                     SoundManager.Instance.testAudioSource.volume = val;
                 }
+            }
+        }
+        private void OnVolumeSliderMoved(float newValue)
+        {
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.SetOutputVolume(newValue);
             }
         }
 
@@ -165,16 +178,6 @@ namespace DefaultNamespace {
             gaugeBar.fillAmount = volumeValue;
         }
 
-        // ==========================================
-        // 💾 저장 및 취소 버튼 로직
-        // ==========================================
-        public void SaveVolumeSetting() {
-            SoundManager.Instance.UpdateSettings(
-                SoundManager.Instance.micDeviceIndex, // 마이크 기기는 기존 것 유지 (추가 기획 시 드롭다운 연결)
-                micVolumeSlider.value,
-                outputVolumeSlider.value
-            );
-        }
 
 
         // 혹시 창이 비정상적으로 꺼졌을 때를 대비한 안전 장치

@@ -43,7 +43,7 @@ namespace Controllers.SpellControllers
 
         [Header("녹음 데이터 보관")]
         public AudioClip LastRecordedClip { get; private set; } // 방금 녹음한 원본/크롭된 오디오 클립
-        private AudioSource audioSource; // 재생을 담당할 컴포넌트
+        public AudioSource audioSource; // 재생을 담당할 컴포넌트
         private float currentAudioLength = 3.5f;
 
         [Header("자동 캐싱 설정")]
@@ -57,7 +57,6 @@ namespace Controllers.SpellControllers
 
             PlayerModel.OnPlayerSpawned += HandlePlayerSpawned;
             PlayerModel.OnPlayerDespawned += HandlePlayerDespawned;
-            audioSource = GetComponent<AudioSource>();
             if (audioSource == null) 
             {
                 audioSource = gameObject.AddComponent<AudioSource>();
@@ -512,7 +511,7 @@ namespace Controllers.SpellControllers
             Debug.Log($"[Client] 🎬 검증된 연출 팝업 가동 - 문장: {recognizedSentence}, 속성: {property}");
             //todo 이름 바꿀 것
             UILoader.Instance.ShowUI("SpellActive_FullScreen", (recognizedSentence, property));
-
+            var bgm = SoundManager.Instance.StopBGM(1.0f);
             // 오디오 재생 처리
             if (NetworkManager.Singleton.LocalClientId == casterId)
             {
@@ -522,14 +521,14 @@ namespace Controllers.SpellControllers
             {
                 PlayVoice(); // 내가 상대방이면 다운로드된 파일 재생
             }
-            StartCoroutine(HidePopupRoutine(audioLength));
+            StartCoroutine(HidePopupRoutine(audioLength, bgm));
         }
-        private IEnumerator HidePopupRoutine(float delayTime)
+        private IEnumerator HidePopupRoutine(float delayTime, AudioClip bgm)
         {
             // 정확히 오디오가 끝날 때쯤 팝업이 닫힙니다.
             yield return new WaitForSeconds(delayTime);
             Debug.Log("[Client] 음성 재생 완료. 팝업 연출 종료!");
-            
+            SoundManager.Instance.PlayBGM(bgm, 1.0f);
             UILoader.Instance.HideUI("SpellActive_FullScreen");
         }
 

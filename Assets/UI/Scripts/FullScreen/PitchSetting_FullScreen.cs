@@ -20,6 +20,7 @@ namespace DefaultNamespace
         private async void OnEnable() {
             if (SoundManager.Instance != null) {
                 SoundManager.Instance.OnMicVolumeChanged += UpdateGauge;
+                
                 gaugeBar.fillAmount = 0f; 
             }
             // 1. 로컬 데이터 매니저에서 유저 ID 추출
@@ -60,6 +61,7 @@ namespace DefaultNamespace
             pitchAnalyzer.ToggleRecording();
             if (SoundManager.Instance != null)
             {
+                
                 if (SoundManager.Instance.isRecording)
                 {
                     // 녹음이 켜졌으면 게이지를 0으로 초기화하고 텍스트도 변경

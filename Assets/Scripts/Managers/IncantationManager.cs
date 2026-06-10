@@ -33,7 +33,7 @@ namespace Managers
             if (prefixes != null && prefixes.Length > 0)
             {
                 randomPrefix = prefixes[Random.Range(0, prefixes.Length)].text;
-            }
+            } else Debug.LogWarning("선제문이 로드가 안 되고 있다");
 
             return (randomConcept, randomPrefix);
         }

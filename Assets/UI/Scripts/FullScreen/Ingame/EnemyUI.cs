@@ -80,18 +80,18 @@ namespace DefaultNamespace
         private void UpdateDeckCount(int count) => Text_DeckCount.text = count.ToString();
         private void UpdateHandCount(int count) => Text_HandCount.text = count.ToString();
         
-        private void UpdateStatuses(NetworkList<StatusData> statuses)
-        {
+        public void UpdateStatuses(NetworkList<StatusData> statuses) {
+            // 🌟 방어 1: 부모 객체(Grid)나 프리팹이 인스펙터에서 누락되었는지 확인
+            if (StatusGrid == null || StatusIconPrefab == null) return;
+
             // 1. 기존 아이콘 초기화
-            foreach (Transform child in StatusGrid)
-            {
+            foreach (Transform child in StatusGrid) {
                 Destroy(child.gameObject);
             }
 
             // 2. 스택 합산 로직 (기존과 동일)
             Dictionary<StatusType, int> displayStatusTotals = new Dictionary<StatusType, int>();
-            foreach (var status in statuses)
-            {
+            foreach (var status in statuses) {
                 if (displayStatusTotals.ContainsKey(status.Type))
                     displayStatusTotals[status.Type] += status.Stacks;
                 else
@@ -99,17 +99,26 @@ namespace DefaultNamespace
             }
 
             // 3. 아이콘 생성 로직
-            foreach (var kvp in displayStatusTotals)
-            {
+            foreach (var kvp in displayStatusTotals) {
                 StatusType type = kvp.Key;
                 int totalStacks = kvp.Value;
 
                 if (totalStacks <= 0) continue;
                 
-                
-                if (totalStacks <= 0) continue;
-                
+                // 🌟 방어 2: 매니저 싱글톤 자체가 씬에 없는 경우 체크
+                if (StatusUIDataManager.Instance == null) {
+                    Debug.LogError("[EnemyUI] 🚨 StatusUIDataManager 인스턴스를 찾을 수 없습니다! 씬에 오브젝트가 배치되어 있는지 확인해주세요.");
+                    continue;
+                }
+
+                // 매니저에서 상태이상 UI 데이터 가져오기
                 var uiData = StatusUIDataManager.Instance.GetStatusData(type);
+
+                // 🌟 방어 3 (핵심 범인 차단): 데이터가 없거나 아이콘 이미지가 등록 안 되어 있을 때
+                if (uiData == null || uiData.Icon == null) {
+                    Debug.LogWarning($"[EnemyUI] ⚠️ {type} 상태이상이 StatusUIDataManager에 등록되지 않았거나 아이콘이 누락되었습니다!");
+                    continue; // 에러로 게임이 터지지 않고, 이 아이콘만 건너뜁니다.
+                }
 
                 GameObject iconObj = Instantiate(StatusIconPrefab, StatusGrid);
                 UI_StatusIcon statusIcon = iconObj.GetComponent<UI_StatusIcon>();
