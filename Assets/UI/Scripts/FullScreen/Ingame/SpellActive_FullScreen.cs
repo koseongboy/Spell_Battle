@@ -3,47 +3,80 @@ using DG.Tweening;
 using Models.CardDatabases;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DefaultNamespace {
     public class SpellActive_FullScreen : MonoBehaviour, UI_ILayerInfo, UI_IDataReceiver<(string, Property)> {
         public EUILayer TargetLayer => EUILayer.Top;
 
         public TextMeshProUGUI txt_Spell;
-        public RectTransform rect_Spell;
-        public CanvasGroup canvasGroup;
+        public RawImage rawImage;
+        
+        [Header("파티클 동기화 설정")]
+        [Tooltip("씬(Scene)에 배치해둔 마법 파티클 오브젝트의 정확한 이름을 적어주세요.")]
+        public string particleObjectNameInScene = "Magic circle 2";
+
+        private ParticleSystem sceneParticle;
+        
+        // 카메라 원위치 복구를 위한 변수 캐싱
+        private Transform mainCamTransform;
+        private Vector3 originalCameraPos;
+        private bool isCamCached = false;
         
         public void ReceiveData((string, Property) data) {
             Color dbColor = CardDatabase.Instance.GetElementData(data.Item2).Color;
-            
-            // 1. DB에서 가져온 색상이 투명할 경우를 대비해 알파값 강제 복구
             dbColor.a = 1f; 
             
-            txt_Spell.color = dbColor;
+            // rawImage.color = dbColor;  // 좀 밤티임
             txt_Spell.text = data.Item1;
         }
 
         private void OnEnable() {
-            StartAction();
+            PlaySceneParticle();
+            StartContinuousCameraShake();
         }
 
         private void OnDisable() {
-            rect_Spell.DOKill();
-            
-            // 2. txt_Spell이 아닌 실제 애니메이션이 들어가는 canvasGroup을 Kill 해야 함
-            canvasGroup.DOKill(); 
+            StopCameraShakeAndReset();
+        }
+        
+        private void PlaySceneParticle() {
+            if (sceneParticle == null) {
+                GameObject obj = GameObject.Find(particleObjectNameInScene);
+                if (obj != null) {
+                    sceneParticle = obj.GetComponent<ParticleSystem>();
+                } else {
+                    Debug.LogWarning($"[Spell UI] 씬에서 '{particleObjectNameInScene}' 이름의 파티클 오브젝트를 찾을 수 없습니다!");
+                    return;
+                }
+            }
+
+            // 파티클 상태를 맨 처음으로 초기화한 뒤 재생
+            sceneParticle.Simulate(0f, true, true);
+            sceneParticle.Play();
         }
 
-        private void StartAction() {
-            rect_Spell.DOKill();
-            canvasGroup.DOKill();
+        private void StartContinuousCameraShake() {
+            if (Camera.main != null) {
+                mainCamTransform = Camera.main.transform;
+                
+                originalCameraPos = mainCamTransform.position;
+                isCamCached = true;
 
-            // 초기 상태 세팅 (5배 크기, 투명함)
-            rect_Spell.localScale = Vector3.one * 5f;
-            canvasGroup.alpha = 0f;
+                mainCamTransform.DOKill();
 
-            // 3. 게임이 일시정지(TimeScale=0)되어도 애니메이션이 재생되도록 SetUpdate(true) 추가
-            rect_Spell.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBounce).SetUpdate(true);
-            canvasGroup.DOFade(1f, 0.2f).SetEase(Ease.OutQuint).SetUpdate(true);
+                mainCamTransform.DOShakePosition(9999f, 0.1f, 14, 90f, false, false)
+                    .SetUpdate(true);
+            }
+        }
+
+        private void StopCameraShakeAndReset() {
+            if (isCamCached && mainCamTransform != null) {
+                mainCamTransform.DOKill();
+                
+                mainCamTransform.position = originalCameraPos;
+                isCamCached = false;
+            }
         }
     }
 }
