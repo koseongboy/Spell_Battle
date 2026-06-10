@@ -83,11 +83,20 @@ namespace Managers.LocalDataManagers
             else Destroy(gameObject);
         }
 
+        void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                SaveData();
+            }
+        }
+
         public void UpdateMicSetting(int idx, float micV, float outV)
         {
             deviceIndex = idx;
             micVol = micV;
             outVol = outV;
+            SaveData();
         }
         public (int deviceIdx, float micV, float outV) GetMicSettings()
         {
@@ -110,6 +119,11 @@ namespace Managers.LocalDataManagers
         // ==========================================
         public void SaveData()
         {
+            if (string.IsNullOrEmpty(saveFilePath)) 
+            {
+                Debug.LogWarning("[LocalDataManager] 저장 경로가 비어있어 SaveData를 취소합니다.");
+                return;
+            }
             // 1. 객체를 JSON 형식의 텍스트로 변환 (true를 넣으면 들여쓰기/줄바꿈이 적용되어 사람이 읽기 편해집니다)
             string jsonText = JsonUtility.ToJson(currentData, true);
 

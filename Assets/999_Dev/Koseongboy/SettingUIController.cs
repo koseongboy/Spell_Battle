@@ -108,11 +108,7 @@ public class SettingUIController : MonoBehaviour
         if (SoundManager.Instance.isRecording) OnTestButtonClicked();
 
         // 2. 🌟 여기서 최종적으로 매니저들에게 영구 저장을 때립니다!
-        SoundManager.Instance.UpdateSettings(
-            SoundManager.Instance.micDeviceIndex, // 마이크 기기는 기존 것 유지 (추가 기획 시 드롭다운 연결)
-            micVolumeSlider.value, 
-            outputVolumeSlider.value
-        );
+        SoundManager.Instance.UpdateSettings();
 
         Debug.Log("[SettingUI] 설정 저장 완료 및 창 닫기");
         settingUIPanel.SetActive(false); // 패널 닫기

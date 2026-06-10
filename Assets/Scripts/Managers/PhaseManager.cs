@@ -148,7 +148,10 @@ namespace DefaultNamespace {
             switch (newPhase) {
                 case GamePhase.Mulligan: {
                     if (IntroCamera != null) IntroCamera.SetActive(false);
-                    if (MainCamera != null) MainCamera.SetActive(true);
+                    if (MainCamera != null) 
+                    {
+                        MainCamera.SetActive(true);
+                    }
 
 
                     NetworkObject localPlayerObj = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();

@@ -158,12 +158,15 @@ namespace DefaultNamespace {
 
 
         public void UpdateStatuses(NetworkList<StatusData> statuses) {
-            // 1. 기존에 생성된 아이콘들을 모두 지운다 (오브젝트 풀링을 쓰면 더 좋지만 우선 Destroy로 구현)
+            // 🌟 방어 1: 부모 객체(Grid)나 프리팹이 누락되었는지 확인
+            if (StatusGrid == null || StatusIconPrefab == null) return;
+
+            // 1. 기존에 생성된 아이콘들을 모두 지운다
             foreach (Transform child in StatusGrid) {
                 Destroy(child.gameObject);
             }
 
-            // 2. 스택 합산 로직 (기존과 동일)
+            // 2. 스택 합산 로직
             Dictionary<StatusType, int> displayStatusTotals = new Dictionary<StatusType, int>();
             foreach (var status in statuses) {
                 if (displayStatusTotals.ContainsKey(status.Type))
@@ -179,9 +182,21 @@ namespace DefaultNamespace {
 
                 if (totalStacks <= 0) continue;
                 
+                // 🌟 방어 2: 매니저 싱글톤 자체가 씬에 없는 경우 체크
+                if (StatusUIDataManager.Instance == null) {
+                    Debug.LogError("[PlayerUI] 🚨 StatusUIDataManager 인스턴스를 찾을 수 없습니다! 씬에 오브젝트가 있는지 확인해주세요.");
+                    continue;
+                }
+
+                // 원래 사용하던 싱글톤 매니저 방식으로 복귀
                 var uiData = StatusUIDataManager.Instance.GetStatusData(type);
 
-                Sprite iconSprite = null;
+                // 🌟 방어 3 (가장 유력한 범인): 매니저에 해당 상태이상 데이터가 등록 안 되어 있을 때
+                if (uiData == null || uiData.Icon == null) {
+                    Debug.LogWarning($"[PlayerUI] ⚠️ {type} 상태이상이 StatusUIDataManager에 등록되지 않았거나 아이콘이 누락되었습니다!");
+                    continue; // 에러로 게임이 터지지 않고, 이 아이콘만 건너뜁니다.
+                }
+
                 GameObject iconObj = Instantiate(StatusIconPrefab, StatusGrid);
                 UI_StatusIcon statusIcon = iconObj.GetComponent<UI_StatusIcon>();
 

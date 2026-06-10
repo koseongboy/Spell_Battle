@@ -24,7 +24,6 @@ namespace DefaultNamespace
         [SerializeField] private float volumeThreshold = 0.02f; // 무음 제외를 위한 최소 진폭(RMS)
         [SerializeField] private int windowSize = 2048;          // 분석 단위 샘플 수 (~46ms)
         [SerializeField] private int hopSize = 1024;             // 분석 간격 (오버랩)
-
         private AudioClip _recordingClip;
         private string _micDevice;
         private bool _isRecording = false;
