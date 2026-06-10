@@ -119,8 +119,8 @@ namespace DefaultNamespace
             }
         }
         
-        public void SetHighlight(bool isOn)
-        {
+        public void SetHighlight(bool isOn) {
+            Debug.Log(isOn);
             isSelected = isOn;
             if (highlight != null)
             {

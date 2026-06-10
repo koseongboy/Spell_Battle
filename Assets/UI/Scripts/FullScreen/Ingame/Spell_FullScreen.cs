@@ -68,8 +68,8 @@ namespace DefaultNamespace
                 },
                 actionOnDestroy: (card) => Destroy(card.gameObject),
                 collectionCheck: false,
-                defaultCapacity: 3,
-                maxSize: 10
+                defaultCapacity: 10,
+                maxSize: 20
             );
         }
         
@@ -92,6 +92,7 @@ namespace DefaultNamespace
             
             ReleaseAllPieces();
             var cardList = payload.GetCards();
+            Debug.Log(cardList.Count);
             for (int i = 0; i < cardList.Count; i++) {
                 var piece = wordPiecePool.Get();
                 piece.UpdateUI(cardList[i]);
@@ -129,7 +130,7 @@ namespace DefaultNamespace
             {
                 wordPiecePool.Release(piece);
             }
-            wordPiecePool.Clear();
+            activeWords.Clear();
         }
         
         

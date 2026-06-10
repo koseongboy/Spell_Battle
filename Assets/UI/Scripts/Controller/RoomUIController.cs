@@ -145,7 +145,6 @@ namespace DefaultNamespace {
             if (ui_Room == null) return;
 
             string hostWebId = matchmakingService.GetHostWebUserId(); 
-            Debug.Log(hostWebId);
             
             if (!string.IsNullOrEmpty(hostWebId)) {
                 var hostProfile = await AuthManager.Instance.RequestUserProfileAsync(hostWebId);
@@ -180,11 +179,7 @@ namespace DefaultNamespace {
             await ReturnToLobbyMain();
             CommonUIController.Instance.DoneLoading();
         }
-        [Rpc(SendTo.Everyone)]
-        private void ShowLoadingScreenClientRpc() {
-            Debug.Log("[Client] 글로벌 로딩 화면 출력 명령 수신!");
-            CommonUIController.Instance.ShowLoading();
-        }
+
 
         private async void HandleStartGame() {
             if (NetworkManager.Singleton.IsHost) {
@@ -193,8 +188,7 @@ namespace DefaultNamespace {
                     // 2. Ready 상태인지 검증
                     if (readyStateModel != null && readyStateModel.isGuestReady.Value) {
                         
-                        // 🌟 2. [수정] 호스트 혼자 로딩창을 띄우지 않고, 무전을 날려서 게스트도 동시에 띄우게 만듭니다!
-                        ShowLoadingScreenClientRpc(); 
+                        readyStateModel.ShowLoadingScreenRpc();
 
                         // 3. 방 잠금 처리
                         if (matchmakingService != null) {

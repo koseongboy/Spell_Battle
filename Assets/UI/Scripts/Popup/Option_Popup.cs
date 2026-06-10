@@ -1,7 +1,10 @@
 using DG.Tweening;
 using Managers.VoiceManagers;
+using Models.RelayMatchmakingService;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace DefaultNamespace {
@@ -41,7 +44,34 @@ namespace DefaultNamespace {
         }
 
         public void SurrenderPressed() {
-            Debug.Log("[Option_Lobby] Surrender Pressed");
+            ConfirmPopupData data = new ConfirmPopupData
+            {
+                message = "항복하고 게임에서 나가시겠습니까?",
+                onConfirm = async () => {
+                    if (RelayMatchmakingService.Instance != null) {
+                        await RelayMatchmakingService.Instance.LeaveLobbyAsync();
+                    }
+
+                    // 2. Netcode(NGO) 안전 종료
+                    if (NetworkManager.Singleton != null) {
+
+                        NetworkManager.Singleton.Shutdown();
+
+                        await System.Threading.Tasks.Task.Delay(100);
+                        Destroy(NetworkManager.Singleton.gameObject);
+                    }
+                    
+                    if (SoundManager.Instance != null) {
+                        SoundManager.Instance.StopBGM(0.5f);
+                        if(SoundManager.Instance.isRecording) SoundManager.Instance.StopRecording();
+                    }
+
+                    SceneManager.LoadScene("01_Lobby_crocobob", LoadSceneMode.Single);
+                },
+                onCancel = () => { }
+            };
+            
+            UILoader.Instance.ShowUI("Confirm_Popup", data);
         }
 
         public void VoiceSettingPressed() {
@@ -50,7 +80,7 @@ namespace DefaultNamespace {
         }
 
         public void TutorialPressed() {
-            Debug.Log("[Option_Lobby] Tutorial Pressed");
+            CommonUIController.Instance.ShowBlackAlert("미구현입니다. 첨부된 문서를 확인해주세요.");
         }
 
         public void LogoutPressed() {
@@ -60,11 +90,18 @@ namespace DefaultNamespace {
                 onCancel = () => { }
             };
 
-            UILoader.Instance.ShowUI<ConfirmPopupData>("Confirm_Popup", data);
+            UILoader.Instance.ShowUI("Confirm_Popup", data);
         }
 
         public void ExitGamePressed() {
-            Debug.Log("[Option_Lobby] Exit Game Pressed");
+            ConfirmPopupData data = new ConfirmPopupData
+            {
+                message = "게임을 종료하시겠습니까?",
+                onConfirm = Application.Quit,
+                onCancel = () => { }
+            };
+
+            UILoader.Instance.ShowUI("Confirm_Popup", data);
         }
 
 

@@ -69,10 +69,7 @@ namespace Controllers.LobbyController {
 
         // '게임 시작'
         public void OnGameStartPressed() {
-            Debug.Log("[LobbyController] OnGameStartPressed");
-
             if (ui_Lobby == null) {
-                Debug.Log("[LobbyController] 잘못된 호출입니다. ui_Lobby null입니다.");
                 return;
             }
 
@@ -86,13 +83,12 @@ namespace Controllers.LobbyController {
 
         // '튜토리얼'
         public void OnTutorialPressed() {
-            Debug.Log("[LobbyController] OnTutorialPressed");
+            CommonUIController.Instance.ShowBlackAlert("미구현입니다. 첨부된 문서를 확인해주세요.");
         }
 
         // '크레딧'
         public void OnCreditPressed() {
-            Debug.Log("[LobbyController] OnCreditPressed");
-            CommonUIController.Instance.ShowBlackAlert("헤헷 미구현입니다. 그치만 저희 열심히 만들었어요.");
+            CommonUIController.Instance.ShowBlackAlert("CAU Software 고성현, 김명준, 김이경");
         }
 
 

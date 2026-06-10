@@ -112,6 +112,7 @@ namespace DefaultNamespace {
 
         // 호스트(방장) 정보 세팅
         public void UpdateHostUI(string name, int score, string rank) {
+            Debug.Log(name);
             hostSlotGroup.SetActive(true);
 
             // TODO
