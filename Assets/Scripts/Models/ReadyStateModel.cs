@@ -31,5 +31,11 @@ namespace Models.RelayMatchmakingService {
                 Debug.LogError("[Guest Error] RoomUIController.Instance가 null입니다! (UI 이벤트를 넘겨줄 수 없음)");
             }
         }
+        
+        [Rpc(SendTo.Everyone)]
+        public void ShowLoadingScreenRpc() {
+            Debug.Log("[Client] 글로벌 로딩 화면 출력 명령 수신!");
+            CommonUIController.Instance.ShowLoading();
+        }
     }
 }

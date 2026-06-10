@@ -14,13 +14,17 @@ using UnityEngine.SceneManagement;
 namespace DefaultNamespace {
     
     [Serializable]
-    public class UserProfileResponse 
-    {
+    public class UserProfileResponse {
+        public string message;
+        public UserData userData;
+    }
+
+    [Serializable]
+    public class UserData {
         public string userId;
-        public string nickname;
         public int score;
         public string rank;
-        public string[] equippedDeck;
+        public float defaultPitch;
     }
     
     public class RoomUIController : MonoBehaviour {
@@ -146,12 +150,12 @@ namespace DefaultNamespace {
             if (ui_Room == null) return;
 
             string hostWebId = matchmakingService.GetHostWebUserId(); 
-            Debug.Log(hostWebId);
             
             if (!string.IsNullOrEmpty(hostWebId)) {
                 var hostProfile = await AuthManager.Instance.RequestUserProfileAsync(hostWebId);
+                var userData = hostProfile.userData;
                 if (hostProfile != null)
-                    ui_Room.UpdateHostUI(hostProfile.nickname, hostProfile.score, hostProfile.rank);
+                    ui_Room.UpdateHostUI(userData.userId, userData.score, userData.rank);
             }
 
             // 2. 게스트(손님) 정보 처리
@@ -162,8 +166,9 @@ namespace DefaultNamespace {
                 
                 if (!string.IsNullOrEmpty(guestWebId)) {
                     var guestProfile = await AuthManager.Instance.RequestUserProfileAsync(guestWebId);
+                    var userData = guestProfile.userData;
                     if (guestProfile != null)
-                        ui_Room.UpdateGuestUI(guestProfile.nickname, guestProfile.score, guestProfile.rank);
+                        ui_Room.UpdateGuestUI(userData.userId, userData.score, userData.rank);
                 }
             }
             else 
@@ -188,6 +193,7 @@ namespace DefaultNamespace {
             CommonUIController.Instance.ShowLoading();
         }
 
+
         private async void HandleStartGame() {
             if (NetworkManager.Singleton.IsHost) {
                 // 1. 방에 2명이 다 있는지 확인
@@ -195,8 +201,7 @@ namespace DefaultNamespace {
                     // 2. Ready 상태인지 검증
                     if (readyStateModel != null && readyStateModel.isGuestReady.Value) {
                         
-                        // 🌟 2. [수정] 호스트 혼자 로딩창을 띄우지 않고, 무전을 날려서 게스트도 동시에 띄우게 만듭니다!
-                        ShowLoadingScreenClientRpc(); 
+                        readyStateModel.ShowLoadingScreenRpc();
 
                         // 3. 방 잠금 처리
                         if (matchmakingService != null) {
@@ -225,8 +230,6 @@ namespace DefaultNamespace {
         // 게스트가 준비 버튼을 눌렀을 때
         private void HandleReadyClicked() {
             if (readyStateModel != null) {
-                // Controller는 Model에게 명령(RPC)만 내림. 
-                // 시각적 업데이트는 서버에서 값이 바뀐 후 콜백을 통해 이루어짐.
                 readyStateModel.ToggleReadyServerRpc();
             }
         }

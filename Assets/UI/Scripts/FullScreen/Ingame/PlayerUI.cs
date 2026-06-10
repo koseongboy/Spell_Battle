@@ -109,7 +109,10 @@ namespace DefaultNamespace {
                 model.Hand.localHand.CollectionChanged += (sender, e) => UpdateHandInfo(model.Hand.localHand);
             }
             
-            btn_endTurn.onClick.AddListener( ()=>PhaseManager.Instance.RequestEndTurn() );
+            btn_endTurn.onClick.RemoveAllListeners();
+            btn_spell.onClick.RemoveAllListeners();
+            
+            btn_endTurn.onClick.AddListener( controller.TryTurnEnd );
             btn_spell.onClick.AddListener( controller.SubmitSpellSelection );
             this.OnCardClickedAction += controller.ToggleSpellIndex;
         
@@ -239,14 +242,14 @@ namespace DefaultNamespace {
                 activeCards.Add(cardUI);
             }
 
-            // 3. 🌟 생성된 카드들을 부채꼴로 예쁘게 정렬하도록 매니저 호출
+            // 3. 생성된 카드들을 부채꼴로 예쁘게 정렬하도록 매니저 호출
             if (HandLayoutManager.Instance != null) {
                 HandLayoutManager.Instance.ArrangeCards(activeCards);
             }
         }
         
-        public void ToggleCardHighlight(int index, bool isOn)
-        {
+        public void ToggleCardHighlight(int index, bool isOn) {
+            Debug.Log("진입"+index+isOn);
             // 안전망: 인덱스가 범위를 벗어나지 않았는지 체크
             if (index >= 0 && index < activeCards.Count)
             {

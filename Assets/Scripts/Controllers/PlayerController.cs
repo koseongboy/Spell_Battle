@@ -130,10 +130,7 @@ namespace Controllers.PlayerController
                 _selectedSpellIndices.Remove(index);
                 model.ExpectedManaCost -= cost;
                 
-                if (PlayerUI.Instance != null)
-                {
-                    PlayerUI.Instance.ToggleCardHighlight(index, false);
-                }
+                PlayerUI.Instance.ToggleCardHighlight(index, false);
             }
             else
             {
@@ -148,10 +145,7 @@ namespace Controllers.PlayerController
                 model.ExpectedManaCost += cost;
                 Debug.Log($"[Select] 🪄 {index + 1}번 추가. (예상 마나 소모: {model.ExpectedManaCost} / {model.CurrentMana.Value})");
 
-                if (PlayerUI.Instance != null)
-                {
-                    PlayerUI.Instance.ToggleCardHighlight(index, true);
-                }
+                PlayerUI.Instance.ToggleCardHighlight(index, true);
             }
 
             // 3. todo: UI 업데이트 지시 (PlayerView에 예상 코스트를 전달하여 텍스트 색상을 바꾸는 등 시각화)
@@ -179,6 +173,15 @@ namespace Controllers.PlayerController
 
         public void SubmitSpellSelection()
         {
+            if (TurnModel.Instance.CurrentTurnPlayerId.Value != NetworkManager.Singleton.LocalClientId) {
+                return;
+            }
+            
+            if (_selectedSpellIndices.Count == 0) {
+                CommonUIController.Instance.ShowRedAlert("선택한 카드가 없습니다!");
+                return;
+            }
+            
             List<PlayableCard> selectedCards = new List<PlayableCard>();
             foreach (int index in _selectedSpellIndices)
             {
@@ -196,5 +199,12 @@ namespace Controllers.PlayerController
             ClearSpellSelections();
         }
 
+        public void TryTurnEnd() {
+            if (TurnModel.Instance.CurrentTurnPlayerId.Value != NetworkManager.Singleton.LocalClientId) {
+                return;
+            }
+            
+            PhaseManager.Instance.RequestEndTurn();
+        }
     }
 }
