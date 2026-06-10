@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cards.CardUIDatas;
+using Models.SpellPayloads;
 using UnityEngine;
 using WebSocketSharp;
 
@@ -112,6 +113,18 @@ namespace DefaultNamespace
         [ContextMenu("SpellActive Test Stop")]
         public void SpellActiveStop() {
             UILoader.Instance.HideUI("SpellActive_FullScreen");
+        }
+
+        
+        [ContextMenu("Show Spell UI")]
+        public void ShowSpellUI() {
+            UILoader.Instance.ShowUI("Spell_FullScreen", new SpellPayload());
+
+        }
+
+        [ContextMenu("Show Spell Active UI")]
+        public void ShowSpellActiveUI() {
+            UILoader.Instance.ShowUI("SpellActive_FullScreen", ("testtesttesttest", Property.Fire));
         }
     }
 }
