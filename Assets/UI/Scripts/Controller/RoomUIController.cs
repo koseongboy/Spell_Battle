@@ -180,24 +180,35 @@ namespace DefaultNamespace {
             await ReturnToLobbyMain();
             CommonUIController.Instance.DoneLoading();
         }
+        [Rpc(SendTo.Everyone)]
+        private void ShowLoadingScreenClientRpc() {
+            Debug.Log("[Client] 글로벌 로딩 화면 출력 명령 수신!");
+            CommonUIController.Instance.ShowLoading();
+        }
 
         private async void HandleStartGame() {
             if (NetworkManager.Singleton.IsHost) {
                 // 1. 방에 2명이 다 있는지 확인
                 if (NetworkManager.Singleton.ConnectedClientsList.Count == 2) {
-                    // 2. [팩트 체크] 버튼 활성화 여부와 별개로, 실제 Model의 데이터가 Ready 상태인지 서버 단에서 이중 검증
+                    // 2. Ready 상태인지 검증
                     if (readyStateModel != null && readyStateModel.isGuestReady.Value) {
-                        CommonUIController.Instance.ShowLoading(); // 로딩창 띄우기
+                        
+                        // 🌟 2. [수정] 호스트 혼자 로딩창을 띄우지 않고, 무전을 날려서 게스트도 동시에 띄우게 만듭니다!
+                        ShowLoadingScreenClientRpc(); 
 
-                        // 3. 게임이 시작되면 로비 리스트에서 검색되지 않도록 방을 잠금 처리
+                        // 3. 방 잠금 처리
                         if (matchmakingService != null) {
                             await matchmakingService.LockLobbyAsync();
                         }
 
-                        Debug.Log("게임 시작! 02_Battle_Koseongboy 씬으로 전환합니다.");
+                        Debug.Log("게임 시작! 02_Battle 씬으로 전환합니다.");
 
-                        // 4. Netcode 전용 씬 로드 (Host가 호출하면 모든 Client가 함께 씬 이동)
-                        NetworkManager.Singleton.SceneManager.LoadScene("02_Battle_Crocobob", LoadSceneMode.Single);
+                        // 🌟 3. [핵심] RPC 무전이 도달하고 유니티가 UI를 화면에 그릴 수 있도록 0.5초(500ms)만 시간을 벌어줍니다.
+                        // (이 대기 시간이 없으면 무전이 가기도 전에 씬 로딩이 시작되어 화면이 멈춰버립니다.)
+                        await System.Threading.Tasks.Task.Delay(500);
+
+                        // 4. Netcode 전용 씬 로드
+                        NetworkManager.Singleton.SceneManager.LoadScene("02_Battle", UnityEngine.SceneManagement.LoadSceneMode.Single);
                     }
                     else {
                         CommonUIController.Instance.ShowRedAlert("게스트가 아직 준비하지 않았습니다.");

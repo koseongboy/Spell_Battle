@@ -90,7 +90,7 @@ namespace DefaultNamespace {
                 {
                     // 🛠️ [수정 부분] 로그인 실패 시 에러 코드와 서버가 보낸 에러 메시지 Body를 같이 출력
                     string errorResponse = request.downloadHandler?.text;
-                    Debug.LogError($"<color=#FF0000>[AuthManager] 로그인 서버 통신 실패.</color>\nError: {request.error}\nServer Message: {errorResponse}");
+                    Debug.LogWarning($"<color=#FF0000>[AuthManager] 로그인 서버 통신 실패.</color>\nError: {request.error}\nServer Message: {errorResponse}");
                     return false;
                 }
             }

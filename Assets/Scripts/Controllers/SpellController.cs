@@ -23,6 +23,7 @@ namespace Controllers.SpellControllers
         
         [Header("배틀 씬 진짜 메인 카메라")]
         public Camera BattleMainCamera;
+
         
         [Header("연결된 플레이어 모델")]
         public PlayerModel MyPlayer;
