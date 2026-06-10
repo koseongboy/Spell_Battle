@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: 7801840898119692718}
   - component: {fileID: 4466011695582496944}
   - component: {fileID: 5897164658101183459}
+  - component: {fileID: 3649344229318276018}
   m_Layer: 5
   m_Name: EffectDetail_BG
   m_TagString: Untagged
@@ -366,3 +367,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.EffectDetail
   txt_Title: {fileID: 711335020244024098}
   txt_Desc: {fileID: 4712463453190067614}
+--- !u!114 &3649344229318276018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8050471701286395565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner

@@ -3170,6 +3170,7 @@ GameObject:
   - component: {fileID: 767537961}
   - component: {fileID: 767537962}
   - component: {fileID: 767537963}
+  - component: {fileID: 767537964}
   m_Layer: 0
   m_Name: UI_Controller
   m_TagString: Untagged
@@ -3268,6 +3269,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.DeckEditController
   ui_DeckEdit: {fileID: 0}
+--- !u!114 &767537964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767537956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d27cc3a4b3c59a4598302165480cce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.GlobalButtonSoundAssigner
 --- !u!1 &784845763
 GameObject:
   m_ObjectHideFlags: 0
@@ -7762,6 +7775,8 @@ MonoBehaviour:
   recorder: {fileID: 1470527233}
   player: {fileID: 159683882}
   bgmSource: {fileID: 1640395187}
+  sfxSource: {fileID: 0}
+  defaultButtonSFX: {fileID: 0}
   micDeviceIndex: 0
   micVolumeMultiplier: 1
   outputVolume: 1

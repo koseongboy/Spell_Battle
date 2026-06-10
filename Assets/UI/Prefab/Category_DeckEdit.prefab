@@ -151,6 +151,7 @@ GameObject:
   - component: {fileID: 6055883744947731334}
   - component: {fileID: 8564420344344375661}
   - component: {fileID: 8217033777420357070}
+  - component: {fileID: 5964550234718492939}
   m_Layer: 5
   m_Name: Category_DeckEdit
   m_TagString: Untagged
@@ -299,6 +300,18 @@ MonoBehaviour:
   highlightObj: {fileID: 5562837856923054488}
   Icon: {fileID: 1009498437709007809}
   Name: {fileID: 6531622578031025737}
+--- !u!114 &5964550234718492939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5070641687796926123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &5562837856923054488
 GameObject:
   m_ObjectHideFlags: 0

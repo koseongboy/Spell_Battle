@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2122713922639997196}
   - component: {fileID: 3688954404742547090}
   - component: {fileID: 2487852744223347702}
+  - component: {fileID: 7458982558063061932}
   m_Layer: 5
   m_Name: DeckList_Room_Popup
   m_TagString: Untagged
@@ -133,3 +134,15 @@ MonoBehaviour:
   contentParent: {fileID: 7040181637340642636}
   deckItemPrefab: {fileID: 3767119893499015652, guid: c6e8f935dbefb6247a54112d506e06f3, type: 3}
   targetOffsetX: 330
+--- !u!114 &7458982558063061932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680227441357939399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner

@@ -316,6 +316,7 @@ GameObject:
   - component: {fileID: 4111186511802894077}
   - component: {fileID: 7846991966126255614}
   - component: {fileID: 8479658211058995307}
+  - component: {fileID: 5835455568326415503}
   m_Layer: 5
   m_Name: btn-Friend_FriendPanel
   m_TagString: Untagged
@@ -426,6 +427,18 @@ MonoBehaviour:
   txt_Status: {fileID: 8843782814243975974}
   btn_Detail: {fileID: 7846991966126255614}
   img_Status: {fileID: 3761740218079625574}
+--- !u!114 &5835455568326415503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218243765700067748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &6116195369509759511
 GameObject:
   m_ObjectHideFlags: 0

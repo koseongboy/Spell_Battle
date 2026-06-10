@@ -468,6 +468,7 @@ GameObject:
   - component: {fileID: 7514802278897021348}
   - component: {fileID: 7395143562165725825}
   - component: {fileID: 4287864623336286332}
+  - component: {fileID: 472076680842647727}
   m_Layer: 7
   m_Name: Friend_DetailWindow
   m_TagString: Untagged
@@ -534,6 +535,7 @@ MonoBehaviour:
   btn_Close: {fileID: 3672280161013710684}
   btn_InviteGame: {fileID: 5708344379306808750}
   btn_DeleteFriend: {fileID: 1339888509921937724}
+  moveOffsetX: 100
   animDuration: 0.1
   startScale: {x: 0.8, y: 0.8, z: 0.8}
 --- !u!225 &4287864623336286332
@@ -548,6 +550,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &472076680842647727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2468003867037612222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &2912587078904416103
 GameObject:
   m_ObjectHideFlags: 0

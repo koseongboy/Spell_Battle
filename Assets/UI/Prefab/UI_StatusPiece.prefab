@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 2814217441440302863}
   - component: {fileID: 1035472539889004959}
   - component: {fileID: 2272070445513346373}
+  - component: {fileID: 7078179291689494465}
   m_Layer: 5
   m_Name: UI_StatusPiece
   m_TagString: Untagged
@@ -235,6 +236,18 @@ MonoBehaviour:
   txt_Turn: {fileID: 9055024788298153179}
   txt_Stack: {fileID: 3927118642194951078}
   txt_Desc: {fileID: 2947255388883445143}
+--- !u!114 &7078179291689494465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136243926338545282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &2510837895362059090
 GameObject:
   m_ObjectHideFlags: 0

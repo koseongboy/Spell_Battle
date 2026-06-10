@@ -3625,6 +3625,7 @@ GameObject:
   - component: {fileID: 3445710239340030840}
   - component: {fileID: 8768506230794646483}
   - component: {fileID: 5772209882592791191}
+  - component: {fileID: 810558374675547998}
   m_Layer: 5
   m_Name: Login_FullScreen
   m_TagString: Untagged
@@ -3716,6 +3717,18 @@ MonoBehaviour:
   registerCanvasGroup: {fileID: 493220497362298163}
   animDuration: 0.1
   startOffset: {x: 0, y: -200}
+--- !u!114 &810558374675547998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8236051108307986478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &9005716426686131114
 GameObject:
   m_ObjectHideFlags: 0

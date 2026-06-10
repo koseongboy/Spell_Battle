@@ -270,6 +270,7 @@ GameObject:
   - component: {fileID: 1217436599532417718}
   - component: {fileID: 2304549029783015368}
   - component: {fileID: 6218761014678689676}
+  - component: {fileID: 7325444269294319871}
   m_Layer: 5
   m_Name: SpellActive_FullScreen
   m_TagString: Untagged
@@ -349,7 +350,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.SpellActive_FullScreen
   txt_Spell: {fileID: 1669107132669004037}
-  rect_Spell: {fileID: 3671888974997878050}
-  canvasGroup: {fileID: 4915977382311179815}
   rawImage: {fileID: 1682978978477763327}
   particleObjectNameInScene: Magic circle 2
+--- !u!114 &7325444269294319871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3699584028929088011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner

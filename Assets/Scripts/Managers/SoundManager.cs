@@ -14,12 +14,16 @@ namespace Managers.VoiceManagers
         public VoicePlayer player;
 
         [Header("하위 모듈 (BGM)")]
-        public AudioSource bgmSource; // 🌟 BGM을 담당할 오디오 소스 추가
+        public AudioSource bgmSource;
+
+        [Header("하위 모듈 (SFX)")]
+        public AudioSource sfxSource;
+        public AudioClip defaultButtonSFX; 
 
         [Header("음성 및 사운드 설정값")]
         public int micDeviceIndex = 0;
         public float micVolumeMultiplier = 1.0f;
-        public float outputVolume = 1.0f; // 🌟 이제 상대방 음성 + BGM 마스터 볼륨으로 쓰입니다.
+        public float outputVolume = 1.0f;
 
         [Header("마이크 테스트 (Loopback)")]
         public AudioSource testAudioSource;
@@ -38,11 +42,6 @@ namespace Managers.VoiceManagers
                 Instance = this;
                 DontDestroyOnLoad(this.gameObject);
 
-                // 깜빡하고 BGM용 AudioSource를 안 붙였을 경우 자동 생성
-                if (bgmSource == null)
-                {
-                    bgmSource = gameObject.AddComponent<AudioSource>();
-                }
             }
             else
             {
@@ -101,7 +100,22 @@ namespace Managers.VoiceManagers
             }
         }
 
-    
+        // ==========================================
+        // 🎵 SFX 통합 제어 모듈
+        // ==========================================
+
+        public void PlaySFX(AudioClip clip)
+        {
+            if (clip == null || sfxSource == null) return;
+            
+            // PlayOnShot은 기존에 나고 있던 효과음을 끊지 않고 겹쳐서 예쁘게 재생해줍니다.
+            sfxSource.PlayOneShot(clip, outputVolume); 
+        }
+
+        public void PlayDefaultButtonSFX()
+        {
+            PlaySFX(defaultButtonSFX);
+        }
 
         // ==========================================
         // ⚙️ 설정 업데이트 동기화 (볼륨 실시간 적용)

@@ -489,6 +489,7 @@ GameObject:
   - component: {fileID: 6187981711144866170}
   - component: {fileID: 299843550636633317}
   - component: {fileID: 6351429088476980970}
+  - component: {fileID: 562271505459225773}
   m_Layer: 5
   m_Name: UI_FindRoom_RoomPiece
   m_TagString: Untagged
@@ -649,6 +650,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &562271505459225773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974715906419634369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &6986652182597918686
 GameObject:
   m_ObjectHideFlags: 0
