@@ -66,7 +66,7 @@ namespace DefaultNamespace {
                     }
                     
                     if (SoundManager.Instance != null) {
-                        SoundManager.Instance.StopBGM(0.5f);
+                        SoundManager.Instance.ToggleBGM();
                         if(SoundManager.Instance.isRecording) SoundManager.Instance.StopRecording();
                     }
 

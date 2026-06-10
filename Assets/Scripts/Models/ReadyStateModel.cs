@@ -33,7 +33,8 @@ namespace Models.RelayMatchmakingService {
         }
         
         [Rpc(SendTo.Everyone)]
-        public void ShowLoadingScreenRpc() {
+        public void ShowLoadingScreenRpc(bool isBGMOff = false) {
+            if(isBGMOff) Managers.VoiceManagers.SoundManager.Instance.ToggleBGM();
             Debug.Log("[Client] 글로벌 로딩 화면 출력 명령 수신!");
             CommonUIController.Instance.ShowLoading();
         }

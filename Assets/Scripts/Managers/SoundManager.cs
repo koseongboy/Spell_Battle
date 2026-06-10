@@ -15,7 +15,6 @@ namespace Managers.VoiceManagers
 
         [Header("하위 모듈 (BGM)")]
         public AudioSource bgmSource; // 🌟 BGM을 담당할 오디오 소스 추가
-        private Coroutine bgmFadeCoroutine;
 
         [Header("음성 및 사운드 설정값")]
         public int micDeviceIndex = 0;
@@ -23,7 +22,7 @@ namespace Managers.VoiceManagers
         public float outputVolume = 1.0f; // 🌟 이제 상대방 음성 + BGM 마스터 볼륨으로 쓰입니다.
 
         [Header("마이크 테스트 (Loopback)")]
-        public AudioSource testAudioSource; 
+        public AudioSource testAudioSource;
         public bool isRecording { get; private set; } = false;
         
         [Obsolete("이 변수는 isRecording으로 통합되었습니다. 앞으로는 isRecording을 사용해 주세요.")]
@@ -76,21 +75,13 @@ namespace Managers.VoiceManagers
         // ==========================================
         // 🎵 BGM 통합 제어 모듈
         // ==========================================
-        public void PlayBGM(AudioClip clip, float fadeDuration = 1.0f)
+        public void SetBgmAudioClip(AudioClip source)
         {
-            if (clip == null || bgmSource.clip == clip) return;
-
-            if (bgmFadeCoroutine != null) StopCoroutine(bgmFadeCoroutine);
-            bgmFadeCoroutine = StartCoroutine(FadeToNextBGMRoutine(clip, fadeDuration));
+            bgmSource.Pause();
+            bgmSource.clip = null;
+            bgmSource.clip = source;
+            bgmSource.Play();
         }
-
-        public AudioClip StopBGM(float fadeDuration = 1.0f)
-        {
-            if (bgmFadeCoroutine != null) StopCoroutine(bgmFadeCoroutine);
-            bgmFadeCoroutine = StartCoroutine(FadeOutBGMRoutine(fadeDuration));
-            return bgmSource.clip;
-        }
-
         public void ToggleBGM()
         {
             // 오디오 소스가 없거나 할당된 음악이 없다면 무시합니다.
@@ -110,43 +101,7 @@ namespace Managers.VoiceManagers
             }
         }
 
-        private IEnumerator FadeToNextBGMRoutine(AudioClip nextClip, float duration)
-        {
-            // 1. 기존 음악 페이드 아웃
-            if (bgmSource.isPlaying)
-            {
-                while (bgmSource.volume > 0)
-                {
-                    bgmSource.volume -= Time.deltaTime / duration;
-                    yield return null;
-                }
-            }
-
-            // 2. 새 음악 교체 및 재생
-            bgmSource.clip = nextClip;
-            bgmSource.loop = true;
-            bgmSource.Play();
-
-            // 3. 새 음악 페이드 인 (🌟 목표 볼륨은 사용자가 설정한 outputVolume!)
-            float targetVolume = outputVolume; 
-            while (bgmSource.volume < targetVolume)
-            {
-                bgmSource.volume += (Time.deltaTime / duration) * targetVolume;
-                yield return null;
-            }
-            bgmSource.volume = targetVolume;
-        }
-
-        private IEnumerator FadeOutBGMRoutine(float duration)
-        {
-            while (bgmSource.volume > 0)
-            {
-                bgmSource.volume -= Time.deltaTime / duration;
-                yield return null;
-            }
-            bgmSource.Stop();
-        }
-
+    
 
         // ==========================================
         // ⚙️ 설정 업데이트 동기화 (볼륨 실시간 적용)

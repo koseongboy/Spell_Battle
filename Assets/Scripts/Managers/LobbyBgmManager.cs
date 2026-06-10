@@ -7,7 +7,8 @@ namespace DefaultNamespace
         public AudioClip lobbyBGM;
 
         private void Start() {
-            Managers.VoiceManagers.SoundManager.Instance.PlayBGM(lobbyBGM);
+            Managers.VoiceManagers.SoundManager.Instance.SetBgmAudioClip(lobbyBGM);
+
         }
     }
 }

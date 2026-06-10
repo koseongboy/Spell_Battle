@@ -51,7 +51,7 @@ namespace DefaultNamespace
 
 
             if (Managers.VoiceManagers.SoundManager.Instance != null) {
-                Managers.VoiceManagers.SoundManager.Instance.StopBGM(0.5f);
+                Managers.VoiceManagers.SoundManager.Instance.ToggleBGM();
                 if(Managers.VoiceManagers.SoundManager.Instance.isRecording) Managers.VoiceManagers.SoundManager.Instance.StopRecording();
             }
 

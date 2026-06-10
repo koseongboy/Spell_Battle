@@ -146,7 +146,8 @@ namespace DefaultNamespace {
         // 게임 시작 & 준비 완료
         // ==========================================
 
-        public void SetupRoleButtons(bool isHost) {
+        public async void SetupRoleButtons(bool isHost) {
+            
             btn_GameStart.gameObject.SetActive(isHost); // 방장만 시작 버튼 노출
             btn_Ready.gameObject.SetActive(!isHost); // 손님만 준비 버튼 노출
         }

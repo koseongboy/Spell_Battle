@@ -186,12 +186,7 @@ namespace DefaultNamespace {
             await ReturnToLobbyMain();
             CommonUIController.Instance.DoneLoading();
         }
-        [Rpc(SendTo.Everyone)]
-        private void ShowLoadingScreenClientRpc() {
-            Debug.Log("[Client] 글로벌 로딩 화면 출력 명령 수신!");
-            SoundManager.Instance.StopBGM();
-            CommonUIController.Instance.ShowLoading();
-        }
+
 
 
         private async void HandleStartGame() {
@@ -229,9 +224,16 @@ namespace DefaultNamespace {
 
         // 게스트가 준비 버튼을 눌렀을 때
         private void HandleReadyClicked() {
-            if (readyStateModel != null) {
+            try
+            {
+                if (readyStateModel != null) {
                 readyStateModel.ToggleReadyServerRpc();
+                }
+            } catch (NullReferenceException e)
+            {
+                Debug.LogWarning($"아직 레디스테이트 모델이 준비가 안 됐는데 준비 버튼을 눌렀습니다. 잠시 후 시도해주세요\n {e.Message}");
             }
+            
         }
 
         // Model의 Ready 값이 바뀌었을 때

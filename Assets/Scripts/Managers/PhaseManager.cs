@@ -65,7 +65,7 @@ namespace DefaultNamespace {
             if (!IsServer) return;
             Debug.Log("[PhaseManager] 세팅 완료. 5초간 인트로 연출 시작...");
             if (battleBGM != null && Managers.VoiceManagers.SoundManager.Instance != null) {
-                Managers.VoiceManagers.SoundManager.Instance.PlayBGM(battleBGM, 1.0f);
+                Managers.VoiceManagers.SoundManager.Instance.SetBgmAudioClip(battleBGM);
             }
             StartCoroutine(IntroRoutine());
         }

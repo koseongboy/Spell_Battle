@@ -511,7 +511,7 @@ namespace Controllers.SpellControllers
             Debug.Log($"[Client] 🎬 검증된 연출 팝업 가동 - 문장: {recognizedSentence}, 속성: {property}");
             //todo 이름 바꿀 것
             UILoader.Instance.ShowUI("SpellActive_FullScreen", (recognizedSentence, property));
-            var bgm = SoundManager.Instance.StopBGM(1.0f);
+            SoundManager.Instance.ToggleBGM();
             // 오디오 재생 처리
             if (NetworkManager.Singleton.LocalClientId == casterId)
             {
@@ -521,14 +521,14 @@ namespace Controllers.SpellControllers
             {
                 PlayVoice(); // 내가 상대방이면 다운로드된 파일 재생
             }
-            StartCoroutine(HidePopupRoutine(audioLength, bgm));
+            StartCoroutine(HidePopupRoutine(audioLength));
         }
-        private IEnumerator HidePopupRoutine(float delayTime, AudioClip bgm)
+        private IEnumerator HidePopupRoutine(float delayTime)
         {
             // 정확히 오디오가 끝날 때쯤 팝업이 닫힙니다.
             yield return new WaitForSeconds(delayTime);
             Debug.Log("[Client] 음성 재생 완료. 팝업 연출 종료!");
-            SoundManager.Instance.PlayBGM(bgm, 1.0f);
+            SoundManager.Instance.ToggleBGM();
             UILoader.Instance.HideUI("SpellActive_FullScreen");
         }
 
