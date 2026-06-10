@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: f1edbf4fcee076c46bc3d37b9a8ac892, type: 3}
   m_Name: Prefix_10
-  m_EditorClassIdentifier: Assembly-CSharp:Models.Databases:PrefixData
+  m_EditorClassIdentifier: Assembly-CSharp::Models.Databases.PrefixData
   text: "\uCC9C\uC9C0\uB97C \uB4A4\uD754\uB4DC\uB294 \uD30C\uBA78\uC758 \uBC88\uAC1C\uC5EC"

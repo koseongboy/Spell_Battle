@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dc4f3e0d1c3da041a9fd07a3ebc562c, type: 3}
+  m_Script: {fileID: 11500000, guid: 39daf45f6d6f61942ba6249257063893, type: 3}
   m_Name: Concept_10
   m_EditorClassIdentifier: Assembly-CSharp::Models.Databases.ConceptData
   text: "\uB2E4\uAE09\uD558\uAC8C"
