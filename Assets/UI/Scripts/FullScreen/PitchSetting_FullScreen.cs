@@ -18,8 +18,8 @@ namespace DefaultNamespace
         
 
         private async void OnEnable() {
-            if (VoiceManager.Instance != null) {
-                VoiceManager.Instance.OnMicVolumeChanged += UpdateGauge;
+            if (SoundManager.Instance != null) {
+                SoundManager.Instance.OnMicVolumeChanged += UpdateGauge;
                 gaugeBar.fillAmount = 0f; 
             }
             // 1. 로컬 데이터 매니저에서 유저 ID 추출
@@ -40,8 +40,8 @@ namespace DefaultNamespace
         }
         
         private void OnDisable() {
-            if (VoiceManager.Instance != null) {
-                VoiceManager.Instance.OnMicVolumeChanged -= UpdateGauge;
+            if (SoundManager.Instance != null) {
+                SoundManager.Instance.OnMicVolumeChanged -= UpdateGauge;
             }
         }
 
@@ -58,9 +58,9 @@ namespace DefaultNamespace
 
         public void OnClick_Record() {
             pitchAnalyzer.ToggleRecording();
-            if (VoiceManager.Instance != null)
+            if (SoundManager.Instance != null)
             {
-                if (VoiceManager.Instance.isRecording)
+                if (SoundManager.Instance.isRecording)
                 {
                     // 녹음이 켜졌으면 게이지를 0으로 초기화하고 텍스트도 변경
                     gaugeBar.fillAmount = 0f;

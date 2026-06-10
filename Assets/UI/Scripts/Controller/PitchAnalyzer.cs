@@ -74,7 +74,7 @@ namespace DefaultNamespace
         /// </summary>
         private void StartRecording()
         {
-            if (VoiceManager.Instance == null)
+            if (SoundManager.Instance == null)
             {
                 Debug.LogError("[PitchAnalyzer] VoiceManager 인스턴스를 찾을 수 없습니다.");
                 return;
@@ -83,7 +83,7 @@ namespace DefaultNamespace
             if (_isRecording) return;
 
             _isRecording = true;
-            VoiceManager.Instance.StartRecording(true);
+            SoundManager.Instance.StartRecording(true);
         }
 
         /// <summary>
@@ -92,12 +92,12 @@ namespace DefaultNamespace
         /// <returns>측정된 평균 피치 Hz (실패 시 -1f)</returns>
         private float StopRecordingAndAnalyze()
         {
-            if (!_isRecording || VoiceManager.Instance == null) return -1f;
+            if (!_isRecording || SoundManager.Instance == null) return -1f;
 
             _isRecording = false;
             
             // 1. VoiceManager에서 WAV 형태의 byte 배열 추출
-            byte[] wavData = VoiceManager.Instance.StopRecording();
+            byte[] wavData = SoundManager.Instance.StopRecording();
 
             if (wavData == null || wavData.Length <= 44)
             {

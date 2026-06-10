@@ -18,6 +18,9 @@ namespace DefaultNamespace {
         public GameObject IntroCamera;
         [Header("인트로 시간 조절")]
         public float introTime = 5.0f;
+
+        [Header("사운드 세팅")]
+        public AudioClip battleBGM;
         public static PhaseManager Instance { get; private set; }
 
         // PhaseManager.cs 내부 변수 추가
@@ -61,8 +64,9 @@ namespace DefaultNamespace {
         public void OnGameSetupCompleted() {
             if (!IsServer) return;
             Debug.Log("[PhaseManager] 세팅 완료. 5초간 인트로 연출 시작...");
-            
-            // 바로 Mulligan으로 넘어가지 않고 5초 대기 코루틴을 실행합니다!
+            if (battleBGM != null && Managers.VoiceManagers.SoundManager.Instance != null) {
+                Managers.VoiceManagers.SoundManager.Instance.PlayBGM(battleBGM, 1.0f);
+            }
             StartCoroutine(IntroRoutine());
         }
 

@@ -72,16 +72,16 @@ namespace DefaultNamespace {
             lobbyUI.SetActive(isLobby);
             ingameUI.SetActive(!isLobby);
 
-            originalMicVol = VoiceManager.Instance.micVolumeMultiplier;
-            originalOutputVol = VoiceManager.Instance.outputVolume;
+            originalMicVol = SoundManager.Instance.micVolumeMultiplier;
+            originalOutputVol = SoundManager.Instance.outputVolume;
             micVolumeSlider.value = originalMicVol;
             outputVolumeSlider.value = originalOutputVol;
 
             gaugeBar.fillAmount = 0f;
             txt_test.text = "마이크 테스트";
-            if (VoiceManager.Instance != null)
+            if (SoundManager.Instance != null)
             {
-                VoiceManager.Instance.OnMicVolumeChanged += UpdateGauge;
+                SoundManager.Instance.OnMicVolumeChanged += UpdateGauge;
             }
 
             OpenAction();
@@ -118,7 +118,7 @@ namespace DefaultNamespace {
             popupRect.DOKill();
             canvasGroup.DOKill();
 
-            if (VoiceManager.Instance.isRecording) OnTestButtonClicked();
+            if (SoundManager.Instance.isRecording) OnTestButtonClicked();
             SaveVolumeSetting();
 
             // 목표 상태로 애니메이션 (다시 작아지게, 투명하게)
@@ -136,9 +136,9 @@ namespace DefaultNamespace {
         public void OnMicVolumeChanged(float val) {
             // 마이크 테스트 중에 슬라이더를 움직이면, 
             // 저장하지 않고도 내 스피커에 들리는 목소리 크기가 바로바로 바뀌도록 적용!
-            if (VoiceManager.Instance != null && VoiceManager.Instance.isRecording) {
-                if (VoiceManager.Instance.testAudioSource != null) {
-                    VoiceManager.Instance.testAudioSource.volume = val;
+            if (SoundManager.Instance != null && SoundManager.Instance.isRecording) {
+                if (SoundManager.Instance.testAudioSource != null) {
+                    SoundManager.Instance.testAudioSource.volume = val;
                 }
             }
         }
@@ -147,15 +147,15 @@ namespace DefaultNamespace {
         // 🎙️ 마이크 테스트 버튼 로직
         // ==========================================
         public void OnTestButtonClicked() {
-            if (VoiceManager.Instance.isRecording) {
-                VoiceManager.Instance.StopMicTest();
+            if (SoundManager.Instance.isRecording) {
+                SoundManager.Instance.StopMicTest();
                 txt_test.text = "마이크 테스트";
                 gaugeBar.fillAmount = 0f;
 
             }
             else {
-                VoiceManager.Instance.micVolumeMultiplier = micVolumeSlider.value;
-                VoiceManager.Instance.StartMicTest();
+                SoundManager.Instance.micVolumeMultiplier = micVolumeSlider.value;
+                SoundManager.Instance.StartMicTest();
                 txt_test.text = "테스트 중지";
             }
         }
@@ -169,8 +169,8 @@ namespace DefaultNamespace {
         // 💾 저장 및 취소 버튼 로직
         // ==========================================
         public void SaveVolumeSetting() {
-            VoiceManager.Instance.UpdateSettings(
-                VoiceManager.Instance.micDeviceIndex, // 마이크 기기는 기존 것 유지 (추가 기획 시 드롭다운 연결)
+            SoundManager.Instance.UpdateSettings(
+                SoundManager.Instance.micDeviceIndex, // 마이크 기기는 기존 것 유지 (추가 기획 시 드롭다운 연결)
                 micVolumeSlider.value,
                 outputVolumeSlider.value
             );
@@ -179,12 +179,12 @@ namespace DefaultNamespace {
 
         // 혹시 창이 비정상적으로 꺼졌을 때를 대비한 안전 장치
         public void OnDisable() {
-            if (VoiceManager.Instance != null)
+            if (SoundManager.Instance != null)
             {
-                VoiceManager.Instance.OnMicVolumeChanged -= UpdateGauge;
-                if(VoiceManager.Instance.isRecording)
+                SoundManager.Instance.OnMicVolumeChanged -= UpdateGauge;
+                if(SoundManager.Instance.isRecording)
                 {
-                    VoiceManager.Instance.StopMicTest();
+                    SoundManager.Instance.StopMicTest();
                     txt_test.text = "마이크 테스트";
                 }
             }

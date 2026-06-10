@@ -173,7 +173,7 @@ namespace Controllers.SpellControllers
         public void StartRecording()
         {
             Debug.Log("[SpellController] 2. 영창 녹음 시작!");
-            VoiceManager.Instance.StartRecording();
+            SoundManager.Instance.StartRecording();
         }
 
         // ==========================================
@@ -185,7 +185,7 @@ namespace Controllers.SpellControllers
             CommonUIController.Instance.ShowLoading();
 
             // 1. 녹음 데이터 추출
-            byte[] myWavData = VoiceManager.Instance.StopRecording();
+            byte[] myWavData = SoundManager.Instance.StopRecording();
 
             LastRecordedClip = CreateClipFromWavBytes(myWavData);
             if (LastRecordedClip != null)
@@ -370,10 +370,10 @@ namespace Controllers.SpellControllers
             Debug.Log("[SpellController] 5. 상대방에게 음성 재생 시작.");
             
             // 기존에 만들어둔 VoiceManager의 스피커를 활용하여 재생합니다. todo: 음성 연결해야 함
-            if (VoiceManager.Instance.testAudioSource != null)
+            if (SoundManager.Instance.testAudioSource != null)
             {
-                VoiceManager.Instance.testAudioSource.clip = downloadedClip;
-                VoiceManager.Instance.testAudioSource.Play();
+                SoundManager.Instance.testAudioSource.clip = downloadedClip;
+                SoundManager.Instance.testAudioSource.Play();
             }
         }
 
@@ -385,9 +385,9 @@ namespace Controllers.SpellControllers
                 
                 // 🌟 재생 직전에 VoiceManager의 현재 볼륨 세팅값을 긁어와서 적용합니다.
                 // (VoiceManager의 실제 변수명이나 함수명으로 바꿔주세요)
-                if (VoiceManager.Instance != null)
+                if (SoundManager.Instance != null)
                 {
-                    audioSource.volume = VoiceManager.Instance.outputVolume;
+                    audioSource.volume = SoundManager.Instance.outputVolume;
                 }
 
                 audioSource.Play();

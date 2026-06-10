@@ -2707,7 +2707,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   MainCamera: {fileID: 1864568616}
   IntroCamera: {fileID: 1677865483}
-  introTime: 7
+  introTime: 5
+  battleBGM: {fileID: 8300000, guid: 95b3b686eba9f1e458cff1375614fa5e, type: 3}
 --- !u!114 &872219541
 MonoBehaviour:
   m_ObjectHideFlags: 0

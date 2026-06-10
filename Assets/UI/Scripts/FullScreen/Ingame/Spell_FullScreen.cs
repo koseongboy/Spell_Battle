@@ -27,9 +27,9 @@ namespace DefaultNamespace
         
         private void OnEnable() {
 
-            if (VoiceManager.Instance != null)
+            if (SoundManager.Instance != null)
             {
-                VoiceManager.Instance.OnMicVolumeChanged += UpdateGauge;
+                SoundManager.Instance.OnMicVolumeChanged += UpdateGauge;
             }
 
         }
@@ -63,9 +63,9 @@ namespace DefaultNamespace
         private void OnDisable()
         {
             ReleaseAllPieces();
-            if (VoiceManager.Instance != null)
+            if (SoundManager.Instance != null)
             {
-                VoiceManager.Instance.OnMicVolumeChanged -= UpdateGauge;
+                SoundManager.Instance.OnMicVolumeChanged -= UpdateGauge;
             }
         }
         
