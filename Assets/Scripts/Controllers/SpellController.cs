@@ -23,6 +23,7 @@ namespace Controllers.SpellControllers
         
         [Header("배틀 씬 진짜 메인 카메라")]
         public Camera BattleMainCamera;
+
         
         [Header("연결된 플레이어 모델")]
         public PlayerModel MyPlayer;
@@ -107,8 +108,14 @@ namespace Controllers.SpellControllers
         {
             if (MyPlayer == null || EnemyPlayer == null)
             {
-                Debug.LogError("[SpellController] 🚨 플레이어를 씬에서 찾을 수 없어 영창을 취소합니다!");
-                return null;
+                ForceReconnectPlayers();
+                
+                // 강제 연결을 시도했는데도 null이라면 진짜로 씬에 캐릭터가 없는 심각한 버그 상황
+                if (MyPlayer == null || EnemyPlayer == null)
+                {
+                    Debug.LogError("[SpellController] 🚨 씬에서 플레이어를 찾을 수 없어 영창을 취소합니다! (스폰 지연 또는 파괴됨)");
+                    return null;
+                }
             }
 
             currentSelectedCards = selectedCards;
@@ -135,6 +142,28 @@ namespace Controllers.SpellControllers
             
             Debug.Log("[SpellController] 1. 스펠 초기화 및 페이로드 조립 완료.");
             return currentPayload;
+        }
+
+        public void ForceReconnectPlayers()
+        {
+            Debug.LogWarning("[SpellController] 🚨 플레이어 연결 끊김 감지! 씬에서 강제 탐색 및 재연결을 시도합니다.");
+            
+            // 씬에 존재하는 모든 PlayerModel을 싹 다 긁어옵니다.
+            PlayerModel[] allPlayers = FindObjectsByType<PlayerModel>(FindObjectsSortMode.None);
+
+            foreach (var player in allPlayers)
+            {
+                if (player.IsOwner) 
+                {
+                    MyPlayer = player;
+                    Debug.Log($"[SpellController] 🔗 MyPlayer 강제 연결 복구 완료: {player.gameObject.name}");
+                }
+                else 
+                {
+                    EnemyPlayer = player;
+                    Debug.Log($"[SpellController] 🔗 EnemyPlayer 강제 연결 복구 완료: {player.gameObject.name}");
+                }
+            }
         }
 
 
@@ -185,7 +214,7 @@ namespace Controllers.SpellControllers
                 currentAudioUrl = uploadResult.audioUrl;
                 currentTaskId = uploadResult.taskId;
 
-                Debug.Log($"[SpellController] 서버 업로드 성공. TaskID: {currentTaskId}");
+                Debug.Log($"[SpellController] 서버 업로드 성공. TaskID: {currentTaskId}, 음성 url {currentAudioUrl}");
                 ShareAudioUrlServerRpc(currentAudioUrl);
 
                 TaskStatusResponse evalResult = null;
@@ -331,6 +360,7 @@ namespace Controllers.SpellControllers
         // ==========================================
         public void PlayVoice()
         {
+            UILoader.Instance.HideUI("Ingame_FullScreen");
             if (downloadedClip == null)
             {
                 Debug.LogWarning("[SpellController] 재생할 오디오 클립이 없습니다.");
@@ -384,6 +414,31 @@ namespace Controllers.SpellControllers
             // 수신받은 URL로 오디오를 몰래 다운로드해둡니다. (재생은 아직 안 함!)
             _ = DownloadAudio(audioUrl);
         }
+
+        private float GetActualSpeechLength(AudioClip clip)
+        {
+            if (clip == null) return 2.0f;
+            
+            float[] samples = new float[clip.samples * clip.channels];
+            clip.GetData(samples, 0); // 오디오의 전체 파형 데이터를 가져옵니다.
+            
+            float threshold = 0.02f;  // 무음(화이트 노이즈) 판정 임계값
+            int lastSpokenSample = 0;
+            
+            // 파형의 맨 뒤(끝)에서부터 역순으로 검사하여 유효한 소리가 있는 마지막 지점을 찾습니다.
+            for (int i = samples.Length - 1; i >= 0; i--)
+            {
+                if (Mathf.Abs(samples[i]) > threshold)
+                {
+                    lastSpokenSample = i;
+                    break;
+                }
+            }
+            
+            // 찾은 샘플 인덱스를 초(Seconds) 단위 시간으로 변환
+            float actualLength = (float)lastSpokenSample / (clip.frequency * clip.channels);
+            return actualLength;
+        }
         #endregion
 
         // =========================================================================
@@ -396,7 +451,8 @@ namespace Controllers.SpellControllers
         {
             if (LastRecordedClip != null) 
             {
-                currentAudioLength = LastRecordedClip.length;
+                float trueLength = GetActualSpeechLength(LastRecordedClip);
+                currentAudioLength = Mathf.Clamp(trueLength + 0.5f, 2.0f, 10.0f);
                 Debug.Log($"[SpellController] 내 오디오 클립 길이 측정 완료: {currentAudioLength}초");
             }
             SubmitSpellServerRpc(currentSelectedCardIds.ToArray(), currentTotalCost, currentTaskId, currentAudioLength);
@@ -440,8 +496,6 @@ namespace Controllers.SpellControllers
             // 4. 진짜 데이터를 완벽히 쥐었으므로 배틀 페이즈로 전환 (PhaseManager가 기존 UI들을 청소함)
             PhaseManager.Instance.ServerSetPhase(GamePhase.Battle);
 
-            // 🌟 5. 양쪽 화면에 "서버가 검증한 진짜 점수와 문장"을 매개변수로 실어서 팝업 UI를 켜라고 명령!
-            audioLength = Mathf.Clamp(audioLength, 2.0f, 10.0f);
             ShowIncantationPopupClientRpc(verifiedSentence, serverPayload.MainProperty, senderId, audioLength);
 
             // 6. 팝업 연출 시간 동안 기다렸다가 데미지를 주는 코루틴 작동
@@ -524,7 +578,37 @@ namespace Controllers.SpellControllers
             }
         }
 
+        [Rpc(SendTo.NotServer)]
+        public void PlayVisualEffectClientRpc(Models.EffectCommands.VFXType vfxType, Models.PlayerModels.StatusType relatedStatus, ulong targetNetworkObjectId)
+        {
 
+            // 🚨 실패 원인 1: 게스트 씬에 VFX 매니저가 없을 경우
+            if (Managers.VFX.BattleVFXManager.Instance == null) {
+                Debug.LogError("[Client] 🚨 BattleVFXManager.Instance가 null입니다! 게스트 씬에 매니저가 있는지 확인하세요.");
+                return;
+            }
+
+            // 🚨 실패 원인 2: 타겟 플레이어 모델을 못 찾는 경우
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out NetworkObject netObj))
+            {
+                PlayerModel targetPlayer = netObj.GetComponent<PlayerModel>();
+                if (targetPlayer != null)
+                {
+                    Debug.Log($"[Client] 🎬 넷코드 수신 성공! {targetPlayer.gameObject.name}에게 {vfxType} 연출을 재생합니다!");
+                    StartCoroutine(Managers.VFX.BattleVFXManager.Instance.PlayVFXRoutine(vfxType, relatedStatus, targetPlayer));
+                }
+                else
+                {
+                    Debug.LogError("[Client] 🚨 NetworkObject를 찾았으나 PlayerModel 컴포넌트가 없습니다!");
+                }
+            }
+            else
+            {
+                Debug.LogError($"[Client] 🚨 ID가 {targetNetworkObjectId}인 대상을 씬에서 찾을 수 없습니다!");
+            }
+        }
+
+        
 
 
         #endregion

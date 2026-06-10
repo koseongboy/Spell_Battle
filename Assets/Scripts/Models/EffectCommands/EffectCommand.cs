@@ -40,6 +40,8 @@ namespace Models.EffectCommands
             // 1. 내가 가진 명찰과 타겟 정보를 바탕으로 매니저에게 VFX 재생을 '요청'합니다.
             if (MyVFXType != VFXType.None)
             {
+                Controllers.SpellControllers.SpellController.Instance.PlayVisualEffectClientRpc(MyVFXType, RelatedStatus, target.NetworkObjectId);
+
                 yield return Managers.VFX.BattleVFXManager.Instance.PlayVFXRoutine(MyVFXType, RelatedStatus, target);
             }
 

@@ -18,53 +18,6 @@ namespace Controllers.PlayerController
     public class PlayerController : NetworkBehaviour
     {
 
-        #region 0. 테스트용
-        // ==========================================
-        // 🕹️ 통합 멀리건 키 입력 테스트 시스템
-        // ==========================================
-        private void Update()
-        {
-            // 1. 내 캐릭터 조종석이 아니라면 입력 차단
-            if (!IsOwner) return;
-
-            // 2. 현재 페이즈 정보 가져오기 (PlayerModel에서 쓰신 방식과 동일하게 접근)
-            if (TurnModel.Instance == null) return;
-            GamePhase currentPhase = TurnModel.Instance.CurrentPhase.Value;
-            ulong currentTurnPlayerId = TurnModel.Instance.CurrentTurnPlayerId.Value;
-
-            // ==========================================
-            // 🪄 [페이즈 2] 카드 선택 페이즈 조작 (내 턴일 때만)
-            // ==========================================
-            if (currentPhase == GamePhase.Select && currentTurnPlayerId == NetworkManager.Singleton.LocalClientId)
-            {
-                HandleSelectInput();
-            }
-        }
-
-        // ==========================================
-        // 🌟 [추가] 카드 선택 입력 처리
-        // ==========================================
-        private void HandleSelectInput()
-        {
-            // 숫자키 1~9는 인덱스 0~8, 숫자키 0은 인덱스 9 (10번째 카드)
-            if (Input.GetKeyDown(KeyCode.Alpha1)) ToggleSpellIndex(0);
-            if (Input.GetKeyDown(KeyCode.Alpha2)) ToggleSpellIndex(1);
-            if (Input.GetKeyDown(KeyCode.Alpha3)) ToggleSpellIndex(2);
-            if (Input.GetKeyDown(KeyCode.Alpha4)) ToggleSpellIndex(3);
-            if (Input.GetKeyDown(KeyCode.Alpha5)) ToggleSpellIndex(4);
-            if (Input.GetKeyDown(KeyCode.Alpha6)) ToggleSpellIndex(5);
-            if (Input.GetKeyDown(KeyCode.Alpha7)) ToggleSpellIndex(6);
-            if (Input.GetKeyDown(KeyCode.Alpha8)) ToggleSpellIndex(7);
-            if (Input.GetKeyDown(KeyCode.Alpha9)) ToggleSpellIndex(8);
-            if (Input.GetKeyDown(KeyCode.Alpha0)) ToggleSpellIndex(9);
-
-            // 스페이스바를 누르면 선택한 카드들로 마법 영창 준비 완료!
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                SubmitSpellSelection();
-            }
-        }
-        #endregion
         [Header("MVP References")]
         public PlayerModel model;
         public PlayerView view;

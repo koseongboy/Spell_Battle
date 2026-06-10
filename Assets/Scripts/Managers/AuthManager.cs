@@ -90,7 +90,7 @@ namespace DefaultNamespace {
                 {
                     // 🛠️ [수정 부분] 로그인 실패 시 에러 코드와 서버가 보낸 에러 메시지 Body를 같이 출력
                     string errorResponse = request.downloadHandler?.text;
-                    Debug.LogError($"<color=#FF0000>[AuthManager] 로그인 서버 통신 실패.</color>\nError: {request.error}\nServer Message: {errorResponse}");
+                    Debug.LogWarning($"<color=#FF0000>[AuthManager] 로그인 서버 통신 실패.</color>\nError: {request.error}\nServer Message: {errorResponse}");
                     return false;
                 }
             }
@@ -101,11 +101,17 @@ namespace DefaultNamespace {
         /// </summary>
         public async Task<bool> RequestAutoLoginAsync(string token)
         {
-            // 친구가 만들어준 토큰 검증용 엔드포인트 주소 (예시: /me)
-            using (UnityWebRequest request = UnityWebRequest.Get(serverURL + "/me"))
+            // 🌟 1. 서버가 요구하는 대로 JSON 바디에 토큰을 담습니다.
+            string jsonBody = $"{{\"token\": \"{token}\"}}";
+
+            // 🌟 2. GET이 아닌 POST 메서드로 변경합니다.
+            using (UnityWebRequest request = new UnityWebRequest(serverURL + "/auto-login", "POST"))
             {
-                // 🛠️ [수정 부분] 헤더에 JWT 토큰을 Bearer 규격으로 첨부합니다.
-                request.SetRequestHeader("Authorization", "Bearer " + token);
+                // JSON 데이터를 바이트로 변환하여 업로드 핸들러에 장착
+                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "application/json");
 
                 var operation = request.SendWebRequest();
                 while (!operation.isDone) await Task.Yield();
@@ -119,7 +125,7 @@ namespace DefaultNamespace {
                     var localData = LocalDataManager.Instance;
                     localData.LoadData();
                     
-                    localData.userToken = token; // 매개변수로 받은 토큰 유지
+                    localData.userToken = token; 
                     localData.userId = response.userData.userId;
                     localData.nickname = response.userData.userId; 
                     localData.score = response.userData.score;

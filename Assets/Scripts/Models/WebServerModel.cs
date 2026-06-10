@@ -202,7 +202,7 @@ namespace Models.Networks
             {
                 string jsonBody = $"{{\"userId\": \"{userId}\", \"defaultPitch\": {defaultPitch}}}";
                 
-                using (UnityWebRequest www = new UnityWebRequest($"{baseUrl}/set-default-pitch", "POST"))
+                using (UnityWebRequest www = new UnityWebRequest($"{baseUrl}/default-pitch", "PUT"))
                 {
                     byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
                     www.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -214,6 +214,7 @@ namespace Models.Networks
 
                     if (www.result == UnityWebRequest.Result.Success)
                     {
+                        Debug.Log("디폴트 피치 입력 성공~");
                         return true;
                     }
                     else
@@ -247,6 +248,7 @@ namespace Models.Networks
                     if (www.result == UnityWebRequest.Result.Success)
                     {
                         DefaultPitchResponse response = JsonUtility.FromJson<DefaultPitchResponse>(www.downloadHandler.text);
+                        Debug.Log("디폴트 피치 조회 성공");
                         return response.defaultPitch;
                     }
                     else

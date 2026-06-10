@@ -126,17 +126,9 @@ namespace Models.PlayerModels {
                     Debug.Log("상대 캐릭 턴 매니져에 등록 완료");
                 }
             }
-
-            // 턴 매니저 구독: 턴이 바뀔 때 발화 데미지를 입거나 마나를 채우기 위함
-            if (TurnModel.TurnModel.Instance != null) {
-                TurnModel.TurnModel.Instance.OnPhaseChangedEvent += HandlePhaseEffects;
-            }
         }
 
         public override void OnNetworkDespawn() {
-            if (TurnModel.TurnModel.Instance != null) {
-                TurnModel.TurnModel.Instance.OnPhaseChangedEvent -= HandlePhaseEffects;
-            }
             OnPlayerDespawned?.Invoke(this);
             base.OnNetworkDespawn();
         }
@@ -442,7 +434,7 @@ namespace Models.PlayerModels {
         // ==========================================
         // 턴 자동 동기화 (기획서 반영)
         // ==========================================
-        private void HandlePhaseEffects(GamePhase phase, bool isMyTurn) {
+        public void HandlePhaseEffects(GamePhase phase, bool isMyTurn) {
             if (!IsServer) return;
 
             // 내 턴이 끝날 때(End) 처리
@@ -452,6 +444,7 @@ namespace Models.PlayerModels {
                 // 1. 발화 데미지 적용
                 int totalIgniteStacks = GetStatusStack(StatusType.Ignite);
                 if (totalIgniteStacks > 0) {
+                    BroadcastPhaseVFX(EffectCommands.VFXType.AddStatus, StatusType.Ignite);
                     // 팩트 체크: 여기서 DamageType.Ignite로 명시해서 보냅니다.
                     TakeDamage(totalIgniteStacks, DamageType.Ignite);
                     Debug.Log($"🔥 발화 효과 발동! 기본 데미지: {totalIgniteStacks}");
@@ -468,6 +461,7 @@ namespace Models.PlayerModels {
                     if (status.Duration > 0) {
                         status.Duration--; // 1턴 감소
                         if (status.Duration == 0) {
+                            BroadcastPhaseVFX(EffectCommands.VFXType.DetonateStatus, status.Type);
                             ActiveStatuses.RemoveAt(i); // 턴이 다 되면 소멸
                         }
                         else {
@@ -503,6 +497,17 @@ namespace Models.PlayerModels {
 
         private ulong GetEnemyClientId() {
             return OwnerClientId == 0 ? 1ul : 0ul;
+        }
+
+        private void BroadcastPhaseVFX(EffectCommands.VFXType vfxType, StatusType statusType = StatusType.None)
+        {
+            // 1. 게스트(클라이언트)들에게 재생하라고 무전(RPC)을 칩니다.
+            SpellController.Instance.PlayVisualEffectClientRpc(vfxType, statusType, this.NetworkObjectId);
+            
+            // 2. 호스트(서버 본인) 화면에서도 백그라운드 코루틴으로 재생시킵니다.
+            if (Managers.VFX.BattleVFXManager.Instance != null) {
+                StartCoroutine(Managers.VFX.BattleVFXManager.Instance.PlayVFXRoutine(vfxType, statusType, this));
+            }
         }
         
         

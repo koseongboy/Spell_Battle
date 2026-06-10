@@ -40,8 +40,9 @@ namespace DefaultNamespace {
                 TurnModel.Instance.HostId.Value = connectedClients[0];
                 TurnModel.Instance.GuestId.Value = connectedClients[1];
 
-                SpawnPlayer(TurnModel.Instance.HostId.Value, hostSpawnPoint.position);
-                SpawnPlayer(TurnModel.Instance.GuestId.Value, guestSpawnPoint.position);
+                SpawnPlayer(TurnModel.Instance.HostId.Value, hostSpawnPoint.position, hostSpawnPoint.rotation);
+                SpawnPlayer(TurnModel.Instance.GuestId.Value, guestSpawnPoint.position, guestSpawnPoint.rotation);
+
 
                 Debug.Log(
                     $"[Server] 방 세팅 완료. 호스트: {TurnModel.Instance.HostId.Value}, 게스트: {TurnModel.Instance.GuestId.Value}");
@@ -53,8 +54,8 @@ namespace DefaultNamespace {
             }
         }
 
-        private void SpawnPlayer(ulong clientId, Vector3 position) {
-            GameObject playerObj = Instantiate(playerPrefab, position, Quaternion.identity);
+        private void SpawnPlayer(ulong clientId, Vector3 position, Quaternion rotation) {
+            GameObject playerObj = Instantiate(playerPrefab, position, rotation);
             NetworkObject networkObj = playerObj.GetComponent<NetworkObject>();
             networkObj.SpawnAsPlayerObject(clientId);
 

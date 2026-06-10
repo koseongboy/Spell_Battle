@@ -10,20 +10,8 @@ namespace Controllers.PlayerSetup
     {
         private Transform mainCam;
 
-        public override void OnNetworkSpawn()
-        {
-            if (IsOwner)
-            {
-                // 회전 세팅
-                if (IsServer) transform.rotation = Quaternion.Euler(0, 180, 0); 
-                else transform.rotation = Quaternion.Euler(0, 0, 0); 
 
-                // 카메라 세팅 코루틴 시작
-                StartCoroutine(SetupCameraRoutine());
-            }
-        }
-
-        private IEnumerator SetupCameraRoutine()
+        public IEnumerator SetupCameraRoutine()
         {
             // 1. 배틀 씬의 TurnController가 준비되고, 카메라가 등록될 때까지 안전하게 대기
             while (SpellController.Instance == null || SpellController.Instance.BattleMainCamera == null)

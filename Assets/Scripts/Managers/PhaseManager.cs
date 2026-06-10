@@ -7,9 +7,17 @@ using UnityEngine;
 using Unity.Netcode;
 using Models.TurnModel;
 using Models.PlayerModels;
+using Controllers.PlayerSetup;
 
 namespace DefaultNamespace {
     public class PhaseManager : NetworkBehaviour {
+
+        [Header("배틀 씬 진짜 메인 카메라")]
+        public GameObject MainCamera;
+        [Header("인트로 연출용 카메라")]
+        public GameObject IntroCamera;
+        [Header("인트로 시간 조절")]
+        public float introTime = 5.0f;
         public static PhaseManager Instance { get; private set; }
 
         // PhaseManager.cs 내부 변수 추가
@@ -21,14 +29,29 @@ namespace DefaultNamespace {
         }
         
         
+        private System.Collections.IEnumerator IntroRoutine() {
+            // 5초 동안 대기 (이 시간 동안 인트로 카메라 애니메이션이 재생되며 로딩을 숨깁니다)
+            yield return new WaitForSeconds(introTime);
+            
+            Debug.Log("[PhaseManager] 인트로 연출 종료. 게임 시작 (Mulligan 진입)");
+            // 5초 뒤에 드디어 페이즈를 넘겨줍니다.
+            TurnModel.Instance.CurrentPhase.Value = GamePhase.Mulligan;
+        }
+        
         public override void OnNetworkSpawn() {
             // 모델의 페이즈 값이 변할 때마다 클라이언트단 로직(UI 띄우기 등)을 실행하도록 구독
             TurnModel.Instance.CurrentPhase.OnValueChanged += HandlePhaseChanged;
+            if (NetworkManager.Singleton != null) {
+                NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
+            }
         }
 
         public override void OnNetworkDespawn() {
             if (TurnModel.Instance != null)
                 TurnModel.Instance.CurrentPhase.OnValueChanged -= HandlePhaseChanged;
+            if (NetworkManager.Singleton != null) {
+                NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
+            }
         }
 
         // ========================================================
@@ -37,8 +60,10 @@ namespace DefaultNamespace {
 
         public void OnGameSetupCompleted() {
             if (!IsServer) return;
-            Debug.Log("[PhaseManager] 세팅 완료. 멀리건 페이즈 진입.");
-            TurnModel.Instance.CurrentPhase.Value = GamePhase.Mulligan;
+            Debug.Log("[PhaseManager] 세팅 완료. 5초간 인트로 연출 시작...");
+            
+            // 바로 Mulligan으로 넘어가지 않고 5초 대기 코루틴을 실행합니다!
+            StartCoroutine(IntroRoutine());
         }
 
         public void OnMulliganCompleted(ulong firstPlayerId) {
@@ -51,21 +76,85 @@ namespace DefaultNamespace {
         public void RequestIncantationPhase(ulong clientId) {
             RequestSpecificPhaseServerRpc(GamePhase.Incantation);
         }
+        private void HandleClientDisconnect(ulong disconnectedClientId) {
+            // 이미 게임이 정상적인 승패 판정으로 끝났다면 중복 처리 방지
+            if (TurnModel.Instance.CurrentPhase.Value == GamePhase.EndGame) return;
+
+            ulong myId = NetworkManager.Singleton.LocalClientId;
+
+            if (IsServer) {
+                // 👑 [호스트 입장] 나간 클라이언트가 내가 아니라면? 👉 게스트가 나간 것!
+                if (disconnectedClientId != myId) {
+                    Debug.Log($"[PhaseManager] 🚨 게스트(ID: {disconnectedClientId}) 탈주 감지! 페이즈 이동 없이 즉시 승리 처리합니다.");
+                    ForceLocalWinDueToDisconnect();
+                }
+            } 
+            else {
+                // 👥 [게스트 입장] 서버가 터지거나 호스트가 나가면 게스트의 Disconnect 콜백이 호출됩니다.
+                // 내가 스스로 '나가기'를 누른 게 아니라면 호스트가 튕긴 것이므로 즉시 승리 처리합니다.
+                Debug.Log($"[PhaseManager] 🚨 호스트(서버) 탈주 감지! 페이즈 이동 없이 즉시 승리 처리합니다.");
+                ForceLocalWinDueToDisconnect();
+            }
+        }
+        private void ForceLocalWinDueToDisconnect() {
+            Debug.Log("[Client] 서버 연결 끊김. 강제 승리 UI를 호출합니다.");
+            
+            // 기존에 떠 있던 불필요한 UI들을 모조리 가려줍니다.
+            UILoader.Instance.HideUI("Ingame_FullScreen");
+            UILoader.Instance.HideUI("MyTurn_Top");
+            UILoader.Instance.HideUI("EnemyTurn_Top");
+            UILoader.Instance.HideUI("Spell_FullScreen");
+            UILoader.Instance.HideUI("SpellResult_FullScreen");
+            UILoader.Instance.HideUI("Mulligan_FullScreen");
+            UILoader.Instance.HideUI("SpellActive_FullScreen");
+            
+
+            // 🏆 묻지도 따지지도 않고 내가 이긴 것으로 UI 출력!
+            UILoader.Instance.ShowUI("GameEnd_Top", GameEndType.Win);
+        }
+        
 
         // ========================================================
         // 2. [클라이언트/서버 공통] 상태 변화 감지 후 액션 집행
         // ========================================================
         private void HandlePhaseChanged(GamePhase oldPhase, GamePhase newPhase) {
+
+            ulong currentTurnPlayerId = TurnModel.Instance.CurrentTurnPlayerId.Value; //
+            
+            // 🌟 [서버 전용 권한] 페이즈가 바뀔 때마다 모든 플레이어에게 페이즈 효과를 링크해 줍니다.
+            if (IsServer) 
+            {
+                PlayerModel hostPlayer = MatchManager.Instance.GetPlayerById(TurnModel.Instance.HostId.Value); 
+                PlayerModel guestPlayer = MatchManager.Instance.GetPlayerById(TurnModel.Instance.GuestId.Value); 
+
+                if (hostPlayer != null)
+                {
+                    bool isHostTurn = currentTurnPlayerId == TurnModel.Instance.HostId.Value; 
+                    hostPlayer.HandlePhaseEffects(newPhase, isHostTurn);
+                }
+
+                if (guestPlayer != null)
+                {
+                    bool isGuestTurn = currentTurnPlayerId == TurnModel.Instance.GuestId.Value; 
+                    guestPlayer.HandlePhaseEffects(newPhase, isGuestTurn);
+                }
+            }
             bool isMyTurn = NetworkManager.Singleton.LocalClientId == TurnModel.Instance.CurrentTurnPlayerId.Value;
 
             switch (newPhase) {
                 case GamePhase.Mulligan: {
+                    if (IntroCamera != null) IntroCamera.SetActive(false);
+                    if (MainCamera != null) MainCamera.SetActive(true);
+
+
                     NetworkObject localPlayerObj = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
 
                     if (localPlayerObj != null) {
                         // 내 캐릭터 프리팹에 붙어있는 모델과 핸들러를 연달아 가져온다.
                         PlayerModel myPlayer = localPlayerObj.GetComponent<PlayerModel>();
                         MulliganHandler myHandler = myPlayer.GetComponent<MulliganHandler>();
+                        PlayerSetup playerSetupManager = localPlayerObj.GetComponent<PlayerSetup>();
+                        StartCoroutine(playerSetupManager.SetupCameraRoutine());
 
                         UILoader.Instance.ShowUI("Mulligan_FullScreen", myHandler);
                     }
@@ -86,7 +175,6 @@ namespace DefaultNamespace {
                         UILoader.Instance.HideUI("EnemyTurn_Top"); 
                         UILoader.Instance.ShowUI("MyTurn_Top");
                         if (UpperTurnUI.Instance != null) {
-                            Debug.Log("진입");
                             UpperTurnUI.Instance.SetTurnState(true);
                         }
                     }
@@ -95,7 +183,6 @@ namespace DefaultNamespace {
                         UILoader.Instance.HideUI("MyTurn_Top"); 
                         UILoader.Instance.ShowUI("EnemyTurn_Top");
                         if (UpperTurnUI.Instance != null) {
-                            Debug.Log("진입");
                             UpperTurnUI.Instance.SetTurnState(false);
                         }
                     }
@@ -109,6 +196,7 @@ namespace DefaultNamespace {
                 }
 
                 case GamePhase.Select:
+                    UILoader.Instance.ShowUI("Ingame_FullScreen");
                     break;
 
                 case GamePhase.Incantation: {
@@ -132,6 +220,18 @@ namespace DefaultNamespace {
                 case GamePhase.End:
                     if(IsServer) ExecuteEndPhaseLogic();
                     break;
+
+                case GamePhase.EndGame:
+                    UILoader.Instance.HideUI("Ingame_FullScreen");
+                    UILoader.Instance.HideUI("MyTurn_Top");
+                    UILoader.Instance.HideUI("EnemyTurn_Top");
+                    UILoader.Instance.HideUI("Spell_FullScreen");
+                    UILoader.Instance.HideUI("SpellResult_FullScreen");
+                    UILoader.Instance.HideUI("Mulligan_FullScreen");
+
+                    
+                    UILoader.Instance.ShowUI("GameEnd_Top", DetermineMyGameResult());
+                    break;
             }
         }
 
@@ -152,6 +252,12 @@ namespace DefaultNamespace {
         // [서버 전용] 마나 증가, 턴 권한 교체, 다음 턴 시작 처리
         private void ExecuteEndPhaseLogic() {
             if (!IsServer) return;
+
+            if (CheckGameEndCondition()) {
+                Debug.Log("[PhaseManager] 🚨 발화 데미지로 사망자 발생! EndGame 페이즈로 진입합니다.");
+                ServerSetPhase(GamePhase.EndGame);
+                return;
+            }
 
             // 1. 기존 TurnController에 있던 턴 종료 시 마나 최대치 1 증가 로직 유지
             // (MatchManager의 O(1) 캐싱 딕셔너리 활용)
@@ -225,7 +331,7 @@ namespace DefaultNamespace {
             }
         }
 
-        // TODO : 리팩토링 필요
+
         public void StartSpell(List<PlayableCard> selectedCards) {
             var payload = SpellController.Instance.InitSpell(selectedCards);
             RequestSpecificPhaseServerRpc(GamePhase.Incantation);
@@ -321,12 +427,7 @@ namespace DefaultNamespace {
                     break;
 
                 case GamePhase.End:
-                    // 🌟 엔드 페이즈 직후: 발화(Ignite) 도트 데미지로 누군가 죽었는지 체크!
-                    if (CheckGameEndCondition()) {
-                        ServerSetPhase(GamePhase.EndGame);
-                    } else {
-                        ExecuteEndPhaseLogic(); // 아무도 안 죽었으면 정상적으로 다음 턴으로
-                    }
+                    ExecuteEndPhaseLogic(); // 아무도 안 죽었으면 정상적으로 다음 턴으로
                     return; 
                     
                 default:
@@ -343,7 +444,38 @@ namespace DefaultNamespace {
 
             if (host == null || guest == null) return false;
 
-            return (host.CurrentHealth.Value <= 0 || guest.CurrentHealth.Value <= 0);
+            return host.CurrentHealth.Value <= 0 || guest.CurrentHealth.Value <= 0;
+        }
+        private GameEndType DetermineMyGameResult() {
+            // 1. 호스트와 게스트의 플레이어 모델을 가져옵니다.
+            PlayerModel host = MatchManager.Instance.GetPlayerById(TurnModel.Instance.HostId.Value);
+            PlayerModel guest = MatchManager.Instance.GetPlayerById(TurnModel.Instance.GuestId.Value);
+
+            // 예외 방어 (씬에서 플레이어를 못 찾은 경우)
+            if (host == null || guest == null) return GameEndType.Lose; 
+
+            // 🌟 2. 기획하신 핵심 로직: 호스트 체력 - 게스트 체력
+            int hpDifference = host.CurrentHealth.Value - guest.CurrentHealth.Value;
+
+            // 3. 내가 현재 호스트인지 게스트인지 판별합니다.
+            ulong myId = NetworkManager.Singleton.LocalClientId;
+            bool amIHost = myId == TurnModel.Instance.HostId.Value;
+
+            // 4. 차이값에 따라 승/무/패를 결정합니다.
+            if (hpDifference == 0) {
+                // 차이가 0이면 무승부
+                return GameEndType.Draw;
+            }
+            else if (hpDifference > 0) {
+                // 양수(0 초과)면 호스트 승리
+                // 내가 호스트라면 Win, 게스트라면 Lose를 반환합니다.
+                return amIHost ? GameEndType.Win : GameEndType.Lose;
+            }
+            else {
+                // 음수(0 미만)면 게스트 승리
+                // 내가 호스트라면 Lose, 게스트라면 Win을 반환합니다.
+                return amIHost ? GameEndType.Lose : GameEndType.Win;
+            }
         }
 
         #endregion

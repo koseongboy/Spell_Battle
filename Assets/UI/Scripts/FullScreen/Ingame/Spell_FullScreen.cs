@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Cards.EffectInfos;
 using Controllers.SpellControllers;
+using Managers.VoiceManagers;
+using Microsoft.Unity.VisualStudio.Editor;
 using Models.SpellPayloads;
 using TMPro;
 using UnityEngine;
@@ -17,12 +19,26 @@ namespace DefaultNamespace
         [SerializeField] private TextMeshProUGUI txt_prefix;
         [SerializeField] private Transform wordPanel;
         [SerializeField] private SpellWordPiece wordPiecePrefab;
+        [SerializeField] private UnityEngine.UI.Image gaugeBar;
 
         private IObjectPool<SpellWordPiece> wordPiecePool;
         private List<SpellWordPiece> activeWords = new List<SpellWordPiece>();
         private bool isRecording = false;
         
-        
+        private void OnEnable() {
+
+            if (VoiceManager.Instance != null)
+            {
+                VoiceManager.Instance.OnMicVolumeChanged += UpdateGauge;
+            }
+
+        }
+
+        private void UpdateGauge(float volumeValue)
+        {
+            gaugeBar.fillAmount = volumeValue;
+        }
+
         private void Awake() {
             // 오브젝트 풀 초기화
             wordPiecePool = new ObjectPool<SpellWordPiece>(
@@ -47,6 +63,10 @@ namespace DefaultNamespace
         private void OnDisable()
         {
             ReleaseAllPieces();
+            if (VoiceManager.Instance != null)
+            {
+                VoiceManager.Instance.OnMicVolumeChanged -= UpdateGauge;
+            }
         }
         
         // 데이터 받아서 화면 구성하는 함수.
