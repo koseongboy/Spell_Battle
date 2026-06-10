@@ -181,7 +181,6 @@ namespace DefaultNamespace {
         
         public async Task<UserProfileResponse> RequestUserProfileAsync(string targetUserId)
         {
-            // 1. 방어 로직: 조회할 타겟 ID가 비정상적이면 서버에 불필요한 요청을 보내지 않음
             if (string.IsNullOrEmpty(targetUserId))
             {
                 Debug.LogError("[AuthManager] 조회할 타겟 유저 ID가 비어있습니다.");
@@ -208,6 +207,7 @@ namespace DefaultNamespace {
                 if (request.result == UnityWebRequest.Result.Success)
                 {
                     string responseText = request.downloadHandler.text;
+                    Debug.Log(responseText);
                     return JsonUtility.FromJson<UserProfileResponse>(responseText);
                 }
                 else

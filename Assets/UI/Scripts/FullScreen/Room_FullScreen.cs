@@ -115,7 +115,6 @@ namespace DefaultNamespace {
             Debug.Log(name);
             hostSlotGroup.SetActive(true);
 
-            // TODO
             txt_HostName.text = name;
             txt_HostRank.text = rank;
             txt_HostScore.text = score.ToString();
@@ -123,9 +122,9 @@ namespace DefaultNamespace {
 
         // 게스트(손님) 정보 세팅
         public void UpdateGuestUI(string name, int score, string rank) {
+            Debug.Log(name);
             guestSlotGroup.SetActive(true);
 
-            // TODO
             txt_GuestName.text = name;
             txt_GuestRank.text = rank;
             txt_GuestScore.text = score.ToString();

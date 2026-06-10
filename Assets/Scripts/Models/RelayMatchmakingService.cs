@@ -120,15 +120,15 @@ namespace Models.RelayMatchmakingService {
                 Debug.LogWarning("이미 네트워크 통신이 진행 중입니다.");
                 return (false, null);
             }
-
             try {
                 isProcessing = true; // 락 설정
                 
                 QuickJoinLobbyOptions quickJoinOptions = new QuickJoinLobbyOptions {
-                    Player = GetPlayerWithWebId() // 🌟 입장할 때 한 방에 제출
+                    Player = GetPlayerWithWebId()
                 };
                 currentLobby = await LobbyService.Instance.QuickJoinLobbyAsync(quickJoinOptions);
-
+                await SubscribeToLobbyEvents();
+                
                 string joinCode = currentLobby.Data["JoinCode"].Value;
                 await JoinRelayRoomAsync(joinCode);
                 return (false, joinCode);
@@ -150,15 +150,15 @@ namespace Models.RelayMatchmakingService {
                     Player = GetPlayerWithWebId(),
                     Data = new Dictionary<string, DataObject> {
                         { "JoinCode", new DataObject(DataObject.VisibilityOptions.Public, joinCode) },
-                        
-                        // 🌟 커스텀 방 생성과 동일한 키값("HostName", "HostLevel")으로 등록!
                         { "HostName", new DataObject(DataObject.VisibilityOptions.Public, hostName, DataObject.IndexOptions.S1) }, //
                         { "HostLevel", new DataObject(DataObject.VisibilityOptions.Public, hostLevel.ToString(), DataObject.IndexOptions.N1) } //
                     }
                 };
 
                 currentLobby = await LobbyService.Instance.CreateLobbyAsync("Random Match Room", 2, options);
-
+                StartHeartbeat(); 
+                await SubscribeToLobbyEvents();
+                
                 return (true, joinCode);
             }
             finally {
@@ -242,6 +242,7 @@ namespace Models.RelayMatchmakingService {
                 // 3. 로비 서버에 방 등록 (최대 인원 2명)
                 currentLobby = await LobbyService.Instance.CreateLobbyAsync(roomName, 2, options);
                 StartHeartbeat(); // (작성하신 Heartbeat 코루틴/메서드 호출)
+                await SubscribeToLobbyEvents();
 
                 Debug.Log($"커스텀 방 생성 완료! 제목: {roomName}, 로비코드: {currentLobby.LobbyCode}");
 
@@ -267,6 +268,8 @@ namespace Models.RelayMatchmakingService {
 
                 // 2. 릴레이 접속
                 string relayJoinCode = currentLobby.Data["JoinCode"].Value;
+                await SubscribeToLobbyEvents();
+                
                 bool isSuccess = await JoinRelayRoomAsync(relayJoinCode);
                 return isSuccess ? currentLobby.Name : null;
             }

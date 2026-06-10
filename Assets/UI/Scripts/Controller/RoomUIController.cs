@@ -13,13 +13,17 @@ using UnityEngine.SceneManagement;
 namespace DefaultNamespace {
     
     [Serializable]
-    public class UserProfileResponse 
-    {
+    public class UserProfileResponse {
+        public string message;
+        public UserData userData;
+    }
+
+    [Serializable]
+    public class UserData {
         public string userId;
-        public string nickname;
         public int score;
         public string rank;
-        public string[] equippedDeck;
+        public float defaultPitch;
     }
     
     public class RoomUIController : MonoBehaviour {
@@ -148,8 +152,9 @@ namespace DefaultNamespace {
             
             if (!string.IsNullOrEmpty(hostWebId)) {
                 var hostProfile = await AuthManager.Instance.RequestUserProfileAsync(hostWebId);
+                var userData = hostProfile.userData;
                 if (hostProfile != null)
-                    ui_Room.UpdateHostUI(hostProfile.nickname, hostProfile.score, hostProfile.rank);
+                    ui_Room.UpdateHostUI(userData.userId, userData.score, userData.rank);
             }
 
             // 2. 게스트(손님) 정보 처리
@@ -160,8 +165,9 @@ namespace DefaultNamespace {
                 
                 if (!string.IsNullOrEmpty(guestWebId)) {
                     var guestProfile = await AuthManager.Instance.RequestUserProfileAsync(guestWebId);
+                    var userData = guestProfile.userData;
                     if (guestProfile != null)
-                        ui_Room.UpdateGuestUI(guestProfile.nickname, guestProfile.score, guestProfile.rank);
+                        ui_Room.UpdateGuestUI(userData.userId, userData.score, userData.rank);
                 }
             }
             else 
@@ -217,8 +223,6 @@ namespace DefaultNamespace {
         // 게스트가 준비 버튼을 눌렀을 때
         private void HandleReadyClicked() {
             if (readyStateModel != null) {
-                // Controller는 Model에게 명령(RPC)만 내림. 
-                // 시각적 업데이트는 서버에서 값이 바뀐 후 콜백을 통해 이루어짐.
                 readyStateModel.ToggleReadyServerRpc();
             }
         }
