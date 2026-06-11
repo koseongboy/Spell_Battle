@@ -21,6 +21,8 @@ namespace Controllers.SpellControllers
     {
         public static SpellController Instance { get; private set; }
         
+        [Header("시도 횟수")]
+        public int maxAttempts = 20;
         [Header("배틀 씬 진짜 메인 카메라")]
         public Camera BattleMainCamera;
 
@@ -192,6 +194,16 @@ namespace Controllers.SpellControllers
                 Debug.Log("[SpellController] 방금 녹음한 WAV 데이터를 AudioClip으로 변환 보관 완료.");
             }
 
+            if (SoundManager.Instance.IsAudioSilent(LastRecordedClip, 0.04f))
+            {
+                Debug.LogWarning("[SpellController] 🛑 녹음된 목소리가 감지되지 않았습니다. 서버 전송을 취소합니다.");
+                
+                await Task.Delay(2000);
+                CommonUIController.Instance.DoneLoading();
+                CommonUIController.Instance.ShowRedAlert("목소리가 작습니다. 다시 녹음해주세요");
+                return; 
+            }
+
             // 2. 단어 리스트 추출
             List<string> selectedWordNames = new List<string>();
             foreach(var card in currentSelectedCards) 
@@ -217,7 +229,7 @@ namespace Controllers.SpellControllers
                 ShareAudioUrlServerRpc(currentAudioUrl);
 
                 TaskStatusResponse evalResult = null;
-                int maxAttempts = 5;
+                
                 int attempt = 0;
 
                 while (evalResult == null && attempt < maxAttempts)

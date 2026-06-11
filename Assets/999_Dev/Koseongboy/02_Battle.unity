@@ -2793,6 +2793,7 @@ GameObject:
   - component: {fileID: 872219539}
   - component: {fileID: 872219538}
   - component: {fileID: 872219546}
+  - component: {fileID: 872219547}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2938,6 +2939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Controllers.TurnController.TurnController
   ShowTopMostFoldoutHeaderGroup: 1
+  maxAttempts: 20
   BattleMainCamera: {fileID: 1864568617}
   MyPlayer: {fileID: 0}
   EnemyPlayer: {fileID: 0}
@@ -3079,6 +3081,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!168 &872219547
+AudioEchoFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872219537}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Delay: 500
+  m_DecayRatio: 0.5
+  m_WetMix: 1
+  m_DryMix: 1
 --- !u!1 &882473174
 GameObject:
   m_ObjectHideFlags: 0
