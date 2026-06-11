@@ -64,10 +64,16 @@ namespace DefaultNamespace {
         public void OnGameSetupCompleted() {
             if (!IsServer) return;
             Debug.Log("[PhaseManager] 세팅 완료. 5초간 인트로 연출 시작...");
+            SetUpBGMClientRpc();
+            StartCoroutine(IntroRoutine());
+        }
+
+        [Rpc(SendTo.Everyone)]
+        public void SetUpBGMClientRpc(RpcParams rpc = default)
+        {
             if (battleBGM != null && Managers.VoiceManagers.SoundManager.Instance != null) {
                 Managers.VoiceManagers.SoundManager.Instance.SetBgmAudioClip(battleBGM);
             }
-            StartCoroutine(IntroRoutine());
         }
 
         public void OnMulliganCompleted(ulong firstPlayerId) {
