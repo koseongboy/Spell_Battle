@@ -17,7 +17,6 @@ namespace DefaultNamespace
         
         [Header("회원가입 팝업")] 
         public GameObject registerPanel;
-        public GameObject loginPanel;
         public TMP_InputField regIdInput;
         public TMP_InputField regPwInput;
         public RectTransform registerRect;
@@ -65,7 +64,6 @@ namespace DefaultNamespace
 
         private void OnEnable() {
             isRegisterOn = false;
-            loginPanel.SetActive(false);
             
             registerPanel.SetActive(false);
             idInputField.ActivateInputField();
@@ -108,13 +106,11 @@ namespace DefaultNamespace
                 } else {
                     // 실패 로직 (예: 토큰 만료시 로그인 화면 유지)
                     Debug.Log("[TryAutoLogin] 자동 로그인 실패. 다시 로그인하세요.");
-                    loginPanel.SetActive(true);
                 }
             }
             catch (System.Exception e) {
                 // 통신 중 예상치 못한 에러가 발생해도 로딩은 닫혀야 함
                 Debug.LogError($"[TryAutoLogin] 예기치 못한 에러: {e.Message}");
-                loginPanel.SetActive(true);
             }
             finally {
                 // 3. 무조건 호출됨 (성공/실패/에러 상관없음)
@@ -225,6 +221,17 @@ namespace DefaultNamespace
                 CommonUIController.Instance.ShowRedAlert("회원가입 실패. 이미 존재하는 아이디일 수 있습니다.");
 
             }
+        }
+
+        public void OnClick_Quit() {
+            ConfirmPopupData data = new ConfirmPopupData
+            {
+                message = "게임을 종료하시겠습니까?",
+                onConfirm = Application.Quit,
+                onCancel = () => { }
+            };
+
+            UILoader.Instance.ShowUI("Confirm_Popup", data);
         }
     }
 }

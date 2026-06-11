@@ -2,7 +2,6 @@ using System;
 using Cards.EffectInfos;
 using UnityEngine;
 using Models.PlayerModels;
-using Cards.PlayableCards;
 using StatusType = Models.PlayerModels.StatusType;
 using System.Collections;
 
@@ -101,7 +100,6 @@ namespace Models.EffectCommands
     public class ShieldCommand : EffectCommand
     {
         public override CommandPriority Priority => CommandPriority.StatusApply;
-        private PlayerModel target;
         private int amount;
         public override VFXType MyVFXType => VFXType.Shield;
 
