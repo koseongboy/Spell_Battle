@@ -44,7 +44,6 @@ namespace Models.Networks
         public float defaultPitch;
     }
 
-    // 🌟 MonoBehaviour 상속을 제거한 순수 C# 클래스
     public class WebServerModel
     {
         private static WebServerModel instance;

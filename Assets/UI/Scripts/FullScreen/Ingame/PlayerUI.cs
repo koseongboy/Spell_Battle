@@ -266,7 +266,6 @@ namespace DefaultNamespace {
         }
 
         public void ToggleCardHighlight(int index, bool isOn) {
-            Debug.Log("진입" + index + isOn);
             // 안전망: 인덱스가 범위를 벗어나지 않았는지 체크
             if (index >= 0 && index < activeCards.Count) {
                 activeCards[index].SetHighlight(isOn);
