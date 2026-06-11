@@ -44,7 +44,6 @@ namespace Models.Networks
         public float defaultPitch;
     }
 
-    // 🌟 MonoBehaviour 상속을 제거한 순수 C# 클래스
     public class WebServerModel
     {
         private static WebServerModel instance;
@@ -174,6 +173,7 @@ namespace Models.Networks
                     if (www.result == UnityWebRequest.Result.Success)
                     {
                         string jsonResult = www.downloadHandler.text;
+                        Debug.Log(jsonResult);
                         var responseData = JsonUtility.FromJson<TaskStatusResponse>(jsonResult);
                         
                         if (responseData.status == "PENDING") return null; 

@@ -6,80 +6,112 @@ using TMPro;
 using System.Collections.Generic;
 using Controllers.PlayerController;
 
-namespace DefaultNamespace
-{
-    public class EnemyUI : MonoBehaviour
-    {
+namespace DefaultNamespace {
+    public class EnemyUI : MonoBehaviour {
+        #region Fields
+
         public static EnemyUI Instance { get; private set; }
 
-        [Header("체력 UI")]
-        public TextMeshProUGUI Text_Hp;
+        [Header("체력 UI")] public TextMeshProUGUI Text_Hp;
         public Slider Slider_Hp;
 
-        [Header("마나 UI")]
-        public TextMeshProUGUI Text_Mana;
+        [Header("마나 UI")] public TextMeshProUGUI Text_Mana;
 
-        [Header("상대 카드 및 상태이상 정보")]
-        public TextMeshProUGUI Text_DeckCount;
+        [Header("상대 카드 및 상태이상 정보")] public TextMeshProUGUI Text_DeckCount;
         public TextMeshProUGUI Text_HandCount;
-        
-        [Header("상태이상 UI 설정")]
-        public Transform StatusGrid;           // GridLayoutGroup이 붙은 상태이상 부모 객체
-        public GameObject StatusIconPrefab;    // StatusIcon.cs가 붙은 프리팹
+
+        [Header("상태이상 UI 설정")] public Transform StatusGrid;
+        public GameObject StatusIconPrefab;
         public StatusIconDatabase IconDatabase;
-        
-        private void Awake()
-        {
+
+        private bool isDataBound = false;
+        private PlayerModel model;
+
+        #endregion
+
+        private void Awake() {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
-        }
-        
-        public void ReceiveData(PlayerController controller) 
-        {
-            PlayerModel model = controller.model;
 
+            isDataBound = false;
+        }
+
+        public void ReceiveData(PlayerController controller) {
+            if (isDataBound) return;
+            isDataBound = true;
+
+            model = controller.model;
+
+            // 체력 바인딩
             UpdateHealth(model.CurrentHealth.Value, model.MaxHealth.Value);
-            model.CurrentHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(newValue, model.MaxHealth.Value);
-            model.MaxHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(model.CurrentHealth.Value, newValue);
+            model.CurrentHealth.OnValueChanged += HandleHealthChanged;
+            model.MaxHealth.OnValueChanged += HandleMaxHealthChanged;
 
+            // 마나 바인딩
             UpdateMana(model.CurrentMana.Value, model.MaxMana.Value);
-            model.CurrentMana.OnValueChanged += (oldValue, newValue) => UpdateMana(newValue, model.MaxMana.Value);
-            model.MaxMana.OnValueChanged += (oldValue, newValue) => UpdateMana(model.CurrentMana.Value, newValue);
+            model.CurrentMana.OnValueChanged += HandleCurrentManaChanged;
+            model.MaxMana.OnValueChanged += HandleMaxManaChanged;
 
+            // 상태이상 바인딩
             UpdateStatuses(model.ActiveStatuses);
-            model.ActiveStatuses.OnListChanged += (changeEvent) => UpdateStatuses(model.ActiveStatuses);
+            model.ActiveStatuses.OnListChanged += HandleStatusChanged;
 
-            if (model.Deck != null)
-            {
-                UpdateDeckCount(model.Deck.DeckCount.Value); 
-                model.Deck.DeckCount.OnValueChanged += (oldValue, newValue) => UpdateDeckCount(newValue);
-            }
+            // 덱 & 손패 카운트 바인딩
+            UpdateDeckCount(model.Deck.DeckCount.Value);
+            model.Deck.DeckCount.OnValueChanged += HandleDeckCountChanged;
 
-            if (model.Hand != null)
-            {
-                UpdateHandCount(model.Hand.HandCount.Value);
-                model.Hand.HandCount.OnValueChanged += (oldValue, newValue) => UpdateHandCount(newValue);
+            UpdateHandCount(model.Hand.HandCount.Value);
+            model.Hand.HandCount.OnValueChanged += HandleHandCountChanged;
+        }
+
+        private void OnEnable() {
+            if (model != null) {
+                UpdateHealth(model.CurrentHealth.Value, model.MaxHealth.Value);
+                UpdateMana(model.CurrentMana.Value, model.MaxMana.Value);
+                UpdateStatuses(model.ActiveStatuses);
+
+                if (model.Deck != null) UpdateDeckCount(model.Deck.DeckCount.Value);
+                if (model.Hand != null) UpdateHandCount(model.Hand.HandCount.Value);
             }
         }
-        
-        private void UpdateHealth(int currentHp, int maxHp)
-        {
+
+        private void OnDestroy() {
+            if (model != null) {
+                model.CurrentHealth.OnValueChanged -= HandleHealthChanged;
+                model.MaxHealth.OnValueChanged -= HandleMaxHealthChanged;
+
+                model.CurrentMana.OnValueChanged -= HandleCurrentManaChanged;
+                model.MaxMana.OnValueChanged -= HandleMaxManaChanged;
+
+                model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+
+                model.Deck.DeckCount.OnValueChanged -= HandleDeckCountChanged;
+                model.Hand.HandCount.OnValueChanged -= HandleHandCountChanged;
+
+                model = null;
+            }
+
+            isDataBound = false;
+        }
+
+
+        #region Update UI
+
+        private void UpdateHealth(int currentHp, int maxHp) {
             Text_Hp.text = currentHp.ToString();
-            if (Slider_Hp != null)
-            {
+            if (Slider_Hp != null) {
                 Slider_Hp.maxValue = maxHp;
                 Slider_Hp.value = currentHp;
             }
         }
 
-        private void UpdateMana(int currentMana, int maxMana)
-        {
+        private void UpdateMana(int currentMana, int maxMana) {
             Text_Mana.text = $"{currentMana} / {maxMana}";
         }
 
         private void UpdateDeckCount(int count) => Text_DeckCount.text = count.ToString();
         private void UpdateHandCount(int count) => Text_HandCount.text = count.ToString();
-        
+
         public void UpdateStatuses(NetworkList<StatusData> statuses) {
             // 🌟 방어 1: 부모 객체(Grid)나 프리팹이 인스펙터에서 누락되었는지 확인
             if (StatusGrid == null || StatusIconPrefab == null) return;
@@ -104,7 +136,7 @@ namespace DefaultNamespace
                 int totalStacks = kvp.Value;
 
                 if (totalStacks <= 0) continue;
-                
+
                 // 🌟 방어 2: 매니저 싱글톤 자체가 씬에 없는 경우 체크
                 if (StatusUIDataManager.Instance == null) {
                     Debug.LogError("[EnemyUI] 🚨 StatusUIDataManager 인스턴스를 찾을 수 없습니다! 씬에 오브젝트가 배치되어 있는지 확인해주세요.");
@@ -128,5 +160,40 @@ namespace DefaultNamespace
                 }
             }
         }
+
+        #endregion
+
+
+        #region 값 변화 handler
+
+        private void HandleHealthChanged(int oldValue, int newValue) {
+            if (model != null) UpdateHealth(newValue, model.MaxHealth.Value);
+        }
+
+        private void HandleMaxHealthChanged(int oldValue, int newValue) {
+            if (model != null) UpdateHealth(model.CurrentHealth.Value, newValue);
+        }
+
+        private void HandleCurrentManaChanged(int oldValue, int newValue) {
+            if (model != null) UpdateMana(newValue, model.MaxMana.Value);
+        }
+
+        private void HandleMaxManaChanged(int oldValue, int newValue) {
+            if (model != null) UpdateMana(model.CurrentMana.Value, newValue);
+        }
+
+        private void HandleStatusChanged(Unity.Netcode.NetworkListEvent<StatusData> changeEvent) {
+            if (model != null) UpdateStatuses(model.ActiveStatuses);
+        }
+
+        private void HandleDeckCountChanged(int oldValue, int newValue) {
+            UpdateDeckCount(newValue);
+        }
+
+        private void HandleHandCountChanged(int oldValue, int newValue) {
+            UpdateHandCount(newValue);
+        }
+
+        #endregion
     }
 }
