@@ -116,7 +116,7 @@ namespace Models.Networks
             string requestUrl = $"{baseUrl}/tasks/{taskId}";
             int retryCount = 0; // 무한 폴링 방지용 카운터
 
-            while (retryCount < 10) // 최대 10번까지만 물어보고 실패 처리 (10초)
+            while (retryCount < 15) // 최대 10번까지만 물어보고 실패 처리 (10초)
             {
                 try
                 {
@@ -176,8 +176,8 @@ namespace Models.Networks
                         Debug.Log(jsonResult);
                         var responseData = JsonUtility.FromJson<TaskStatusResponse>(jsonResult);
                         
-                        if (responseData.status == "PENDING") return null; 
-                        return responseData;
+                        if (responseData.status == "completed") return responseData; 
+                        else return null;
                     }
                     else
                     {

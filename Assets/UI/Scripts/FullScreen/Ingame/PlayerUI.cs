@@ -228,8 +228,17 @@ namespace DefaultNamespace {
 
         public void UpdateLastProperty(Property prop) {
             var data = CardDatabase.Instance.GetElementData(prop);
-            txt_LastElement.text = data.Name;
-            img_LastElement.sprite = data.Icon;
+            try
+            {
+                txt_LastElement.text = data.Name;
+                img_LastElement.sprite = data.Icon;
+            }
+            catch
+            {
+                if(data.Name == null) Debug.LogWarning("[PlayerUI] 네임이 오류입니다.");
+                else if (data.Icon == null) Debug.LogWarning("[PlayerUI] 아이콘이 오류입니다.");
+            }
+            
         }
 
         private void UpdateHandInfo(ObservableCollection<int> localHand) {

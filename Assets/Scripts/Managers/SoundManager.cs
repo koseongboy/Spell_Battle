@@ -3,7 +3,8 @@ using Managers.LocalDataManagers;
 using System;
 using System.Collections;
 using Models.PlayerModels;
-using Cards.EffectInfos; // 코루틴을 위해 추가
+using Cards.EffectInfos;
+using DefaultNamespace; // 코루틴을 위해 추가
 
 namespace Managers.VoiceManagers
 {
@@ -63,6 +64,8 @@ namespace Managers.VoiceManagers
         private string testDeviceName;
 
         public Action<float> OnMicVolumeChanged;
+
+
 
         private void Awake()
         {
@@ -284,6 +287,32 @@ namespace Managers.VoiceManagers
             OnMicVolumeChanged?.Invoke(0f); 
             return recorder.StopAndGetWav();
         }
+
+        /// <summary>
+        /// 녹음된 오디오가 완전한 침묵(또는 잡음뿐)인지 판별합니다.
+        /// </summary>
+        public bool IsAudioSilent(AudioClip clip, float silenceThreshold = 0.02f)
+        {
+            if (clip == null) return true;
+
+            float[] samples = new float[clip.samples * clip.channels];
+            clip.GetData(samples, 0);
+
+            // 파형을 쭉 훑으면서 단 하나라도 기준치 이상의 '진짜 소리'가 있는지 검사합니다.
+            for (int i = 0; i < samples.Length; i++)
+            {
+                if (Mathf.Abs(samples[i]) > silenceThreshold)
+                {
+                    return false; // 진짜 목소리가 하나라도 섞여 있음! (침묵 아님)
+                }
+            }
+
+            return true; // 끝까지 훑었는데 소리가 없음 = 완벽한 침묵
+        }
+
+        
         
     }
+
+
 }
