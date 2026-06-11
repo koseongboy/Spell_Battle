@@ -348,7 +348,7 @@ async function runBackgroundAnalysis(taskId, filePath, concept, prefix, wordName
         tasks[taskId] = {
             status: "completed",
             score: resultJson.score,
-            reason: resultJson.reason, 
+            RecognizedSentence: stt_text,
             updatedAt: Date.now()
         };
         console.log(`🗑️ [태스크 완료] ID: ${taskId} | 점수: ${resultJson.score}점`);
@@ -438,7 +438,7 @@ app.get('/evaluation-result', (req, res) => {
         status: "completed",
         message: `평가 완료: ${task.score}점`,
         score: task.score,
-        reason: task.reason
+        RecognizedSentence: task.RecognizedSentence || "",
     });
 });
 
