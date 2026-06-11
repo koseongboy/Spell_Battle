@@ -11,6 +11,7 @@ namespace Models.EffectCommands
     public enum VFXType {
         None, Damage, DynamicDamage, Heal, Shield, AddStatus, DetonateStatus, CardMovement, ManaGain, ManaLoss, SystemControl, CostUp, CostDown
     }
+
     // 실행 우선순위 정의 (낮은 숫자가 먼저 실행됨)
     public enum CommandPriority
     {
@@ -41,8 +42,9 @@ namespace Models.EffectCommands
             if (MyVFXType != VFXType.None)
             {
                 Controllers.SpellControllers.SpellController.Instance.PlayVisualEffectClientRpc(MyVFXType, RelatedStatus, target.NetworkObjectId);
-
+                
                 yield return Managers.VFX.BattleVFXManager.Instance.PlayVFXRoutine(MyVFXType, RelatedStatus, target);
+
             }
 
             // 2. 이펙트 재생(1.5초 대기)이 끝나면, 나만의 실제 데미지/힐 로직을 조용히 실행합니다.

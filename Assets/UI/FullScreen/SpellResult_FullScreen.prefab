@@ -704,6 +704,8 @@ GameObject:
   - component: {fileID: 8877163573081939531}
   - component: {fileID: 759116976147923141}
   - component: {fileID: 2346158863031613368}
+  - component: {fileID: 2214661144405991737}
+  - component: {fileID: 7326470979792895666}
   m_Layer: 5
   m_Name: SpellResult_FullScreen
   m_TagString: Untagged
@@ -787,6 +789,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.SpellResult_FullScreen
   txt_sentense: {fileID: 2404115680655377123}
   txt_score: {fileID: 5877417169319255755}
+--- !u!114 &2214661144405991737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4928524656599613776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
+--- !u!114 &7326470979792895666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4928524656599613776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &5094923059651802377
 GameObject:
   m_ObjectHideFlags: 0

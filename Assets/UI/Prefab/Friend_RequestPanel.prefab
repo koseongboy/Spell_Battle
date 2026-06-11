@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 7170843508189306258}
   - component: {fileID: 7039978095118404718}
   - component: {fileID: 5958934970779746729}
+  - component: {fileID: 8178671737041217355}
   m_Layer: 5
   m_Name: Friend_RequestPanel
   m_TagString: Untagged
@@ -248,6 +249,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &8178671737041217355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4381191842284577087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &5173816260440762279
 GameObject:
   m_ObjectHideFlags: 0

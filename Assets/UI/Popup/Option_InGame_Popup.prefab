@@ -686,6 +686,7 @@ GameObject:
   - component: {fileID: 6624577082726460752}
   - component: {fileID: 6118502505237425558}
   - component: {fileID: 7657718473622038111}
+  - component: {fileID: 8375767892890432883}
   m_Layer: 7
   m_Name: Option_InGame_Popup
   m_TagString: Untagged
@@ -780,6 +781,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &8375767892890432883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3968333076030758468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &4292593703490510814
 GameObject:
   m_ObjectHideFlags: 0

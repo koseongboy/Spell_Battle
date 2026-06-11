@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 1359980252185507269}
   - component: {fileID: 5631279871494482826}
   - component: {fileID: 113750896978068035}
+  - component: {fileID: 7886984052273959215}
   m_Layer: 5
   m_Name: CardDetailInGame_Popup
   m_TagString: Untagged
@@ -222,6 +223,18 @@ MonoBehaviour:
   animDuration: 0.1
   tooltipPrefab: {fileID: 5897164658101183459, guid: c6a2331b7bec383409ad73bfcbcd66ea, type: 3}
   tooltipContainer: {fileID: 3220013688325345183}
+--- !u!114 &7886984052273959215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352408900975402509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &2378095142666423957
 GameObject:
   m_ObjectHideFlags: 0

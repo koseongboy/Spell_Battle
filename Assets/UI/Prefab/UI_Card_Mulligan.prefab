@@ -552,6 +552,7 @@ GameObject:
   - component: {fileID: 6716935020220534667}
   - component: {fileID: 6385901159597611657}
   - component: {fileID: 2709532209507805587}
+  - component: {fileID: 6884600743035524176}
   m_Layer: 5
   m_Name: UI_Card_Mulligan
   m_TagString: Untagged
@@ -662,6 +663,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6884600743035524176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5434026315024681407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &6066319575691066014
 GameObject:
   m_ObjectHideFlags: 0

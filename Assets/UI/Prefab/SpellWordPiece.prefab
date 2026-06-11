@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 3882155315016089892}
   - component: {fileID: 7329221898975248476}
   - component: {fileID: 8123017103383033383}
+  - component: {fileID: 7585645921656773228}
   m_Layer: 5
   m_Name: SpellWordPiece
   m_TagString: Untagged
@@ -228,3 +229,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.SpellWordPiece
   txt_Word: {fileID: 1734146625279551592}
   img_BG: {fileID: 7329221898975248476}
+--- !u!114 &7585645921656773228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7141834029278380341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner

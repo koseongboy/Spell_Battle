@@ -520,6 +520,7 @@ GameObject:
   - component: {fileID: 8199961473480957349}
   - component: {fileID: 358498193711660057}
   - component: {fileID: 895382593582688579}
+  - component: {fileID: 6173172926469822339}
   m_Layer: 7
   m_Name: Friend_SearchWindow
   m_TagString: Untagged
@@ -630,6 +631,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &6173172926469822339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4594100748771384344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &5180641226909831939
 GameObject:
   m_ObjectHideFlags: 0

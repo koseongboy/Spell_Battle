@@ -1,7 +1,9 @@
 using UnityEngine;
 using Managers.LocalDataManagers;
 using System;
-using System.Collections; // 코루틴을 위해 추가
+using System.Collections;
+using Models.PlayerModels;
+using Cards.EffectInfos; // 코루틴을 위해 추가
 
 namespace Managers.VoiceManagers
 {
@@ -14,16 +16,47 @@ namespace Managers.VoiceManagers
         public VoicePlayer player;
 
         [Header("하위 모듈 (BGM)")]
-        public AudioSource bgmSource; // 🌟 BGM을 담당할 오디오 소스 추가
+        public AudioSource bgmSource;
+
+        [Header("하위 모듈 (SFX)")]
+        public AudioSource sfxSource;
+        public AudioClip defaultButtonSFX; 
 
         [Header("음성 및 사운드 설정값")]
         public int micDeviceIndex = 0;
         public float micVolumeMultiplier = 1.0f;
-        public float outputVolume = 1.0f; // 🌟 이제 상대방 음성 + BGM 마스터 볼륨으로 쓰입니다.
+        public float outputVolume = 1.0f;
 
         [Header("마이크 테스트 (Loopback)")]
         public AudioSource testAudioSource;
         public bool isRecording { get; private set; } = false;
+
+        [Header("Combat Actions (Damage & Heal)")]
+        [Tooltip("기본 데미지 (DamageCommand)")]
+        [SerializeField] private AudioClip defaultDamageSFX;
+        
+        [Tooltip("체력 회복 (HealCommand)")]
+        [SerializeField] private AudioClip healSFX;
+        
+        [Tooltip("보호막 생성 (ShieldCommand)")]
+        [SerializeField] private AudioClip shieldSFX;
+        [System.Serializable]
+        public struct StatusSFXMapping {
+            public StatusType statusType;
+            public AudioClip sfxClip;
+        }
+         [Tooltip("상태이상 부여")]
+        [SerializeField] private StatusSFXMapping[] specificStatusSFXs;
+
+        [Header("Mana & System")]
+        [Tooltip("마나 회복 (ManaCommand - 양수)")]
+        [SerializeField] private AudioClip manaGainSFX;
+        
+        [Tooltip("마나 감소/소모 (ManaCommand - 음수)")]
+        [SerializeField] private AudioClip manaLossSFX;
+
+
+
         
         [Obsolete("이 변수는 isRecording으로 통합되었습니다. 앞으로는 isRecording을 사용해 주세요.")]
         public bool isTesting { get => isRecording; private set => isRecording = value; }
@@ -38,11 +71,6 @@ namespace Managers.VoiceManagers
                 Instance = this;
                 DontDestroyOnLoad(this.gameObject);
 
-                // 깜빡하고 BGM용 AudioSource를 안 붙였을 경우 자동 생성
-                if (bgmSource == null)
-                {
-                    bgmSource = gameObject.AddComponent<AudioSource>();
-                }
             }
             else
             {
@@ -101,7 +129,58 @@ namespace Managers.VoiceManagers
             }
         }
 
-    
+        // ==========================================
+        // 🎵 SFX 통합 제어 모듈
+        // ==========================================
+
+        public void PlaySFX(AudioClip clip)
+        {
+            if (clip == null || sfxSource == null) return;
+            
+            // PlayOnShot은 기존에 나고 있던 효과음을 끊지 않고 겹쳐서 예쁘게 재생해줍니다.
+            sfxSource.PlayOneShot(clip, outputVolume); 
+        }
+
+        public void PlayDefaultButtonSFX()
+        {
+            PlaySFX(defaultButtonSFX);
+        }
+        public void PlaySkillSFX(Models.EffectCommands.VFXType vfxType, StatusType statusType, EffectType cardMovement = EffectType.None)
+        {
+            // 명찰이 None이거나 타겟이 없으면 그냥 넘어갑니다.
+            if (vfxType == Models.EffectCommands.VFXType.None) return;
+
+            AudioClip sfx = null;
+
+            // 🌟 넘어온 명찰(enum)에 맞는 프리팹을 인스펙터 필드에서 꺼냅니다.
+            switch (vfxType)
+            {
+                case Models.EffectCommands.VFXType.Damage: sfx = defaultDamageSFX; break;
+                case Models.EffectCommands.VFXType.Heal: sfx = healSFX; break;
+                case Models.EffectCommands.VFXType.Shield: sfx = shieldSFX; break;
+                case Models.EffectCommands.VFXType.AddStatus: 
+                    sfx = GetSpecificStatusSFX(statusType);
+                    break;
+                case Models.EffectCommands.VFXType.ManaGain: sfx = manaGainSFX; break;
+                case Models.EffectCommands.VFXType.ManaLoss: sfx = manaLossSFX; break;
+                default: sfx = defaultDamageSFX; break;
+            }
+            if(sfx != null) PlaySFX(sfx);
+        }
+        private AudioClip GetSpecificStatusSFX(StatusType targetStatus)
+        {
+            if (specificStatusSFXs == null) return defaultDamageSFX; // 방어 코드
+
+            foreach (var mapping in specificStatusSFXs)
+            {
+                if (mapping.statusType == targetStatus && mapping.sfxClip != null)
+                {
+                    return mapping.sfxClip; // 매핑된 전용 이펙트 반환!
+                }
+            }
+            // 매핑을 못 찾았다면(아직 프리팹 안 넣은 경우 등) 기본 상태이상 이펙트를 띄웁니다.
+            return defaultDamageSFX; 
+        }
 
         // ==========================================
         // ⚙️ 설정 업데이트 동기화 (볼륨 실시간 적용)

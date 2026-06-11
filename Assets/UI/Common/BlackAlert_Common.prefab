@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 4317746353098331918}
   - component: {fileID: 1972777584165520235}
   - component: {fileID: 7955248568473342549}
+  - component: {fileID: 8882471847223754834}
+  - component: {fileID: 4489544371411857935}
   m_Layer: 8
   m_Name: BlackAlert_Common
   m_TagString: Untagged
@@ -156,6 +158,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.BlackAlert
   message: {fileID: 2486273497292272926}
+--- !u!225 &8882471847223754834
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650844821004489171}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &4489544371411857935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650844821004489171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &8916182654482609983
 GameObject:
   m_ObjectHideFlags: 0

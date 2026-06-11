@@ -722,6 +722,7 @@ GameObject:
   - component: {fileID: 399550209004970330}
   - component: {fileID: 8503091083720889149}
   - component: {fileID: 8320250564438651164}
+  - component: {fileID: 4422748880622007117}
   m_Layer: 5
   m_Name: Mulligan_FullScreen
   m_TagString: Untagged
@@ -808,3 +809,15 @@ MonoBehaviour:
   isFirst: {fileID: 7517543478047528061}
   ExchangeButton: {fileID: 7861730451885159731}
   WaitingText: {fileID: 5624171406547514927}
+--- !u!114 &4422748880622007117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7692079827639321229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner

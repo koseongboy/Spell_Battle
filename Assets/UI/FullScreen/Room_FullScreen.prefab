@@ -560,6 +560,7 @@ GameObject:
   - component: {fileID: 3355030728569450936}
   - component: {fileID: 4960031470649138925}
   - component: {fileID: 6085733626664391894}
+  - component: {fileID: 7580753291354588998}
   m_Layer: 5
   m_Name: Room_FullScreen
   m_TagString: Untagged
@@ -664,7 +665,6 @@ MonoBehaviour:
   txt_GuestRank: {fileID: 3356614264189185862}
   txt_GuestScore: {fileID: 5981296097218675021}
   img_GuestReadyCheck: {fileID: 9052683945933143624}
-  inviteButton: {fileID: 0}
   btn_GameStart: {fileID: 387218770420047336}
   img_GameStart: {fileID: 5250542550551408364}
   btn_Ready: {fileID: 4688540964215964298}
@@ -678,6 +678,18 @@ MonoBehaviour:
   txt_SelectedDeckName: {fileID: 7396758404917164861}
   txt_SelectedDeckSummary: {fileID: 7770129552376603155}
   img_SelectedDeckElement: {fileID: 7015409517893990416}
+--- !u!114 &7580753291354588998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833811541381859868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &1986553115596357930
 GameObject:
   m_ObjectHideFlags: 0

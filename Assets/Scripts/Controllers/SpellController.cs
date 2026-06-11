@@ -227,9 +227,8 @@ namespace Controllers.SpellControllers
                     attempt++;
                 }
                 
-                // 5. 평가가 완료되면 PhaseManager 호출 (아직 구현 안됨)
+                // 5. 평가가 완료되면 PhaseManager 호출
                 PhaseManager.Instance.DoneEval(evalResult);
-                Debug.Log($"[SpellController] 평가 완료 통보 (PhaseManager 연동 예정). 점수: {evalResult}");
             }
             else
             {
@@ -371,8 +370,12 @@ namespace Controllers.SpellControllers
             // 기존에 만들어둔 VoiceManager의 스피커를 활용하여 재생합니다. todo: 음성 연결해야 함
             if (SoundManager.Instance.testAudioSource != null)
             {
-                SoundManager.Instance.testAudioSource.clip = downloadedClip;
-                SoundManager.Instance.testAudioSource.Play();
+                audioSource.clip = downloadedClip;
+                if (SoundManager.Instance != null)
+                {
+                    audioSource.volume = SoundManager.Instance.outputVolume;
+                }
+                audioSource.Play();
             }
         }
 
@@ -504,12 +507,6 @@ namespace Controllers.SpellControllers
         [Rpc(SendTo.Everyone)]
         private void ShowIncantationPopupClientRpc(string recognizedSentence, Property property, ulong casterId, float audioLength)
         {
-            // 🌟 여기에 사진으로 보여주신 보라색 이펙트 팝업 UI를 띄우는 코드를 넣습니다!
-            // 서버가 직접 내려준 안전한 recognizedSentence와 verifiedScore를 UI 텍스트에 매핑하시면 됩니다.
-            // 예: UILoader.Instance.ShowUI("IncantationPopup_UI", recognizedSentence, verifiedScore);
-            
-            Debug.Log($"[Client] 🎬 검증된 연출 팝업 가동 - 문장: {recognizedSentence}, 속성: {property}");
-            //todo 이름 바꿀 것
             UILoader.Instance.ShowUI("SpellActive_FullScreen", (recognizedSentence, property));
             SoundManager.Instance.ToggleBGM();
             // 오디오 재생 처리
@@ -557,7 +554,8 @@ namespace Controllers.SpellControllers
 
         private float CalculateMultiplierFromScore(float score)
         {
-            return Mathf.Clamp(score / 100f, 0.1f, 1.5f);
+            // return Mathf.Clamp(score / 100f, 0.1f, 1.5f);
+            return 1f;
         }
 
         private void AfterExecutingAllCards(SpellPayload payload, PlayerModel caster) 

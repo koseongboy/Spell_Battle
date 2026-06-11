@@ -304,6 +304,7 @@ GameObject:
   - component: {fileID: 8355986897527402268}
   - component: {fileID: 389537416893780510}
   - component: {fileID: 3910427456068421167}
+  - component: {fileID: 879171651975699069}
   m_Layer: 5
   m_Name: DeckEdit_FullScreen
   m_TagString: Untagged
@@ -403,7 +404,7 @@ MonoBehaviour:
   leftDeckListContent: {fileID: 3282458303111870514}
   rightCardInDeckContent: {fileID: 6597880259862202268}
   uiCardDeckEditPrefab: {fileID: 9054048108323132008, guid: 00df9042218770a408f5ed59371c9b75, type: 3}
-  deckListPiecePrefab: {fileID: 8429168833947864846, guid: 08f909c427b0151468976b29b4fda91c, type: 3}
+  deckPieceDeckEditPrefab: {fileID: 8429168833947864846, guid: 08f909c427b0151468976b29b4fda91c, type: 3}
   cardInDeckPiecePrefab: {fileID: 663227107506103485, guid: a5473ed4dac01a94b8bcef3abe105724, type: 3}
   prevPageButton: {fileID: 7980269099920130262}
   nextPageButton: {fileID: 2730358238647265716}
@@ -436,6 +437,18 @@ MonoBehaviour:
   btn_ConfirmRenameDeck: {fileID: 8948375621807736567}
   btn_CloseRenameDeckPopup: {fileID: 8123366791472957369}
   dropZoneRect: {fileID: 6056883929334283441}
+--- !u!114 &879171651975699069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772925186752858673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &889222059757855678
 GameObject:
   m_ObjectHideFlags: 0

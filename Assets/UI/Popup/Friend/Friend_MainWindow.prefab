@@ -1966,6 +1966,7 @@ GameObject:
   - component: {fileID: 5033372363316514358}
   - component: {fileID: 2002039293262747402}
   - component: {fileID: 2949452976668265346}
+  - component: {fileID: 457197146856337489}
   m_Layer: 7
   m_Name: Friend_MainWindow
   m_TagString: Untagged
@@ -2081,6 +2082,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &457197146856337489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6870216853771712425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019d5dcaa38008c49acdb3c5c9e77939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicButtonSoundAssigner
 --- !u!1 &7289032847037698904
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,7 +2,8 @@ using UnityEngine;
 using Models.PlayerModels;
 using System.Collections;
 using System.Runtime.CompilerServices;
-using Cards.EffectInfos; // StatusType 등 사용을 위해 포함
+using Cards.EffectInfos;
+using Managers.VoiceManagers; // StatusType 등 사용을 위해 포함
 
 namespace Managers.VFX
 {
@@ -127,7 +128,10 @@ namespace Managers.VFX
             yield return new WaitForSeconds(0.5f);
 
             Transform mountPoint = target.transform;
-
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySkillSFX(vfxType, statusType);
+            }
             GameObject vfxInstance = Instantiate(prefabToPlay, mountPoint.position, mountPoint.rotation);
             vfxInstance.transform.SetParent(mountPoint, false);
             vfxInstance.transform.localPosition = new Vector3(0f, 0f, 0f);
