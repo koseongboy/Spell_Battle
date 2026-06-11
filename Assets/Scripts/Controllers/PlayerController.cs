@@ -57,21 +57,23 @@ namespace Controllers.PlayerController
         public override void OnNetworkDespawn()
         {
             // 구독 해제 (메모리 누수 방지)
-            model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => view.UpdateHealth(newValue);
-            model.CurrentMana.OnValueChanged -= (oldValue, newValue) => view.UpdateMana(newValue);
-            model.Shield.OnValueChanged -= (oldValue, newValue) => view.UpdateShield(newValue);
-            model.LastProperty.OnValueChanged -= (oldValue, newValue) => view.UpdateLastProperty(newValue);
-            model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => playerUI.UpdateHealth(newValue, model.MaxHealth.Value);
-            model.CurrentMana.OnValueChanged -= (oldValue, newValue) => playerUI.UpdateMana(newValue, model.MaxMana.Value, 10);
-            model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
             
-            model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateHealth(newValue);
-            model.CurrentMana.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateMana(newValue);
-            model.Shield.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateShield(newValue);
-            model.LastProperty.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateLastProperty(newValue);
-            model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+            // 생각해보니 람다식으로 -= 연산은 안 먹히잖아?
             
-            // 🌟 팝업이 꺼질 때 Instance가 null일 수 있으므로 널 체크 추가 (? 기호 사용)
+            // model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => view.UpdateHealth(newValue);
+            // model.CurrentMana.OnValueChanged -= (oldValue, newValue) => view.UpdateMana(newValue);
+            // model.Shield.OnValueChanged -= (oldValue, newValue) => view.UpdateShield(newValue);
+            // model.LastProperty.OnValueChanged -= (oldValue, newValue) => view.UpdateLastProperty(newValue);
+            // model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => playerUI.UpdateHealth(newValue, model.MaxHealth.Value);
+            // model.CurrentMana.OnValueChanged -= (oldValue, newValue) => playerUI.UpdateMana(newValue, model.MaxMana.Value, 10);
+            // model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+            //
+            // model.CurrentHealth.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateHealth(newValue);
+            // model.CurrentMana.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateMana(newValue);
+            // model.Shield.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateShield(newValue);
+            // model.LastProperty.OnValueChanged -= (oldValue, newValue) => enemyView.UpdateLastProperty(newValue);
+            // model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+            
             if (TurnModel.Instance != null) TurnModel.Instance.OnPhaseChangedEvent -= HandlePhaseChange;
             if (PlayerUI.Instance != null) PlayerUI.Instance.OnCardClickedAction -= ToggleSpellIndex;
         }

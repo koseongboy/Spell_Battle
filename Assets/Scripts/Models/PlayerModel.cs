@@ -36,7 +36,6 @@ namespace Models.PlayerModels {
         DamageReflect // 반사 (금강, 환각용 / 스택=반사율%)
     }
 
-    // 🌟 네트워크로 전송할 상태이상 '택배 상자' (구조체)
     public struct StatusData : INetworkSerializable, IEquatable<StatusData> {
         public StatusType Type;
         public int Stacks; // 중첩 수
@@ -354,12 +353,11 @@ namespace Models.PlayerModels {
             int totalStacks = GetStatusStack(type);
             if (totalStacks <= 0) return;
 
-            // 팩트: 기획상 발화와 빙결에 대한 강제 발동 효과만 명시되어 있습니다.
             switch (type) {
                 case StatusType.Ignite:
                     // 도트 데미지 강제 1회 적용
                     TakeDamage(totalStacks, DamageType.Ignite);
-                    Debug.Log($"🔥 {type} 강제 1회 발동! 데미지: {totalStacks}");
+                    Debug.Log($"{type} 강제 1회 발동! 데미지: {totalStacks}");
                     break;
                 case StatusType.Freeze:
                     // 빙결 폭발 (추가 데미지) 구현 - 기획에 맞게 데미지 공식 세팅 (예: 스택 * 2)
@@ -392,12 +390,12 @@ namespace Models.PlayerModels {
 
             switch (moveType) {
                 case EffectType.DrawCard:
-                    // 1. 카드를 count만큼 뽑음 (HandModel 내부에서 주인에게만 자동 RPC 전송됨)
+                    // 카드를 count만큼 뽑음 (HandModel 내부에서 주인에게만 자동 RPC 전송됨)
                     for (int i = 0; i < count; i++) {
                         Deck.DrawCard();
                     }
 
-                    // 2. 상대방 클라이언트에게는 "N장 뽑았다"는 사실만 전송하여 뒷면 애니메이션 재생
+                    // 상대방 클라이언트에게는 "N장 뽑았다"는 사실만 전송하여 뒷면 애니메이션 재생
                     ulong enemyId = GetEnemyClientId();
                     PlayEnemyDrawAnimationClientRpc(count, RpcTarget.Single(enemyId, RpcTargetUse.Temp));
                     break;
@@ -441,16 +439,16 @@ namespace Models.PlayerModels {
             if (phase == GamePhase.End && isMyTurn) {
                 if (!IsServer) return;
 
-                // 1. 발화 데미지 적용
+                // 발화 데미지 적용
                 int totalIgniteStacks = GetStatusStack(StatusType.Ignite);
                 if (totalIgniteStacks > 0) {
                     BroadcastPhaseVFX(EffectCommands.VFXType.AddStatus, StatusType.Ignite);
                     // 팩트 체크: 여기서 DamageType.Ignite로 명시해서 보냅니다.
                     TakeDamage(totalIgniteStacks, DamageType.Ignite);
-                    Debug.Log($"🔥 발화 효과 발동! 기본 데미지: {totalIgniteStacks}");
+                    Debug.Log($"발화 효과 발동! 기본 데미지: {totalIgniteStacks}");
                 }
 
-                // 2. 턴 지속시간 감소 및 만료된 상태이상 제거
+                // 턴 지속시간 감소 및 만료된 상태이상 제거
                 for (int i = ActiveStatuses.Count - 1; i >= 0; i--) {
                     var status = ActiveStatuses[i];
 
@@ -512,7 +510,6 @@ namespace Models.PlayerModels {
         
         
         #region DEV
-        // 주의: NetworkVariable은 플레이 모드에서 스폰된 이후, 서버(호스트) 권한으로만 변경 가능합니다.
 
         [ContextMenu("TEST: 데미지 5 받기")]
         public void TestTakeDamage()
@@ -574,8 +571,6 @@ namespace Models.PlayerModels {
             if (!Application.isPlaying || !IsServer) return;
     
             AddShield(5);
-            // 참고: 현재 코드는 보호막 스택을 상태이상 아이콘으로 띄우는 것이 아니라 
-            // Shield NetworkVariable로 관리하고 있습니다. UI에 반영하려면 UI 코드 수정이 필요할 수 있습니다.
         }
 
         #endregion

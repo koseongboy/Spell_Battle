@@ -17,45 +17,38 @@ using Models.TurnModel;
 using UnityEngine.Pool;
 
 namespace DefaultNamespace {
-    
     public class PlayerUI : MonoBehaviour {
         public static PlayerUI Instance { get; private set; }
 
 
-        [Header("체력 UI")] 
-        public TextMeshProUGUI Text_Hp;
+        [Header("체력 UI")] public TextMeshProUGUI Text_Hp;
         public Slider Slider_Hp;
 
-        [Header("마나 UI")] 
-        public TextMeshProUGUI Text_Mana;
-        public Image[] ManaSlots; // 하스스톤 스타일 마나 아이콘 10개 배열
+        [Header("마나 UI")] public TextMeshProUGUI Text_Mana;
+        public Image[] ManaSlots;
 
-        [Header("마나 색상 설정")] 
-        public Color Color_ExpectedMana = Color.white; // 소모 예정 마나 (흰색)
+        [Header("마나 색상 설정")] public Color Color_ExpectedMana = Color.white; // 소모 예정 마나 (흰색)
         public Color Color_AvailableMana = new Color(0.4f, 0.8f, 1f); // 2. 사용 가능한 마나 (밝은 하늘색)
         public Color Color_UsedMana = new Color(0.1f, 0.3f, 0.5f); // 3. 이미 사용한 마나 (어두운 하늘색)
         public Color Color_LockedMana = Color.gray; // 1. 아직 도달하지 않은 최대 마나 (회색)
 
-        [Header("상태이상 UI 설정")] 
-        public Transform StatusGrid; // GridLayoutGroup이 붙은 상태이상 부모 객체
+        [Header("상태이상 UI 설정")] public Transform StatusGrid; // GridLayoutGroup이 붙은 상태이상 부모 객체
         public GameObject StatusIconPrefab; // StatusIcon.cs가 붙은 프리팹
         public StatusIconDatabase IconDatabase;
 
-        [Header("손패 UI 설정")] 
-        public Transform HandContainer;
+        [Header("손패 UI 설정")] public Transform HandContainer;
         public GameObject CardPrefab;
         public Action<int> OnCardClickedAction;
 
-        [Header("이전 속성")] 
-        public Image img_LastElement;
+        [Header("이전 속성")] public Image img_LastElement;
         public TextMeshProUGUI txt_LastElement;
-        
-        [Header("우하단 버튼")]
-        public Button btn_endTurn;
+
+        [Header("우하단 버튼")] public Button btn_endTurn;
         public Button btn_spell;
 
         private IObjectPool<UI_Card_InHand> cardPool;
         private List<UI_Card_InHand> activeCards = new List<UI_Card_InHand>();
+        private PlayerModel model;
 
         private bool isDataBound = false;
 
@@ -79,57 +72,74 @@ namespace DefaultNamespace {
                 defaultCapacity: 10,
                 maxSize: 20
             );
-            
+
             isDataBound = false;
         }
 
-        
-        public void ReceiveData(PlayerController controller) 
-        {
-            // 🌟 2. 이미 연결을 마쳤다면, 아무 작업도 하지 않고 돌아가게 하여 중복 누적을 방어합니다.
-            if (isDataBound) {
-                Debug.Log("⚠️ [PlayerUI] 이미 데이터 바인딩이 완료되어 중복 실행을 차단했습니다.");
-                return; 
-            }
-            isDataBound = true; // 문 걸어 잠그기
-            
-            PlayerModel model = controller.model;
-            
-            // 1. 체력 바인딩 (MaxHealth와 CurrentHealth 모두 추적)
+
+        public void ReceiveData(PlayerController controller) {
+            if (isDataBound) return;
+            isDataBound = true;
+
+            model = controller.model;
+
             UpdateHealth(model.CurrentHealth.Value, model.MaxHealth.Value);
-            model.CurrentHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(newValue, model.MaxHealth.Value);
-            model.MaxHealth.OnValueChanged += (oldValue, newValue) => UpdateHealth(model.CurrentHealth.Value, newValue);
 
-            // 2. 마나 바인딩 (Current, Max, Final 모두 추적)
             UpdateMana(model.CurrentMana.Value, model.MaxMana.Value, model.FinalMana.Value, model.ExpectedManaCost);
-            model.CurrentMana.OnValueChanged += (oldValue, newValue) =>
-                UpdateMana(newValue, model.MaxMana.Value, model.FinalMana.Value);
-            model.MaxMana.OnValueChanged += (oldValue, newValue) =>
-                UpdateMana(model.CurrentMana.Value, newValue, model.FinalMana.Value);
-            model.OnExpectedManaChanged += (newExpectedMana) => 
-                UpdateMana(model.CurrentMana.Value, model.MaxMana.Value, model.FinalMana.Value, newExpectedMana);
-            model.LastProperty.OnValueChanged += (oldValue, newValue) => UpdateLastProperty(newValue);
+            model.CurrentMana.OnValueChanged += HandleCurrentManaChanged;
+            model.MaxMana.OnValueChanged += HandleMaxManaChanged;
+            model.OnExpectedManaChanged += HandleExpectedManaChanged;
             
-            
-            // 3. 기타 상태 및 카드 정보 바인딩
             UpdateStatuses(model.ActiveStatuses);
-            model.ActiveStatuses.OnListChanged += (changeEvent) => UpdateStatuses(model.ActiveStatuses);
-
-            if (model.Hand != null) {
-                UpdateHandInfo(model.Hand.localHand);
-                model.Hand.localHand.CollectionChanged += (sender, e) => UpdateHandInfo(model.Hand.localHand);
-            }
+            model.ActiveStatuses.OnListChanged += HandleStatusChanged;
+            model.LastProperty.OnValueChanged += HandleLastPropertyChanged;
+            
+            UpdateHandInfo(model.Hand.localHand);
+            model.Hand.localHand.CollectionChanged += HandleHandCollectionChanged;
             
             btn_endTurn.onClick.RemoveAllListeners();
             btn_spell.onClick.RemoveAllListeners();
-            
-            btn_endTurn.onClick.AddListener( controller.TryTurnEnd );
-            btn_spell.onClick.AddListener( controller.SubmitSpellSelection );
+
+            btn_endTurn.onClick.AddListener(controller.TryTurnEnd);
+            btn_spell.onClick.AddListener(controller.SubmitSpellSelection);
             this.OnCardClickedAction += controller.ToggleSpellIndex;
-        
-            Debug.Log("✅ PlayerUI가 스스로 컨트롤러 데이터를 받아 바인딩을 완료했습니다!");
+
+            Debug.Log("PlayerUI가 스스로 컨트롤러 데이터를 받아 바인딩을 완료했습니다!");
         }
 
+        private void OnEnable() {
+            // 꺼져있는 동안 변경되었을지 모르는 모든 수치를 최신 상태로 덮어씌웁니다.
+            if (model != null) {
+                UpdateHealth(model.CurrentHealth.Value, model.MaxHealth.Value);
+                UpdateMana(model.CurrentMana.Value, model.MaxMana.Value, model.FinalMana.Value, model.ExpectedManaCost);
+                UpdateStatuses(model.ActiveStatuses);
+                UpdateLastProperty(model.LastProperty.Value);
+
+                if (model.Hand != null) {
+                    UpdateHandInfo(model.Hand.localHand);
+                }
+            }
+        }
+
+        private void OnDestroy() {
+            if (model != null) {
+                model.CurrentHealth.OnValueChanged -= HandleCurrentHealthChanged;
+                model.MaxHealth.OnValueChanged -= HandleMaxHealthChanged;
+                model.CurrentMana.OnValueChanged -= HandleCurrentManaChanged;
+                model.MaxMana.OnValueChanged -= HandleMaxManaChanged;
+                model.OnExpectedManaChanged -= HandleExpectedManaChanged;
+                model.ActiveStatuses.OnListChanged -= HandleStatusChanged;
+
+                model.LastProperty.OnValueChanged -= HandleLastPropertyChanged;
+                model.Hand.localHand.CollectionChanged -= HandleHandCollectionChanged;
+                
+                model = null;
+            }
+
+            isDataBound = false;
+        }
+
+        #region UpdateUI
 
         public void UpdateHealth(int currentHp, int maxHp) {
             Text_Hp.text = currentHp.ToString();
@@ -170,9 +180,7 @@ namespace DefaultNamespace {
             }
         }
 
-
         public void UpdateStatuses(NetworkList<StatusData> statuses) {
-            // 🌟 방어 1: 부모 객체(Grid)나 프리팹이 누락되었는지 확인
             if (StatusGrid == null || StatusIconPrefab == null) return;
 
             // 1. 기존에 생성된 아이콘들을 모두 지운다
@@ -195,8 +203,7 @@ namespace DefaultNamespace {
                 int totalStacks = kvp.Value;
 
                 if (totalStacks <= 0) continue;
-                
-                // 🌟 방어 2: 매니저 싱글톤 자체가 씬에 없는 경우 체크
+
                 if (StatusUIDataManager.Instance == null) {
                     Debug.LogError("[PlayerUI] 🚨 StatusUIDataManager 인스턴스를 찾을 수 없습니다! 씬에 오브젝트가 있는지 확인해주세요.");
                     continue;
@@ -205,7 +212,6 @@ namespace DefaultNamespace {
                 // 원래 사용하던 싱글톤 매니저 방식으로 복귀
                 var uiData = StatusUIDataManager.Instance.GetStatusData(type);
 
-                // 🌟 방어 3 (가장 유력한 범인): 매니저에 해당 상태이상 데이터가 등록 안 되어 있을 때
                 if (uiData == null || uiData.Icon == null) {
                     Debug.LogWarning($"[PlayerUI] ⚠️ {type} 상태이상이 StatusUIDataManager에 등록되지 않았거나 아이콘이 누락되었습니다!");
                     continue; // 에러로 게임이 터지지 않고, 이 아이콘만 건너뜁니다.
@@ -219,7 +225,7 @@ namespace DefaultNamespace {
                 }
             }
         }
-        
+
         public void UpdateLastProperty(Property prop) {
             var data = CardDatabase.Instance.GetElementData(prop);
             txt_LastElement.text = data.Name;
@@ -258,14 +264,69 @@ namespace DefaultNamespace {
                 HandLayoutManager.Instance.ArrangeCards(activeCards);
             }
         }
-        
+
         public void ToggleCardHighlight(int index, bool isOn) {
-            Debug.Log("진입"+index+isOn);
+            Debug.Log("진입" + index + isOn);
             // 안전망: 인덱스가 범위를 벗어나지 않았는지 체크
-            if (index >= 0 && index < activeCards.Count)
-            {
+            if (index >= 0 && index < activeCards.Count) {
                 activeCards[index].SetHighlight(isOn);
             }
         }
+
+        #endregion
+
+
+        #region 값 변화 handler
+
+        private void HandleCurrentHealthChanged(int oldValue, int newValue) {
+            if (model != null) {
+                UpdateHealth(newValue, model.MaxHealth.Value);
+            }
+        }
+
+        private void HandleMaxHealthChanged(int oldValue, int newValue) {
+            if (model != null) {
+                UpdateHealth(model.CurrentHealth.Value, newValue);
+            }
+        }
+
+        private void HandleCurrentManaChanged(int oldValue, int newValue) {
+            if (model != null) {
+                UpdateMana(newValue, model.MaxMana.Value, model.FinalMana.Value, model.ExpectedManaCost);
+            }
+        }
+
+        private void HandleMaxManaChanged(int oldValue, int newValue) {
+            if (model != null) {
+                UpdateMana(model.CurrentMana.Value, newValue, model.FinalMana.Value, model.ExpectedManaCost);
+            }
+        }
+
+        private void HandleExpectedManaChanged(int newExpectedMana) {
+            if (model != null) {
+                UpdateMana(model.CurrentMana.Value, model.MaxMana.Value, model.FinalMana.Value, newExpectedMana);
+            }
+        }
+
+        private void HandleStatusChanged(Unity.Netcode.NetworkListEvent<StatusData> changeEvent) {
+            if (model != null) {
+                UpdateStatuses(model.ActiveStatuses);
+            }
+        }
+
+        private void HandleLastPropertyChanged(Property oldValue, Property newValue) {
+            if (model != null) {
+                UpdateLastProperty(newValue);
+            }
+        }
+
+        private void HandleHandCollectionChanged(object sender,
+            System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+            if (model != null && model.Hand != null) {
+                UpdateHandInfo(model.Hand.localHand);
+            }
+        }
+
+        #endregion
     }
 }
