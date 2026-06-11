@@ -2497,6 +2497,7 @@ GameObject:
   m_Component:
   - component: {fileID: 506466686}
   - component: {fileID: 506466685}
+  - component: {fileID: 506466687}
   m_Layer: 0
   m_Name: CardDatabase
   m_TagString: Untagged
@@ -2537,6 +2538,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &506466687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 506466684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 491b3f80f61ff6241bd34ab0e460e727, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultNamespace.StatusUIDataManager
+  targetLabel:
+    m_LabelString: StatusUIData
 --- !u!1 &530737408
 GameObject:
   m_ObjectHideFlags: 0
@@ -10819,3 +10834,4 @@ SceneRoots:
   - {fileID: 799490285}
   - {fileID: 949277315}
   - {fileID: 506466686}
+  - {fileID: 1950390897}
