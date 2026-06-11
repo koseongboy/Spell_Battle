@@ -57,6 +57,8 @@ namespace DefaultNamespace {
         private IObjectPool<UI_Card_InHand> cardPool;
         private List<UI_Card_InHand> activeCards = new List<UI_Card_InHand>();
 
+        private bool isDataBound = false;
+
         private void Awake() {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
@@ -77,11 +79,20 @@ namespace DefaultNamespace {
                 defaultCapacity: 10,
                 maxSize: 20
             );
+            
+            isDataBound = false;
         }
 
         
         public void ReceiveData(PlayerController controller) 
         {
+            // 🌟 2. 이미 연결을 마쳤다면, 아무 작업도 하지 않고 돌아가게 하여 중복 누적을 방어합니다.
+            if (isDataBound) {
+                Debug.Log("⚠️ [PlayerUI] 이미 데이터 바인딩이 완료되어 중복 실행을 차단했습니다.");
+                return; 
+            }
+            isDataBound = true; // 문 걸어 잠그기
+            
             PlayerModel model = controller.model;
             
             // 1. 체력 바인딩 (MaxHealth와 CurrentHealth 모두 추적)

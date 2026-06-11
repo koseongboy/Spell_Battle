@@ -28,7 +28,6 @@ namespace Controllers.PlayerController
         public int CurrentHp { get; private set; } = 100;
         public int CurrentMana { get; private set; } = 50;
         private HashSet<int> _selectedSpellIndices = new HashSet<int>();
-
         
         public override void OnNetworkSpawn() {
             // NGO의 스폰 속보다 UI 초기화보다 빨라져서, 준비될 때까지 기다리게 함
