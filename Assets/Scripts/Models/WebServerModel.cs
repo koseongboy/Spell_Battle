@@ -173,6 +173,7 @@ namespace Models.Networks
                     if (www.result == UnityWebRequest.Result.Success)
                     {
                         string jsonResult = www.downloadHandler.text;
+                        Debug.Log(jsonResult);
                         var responseData = JsonUtility.FromJson<TaskStatusResponse>(jsonResult);
                         
                         if (responseData.status == "PENDING") return null; 
