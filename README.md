@@ -71,6 +71,6 @@
 - Node.js (v18+) 및 Python 3.10+ 설치 환경
 
 ### 2. 클라이언트 실행
-Unity Hub에서 프로젝트를 열거나, Release 탭에서 최신 Windows 빌드(.exe)를 다운로드하여 실행합니다.
+Unity Hub에서 프로젝트를 열거나, Build 폴더에서 Windows 빌드(.exe)를 다운로드하여 실행합니다.
 
-인게임 매뉴얼 및 덱 구성 가이드는 프로젝트 폴더 내 [Spell_Battle_Manual.pdf]를 참고해 주세요.
+인게임 매뉴얼 및 덱 구성 가이드는 프로젝트 폴더 내 [Spell_Arena SW Manual.pdf]를 참고해 주세요.
