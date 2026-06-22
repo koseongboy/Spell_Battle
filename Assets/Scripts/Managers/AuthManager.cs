@@ -224,11 +224,16 @@ namespace DefaultNamespace {
             LocalDataManager.Instance.ClearData();
             LocalDataManager.Instance.SaveData();
 
-            // TODO : 서버 소켓이 연결되어 있다면 여기서 끊어주는 로직 추가 (필요 시)
-            // NetworkManager.Instance.Disconnect(); 
+            if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsListening)
+            {
+                Unity.Netcode.NetworkManager.Singleton.Shutdown();
+            }
 
-            CommonUIController.Instance.InitFullScreenStack();
-            CommonUIController.Instance.ChangeFullScreen("LoginUI_FullScreen");
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
     }
 }

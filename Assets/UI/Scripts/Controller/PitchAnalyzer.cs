@@ -13,7 +13,7 @@ namespace DefaultNamespace
     {
         public static PitchAnalyzer Instance { get; private set; }
         
-        [Header("UI")]
+        [Header("UI")]      
         [SerializeField] private PitchSetting_FullScreen ui;
 
         [Header("녹음 설정")]

@@ -65,7 +65,7 @@ namespace DefaultNamespace
 
         private void OnEnable() {
             isRegisterOn = false;
-            loginPanel.SetActive(false);
+            loginPanel.SetActive(true);
             
             registerPanel.SetActive(false);
             idInputField.ActivateInputField();
@@ -225,6 +225,20 @@ namespace DefaultNamespace
                 CommonUIController.Instance.ShowRedAlert("회원가입 실패. 이미 존재하는 아이디일 수 있습니다.");
 
             }
+        }
+
+        public void OnQuitButtonClick()
+        {
+            Debug.Log("[Login_FullScreen] 게임을 종료합니다.");
+
+            // 1. 유니티 에디터에서 플레이 중일 때 종료하는 코드
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+            
+            // 2. 실제 빌드된 게임(.exe, .app)에서 종료하는 코드
+#else
+            Application.Quit();
+#endif
         }
     }
 }

@@ -13,7 +13,7 @@ public class SettingUIController : MonoBehaviour
     public Button btn_test;                 // 테스트 시작/중지 버튼
     public TextMeshProUGUI btn_test_text;              // 테스트 버튼 내부 텍스트
     public Button btn_save;                 // 저장 버튼
-    public Button btn_cancel;               // 취소 버튼
+    public Button btn_cancel;               // 취소 버튼1
 
     [Header("평상시 목소리 등록 UI")]
     public Button btn_recordDefaultVoice;
