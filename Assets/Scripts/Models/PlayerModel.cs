@@ -16,7 +16,7 @@ namespace Models.PlayerModels {
         Reflect // 반사 데미지
     }
 
-    // 기획서에 명시된 상태이상 종류들
+    // 상태이상 종류
     public enum StatusType {
         None,
         Ignite, // 발화 (불 - 도트뎀)
@@ -25,8 +25,7 @@ namespace Models.PlayerModels {
         ArcaneStack, // 응축 (비전 - 터뜨려서 데미지 증가)
         Shield, // 보호막
 
-
-        // --- 아래부터 새롭게 추가된 수치 변조용(Modifier) 상태이상 ---
+        // --- 수치 보정(Modifier)용 상태이상: Stacks를 배수/비율 값으로 사용 ---
         IgniteDamageMultiplier, // 발화 데미지 배수 (분출, 확산용 / 스택=배수)
         DamageReduction, // 받는 데미지 감소 (암주, 신념용 / 스택=감소율%)
         DamageReduction_Turn, // 턴 단위 데미지 감소 (Duration = 턴 수)
@@ -36,12 +35,13 @@ namespace Models.PlayerModels {
         DamageReflect // 반사 (금강, 환각용 / 스택=반사율%)
     }
 
+    // NetworkList로 동기화하기 위한 상태이상 데이터 (INetworkSerializable + IEquatable 필요)
     public struct StatusData : INetworkSerializable, IEquatable<StatusData> {
         public StatusType Type;
-        public int Stacks; // 중첩 수
-        public int Duration; // 지속 턴 수
-        
-        // NGO가 이 데이터를 0과 1로 변환(직렬화)하는 규칙
+        public int Stacks; // 중첩 수 (Modifier 계열은 배수/비율)
+        public int Duration; // 남은 턴 수. -1은 영구 지속, *_Hit 계열은 남은 횟수
+
+        // NGO 네트워크 직렬화 규칙
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter {
             serializer.SerializeValue(ref Type);
             serializer.SerializeValue(ref Stacks);
@@ -55,6 +55,10 @@ namespace Models.PlayerModels {
 
     }
 
+    /// <summary>
+    /// 플레이어 1명의 전투 상태(체력·마나·보호막·상태이상)와 카드 모듈(덱·손패·무덤)을 보유한다.
+    /// 모든 수치는 NetworkVariable/NetworkList로 동기화되며, 변경 함수는 서버에서만 동작한다.
+    /// </summary>
     public class PlayerModel : NetworkBehaviour
     {
         public static event Action<PlayerModel> OnPlayerSpawned;
@@ -68,19 +72,20 @@ namespace Models.PlayerModels {
         public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>(30);
 
         public NetworkVariable<int> MaxMana = new NetworkVariable<int>(4);
-        public NetworkVariable<int> FinalMana = new NetworkVariable<int>(20);
+        public NetworkVariable<int> FinalMana = new NetworkVariable<int>(20); // 최대 마나 성장 상한
         public NetworkVariable<int> CurrentMana = new NetworkVariable<int>(4);
         public NetworkVariable<int> Shield = new NetworkVariable<int>(0);
-        public NetworkVariable<Property> LastProperty = new NetworkVariable<Property>(Property.None);
+        public NetworkVariable<Property> LastProperty = new NetworkVariable<Property>(Property.None); // 직전 주문의 메인 속성
 
 
-        // 네트워크로 자동 동기화되는 상태이상 리스트
-        // (일반 List나 Dictionary는 동기화가 안 되기 때문에 반드시 NetworkList를 써야 합니다!)
+        // 적용 중인 상태이상 목록 (컬렉션 동기화를 위해 NetworkList 사용)
         public NetworkList<StatusData> ActiveStatuses;
 
         [Header("Card Modules")] public DeckModel Deck;
         public GraveyardModel Graveyard;
-        public HandModel Hand; 
+        public HandModel Hand;
+
+        // 카드 선택 중 사용 예정 마나 (로컬 UI 미리보기 전용, 동기화하지 않음)
         private int _expectedManaCost = 0;
         public int ExpectedManaCost
         {
@@ -97,7 +102,7 @@ namespace Models.PlayerModels {
         public event Action<int> OnExpectedManaChanged;
 
         private void Awake() {
-            // NetworkList는 반드시 Awake에서 공간을 할당해 주어야 합니다.
+            // NetworkList는 NetworkBehaviour 초기화 전에 생성되어야 하므로 Awake에서 할당
             ActiveStatuses = new NetworkList<StatusData>();
         }
         public static event Action<PlayerModel> OnPlayerDespawned;
@@ -112,9 +117,10 @@ namespace Models.PlayerModels {
                 MaxMana.Value = defaultMaxMana;
                 CurrentMana.Value = defaultMaxMana;
             }
-            OnPlayerSpawned?.Invoke(this); 
-            
+            OnPlayerSpawned?.Invoke(this);
+
             Debug.Log($"[PlayerModel] {gameObject.name} 스폰 완료, 이벤트 방송 송출!");
+            // SpellController가 이미 존재해 이벤트 구독 전 스폰된 경우를 대비한 직접 등록
             if (SpellController.Instance != null) {
                 if (IsOwner) {
                     SpellController.Instance.MyPlayer = this;
@@ -133,9 +139,12 @@ namespace Models.PlayerModels {
         }
 
         // ==========================================
-        // [서버 전용 권한] 스탯 조작 함수들 (카드가 발동될 때 호출됨)
+        // [서버 전용] 스탯 조작 (주로 EffectCommand에서 호출)
         // ==========================================
 
+        /// <summary>
+        /// 피해 적용. 감소/증폭 보정 → 반사 → 보호막 → 체력 순으로 처리한다.
+        /// </summary>
         public void TakeDamage(int amount, DamageType dmgType = DamageType.Direct) {
             if (!IsServer) return;
             int finalDamage = amount;
@@ -151,33 +160,32 @@ namespace Models.PlayerModels {
             if (hitReductionPct > 0) {
                 finalDamage = Mathf.RoundToInt(finalDamage * (100f - hitReductionPct) / 100f);
 
-                // 데미지를 줄인 직후, 횟수(Duration) 1 차감
+                // 피격 1회마다 남은 횟수(Duration) 1 차감
                 ConsumeStatusCharge(StatusType.DamageReduction_Hit, 1);
             }
 
-            // 1. 발화 데미지 증폭 체크 (분출, 확산 카드 대응)
+            // [발화 피해 증폭] 분출, 확산 (스택 = 배수)
             if (dmgType == DamageType.Ignite) {
                 int igniteMultiplier = GetStatusStack(StatusType.IgniteDamageMultiplier);
                 if (igniteMultiplier > 0) {
-                    finalDamage *= igniteMultiplier; // 분출(스택 2)이면 데미지 2배
+                    finalDamage *= igniteMultiplier;
                 }
             }
 
-            // 2. 받는 데미지 감소 체크 (신념, 암주 대응)
+            // [받는 피해 감소] 신념, 암주 (스택 = 감소율 %)
             int damageReductionPct = GetStatusStack(StatusType.DamageReduction);
             if (damageReductionPct > 0) {
-                // 30% 감소라면, (100 - 30) / 100 적용
                 finalDamage = Mathf.RoundToInt(finalDamage * (100f - damageReductionPct) / 100f);
             }
 
-            // 3. 반사 데미지 로직 (금강, 환각 대응 - 상대방에게 데미지 리턴)
+            // [피해 반사] 금강, 환각 (스택 = 반사율 %). 반사 피해끼리 무한 반사되지 않도록 Direct만 대상
             int reflectPct = GetStatusStack(StatusType.DamageReflect);
             if (reflectPct > 0 && dmgType == DamageType.Direct) {
                 int reflectDamage = Mathf.RoundToInt(finalDamage * (reflectPct / 100f));
-                // TODO: 공격자(Enemy) 타겟을 찾아 TakeDamage(reflectDamage, DamageType.Reflect) 호출 로직 필요
+                // TODO: 공격자에게 TakeDamage(reflectDamage, DamageType.Reflect) 적용
             }
 
-            // --- 이후 기존과 동일한 쉴드 깎기 및 체력 차감 로직 ---
+            // 보호막이 먼저 피해를 흡수하고, 초과분만 체력에서 차감
             if (Shield.Value > 0) {
                 if (Shield.Value >= finalDamage) Shield.Value -= finalDamage;
                 else {
@@ -196,6 +204,7 @@ namespace Models.PlayerModels {
             CurrentHealth.Value = Mathf.Min(MaxHealth.Value, CurrentHealth.Value + amount);
         }
 
+        // 마나가 충분할 때만 차감하고 성공 여부를 반환 (주문 제출 시 서버 측 검증에 사용)
         public bool TryUseMana(int amount) {
             if (!IsServer) return false;
             if (CurrentMana.Value - amount >= 0) {
@@ -210,7 +219,7 @@ namespace Models.PlayerModels {
         public void ConsumeAllStatus(StatusType type) {
             if (!IsServer) return;
 
-            // NetworkList 삭제 시에는 반드시 역순으로 순회해야 인덱스 오류가 발생하지 않습니다.
+            // 순회 중 삭제하므로 인덱스가 밀리지 않도록 역순 순회
             for (int i = ActiveStatuses.Count - 1; i >= 0; i--) {
                 if (ActiveStatuses[i].Type == type) {
                     ActiveStatuses.RemoveAt(i);
@@ -221,22 +230,21 @@ namespace Models.PlayerModels {
         }
 
 
-        // 특정 상태이상의 'Duration(여기서는 횟수로 취급)'을 원하는 만큼만 깎는 함수
+        // 횟수제 상태이상(*_Hit)의 남은 횟수(Duration)를 차감하고, 0 이하가 되면 제거
         public void ConsumeStatusCharge(StatusType type, int chargesToConsume = 1) {
             if (!IsServer) return;
 
-            // NetworkList 삭제/수정은 반드시 역순으로 진행
             for (int i = ActiveStatuses.Count - 1; i >= 0; i--) {
                 if (ActiveStatuses[i].Type == type) {
                     var status = ActiveStatuses[i];
-                    status.Duration -= chargesToConsume; // Duration을 횟수로 취급하여 차감
+                    status.Duration -= chargesToConsume;
 
                     if (status.Duration <= 0) {
                         ActiveStatuses.RemoveAt(i);
                         Debug.Log($"[Player {OwnerClientId}] {type} 방어 횟수가 소모되어 파괴되었습니다.");
                     }
                     else {
-                        ActiveStatuses[i] = status; // 차감된 횟수로 NetworkList 갱신
+                        ActiveStatuses[i] = status; // struct 복사본이므로 다시 대입해야 동기화됨
                         Debug.Log($"[Player {OwnerClientId}] {type} 방어 횟수 차감! 남은 횟수: {status.Duration}");
                     }
                 }
@@ -248,6 +256,7 @@ namespace Models.PlayerModels {
             CurrentMana.Value = Mathf.Min(MaxMana.Value, CurrentMana.Value + amount);
         }
 
+        // 최대 마나 성장 (FinalMana를 넘지 않음)
         public void IncreaseMaxMana(int amount) {
             if (!IsServer) return;
             MaxMana.Value = Mathf.Min(MaxMana.Value + amount, FinalMana.Value);
@@ -258,10 +267,10 @@ namespace Models.PlayerModels {
 
             int finalAmount = amount;
 
-            // 보호막 획득량 증가 체크
+            // 보호막 획득량 증가율(%) = 상태이상 보정 + 조건부 보정
             int shieldBoostPct = GetStatusStack(StatusType.ShieldGainBoost);
 
-            // 지핵(체력 10 이하일 때 50% 증가) 조건부 하드코딩
+            // 지핵: 체력 10 이하일 때 +50%
             if (CurrentHealth.Value <= 10) shieldBoostPct += 50;
 
             if (shieldBoostPct > 0) {
@@ -272,35 +281,37 @@ namespace Models.PlayerModels {
         }
 
         // ==========================================
-        // [서버 전용 권한] 상태이상(스택) 관리 시스템
+        // [서버 전용] 상태이상(스택) 관리
         // ==========================================
 
+        /// <summary>
+        /// 상태이상 부여. 속성별로 중첩 규칙이 다르다.
+        /// - 발화: 부여할 때마다 별도 인스턴스로 추가 (각자 지속시간이 따로 흐름)
+        /// - 빙결: 스택 합산 + 지속시간 갱신
+        /// - 응축/예언: 스택 합산 + 영구 지속(-1)
+        /// - 그 외: 스택 합산 + 더 긴 지속시간 유지
+        /// </summary>
         public void AddStatus(StatusType type, int stacks, int duration = 1) {
             if (!IsServer) return;
 
-            // 1. 불(발화) : 무조건 별개의 인스턴스로 분리해서 추가
             if (type == StatusType.Ignite) {
                 ActiveStatuses.Add(new StatusData { Type = type, Stacks = stacks, Duration = duration });
                 Debug.Log($"[Player {OwnerClientId}] {type} 별도 부여됨! ({duration}턴)");
                 return;
             }
 
-            // 2. 얼음(빙결), 비전(응축), 공허(예언) : 하나로 합치는 로직
+            // 이미 같은 상태이상이 있으면 하나로 합산
             for (int i = 0; i < ActiveStatuses.Count; i++) {
                 if (ActiveStatuses[i].Type == type) {
                     var status = ActiveStatuses[i];
                     status.Stacks += stacks;
 
-                    // 속성에 따른 갱신 규칙 적용
                     if (type == StatusType.Freeze) {
-                        // 빙결: 기획서대로 들어온 duration으로 덮어씌움 (갱신)
                         status.Duration = duration;
                     }
                     else if (type == StatusType.ArcaneStack || type == StatusType.Prophecy) {
-                        // 비전/공허: 영원히 사라지지 않음 (-1을 무한대의 의미로 사용)
                         status.Duration = -1;
                     }
-                    // 그 외 상태이상(Shield 등)은 가장 긴 턴 수를 유지하거나 기획에 맞게 처리
                     else {
                         status.Duration = Mathf.Max(status.Duration, duration);
                     }
@@ -311,7 +322,7 @@ namespace Models.PlayerModels {
                 }
             }
 
-            // 기존에 없었다면 새로 추가 (비전/공허는 애초에 무한대(-1)로 세팅)
+            // 처음 부여되는 경우 새로 추가
             if (type == StatusType.ArcaneStack || type == StatusType.Prophecy) duration = -1;
             ActiveStatuses.Add(new StatusData { Type = type, Stacks = stacks, Duration = duration });
             Debug.Log($"[Player {OwnerClientId}] {type} {stacks}스택 새로 부여됨!");
@@ -319,7 +330,7 @@ namespace Models.PlayerModels {
 
         public int GetStatusStack(StatusType type) {
             int totalStacks = 0;
-            // 발화처럼 여러 개로 나뉘어 있을 수 있으므로 모두 합산해서 반환합니다.
+            // 발화처럼 여러 인스턴스로 나뉜 경우도 있으므로 전체 합산
             foreach (var status in ActiveStatuses) {
                 if (status.Type == type) totalStacks += status.Stacks;
             }
@@ -327,26 +338,24 @@ namespace Models.PlayerModels {
             return totalStacks;
         }
         
-        // 상태이상의 연장 (예: 발화 지속시간 증가)
+        // 같은 타입의 모든 상태이상 지속시간 연장 (영구 지속(-1)은 제외)
         public void ExtendStatusDuration(StatusType type, int amountToExtend) {
             if (!IsServer) return;
 
-            // NetworkList를 순회하면서 같은 타입의 상태이상을 모두 찾음
             for (int i = 0; i < ActiveStatuses.Count; i++) {
                 if (ActiveStatuses[i].Type == type) {
                     var status = ActiveStatuses[i];
-                    
-                    // 영구 지속(-1)이 아닐 때만 연장
+
                     if (status.Duration > 0) {
                         status.Duration += amountToExtend;
-                        ActiveStatuses[i] = status; // 변경된 값 덮어쓰기
+                        ActiveStatuses[i] = status;
                         Debug.Log($"[Player {OwnerClientId}] {type}의 지속 턴 수가 {amountToExtend}만큼 증가했습니다.");
                     }
                 }
             }
         }
         
-        // 상태이상 소모 없이 1회 강제 발동 (예: 빙결 폭발, 발화 강제 1회 틱)
+        // 스택을 소모하지 않고 효과만 1회 발동 (발화 피해 1회, 빙결 폭발 등)
         public void TriggerStatusEffect(StatusType type) {
             if (!IsServer) return;
 
@@ -355,12 +364,11 @@ namespace Models.PlayerModels {
 
             switch (type) {
                 case StatusType.Ignite:
-                    // 도트 데미지 강제 1회 적용
                     TakeDamage(totalStacks, DamageType.Ignite);
                     Debug.Log($"{type} 강제 1회 발동! 데미지: {totalStacks}");
                     break;
                 case StatusType.Freeze:
-                    // 빙결 폭발 (추가 데미지) 구현 - 기획에 맞게 데미지 공식 세팅 (예: 스택 * 2)
+                    // 빙결 폭발: 스택 × 2 피해
                     int freezeDamage = totalStacks * 2; 
                     TakeDamage(freezeDamage, DamageType.Direct);
                     Debug.Log($"❄️ {type} 강제 폭발! 데미지: {freezeDamage}");
@@ -368,7 +376,7 @@ namespace Models.PlayerModels {
             }
         }
         
-        // 상태이상 중첩 수 배수 증가 (예: 다음 발화 스택 적용량 2배)
+        // 현재 적용 중인 해당 상태이상의 스택을 배수로 증폭
         public void MultiplyStatusStack(StatusType type, int multiplier) {
             if (!IsServer) return;
 
@@ -376,35 +384,35 @@ namespace Models.PlayerModels {
                 if (ActiveStatuses[i].Type == type) {
                     var status = ActiveStatuses[i];
                     status.Stacks *= multiplier;
-                    ActiveStatuses[i] = status; // 변경된 값 덮어쓰기
+                    ActiveStatuses[i] = status;
                     Debug.Log($"[Player {OwnerClientId}] {type}의 스택이 {multiplier}배로 증가했습니다! (현재: {status.Stacks})");
                 }
             }
         }
 
         // ==========================================
-        // [서버 전용 권한] 카드 이동 메인 로직
+        // [서버 전용] 카드 이동 (CardMovementCommand에서 호출)
         // ==========================================
         public void ProcessCardMovement(EffectType moveType, int count, string specificCardId = "") {
             if (!IsServer) return;
 
             switch (moveType) {
                 case EffectType.DrawCard:
-                    // 카드를 count만큼 뽑음 (HandModel 내부에서 주인에게만 자동 RPC 전송됨)
+                    // 카드 내용은 HandModel이 주인에게만 전송
                     for (int i = 0; i < count; i++) {
                         Deck.DrawCard();
                     }
 
-                    // 상대방 클라이언트에게는 "N장 뽑았다"는 사실만 전송하여 뒷면 애니메이션 재생
+                    // 상대에게는 장수만 알려 카드 정보 노출 없이 뒷면 연출만 재생
                     ulong enemyId = GetEnemyClientId();
                     PlayEnemyDrawAnimationClientRpc(count, RpcTarget.Single(enemyId, RpcTargetUse.Temp));
                     break;
 
                 case EffectType.ShuffleSpecificCardToDeck:
-                    // string으로 들어온 특정 카드 ID를 int로 파싱 (기획상 ID가 int이므로)
+                    // 카드 데이터의 ID는 문자열로 들어오므로 int로 변환
                     if (int.TryParse(specificCardId, out int parsedCardId)) {
+                        // 매번 섞지 않고 모두 넣은 뒤 한 번만 셔플
                         for (int i = 0; i < count; i++) {
-                            // shuffleAfter를 false로 두고 다 넣은 뒤 마지막에 한 번만 셔플
                             Deck.InsertCard(parsedCardId, shuffleAfter: false);
                         }
 
@@ -414,13 +422,12 @@ namespace Models.PlayerModels {
                     break;
 
                 case EffectType.DiscardRandom:
-                    // HandModel에 무작위로 카드를 버리는 함수 호출
                     for (int i = 0; i < count; i++) {
                         int discardedId = Hand.DiscardRandomCardFromServer();
                         if (discardedId != -1) {
-                            // 무덤 모델이 있다면 여기에 추가: Graveyard.AddCard(discardedId);
+                            // TODO: Graveyard.AddCardToGraveyard(discardedId) 연동
 
-                            // 버려진 카드는 모두가 알아야 하므로 전체 클라이언트에게 알림
+                            // 버려진 카드는 공개 정보이므로 양측에 알림
                             NotifyCardDiscardedClientRpc(discardedId);
                         }
                     }
@@ -430,46 +437,45 @@ namespace Models.PlayerModels {
         }
 
         // ==========================================
-        // 턴 자동 동기화 (기획서 반영)
+        // [서버 전용] 페이즈 진입 시 상태 처리 (PhaseManager가 페이즈 변경마다 호출)
         // ==========================================
         public void HandlePhaseEffects(GamePhase phase, bool isMyTurn) {
             if (!IsServer) return;
 
-            // 내 턴이 끝날 때(End) 처리
+            // 내 턴 종료(End): 발화 피해 → 상태이상 지속시간 감소
             if (phase == GamePhase.End && isMyTurn) {
                 if (!IsServer) return;
 
-                // 발화 데미지 적용
                 int totalIgniteStacks = GetStatusStack(StatusType.Ignite);
                 if (totalIgniteStacks > 0) {
                     BroadcastPhaseVFX(EffectCommands.VFXType.AddStatus, StatusType.Ignite);
-                    // 팩트 체크: 여기서 DamageType.Ignite로 명시해서 보냅니다.
+                    // Ignite 타입으로 전달해야 발화 증폭(IgniteDamageMultiplier)이 적용됨
                     TakeDamage(totalIgniteStacks, DamageType.Ignite);
                     Debug.Log($"발화 효과 발동! 기본 데미지: {totalIgniteStacks}");
                 }
 
-                // 턴 지속시간 감소 및 만료된 상태이상 제거
+                // 지속시간 1턴 감소, 만료 시 제거 (삭제가 있으므로 역순 순회)
                 for (int i = ActiveStatuses.Count - 1; i >= 0; i--) {
                     var status = ActiveStatuses[i];
 
-                    // 횟수제(Hit) 기반 상태이상은 턴 종료 시점에 턴을 깎지 않고 건너뜀
+                    // 횟수제는 피격 시에만 차감
                     if (status.Type == StatusType.DamageReduction_Hit) continue;
 
-                    // Duration이 -1(영구 지속)인 예언/응축 스택은 깎지 않음
+                    // 영구 지속(-1)은 감소 대상 아님
                     if (status.Duration > 0) {
-                        status.Duration--; // 1턴 감소
+                        status.Duration--;
                         if (status.Duration == 0) {
                             BroadcastPhaseVFX(EffectCommands.VFXType.DetonateStatus, status.Type);
-                            ActiveStatuses.RemoveAt(i); // 턴이 다 되면 소멸
+                            ActiveStatuses.RemoveAt(i);
                         }
                         else {
-                            ActiveStatuses[i] = status; // 깎인 턴 수 다시 저장
+                            ActiveStatuses[i] = status;
                         }
                     }
                 }
             }
 
-            // 내 턴이 시작할 때(Draw) -> 코스트(마나) 회복
+            // 내 턴 시작(Draw): 마나 전량 회복
             if (phase == GamePhase.Draw && isMyTurn) {
                 CurrentMana.Value = MaxMana.Value;
                 Debug.Log($"[Player {OwnerClientId}] 턴 시작, 마나가 가득 찼습니다.");
@@ -478,7 +484,7 @@ namespace Models.PlayerModels {
 
 
         // ==========================================
-        // [클라이언트 연출용 RPC] 서버가 클라이언트에게 지시
+        // [서버 → 클라이언트] 연출용 RPC
         // ==========================================
 
         [Rpc(SendTo.SpecifiedInParams)]
@@ -497,12 +503,13 @@ namespace Models.PlayerModels {
             return OwnerClientId == 0 ? 1ul : 0ul;
         }
 
+        // 커맨드 외부(턴 종료 처리 등)에서 발생한 VFX를 호스트·게스트 양쪽에 재생
         private void BroadcastPhaseVFX(EffectCommands.VFXType vfxType, StatusType statusType = StatusType.None)
         {
-            // 1. 게스트(클라이언트)들에게 재생하라고 무전(RPC)을 칩니다.
+            // 게스트: RPC (SendTo.NotServer)
             SpellController.Instance.PlayVisualEffectClientRpc(vfxType, statusType, this.NetworkObjectId);
-            
-            // 2. 호스트(서버 본인) 화면에서도 백그라운드 코루틴으로 재생시킵니다.
+
+            // 호스트: 로컬에서 직접 재생 (턴 처리를 막지 않도록 대기하지 않음)
             if (Managers.VFX.BattleVFXManager.Instance != null) {
                 StartCoroutine(Managers.VFX.BattleVFXManager.Instance.PlayVFXRoutine(vfxType, statusType, this));
             }

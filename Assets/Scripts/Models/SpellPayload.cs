@@ -11,18 +11,24 @@ using Newtonsoft.Json;
 
 namespace Models.SpellPayloads
 {
+    /// <summary>
+    /// 주문 1회 분량의 데이터 묶음.
+    /// - EvalData : AI 평가 서버에 보낼 컨셉/선주문/단어
+    /// - Commands : 카드 효과로부터 생성된 EffectCommand 목록 (우선순위 정렬 후 실행)
+    /// 메인 속성은 사용한 카드 속성의 최빈값으로 결정되며, 카드 효과의 발동 조건으로 쓰인다.
+    /// </summary>
     public class SpellPayload
     {
         public EvaluationRequest EvalData = new EvaluationRequest();
         public List<EffectCommand> Commands = new List<EffectCommand>();
         public List<int> UsedCardIds = new List<int>();
 
-        public List<Property> PropertyHistory = new List<Property>();
-        
-        public Property MainProperty = Property.None;
-        private Property? forcedMainProperty = null;
+        public List<Property> PropertyHistory = new List<Property>(); // 영창 순서대로 누적된 속성
 
-        // 영창 중인 카드들을 보관할 대기열
+        public Property MainProperty = Property.None;
+        private Property? forcedMainProperty = null; // 설정 시 최빈값 계산보다 우선
+
+        // 효과 해석 전 대기 중인 카드 (CompileSpell에서 일괄 처리)
         private List<PlayableCard> pendingCards = new List<PlayableCard>();
         public void EnqueuePendingCard(PlayableCard card)
         {
@@ -35,28 +41,29 @@ namespace Models.SpellPayloads
             }
         }
         
-        // 영창 종료 시 턴 매니저가 호출할 핵심 메서드
+        /// <summary>
+        /// [서버] 주문 확정 시 호출. 메인 속성을 먼저 확정해야 "메인 속성이 X일 때" 같은
+        /// 카드 조건을 모든 카드가 동일한 기준으로 판정할 수 있다.
+        /// </summary>
         public void CompileSpell(PlayerModel caster, PlayerModel enemy)
         {
-            // 1. 대기열에 쌓인 속성들을 바탕으로 현재 주문의 메인 속성 최종 확정
             CalculateMainProperty();
 
-            // 2. 확정된 메인 속성(MainProperty)을 기준으로 각 카드의 조건 및 효과 해석
             foreach (var card in pendingCards)
             {
                 card.ApplyCardEffects(this, caster, enemy);
             }
-            
-            // 우선순위 기반 일괄 정렬
+
+            // 카드 순서와 무관하게 CommandPriority 순으로 실행되도록 정렬
             Commands.Sort();
         }
-        
-        
-        // 카드가 호출할 함수들
+
+
+        // 카드 효과 해석 중 호출되는 함수들
         public void AddWord(string word) => EvalData.Words.Add(word);
         public void AddCommand(EffectCommand cmd) => Commands.Add(cmd);
 
-        // 한 번에 여러 개의 속성을 스택에 넣을 수 있도록 count 매개변수 추가
+        // 속성을 count만큼 누적 (최빈값 계산 시 가중치로 작용)
         public void AddProperty(Property property, int count = 1)
         {
             if (property == Property.None) return;
@@ -67,13 +74,12 @@ namespace Models.SpellPayloads
             }
         }
         
-        // '신비' 카드 대응: 최빈값 계산을 무시하고 메인 속성을 강제 설정
+        // '신비' 카드: 최빈값 계산을 무시하고 메인 속성을 강제 지정
         public void ForceMainProperty(Property property)
         {
             forcedMainProperty = property;
         }
-                
-        // 턴 매니저가 호출할 코드
+
         public void SetPrefix(string prefix)
         {
             EvalData.RequiredPrefix = prefix;
@@ -83,16 +89,15 @@ namespace Models.SpellPayloads
         public void SetConcept(string concept) => EvalData.Concept = concept;
         
         
-        // 김명준이 추가
+        // 영창 UI 표시용 조회
         public string GetConcept() => EvalData.Concept;
         public string GetPrefix() => EvalData.RequiredPrefix;
         public List<string> GetWords() => EvalData.Words;
         public List<PlayableCard> GetCards() => pendingCards;
 
-        // 영창 종료 후
+        // 메인 속성 결정: 강제 지정 > 최빈값 (동률이면 먼저 영창한 속성)
         public void CalculateMainProperty()
         {
-            // 1. 강제 설정된 속성이 있다면 우선 적용
             if (forcedMainProperty.HasValue)
             {
                 MainProperty = forcedMainProperty.Value;
@@ -105,7 +110,6 @@ namespace Models.SpellPayloads
                 return;
             }
 
-            // 2. 속성별 등장 횟수를 카운트
             Dictionary<Property, int> counts = new Dictionary<Property, int>();
             foreach (var prop in PropertyHistory)
             {
@@ -113,13 +117,12 @@ namespace Models.SpellPayloads
                 else counts[prop] = 1;
             }
  
-            // 3. 가장 많이 등장한(최빈값) 속성 찾기
             Property mostFrequent = Property.None;
             int maxCount = 0;
 
-            foreach (var prop in PropertyHistory) 
+            // 영창 순서대로 순회하며 '초과'일 때만 갱신하므로 동률이면 먼저 등장한 속성이 유지됨
+            foreach (var prop in PropertyHistory)
             {
-                // PropertyHistory 순서대로 순회하므로, 동률일 경우 '먼저 영창한 카드 속성'이 유지됨
                 if (counts[prop] > maxCount)
                 {
                     mostFrequent = prop;
@@ -138,7 +141,6 @@ namespace Models.SpellPayloads
                 EvalData.AudioBase64 = Convert.ToBase64String(audioBytes);
             }
 
-            // EvaluationRequest 쪽에 ToJson()이 구현되어 있다고 가정
             return EvalData.ToJson();
         }
     }
