@@ -24,7 +24,7 @@
    - 점수에 따라 3단계(실패/성공/대성공)로 스킬 위력 및 시각적 이펙트(VFX) 차등 적용.
 3. **실시간 1v1 PVP 전투 및 덱 빌딩** 
    - CSV 및 Scriptable Object 기반의 기획 데이터 연동.
-   - 플레이어 간 실시간 P2P 네트워크 매칭 및 턴제 전투 로직 동기화.
+   - Unity Relay 기반 1:1 매칭, Netcode for GameObjects 호스트 권한(Listen Server) 구조의 턴제 전투 동기화.
 
 <br>
 
@@ -33,12 +33,12 @@
 ### Client
 - **Engine:** Unity 6
 - **UI:** UI Toolkit (UXML Viewport)
-- **Architecture:** MVVM, MVP, Singleton, Factory, Command Pattern
-- **Optimization:** Addressables, ObjectPool
+- **Architecture:** MVC, Command Pattern, Singleton
+- **Asset Loading:** Addressables
 
 ### Backend & Network
 - **Main Server:** Node.js, Express, MongoDB
-- **Real-time Network:** Socket.io, Unity NetworkManager (P2P)
+- **Real-time Network:** Unity Netcode for GameObjects (Listen Server), Unity Relay
 
 ### AI & Audio Analysis
 - **Framework:** Python, FastAPI
@@ -51,6 +51,6 @@
 
 | 이름 | 역할 및 담당 업무 |
 |:---:|---|
-| **고성현** | **Client Architecture & Core Battle Logic:** Unity 클라이언트 아키텍처 설계, 커맨드 패턴 기반 턴(Turn) 흐름 및 인게임 코어 전투 로직 구현, 네트워크 P2P 동기화 로직 적용, CSV/Scriptable Object 기반 카드 데이터 파이프라인 설계(김명준 공동), 스킬 VFX 연출 |
+| **고성현** | **Client Architecture & Core Battle Logic:** Unity 클라이언트 아키텍처 설계, 커맨드 패턴 기반 턴(Turn) 흐름 및 인게임 코어 전투 로직 구현, NGO 기반 네트워크 동기화 로직 적용, CSV/Scriptable Object 기반 카드 데이터 파이프라인 설계(김명준 공동), 스킬 VFX 연출 |
 | **김명준** | **Game Design & UI/UX:** 핵심 아이디어 기획 및 TCG 카드 밸런스 데이터 파이프라인(CSV/Scriptable Object) 설계(고성현 공동), UI Toolkit 기반 반응형 화면 구축, 에셋 가공 |
 | **김이경** | **AI Pipeline & Backend:** Node.js 메인 서버 및 Python(FastAPI) 분석 서버 구축, Whisper/Wav2Vec2 라이브러리 연동, Gemini 2.5 Flash 프롬프트 엔지니어링 및 음성 채점 API 구축 |
