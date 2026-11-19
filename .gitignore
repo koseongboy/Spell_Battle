@@ -100,3 +100,11 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# IDE 개인 설정
+.idea/
+
+# Node 의존성 (서버 의존성은 Assets/Server/package.json에서 관리)
+node_modules/
+/package.json
+/package-lock.json
