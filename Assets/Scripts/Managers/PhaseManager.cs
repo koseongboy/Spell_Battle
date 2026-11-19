@@ -10,6 +10,11 @@ using Models.PlayerModels;
 using Controllers.PlayerSetup;
 
 namespace DefaultNamespace {
+    /// <summary>
+    /// 게임 페이즈(Mulligan → Draw → Select → Incantation → Battle → End)의 전환을 중앙에서 통제한다.
+    /// 페이즈 값(TurnModel.CurrentPhase)의 쓰기는 서버에서만 일어나며,
+    /// 클라이언트는 RPC로 전환을 요청하고 값 변경 이벤트를 구독해 각자의 연출을 수행한다.
+    /// </summary>
     public class PhaseManager : NetworkBehaviour {
 
         [Header("배틀 씬 진짜 메인 카메라")]
@@ -23,7 +28,7 @@ namespace DefaultNamespace {
         public AudioClip battleBGM;
         public static PhaseManager Instance { get; private set; }
 
-        // PhaseManager.cs 내부 변수 추가
+        // 현재 페이즈의 연출/로딩을 마쳤다고 보고한 클라이언트 목록 (서버 전용)
         private HashSet<ulong> phaseReadyPlayers = new HashSet<ulong>();
 
         private void Awake() {
@@ -33,16 +38,15 @@ namespace DefaultNamespace {
         
         
         private System.Collections.IEnumerator IntroRoutine() {
-            // 5초 동안 대기 (이 시간 동안 인트로 카메라 애니메이션이 재생되며 로딩을 숨깁니다)
+            // introTime 동안 인트로 카메라 연출을 재생하며 초기 로딩을 가린다.
             yield return new WaitForSeconds(introTime);
-            
+
             Debug.Log("[PhaseManager] 인트로 연출 종료. 게임 시작 (Mulligan 진입)");
-            // 5초 뒤에 드디어 페이즈를 넘겨줍니다.
             TurnModel.Instance.CurrentPhase.Value = GamePhase.Mulligan;
         }
         
         public override void OnNetworkSpawn() {
-            // 모델의 페이즈 값이 변할 때마다 클라이언트단 로직(UI 띄우기 등)을 실행하도록 구독
+            // 페이즈 값 변경 시 서버/클라이언트 모두 HandlePhaseChanged에서 후속 처리
             TurnModel.Instance.CurrentPhase.OnValueChanged += HandlePhaseChanged;
             if (NetworkManager.Singleton != null) {
                 NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
@@ -61,6 +65,7 @@ namespace DefaultNamespace {
         // 1. [서버] 상태 전환 통제
         // ========================================================
 
+        /// <summary>MatchManager가 초기 드로우까지 마친 뒤 호출. 인트로 연출 후 Mulligan으로 진입한다.</summary>
         public void OnGameSetupCompleted() {
             if (!IsServer) return;
             Debug.Log("[PhaseManager] 세팅 완료. 5초간 인트로 연출 시작...");
@@ -76,6 +81,7 @@ namespace DefaultNamespace {
             }
         }
 
+        /// <summary>양측 멀리건 제출이 끝나면 선공 플레이어의 Draw 페이즈로 진입한다.</summary>
         public void OnMulliganCompleted(ulong firstPlayerId) {
             if (!IsServer) return;
             Debug.Log("[PhaseManager] 멀리건 완료. 1턴 Draw 페이즈 진입.");
@@ -86,22 +92,24 @@ namespace DefaultNamespace {
         public void RequestIncantationPhase(ulong clientId) {
             RequestSpecificPhaseServerRpc(GamePhase.Incantation);
         }
+        /// <summary>
+        /// 상대 이탈 시 남아 있는 쪽을 즉시 승리 처리한다.
+        /// 정상적인 승패 판정(EndGame) 이후의 연결 해제는 무시한다.
+        /// </summary>
         private void HandleClientDisconnect(ulong disconnectedClientId) {
-            // 이미 게임이 정상적인 승패 판정으로 끝났다면 중복 처리 방지
             if (TurnModel.Instance.CurrentPhase.Value == GamePhase.EndGame) return;
 
             ulong myId = NetworkManager.Singleton.LocalClientId;
 
             if (IsServer) {
-                // 👑 [호스트 입장] 나간 클라이언트가 내가 아니라면? 👉 게스트가 나간 것!
+                // 호스트: 끊긴 ID가 자신이 아니면 게스트가 이탈한 것
                 if (disconnectedClientId != myId) {
                     Debug.Log($"[PhaseManager] 🚨 게스트(ID: {disconnectedClientId}) 탈주 감지! 페이즈 이동 없이 즉시 승리 처리합니다.");
                     ForceLocalWinDueToDisconnect();
                 }
             } 
             else {
-                // 👥 [게스트 입장] 서버가 터지거나 호스트가 나가면 게스트의 Disconnect 콜백이 호출됩니다.
-                // 내가 스스로 '나가기'를 누른 게 아니라면 호스트가 튕긴 것이므로 즉시 승리 처리합니다.
+                // 게스트: 이 콜백은 호스트(서버)와의 연결이 끊겼을 때 호출된다.
                 Debug.Log($"[PhaseManager] 🚨 호스트(서버) 탈주 감지! 페이즈 이동 없이 즉시 승리 처리합니다.");
                 ForceLocalWinDueToDisconnect();
             }
@@ -109,7 +117,7 @@ namespace DefaultNamespace {
         private void ForceLocalWinDueToDisconnect() {
             Debug.Log("[Client] 서버 연결 끊김. 강제 승리 UI를 호출합니다.");
             
-            // 기존에 떠 있던 불필요한 UI들을 모조리 가려줍니다.
+            // 진행 중이던 인게임 UI를 모두 닫고 결과 화면만 남긴다.
             UILoader.Instance.HideUI("Ingame_FullScreen");
             UILoader.Instance.HideUI("MyTurn_Top");
             UILoader.Instance.HideUI("EnemyTurn_Top");
@@ -117,9 +125,8 @@ namespace DefaultNamespace {
             UILoader.Instance.HideUI("SpellResult_FullScreen");
             UILoader.Instance.HideUI("Mulligan_FullScreen");
             UILoader.Instance.HideUI("SpellActive_FullScreen");
-            
 
-            // 🏆 묻지도 따지지도 않고 내가 이긴 것으로 UI 출력!
+
             UILoader.Instance.ShowUI("GameEnd_Top", GameEndType.Win);
         }
         
@@ -129,10 +136,10 @@ namespace DefaultNamespace {
         // ========================================================
         private void HandlePhaseChanged(GamePhase oldPhase, GamePhase newPhase) {
 
-            ulong currentTurnPlayerId = TurnModel.Instance.CurrentTurnPlayerId.Value; //
-            
-            // 🌟 [서버 전용 권한] 페이즈가 바뀔 때마다 모든 플레이어에게 페이즈 효과를 링크해 줍니다.
-            if (IsServer) 
+            ulong currentTurnPlayerId = TurnModel.Instance.CurrentTurnPlayerId.Value;
+
+            // [서버] 페이즈 진입 시점의 상태이상 처리(발화 피해, 지속시간 감소, 마나 회복 등)를 양측에 적용
+            if (IsServer)
             {
                 PlayerModel hostPlayer = MatchManager.Instance.GetPlayerById(TurnModel.Instance.HostId.Value); 
                 PlayerModel guestPlayer = MatchManager.Instance.GetPlayerById(TurnModel.Instance.GuestId.Value); 
@@ -163,7 +170,7 @@ namespace DefaultNamespace {
                     NetworkObject localPlayerObj = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
 
                     if (localPlayerObj != null) {
-                        // 내 캐릭터 프리팹에 붙어있는 모델과 핸들러를 연달아 가져온다.
+                        // 로컬 플레이어 오브젝트에서 멀리건 핸들러를 꺼내 멀리건 UI에 주입
                         PlayerModel myPlayer = localPlayerObj.GetComponent<PlayerModel>();
                         MulliganHandler myHandler = myPlayer.GetComponent<MulliganHandler>();
                         PlayerSetup playerSetupManager = localPlayerObj.GetComponent<PlayerSetup>();
@@ -182,7 +189,7 @@ namespace DefaultNamespace {
                     UILoader.Instance.HideUI("Mulligan_FullScreen");
                     UILoader.Instance.ShowUI("Ingame_FullScreen");
                     
-                    // 턴 UI들 다 해주고
+                    // 턴 주인에 따라 내 턴/상대 턴 배너 전환
                     if (isMyTurn)
                     {
                         UILoader.Instance.HideUI("EnemyTurn_Top"); 
@@ -201,9 +208,10 @@ namespace DefaultNamespace {
                     }
                     
 
+                    // UI 바인딩이 끝나면 각 클라이언트가 준비 완료를 보고하고, 양측이 모이면 Select로 진입
                     StartCoroutine(WaitAndInjectUIData());
 
-                    // 서버는 덱에서 카드를 뽑는 로직을 실행
+                    // 드로우는 서버 권한으로만 수행
                     if (IsServer) ExecuteDrawLogic(TurnModel.Instance.CurrentTurnPlayerId.Value);
                     break;
                 }
@@ -257,23 +265,25 @@ namespace DefaultNamespace {
         }
 
 
-        // [클라이언트 UI 호출용] 턴 종료 버튼을 누르면 실행됨
+        // [클라이언트] 턴 종료 버튼에서 호출
         public void RequestEndTurn() {
             RequestSpecificPhaseServerRpc(GamePhase.End);
         }
 
-        // [서버 전용] 마나 증가, 턴 권한 교체, 다음 턴 시작 처리
+        /// <summary>
+        /// [서버] 턴 종료 처리: 사망자 확인 → 턴 종료 플레이어의 최대 마나 증가 → 턴 교체 → 다음 Draw.
+        /// </summary>
         private void ExecuteEndPhaseLogic() {
             if (!IsServer) return;
 
+            // End 진입 시 HandlePhaseEffects에서 발화 피해가 먼저 적용되므로 여기서 사망 여부를 확인한다.
             if (CheckGameEndCondition()) {
                 Debug.Log("[PhaseManager] 🚨 발화 데미지로 사망자 발생! EndGame 페이즈로 진입합니다.");
                 ServerSetPhase(GamePhase.EndGame);
                 return;
             }
 
-            // 1. 기존 TurnController에 있던 턴 종료 시 마나 최대치 1 증가 로직 유지
-            // (MatchManager의 O(1) 캐싱 딕셔너리 활용)
+            // 1. 턴을 마친 플레이어의 최대 마나 +3 (FinalMana 상한)
             PlayerModel endingPlayer =
                 MatchManager.Instance.GetPlayerById(TurnModel.Instance.CurrentTurnPlayerId.Value);
             if (endingPlayer != null) {
@@ -290,13 +300,15 @@ namespace DefaultNamespace {
             ServerSetPhase(GamePhase.Draw);
         }
 
+        /// <summary>
+        /// 비동기로 로드되는 플레이어/적 UI가 준비될 때까지 기다린 뒤 컨트롤러를 바인딩하고,
+        /// 서버에 Draw 페이즈 준비 완료를 보고한다.
+        /// </summary>
         private System.Collections.IEnumerator WaitAndInjectUIData() {
-            // 1. 비동기로 띄운 UI 싱글톤이 씬에 완전히 올라올 때까지 대기
             while (PlayerUI.Instance == null || EnemyUI.Instance == null) {
                 yield return null;
             }
 
-            // 2. 인스턴스가 확인되면 안전하게 로컬 및 적 데이터 주입
             NetworkObject localPlayerObj = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
             if (localPlayerObj != null) {
                 PlayerController myController = localPlayerObj.GetComponent<PlayerController>();
@@ -323,20 +335,21 @@ namespace DefaultNamespace {
             return null;
         }
 
-        // [클라이언트 -> 서버] "나 해당 페이즈 연출(로딩) 다 끝났어!"
+        /// <summary>
+        /// [클라이언트 → 서버] 해당 페이즈의 연출/로딩 완료 보고.
+        /// 양측 보고가 모두 모였을 때만 다음 페이즈로 넘어가 연출 도중 전환되는 것을 막는다.
+        /// </summary>
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         public void ReportPhaseReadyServerRpc(GamePhase currentPhase, RpcParams rpcParams = default) {
-            // 현재 페이즈와 보고된 페이즈가 다르면 무시 (비정상 통신 방어)
+            // 이미 지나간 페이즈에 대한 늦은 보고는 무시
             if (TurnModel.Instance.CurrentPhase.Value != currentPhase) return;
 
             ulong senderId = rpcParams.Receive.SenderClientId;
             phaseReadyPlayers.Add(senderId);
 
-            // 🌟 양쪽 모두 연출/로딩이 끝났다고 보고했다면?
             if (phaseReadyPlayers.Count == 2) {
-                phaseReadyPlayers.Clear(); // 다음 페이즈를 위해 명단 초기화
+                phaseReadyPlayers.Clear();
 
-                // Draw 페이즈 완료 보고가 모였으니, 진짜 Select 페이즈로 전환!
                 if (currentPhase == GamePhase.Draw) {
                     Debug.Log("[Server] 양측 Draw 로딩 완료. Select 페이즈로 진입합니다.");
                     TurnModel.Instance.CurrentPhase.Value = GamePhase.Select;
@@ -345,6 +358,7 @@ namespace DefaultNamespace {
         }
 
 
+        /// <summary>[클라이언트] 선택한 카드로 주문을 조립하고 영창 화면으로 전환한다.</summary>
         public void StartSpell(List<PlayableCard> selectedCards) {
             var payload = SpellController.Instance.InitSpell(selectedCards);
             RequestSpecificPhaseServerRpc(GamePhase.Incantation);
@@ -352,6 +366,7 @@ namespace DefaultNamespace {
             UILoader.Instance.ShowUI("Spell_FullScreen", payload);
         }
 
+        /// <summary>[클라이언트] AI 평가 결과 수신 후 결과 화면을 띄운다. (재녹음/확정 선택)</summary>
         public void DoneEval(TaskStatusResponse evalResult) {
             CommonUIController.Instance.DoneLoading();
             
@@ -359,12 +374,13 @@ namespace DefaultNamespace {
         }
 
         // ========================================================
-        // 🛡️ NGO 철칙 적용: 페이즈 전환 중앙 통제 시스템
+        // 페이즈 전환 중앙 통제
+        // 클라이언트는 요청만 보내고, 실제 NetworkVariable 쓰기는 서버(ServerSetPhase)에서만 수행한다.
         // ========================================================
 
         #region 1. Client -> Server Requests (클라이언트의 페이즈 전환 요청)
 
-        // [클라이언트 -> 서버] "다음 페이즈로 넘겨주세요" 요청
+        // [클라이언트 → 서버] 다음 페이즈 진행 요청 (턴 플레이어만 허용)
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         public void RequestAdvancePhaseServerRpc(RpcParams rpcParams = default) {
             ulong senderId = rpcParams.Receive.SenderClientId;
@@ -375,7 +391,7 @@ namespace DefaultNamespace {
             ServerAdvancePhase();
         }
 
-        // [클라이언트 -> 서버] "특정 페이즈로 가주세요" 요청
+        // [클라이언트 → 서버] 특정 페이즈로의 전환 요청 (턴 플레이어만 허용)
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         public void RequestSpecificPhaseServerRpc(GamePhase targetPhase, RpcParams rpcParams = default) {
             ulong senderId = rpcParams.Receive.SenderClientId;
@@ -392,31 +408,30 @@ namespace DefaultNamespace {
 
         #region 2. Server-Only Phase Controls (서버 단독 페이즈 제어)
 
-        // [서버 전용] "다음 페이즈로 넘기기" 트리거
+        // [서버] 정해진 흐름에 따라 다음 페이즈로 진행
         public void ServerAdvancePhase() {
             if (!IsServer) return;
             AdvancePhaseLogic();
         }
 
-        // [서버 전용] "특정 페이즈로 가기" 강제 실행 (모든 .Value 수정은 여기서만 일어납니다)
+        // [서버] 지정한 페이즈로 전환. 페이즈 값 쓰기의 단일 진입점이다.
         public void ServerSetPhase(GamePhase newPhase) {
             if (!IsServer) return;
-            
+
             GamePhase oldPhase = TurnModel.Instance.CurrentPhase.Value;
-            if (oldPhase == newPhase) return; // 중복 호출 방지
+            if (oldPhase == newPhase) return; // 동일 페이즈로의 중복 전환 방지
 
             Debug.Log($"[Server] 🔄 페이즈 전환: {oldPhase} -> {newPhase}");
             TurnModel.Instance.CurrentPhase.Value = newPhase;
         }
 
-        // [서버 전용] 페이즈 순서 연산 및 전환 내부 로직
+        // [서버] 현재 페이즈 기준으로 다음 페이즈를 결정
         private void AdvancePhaseLogic() {
             if (!IsServer) return;
 
             GamePhase currentPhase = TurnModel.Instance.CurrentPhase.Value;
             GamePhase nextPhase;
 
-            // 🌟 게임의 페이즈 흐름 정의 
             switch (currentPhase) {
                 case GamePhase.Mulligan:
                     nextPhase = GamePhase.Draw;
@@ -431,17 +446,18 @@ namespace DefaultNamespace {
                     nextPhase = GamePhase.Battle;
                     break;
                 case GamePhase.Battle:
-                    // 🌟 배틀 페이즈 직후: 타격 데미지로 누군가 죽었는지 체크!
+                    // 주문 피해로 사망자가 나왔으면 게임 종료, 아니면 같은 턴에 추가 주문을 고를 수 있도록 Select로 복귀
                     if (CheckGameEndCondition()) {
                         nextPhase = GamePhase.EndGame;
                     } else {
-                        nextPhase = GamePhase.Select; // (또는 기획에 따라 End)
+                        nextPhase = GamePhase.Select;
                     }
                     break;
 
                 case GamePhase.End:
-                    ExecuteEndPhaseLogic(); // 아무도 안 죽었으면 정상적으로 다음 턴으로
-                    return; 
+                    // 턴 교체 및 다음 Draw 전환은 ExecuteEndPhaseLogic에서 직접 처리
+                    ExecuteEndPhaseLogic();
+                    return;
                     
                 default:
                     nextPhase = GamePhase.Select;
@@ -459,34 +475,30 @@ namespace DefaultNamespace {
 
             return host.CurrentHealth.Value <= 0 || guest.CurrentHealth.Value <= 0;
         }
+        /// <summary>
+        /// 로컬 플레이어 기준 승패를 판정한다.
+        /// 양측 체력 차(호스트 - 게스트)로 비교하므로 동시 사망 등 체력이 같으면 무승부가 된다.
+        /// </summary>
         private GameEndType DetermineMyGameResult() {
-            // 1. 호스트와 게스트의 플레이어 모델을 가져옵니다.
             PlayerModel host = MatchManager.Instance.GetPlayerById(TurnModel.Instance.HostId.Value);
             PlayerModel guest = MatchManager.Instance.GetPlayerById(TurnModel.Instance.GuestId.Value);
 
-            // 예외 방어 (씬에서 플레이어를 못 찾은 경우)
-            if (host == null || guest == null) return GameEndType.Lose; 
+            if (host == null || guest == null) return GameEndType.Lose;
 
-            // 🌟 2. 기획하신 핵심 로직: 호스트 체력 - 게스트 체력
             int hpDifference = host.CurrentHealth.Value - guest.CurrentHealth.Value;
 
-            // 3. 내가 현재 호스트인지 게스트인지 판별합니다.
             ulong myId = NetworkManager.Singleton.LocalClientId;
             bool amIHost = myId == TurnModel.Instance.HostId.Value;
 
-            // 4. 차이값에 따라 승/무/패를 결정합니다.
             if (hpDifference == 0) {
-                // 차이가 0이면 무승부
                 return GameEndType.Draw;
             }
             else if (hpDifference > 0) {
-                // 양수(0 초과)면 호스트 승리
-                // 내가 호스트라면 Win, 게스트라면 Lose를 반환합니다.
+                // 호스트 승리
                 return amIHost ? GameEndType.Win : GameEndType.Lose;
             }
             else {
-                // 음수(0 미만)면 게스트 승리
-                // 내가 호스트라면 Lose, 게스트라면 Win을 반환합니다.
+                // 게스트 승리
                 return amIHost ? GameEndType.Lose : GameEndType.Win;
             }
         }

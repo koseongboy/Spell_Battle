@@ -12,18 +12,24 @@ namespace Models.EffectCommands
         None, Damage, DynamicDamage, Heal, Shield, AddStatus, DetonateStatus, CardMovement, ManaGain, ManaLoss, SystemControl, CostUp, CostDown
     }
 
-    // 실행 우선순위 정의 (낮은 숫자가 먼저 실행됨)
+    // 커맨드 실행 우선순위 (값이 낮을수록 먼저 실행)
+    // 카드 영창 순서와 무관하게 "상태 부여 → 피해 → 기폭" 같은 일관된 해석 순서를 보장한다.
     public enum CommandPriority
     {
-        ManaAndSystem = 0,     // 마나 증감, 턴 종료 등 시스템적 처리
+        ManaAndSystem = 0,     // 마나 증감, 코스트 변경 등 시스템 처리
         CardMovement = 10,     // 드로우, 버리기, 덱 섞기 등 카드 위치 이동
-        StatusApply = 20,      // 버프 및 디버프 부여 (예: 잔불의 발화 적용)
-        DamageAndHeal = 30,    // 기본 데미지 계산 및 회복 (만조, 박동)
-        StatusDetonate = 40,   // 상태이상 소모 및 기폭 (예: 홍련)
-        CombatAction = 50,
-        LateSystem = 100       // 턴 즉시 종료 등 극후반 처리 (예: 대격변)
+        StatusApply = 20,      // 버프/디버프, 보호막 부여 (예: 잔불의 발화)
+        DamageAndHeal = 30,    // 현재 상태를 참조하는 동적 피해 (DynamicDamageCommand)
+        StatusDetonate = 40,   // 상태이상 소모·기폭·조작 (예: 홍련)
+        CombatAction = 50,     // 고정 수치 피해 및 회복
+        LateSystem = 100       // 턴 즉시 종료 등 마지막에 처리할 효과 (예: 대격변)
     }
-    
+
+    /// <summary>
+    /// 카드 효과 하나를 표현하는 커맨드 (Command 패턴).
+    /// SpellPayload가 카드들로부터 커맨드를 수집해 Priority 순으로 정렬한 뒤,
+    /// 서버에서 ExecuteRoutine으로 VFX 연출과 실제 수치 적용을 순차 실행한다.
+    /// </summary>
     public abstract class EffectCommand : IComparable<EffectCommand>
     {
 
@@ -36,24 +42,27 @@ namespace Models.EffectCommands
             this.target = target;
         }
 
+        /// <summary>
+        /// [서버] VFX 연출 후 효과를 적용한다.
+        /// 게스트에게는 RPC로 연출을 지시하고, 호스트는 연출이 끝날 때까지 대기해 화면과 수치 변화 시점을 맞춘다.
+        /// </summary>
         public virtual IEnumerator ExecuteRoutine(float multiplier = 1.0f)
         {
-            // 1. 내가 가진 명찰과 타겟 정보를 바탕으로 매니저에게 VFX 재생을 '요청'합니다.
             if (MyVFXType != VFXType.None)
             {
                 Controllers.SpellControllers.SpellController.Instance.PlayVisualEffectClientRpc(MyVFXType, RelatedStatus, target.NetworkObjectId);
-                
+
                 yield return Managers.VFX.BattleVFXManager.Instance.PlayVFXRoutine(MyVFXType, RelatedStatus, target);
 
             }
 
-            // 2. 이펙트 재생(1.5초 대기)이 끝나면, 나만의 실제 데미지/힐 로직을 조용히 실행합니다.
             Execute(multiplier);
         }
-        
-        protected abstract void Execute(float multiplier = 1.0f); //multiplier는 llm 평가 받고 곱해지는 계수 자료형은 미정
-        
-        // C# 내장 Sort()를 위한 비교 로직
+
+        /// <param name="multiplier">AI 영창 평가 점수로부터 환산된 효과 배율</param>
+        protected abstract void Execute(float multiplier = 1.0f);
+
+        // List.Sort()에서 Priority 오름차순 정렬에 사용
         public int CompareTo(EffectCommand other)
         {
             if (other == null) return 1;
@@ -139,7 +148,7 @@ namespace Models.EffectCommands
 
         protected override void Execute(float multiplier = 1.0f) 
         { 
-            // 스택(중첩수)에 multiplier를 적용합니다. 지속 턴 수(duration)는 곱하지 않는 것이 기획상 안전합니다.
+            // 배율은 스택에만 적용하고 지속 턴 수는 고정 (턴 수가 늘어나면 밸런스가 급격히 무너짐)
             target.AddStatus(status, Mathf.RoundToInt(stack * multiplier), duration); 
         }
     }
@@ -159,7 +168,7 @@ namespace Models.EffectCommands
 
         protected override void Execute(float multiplier = 1.0f) 
         { 
-            // 기폭/소모 트리거이므로 multiplier의 영향을 받지 않습니다.
+            // 소모 트리거이므로 배율 미적용
             target.ConsumeAllStatus(status); 
         }
     }
@@ -180,22 +189,20 @@ namespace Models.EffectCommands
             this.count = count;
             this.specificCardId = specificCardId;
         }
+        // 카드 이동은 파티클 VFX 대신 짧은 대기 후 바로 적용
         public override IEnumerator ExecuteRoutine(float multiplier = 1.0f)
         {
-            //todo DoTween을 통한 카드 이동 애니매이션 구현 요함
+            // TODO: DOTween 기반 카드 이동 애니메이션
             yield return new WaitForSeconds(0.1f);
 
-            // 2. 이펙트 재생(1.5초 대기)이 끝나면, 나만의 실제 데미지/힐 로직을 조용히 실행합니다.
             Execute(multiplier);
         }
 
 
-        protected override void Execute(float multiplier = 1.0f) 
-        { 
-            // TODO: PlayerModel 내에 ProcessCardMovement 함수가 아직 없습니다.
-            // target.Deck, target.Hand, target.Graveyard 컴포넌트를 조작하는 함수를 PlayerModel에 추가해야 합니다.
-            target.ProcessCardMovement(moveType, count, specificCardId); 
-            //
+        protected override void Execute(float multiplier = 1.0f)
+        {
+            // 덱/손패/무덤 간 실제 이동과 클라이언트 동기화는 PlayerModel에서 처리
+            target.ProcessCardMovement(moveType, count, specificCardId);
         }
     }
 
@@ -213,7 +220,7 @@ namespace Models.EffectCommands
 
         protected override void Execute(float multiplier = 1.0f) 
         { 
-            // 마나 조작은 보통 고정값이므로 multiplier를 적용하지 않는 편이 기획 의도에 맞습니다.
+            // 마나는 고정 자원이므로 배율 미적용 (양수: 회복, 음수: 소모)
             if (amount > 0)
             {
                 target.ManaHeal(amount); 
@@ -241,12 +248,12 @@ namespace Models.EffectCommands
         { 
             if(systemAction == EffectType.EndTurnInstantly)
             {
-                // TODO: BattleManager.Instance.EndTurn() 등의 턴 강제 종료 로직 구현 필요
+                // TODO: PhaseManager를 통한 턴 강제 종료 연동
             }
         }
     }    
     
-    // 🌟 동적으로 계산할 값의 종류를 정의
+    // 실행 시점의 게임 상태를 참조해 피해량을 산출하는 기준값
     public enum DynamicValueType {
         None,
         CurrentShield,         // 현재 보호막
@@ -255,11 +262,12 @@ namespace Models.EffectCommands
         MissingHealth          // 잃은 체력
     }
 
+    // [9] 동적 피해 커맨드: 생성 시점이 아닌 실행 시점의 상태로 피해량을 계산
     public class DynamicDamageCommand : EffectCommand {
         public override CommandPriority Priority => CommandPriority.DamageAndHeal;
         public override VFXType MyVFXType => VFXType.Damage;
         private DynamicValueType valueType;
-        private float ratio; // 예: 30%면 0.3f
+        private float ratio; // 기준값 대비 비율 (30% → 0.3f)
 
         public DynamicDamageCommand(PlayerModel target, DynamicValueType valueType, float ratio) : base(target) {
             this.valueType = valueType;
@@ -268,14 +276,13 @@ namespace Models.EffectCommands
 
         protected override void Execute(float multiplier = 1.0f) {
             int calculatedAmount = 0;
-            
-            // 실행되는 순간의 타겟 상태를 읽어와서 계산
+
             switch (valueType) {
                 case DynamicValueType.CurrentShield:
                     calculatedAmount = Mathf.RoundToInt(target.Shield.Value * ratio);
                     break;
                 case DynamicValueType.WaterSpellsCast:
-                    // TODO: BattleManager 등에서 카운트 가져오기
+                    // TODO: 게임 중 사용한 물 속성 주문 수 집계 연동
                     calculatedAmount = Mathf.RoundToInt(10 /* 임시값 */ * ratio); 
                     break;
             }
@@ -284,12 +291,13 @@ namespace Models.EffectCommands
         }
     }
     
+    // [10] 카드 코스트 변경 커맨드
     public class ModifyCostCommand : EffectCommand {
         public override CommandPriority Priority => CommandPriority.ManaAndSystem;
         public override VFXType MyVFXType => amount > 0 ? VFXType.CostUp : VFXType.CostDown;
-        private TargetType cardTargetLocation; // 핸드, 덱, 다음 드로우 등
+        private TargetType cardTargetLocation; // 적용 위치 (손패, 덱, 다음 드로우 등)
         private int amount;
-        private bool isSetToZero; // 코스트를 아예 0으로 만드는 경우
+        private bool isSetToZero; // true면 amount 대신 코스트를 0으로 고정
 
         public ModifyCostCommand(PlayerModel target, TargetType location, int amount, bool isSetToZero = false) : base(target) {
             this.cardTargetLocation = location;
@@ -298,16 +306,18 @@ namespace Models.EffectCommands
         }
 
         protected override void Execute(float multiplier = 1.0f) {
-            // TODO: PlayerModel.Deck이나 Hand에 접근하여 조건에 맞는 카드의 Cost를 직접 수정하는 로직 구현
+            // TODO: 대상 위치(손패/덱)의 카드 코스트 수정 로직 구현
         }
     }
-    
+
+    // 기존 상태이상에 대한 조작 방식
     public enum StatusActionType {
         ExtendDuration, // 지속시간 연장
         TriggerOnce,    // 스택 소모 없이 1회 강제 발동
         DoubleStacks    // 현재 스택 2배
     }
 
+    // [11] 상태이상 조작 커맨드 (지속시간 연장, 강제 발동, 스택 증폭)
     public class ManipulateStatusCommand : EffectCommand {
         public override CommandPriority Priority => CommandPriority.StatusDetonate;
         public override VFXType MyVFXType => VFXType.AddStatus;

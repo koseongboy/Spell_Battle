@@ -51,6 +51,6 @@
 
 | 이름 | 역할 및 담당 업무 |
 |:---:|---|
-| **고성현** | **Client Architecture & Core Battle Logic:** Unity 클라이언트 아키텍처 설계, 커맨드 패턴 기반 턴(Turn) 흐름 및 인게임 코어 전투 로직 구현, 네트워크 P2P 동기화 로직 적용, 스킬 VFX 연출 |
-| **김명준** | **Game Design & UI/UX:** 핵심 아이디어 기획 및 TCG 카드 밸런스 데이터 파이프라인(CSV/Scriptable Object) 설계, UI Toolkit 기반 반응형 화면 구축, 에셋 가공 |
+| **고성현** | **Client Architecture & Core Battle Logic:** Unity 클라이언트 아키텍처 설계, 커맨드 패턴 기반 턴(Turn) 흐름 및 인게임 코어 전투 로직 구현, 네트워크 P2P 동기화 로직 적용, CSV/Scriptable Object 기반 카드 데이터 파이프라인 설계(김명준 공동), 스킬 VFX 연출 |
+| **김명준** | **Game Design & UI/UX:** 핵심 아이디어 기획 및 TCG 카드 밸런스 데이터 파이프라인(CSV/Scriptable Object) 설계(고성현 공동), UI Toolkit 기반 반응형 화면 구축, 에셋 가공 |
 | **김이경** | **AI Pipeline & Backend:** Node.js 메인 서버 및 Python(FastAPI) 분석 서버 구축, Whisper/Wav2Vec2 라이브러리 연동, Gemini 2.5 Flash 프롬프트 엔지니어링 및 음성 채점 API 구축 |

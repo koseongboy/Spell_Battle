@@ -7,26 +7,26 @@ using UnityEngine;
 
 namespace Models.CardModels
 {
+    /// <summary>
+    /// 손패는 비공개 정보이므로 NetworkList로 전체 동기화하지 않고 세 갈래로 나눠 관리한다.
+    /// - serverHand : 서버가 보유한 원본 (카드 사용 검증 기준)
+    /// - localHand  : 주인 클라이언트에만 Targeted RPC로 반영되는 사본 (UI 렌더링용)
+    /// - HandCount  : 상대에게 공개되는 장수 정보
+    /// </summary>
     public class HandModel : NetworkBehaviour
     {
-        // ==========================================
-        // 🔒 1. 서버 전용 손패 (보안 및 검증용)
-        // ==========================================
+        // 서버 전용 원본 손패
         private ObservableCollection<int> serverHand = new ObservableCollection<int>();
 
-        // ==========================================
-        // 💻 2. 주인 전용 손패 (UI 렌더링용)
-        // ==========================================
+        // 주인 클라이언트의 손패 사본 (UI가 CollectionChanged를 구독)
         public ObservableCollection<int> localHand = new ObservableCollection<int>();
 
-        // ==========================================
-        // 📢 3. 공용 데이터 (상대방 화면의 카드 뒷면 개수)
-        // ==========================================
+        // 공개 정보: 손패 장수 (상대 화면의 카드 뒷면 표시용)
         public NetworkVariable<int> HandCount = new NetworkVariable<int>(0);
 
         public void Awake()
         {
-            // 서버 손패 리스트에 변화가 생기면 자동으로 개수(HandCount) 동기화
+            // 서버 손패가 바뀔 때마다 HandCount 자동 갱신
             serverHand.CollectionChanged += OnServerHandChanged;
         }
 
@@ -44,28 +44,28 @@ namespace Models.CardModels
         }
 
         // ==========================================
-        // 📥 [서버 영역] 덱에서 카드를 뽑아 넣을 때 (DeckModel이 호출함)
+        // [서버] 드로우 시 손패에 추가 (DeckModel.DrawCard에서 호출)
         // ==========================================
         public void AddCardToServerHand(int cardId)
         {
             if (!IsServer) return;
-            
-            serverHand.Add(cardId); // 추가되는 순간 HandCount 자동 상승
 
-            // 주인의 로컬 손패에도 카드를 추가하라고 귓속말 전송
+            serverHand.Add(cardId);
+
+            // 카드 내용은 주인에게만 전송
             ReceiveDrawnCardClientRpc(cardId, RpcTarget.Single(OwnerClientId, RpcTargetUse.Temp));
         }
 
         // ==========================================
-        // 📤 [서버 영역] 카드를 사용하거나 멀리건으로 버릴 때 (TurnController가 호출함)
+        // [서버] 카드 사용/멀리건 시 손패에서 제거 (SpellController, MatchManager에서 호출)
         // ==========================================
         public bool RemoveCardFromServerHand(int cardId)
         {
             if (!IsServer) return false;
-            
-            if (serverHand.Remove(cardId)) // 성공적으로 지워졌다면 (HandCount 자동 감소)
+
+            // 서버 원본에 없는 카드는 제거 실패로 처리 (위조된 카드 ID 방어)
+            if (serverHand.Remove(cardId))
             {
-                // 주인의 로컬 손패에서도 해당 카드를 지우라고 귓속말 전송
                 RemoveCardClientRpc(cardId, RpcTarget.Single(OwnerClientId, RpcTargetUse.Temp));
                 return true;
             }
@@ -73,63 +73,58 @@ namespace Models.CardModels
         }
         
         // ==========================================
-        // 📤 [서버 영역] 손패에서 무작위 카드 하나를 버리고 그 ID를 반환
+        // [서버] 무작위 카드 1장을 버리고 그 ID를 반환 (손패가 비었으면 -1)
         // ==========================================
         public int DiscardRandomCardFromServer()
         {
             if (!IsServer || serverHand.Count == 0) return -1;
 
-            // 1. 무작위 인덱스 추첨
             int randomIndex = Random.Range(0, serverHand.Count);
             int cardToDiscard = serverHand[randomIndex];
 
-            // 2. 기존에 만들어두신 함수 재활용 (주인 로컬 손패 제거 RPC 자동 전송됨)
             RemoveCardFromServerHand(cardToDiscard);
 
             return cardToDiscard;
         }
 
         // ==========================================
-        // 📨 [클라이언트 영역] 서버의 귓속말을 받는 RPC 함수들
+        // [서버 → 주인 클라이언트] 로컬 손패 동기화 RPC
         // ==========================================
-        
-        // 1. 카드 추가 알림 수신
+
         [Rpc(SendTo.SpecifiedInParams)]
         private void ReceiveDrawnCardClientRpc(int cardId, RpcParams rpcParams = default)
         {
-            localHand.Add(cardId); // 로컬 리스트에 추가 (UI가 이 리스트를 구독하여 화면에 그림)
+            localHand.Add(cardId);
             Debug.Log($"[Client] {cardId}번 카드가 손패에 들어왔습니다.");
         }
 
-        // 2. 카드 제거 알림 수신 (멀리건, 마법 발동 시)
         [Rpc(SendTo.SpecifiedInParams)]
         private void RemoveCardClientRpc(int cardId, RpcParams rpcParams = default)
         {
-            localHand.Remove(cardId); // 로컬 리스트에서 제거 (UI가 구독하여 화면에서 카드를 치움)
+            localHand.Remove(cardId);
             Debug.Log($"[Client] {cardId}번 카드가 손패에서 제거되었습니다.");
         }
 
         // ==========================================
-        // 🔍 [클라이언트 영역] 조작 및 UI 조회를 위한 보조 함수
+        // [클라이언트] 로컬 손패 조회
         // ==========================================
 
         /// <summary>
-        /// 내 로컬 손패의 특정 인덱스에 있는 카드 고유 ID를 반환합니다.
+        /// 로컬 손패의 index 위치 카드 ID를 반환한다. 범위를 벗어나면 -1.
         /// </summary>
         public int GetCardIdAt(int index)
         {
-            // 안전망: 요청한 인덱스가 손패 범위를 벗어났는지 확인
             if (index < 0 || index >= localHand.Count)
             {
                 Debug.LogError($"[HandModel] 잘못된 카드 인덱스 요청: {index} (현재 손패 장수: {localHand.Count}장)");
-                return -1; // 오류 발생 시 -1을 반환하여 비정상 종료 방지
+                return -1;
             }
 
             return localHand[index];
         }
 
         /// <summary>
-        /// 내 로컬 손패에 현재 몇 장의 카드가 있는지 반환합니다.
+        /// 로컬 손패 장수를 반환한다.
         /// </summary>
         public int GetLocalHandCount()
         {

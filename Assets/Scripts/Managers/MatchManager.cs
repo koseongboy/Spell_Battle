@@ -6,6 +6,10 @@ using Models.TurnModel;
 using Models.PlayerModels;
 
 namespace DefaultNamespace {
+    /// <summary>
+    /// [서버] 대전 준비 단계를 담당한다.
+    /// 플레이어 스폰 → 양측 덱 제출 대기 → 선후공 결정 및 초기 드로우 → 멀리건 처리 후 PhaseManager에 위임.
+    /// </summary>
     public class MatchManager : NetworkBehaviour {
         public void testGame()
         {
@@ -18,6 +22,7 @@ namespace DefaultNamespace {
         [SerializeField] private Transform guestSpawnPoint;
 
         [Header("상태 관리")] private HashSet<ulong> mulliganReadyPlayers = new HashSet<ulong>();
+        // ClientId → PlayerModel 캐시. 씬 탐색 없이 O(1)로 조회
         private Dictionary<ulong, PlayerModel> activePlayers = new Dictionary<ulong, PlayerModel>();
 
         private void Awake() {
@@ -59,14 +64,12 @@ namespace DefaultNamespace {
             NetworkObject networkObj = playerObj.GetComponent<NetworkObject>();
             networkObj.SpawnAsPlayerObject(clientId);
 
-            // 스폰 직후 딕셔너리에 등록
             PlayerModel playerModel = playerObj.GetComponent<PlayerModel>();
             RegisterPlayer(clientId, playerModel);
 
             Debug.Log($"[Server] 플레이어 {clientId} 캐릭터 생성 완료");
         }
 
-        // 플레이어 캐싱 등록/해제 관리
         public void RegisterPlayer(ulong clientId, PlayerModel playerModel) => activePlayers[clientId] = playerModel;
         public void UnregisterPlayer(ulong clientId) => activePlayers.Remove(clientId);
 
@@ -79,6 +82,7 @@ namespace DefaultNamespace {
 
         #region 2. 게임 준비 및 시작
 
+        // 각 클라이언트의 덱 제출(SubmitDeckServerRpc)이 끝날 때까지 대기
         private IEnumerator WaitUntilDecksReadyAndStart() {
             Debug.Log("[Server] 플레이어들의 덱 세팅을 기다립니다...");
 
@@ -109,6 +113,7 @@ namespace DefaultNamespace {
             PlayerModel firstPlayer = GetPlayerById(firstPlayerId);
             PlayerModel secondPlayer = GetPlayerById(secondPlayerId);
 
+            // 선공 4장, 후공 5장 (후공 보정)
             for (int i = 0; i < 4; i++) firstPlayer.Deck.DrawCard();
             for (int i = 0; i < 5; i++) secondPlayer.Deck.DrawCard();
 
@@ -121,6 +126,11 @@ namespace DefaultNamespace {
 
         #region 3. 멀리건 시스템
 
+        /// <summary>
+        /// [클라이언트 → 서버] 멀리건 제출.
+        /// 교체 카드를 손패에서 빼 둔 채로 같은 수만큼 새로 뽑고, 그 뒤 덱에 되돌려 섞는다.
+        /// (먼저 되돌리면 방금 버린 카드를 다시 뽑을 수 있기 때문)
+        /// </summary>
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         public void SubmitMulliganServerRpc(int[] replaceCardIds, RpcParams rpcParams = default) {
             ulong clientId = rpcParams.Receive.SenderClientId;
@@ -128,6 +138,7 @@ namespace DefaultNamespace {
 
             List<int> tempPocket = new List<int>();
 
+            // 서버 손패에 실제로 있는 카드만 교체 대상으로 인정
             foreach (int id in replaceCardIds) {
                 if (targetPlayer.Hand.RemoveCardFromServerHand(id)) tempPocket.Add(id);
             }
@@ -146,9 +157,9 @@ namespace DefaultNamespace {
 
             mulliganReadyPlayers.Add(clientId);
 
-            if (mulliganReadyPlayers.Count == 2) 
+            if (mulliganReadyPlayers.Count == 2)
             {
-                // 직접 TurnModel을 건드리지 않고, PhaseManager에게 전환을 위임함!
+                // 페이즈 전환은 PhaseManager로 일원화
                 PhaseManager.Instance.OnMulliganCompleted(TurnModel.Instance.FirstPlayerId.Value);
             }
         }
